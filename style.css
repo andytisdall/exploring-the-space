@@ -1,0 +1,132 @@
+body {
+    background-color: rgb(56, 56, 56);
+    color: rgb(151, 235, 68);
+    font-family: 'Fira Sans', sans-serif;
+    margin: 2rem;
+}
+
+a {
+    color:white;
+    text-decoration: none;
+}
+
+.marqee {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+    max-width: 60rem;
+}
+
+.add {
+    font-size: small;
+    padding-top: 2.5rem;
+    color:rgb(94, 235, 245);
+    display: flex;
+}
+
+.addbox {
+    height: 200px;
+    width: 150px;
+    position: fixed;
+    border: 1px solid rgb(94, 235, 245);
+    background-color: black;
+    margin-top: 1.3rem;
+    margin-left: -2.8rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.delete {
+    color: red;
+    font-size: .8rem;
+    margin-left: 5rem;
+}
+
+input {
+    width: 7rem;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    line-height: 40%;
+}
+
+h2 {
+    font-size: 2.2rem;
+    line-height: 10%;
+}
+
+h3 {
+    font-size: 1.9rem;
+    line-height: 30%;
+}
+
+h4 {
+    font-size: 1.6rem;
+    line-height: 30%;
+}
+
+h5 {
+    font-size: 1.3rem;
+    line-height: 20%;
+}
+
+.row {
+    padding-left: 10px;
+}
+
+.tier {
+    margin-left: 2rem;;
+}
+
+.title {
+    margin-left: 4rem;
+    border-bottom: rgb(151, 235, 68); solid 1px;
+    border-left: rgb(151, 235, 68); solid 1px;
+    padding-bottom: 1rem;
+}
+
+.version {
+    margin-left: 3rem;
+    border-top: solid 1px rgb(151, 235, 68);;
+}
+
+.comments {
+    height: 10rem;
+    width: 15rem;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 3rem;
+    box-sizing: border-box;
+}
+
+.song-con {
+    display: flex;
+    height: 15rem;
+    width: 28rem;
+    border: 1px solid rgb(241, 131, 149);
+    margin-left: 5rem;
+    justify-content: space-between;
+    color: rgb(236, 83, 108);
+}
+
+.older {
+    padding-right: 2rem;
+    height: 2rem;
+    margin-top: 3rem;
+}
+
+hr {
+    border-color: rgb(151, 235, 68);;
+    text-align: left;
+    margin-left: 0;
+    line-height: 0%;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,77 @@
+doctype html
+html(lang="en")
+head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="preconnect" href="https://fonts.gstatic.com")
+    link(href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet")
+    style
+        include ../style.css
+    title Greenhouse
+body
+    div(class='container')
+        div(class="marqee")
+            h1 Apprehenchmen
+            div(class="add" id='addtier') Add a Tier
+                div(class='addbox hidden')
+                    form(method='POST' action='' id='tierform')
+                        label(for='tierName' id='inputbox') Tier Name:
+                        input(type='text' id='inputbox' name='tierName' required='true' value='')
+                        input(type='hidden' id='inputbox' name='dataID' value='tier-0')
+                        button(type='submit' form='tierform') OK
+        hr 
+        each tier in tiers
+            div(class="row tier" id=tier.id)
+                div(class="marqee")
+                    h2 #{tier.name}
+                    div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
+                        div(class='addbox hidden')
+                            form(method='POST' action='' id='titleform-' + tier.id)
+                                label(for='titleName' id='inputbox') Title:
+                                input(type='text' id='inputbox' name='titleName' required='true' value='')
+                                input(type='hidden' id='inputbox' name='dataID' value='title-' + tier.id)
+                                input(type='submit' value='OK' form='titleform-' + tier.id)
+                        div
+                            a(class = 'delete' href=('/delete/tier/' + tier.id)) delete
+                hr
+                div(class='titlecontainer hidden' id=('title-' + tier.id))
+                    each title in tier.trackList
+                        div(class="row title" id=title.id)
+                            div(class="marqee")
+                                h3 Title: #{title.title}
+                                div(class="add" id=('addversion-' + title.id)) Add a New Version
+                                    div(class='addbox hidden')
+                                        form(method='POST' action='' id='versionform')
+                                            label(for='versionName' id='inputbox') Name:
+                                            input(type='text' id='inputbox' name='versionName' required='true' value='')
+                                            label(for='versionName' id='inputbox') Version Notes:
+                                            input(type='text' id='inputbox' name='versionNotes' value='')
+                                            input(type='hidden' id='inputbox' name='dataType' value='version-' + title.id)
+                                            button(type='submit' form='versionform') OK
+                                    div
+                                        a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete
+                            div(class='versioncontainer hidden' id=('version-' + title.id))
+                            //- each version in title.version
+                            //-     div(class="row version hidden" id=tier.id)
+                            //-         div(class='marqee')
+                            //-             h4 #{version.name}
+                            //-             div(class="add" id='addbounce-' + tier.id) Add a New Bounce
+                            //-                 div(class='addbox hidden' id=tier.id) form       
+                            //-         div(class="row song-con hidden"  id=tier.id)
+                            //-             div(class="row song")
+                            //-                 h5 Latest -- #{version.songs[0]}
+                            //-                 div(class="row comments")
+                            //-                     p Comments for this particular bounce.
+                            //-             div(class="row older")
+                            //-                 older dates:   
+                            //-                 select(name="oldselect")
+                            //-                     each song in version.songs
+                            //-                         option #{song.date}
+                            //- else
+                            //-     p Somehow no versions of this song.
+                    else
+                        p(class='row title') No songs in this tier.
+        else
+            p(class='row tier') There are no tiers.                       
+    script
+        include ../index.js
