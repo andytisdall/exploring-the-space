@@ -15,7 +15,7 @@ const Version = mongoose.model('Version');
 
 
 exports.index = async (req, res) => {
-
+    const errorMessage = req.session.errorMessage;
     try {
         const tiers = await Tier.find({}).populate({
             path: 'trackList', populate: {
@@ -26,7 +26,7 @@ exports.index = async (req, res) => {
         });
         // console.log(tiers);
         // console.log('index');
-        res.render('index', {tiers: tiers});
+        res.render('index', {tiers, errorMessage});
     } catch (err) {
         res.send(err);
     }
@@ -36,6 +36,7 @@ exports.index = async (req, res) => {
 
 exports.addItem = async (req, res) => {
 
+    req.session.errorMessage = '';
 
     const {dataID} = req.body;
     // console.log(dataID);
@@ -47,35 +48,26 @@ exports.addItem = async (req, res) => {
             // console.log('gagaga')
             const { tierName } = req.body;
             const newTier = new Tier({name: tierName});
-            await newTier.save((err) => {
-                if (err) {
-                    res.send(err);
-                } else {
-                    res.redirect('/');
-                }
-            });
+            try {
+                await newTier.save();
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'Could not create that tier.';
+                res.redirect('/');
+            }
             break;
         case 'title':
             // console.log(req.body);
             const { titleName } = req.body;
             const newTitle = new Title({title: titleName});
-            Tier.updateOne({ _id: id }, {$push: { trackList: newTitle }}, (err) => {
-                if (err) {
-                    res.send(err);
-                } else {
-                    // console.log('hi');
-                    newTitle.save((err) => {
-                        //update track list of tier using id
-                        if (err) {
-                            res.send(err);
-                        } else {
-                            res.redirect('/');
-                        }
-                    });
-                }
-            });
-        
-                
+            try {
+                await Tier.updateOne({ _id: id }, {$push: { trackList: newTitle }});
+                await newTitle.save();
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'There was an error creating the title or updating the tier tracklist.';
+                res.redirect('/');
+            }
             break;
         // case 'version':
         //     const { versionName, versionNotes } = req.body;
@@ -101,37 +93,31 @@ exports.addItem = async (req, res) => {
 };
 
 exports.deleteItem = async (req, res) => {
+    req.session.errorMessage = '';
     // console.log(req.params);
     const rowType = req.params.rowtype;
     const id = req.params.id;
     switch (rowType) {
         case 'tier':
-            Tier.deleteOne({ _id: id }, (err, tier) => {
-                if (err) {
-                    res.send(err);
-                } else {
-                    console.log('deleted ' + tier.name);
-                    res.redirect('/');
-                }
-            });
+            try {
+                await Tier.deleteOne({ _id: id });
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'Could not delete the tier or update the tier trackist.';
+                res.redirect('/');
+            }
             break;
         case 'title':
-            const title = await Title.find({ _id: id });
-            const parentId = req.params.parentid;
-            Tier.updateOne({ _id: parentId }, { $pull: {trackList: title} }, async (err, tier) => {
-                if (err) {
-                    res.send(err);
-                } else {
-                    Title.deleteOne({ _id: id }, (err) => {               
-                        if (err) {
-                            res.send(err);                  
-                        } else {
-                            console.log('Deleted ' + title.name + ' from ' + tier.name );
-                            res.redirect('/');
-                        }
-                    });
-                }
-            });
+            try {
+                await Title.deleteOne({ _id: id });
+                const title = await Title.find({ _id: id });
+                const parentId = req.params.parentid;
+                await Tier.updateOne({ _id: parentId }, { $pull: {trackList: title} });
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'Could not delete the title or update the tier trackist.';
+                res.redirect('/');
+            }
             break;
         default:
             console.log('i dunno');

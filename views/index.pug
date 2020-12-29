@@ -9,28 +9,33 @@ head
         include ../style.css
     title Greenhouse
 body
+    if errorMessage
+        div(class='error') #{errorMessage}
     div(class='container')
         div(class="marqee")
+            
             h1 Apprehenchmen
             div(class="add" id='addtier') Add a Tier
                 div(class='addbox hidden')
-                    form(method='POST' action='' id='tierform')
+                    form(method='POST' action='' id='inputbox')
                         label(for='tierName' id='inputbox') Tier Name:
                         input(type='text' id='inputbox' name='tierName' required='true' value='')
                         input(type='hidden' id='inputbox' name='dataID' value='tier-0')
-                        button(type='submit' form='tierform') OK
+                        button(type='submit') OK
         hr 
         each tier in tiers
             div(class="row tier" id=tier.id)
                 div(class="marqee")
-                    h2 #{tier.name}
+                    div(class='row-name')
+                        img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
+                        h2 #{tier.name}
                     div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
                         div(class='addbox hidden')
-                            form(method='POST' action='' id='titleform-' + tier.id)
+                            form(method='POST' action='' id='inputbox')
                                 label(for='titleName' id='inputbox') Title:
                                 input(type='text' id='inputbox' name='titleName' required='true' value='')
                                 input(type='hidden' id='inputbox' name='dataID' value='title-' + tier.id)
-                                input(type='submit' value='OK' form='titleform-' + tier.id)
+                                button(type='submit') OK
                         div
                             a(class = 'delete' href=('/delete/tier/' + tier.id)) delete
                 hr
@@ -47,7 +52,7 @@ body
                                             label(for='versionName' id='inputbox') Version Notes:
                                             input(type='text' id='inputbox' name='versionNotes' value='')
                                             input(type='hidden' id='inputbox' name='dataType' value='version-' + title.id)
-                                            button(type='submit' form='versionform') OK
+                                            button(type='submit') OK
                                     div
                                         a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete
                             div(class='versioncontainer hidden' id=('version-' + title.id))

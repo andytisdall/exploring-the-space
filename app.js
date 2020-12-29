@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const pug = require('pug');
+const session = require('express-session');
 const express = require('express');
 
 const app = express();
 
+app.use(express.static('images'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

@@ -3,16 +3,15 @@
 
 
 
-const toggleStorage = (id) => {
-    if (sessionStorage.getItem(id)) {
-        sessionStorage.removeItem(id)
+const toggleStorage = (key, id) => {
+    if (sessionStorage.getItem(key)) {
+        sessionStorage.removeItem(key)
     } else {
-        sessionStorage.setItem(id, id);
+        sessionStorage.setItem(key, id);
     }
 };
 const readStorage = () => {
     const rows = Object.keys(sessionStorage);
-    console.log(rows);
     // console.log(rows);
     rows.forEach(id => {
         if (id == 'scrollpos') {
@@ -21,6 +20,8 @@ const readStorage = () => {
             const row = document.getElementById(id);
             if (row) {
                 row.classList.toggle('hidden');
+                const arrow = sessionStorage.getItem(id);
+                document.getElementById(arrow).setAttribute('src', 'down-arrow.svg');
             } else {
                 sessionStorage.removeItem(id);
             }
@@ -44,9 +45,7 @@ let selected;
 document.addEventListener('click', (e) => {
 
     const target = e.target;
-    if (!target) {
-        return;
-    }
+    // console.log(e);
 
     if (selected && target.id !== 'inputbox' && target.className !== 'add' && target.className !== 'addbox') {
         selected.classList.toggle('hidden');
@@ -57,29 +56,48 @@ document.addEventListener('click', (e) => {
 
     if (target.className === 'add') {
         let addboxIsVisible;
+        selected = document.getElementById(target.id).childNodes[1];
         if (!selected.classList.contains('hidden')) {
             addboxIsVisible = true;
         }
-           selected.classList.toggle('hidden');
+        selected.classList.toggle('hidden');
         if (addboxIsVisible) {
             selected = 0;
         }
     } 
     else if (button && !selected) {   
-        let id;     
+        let id;
+        let arrow = `arrow-${button.id}`;
+        let arrowEl = document.getElementById(arrow);
         if (button.classList.contains('tier')) {
-            id = 'title-' + button.id;
+            id = `title-${button.id}`;
+
         // } else if (button.classList.contains('title')) {
         //     id = 'version-' + button.id;          
         // } else if (button.classList.contains('songCon')) {
         //     id = 'song-con-' + button.id;
+
         } else {
             return;
         }
         document.getElementById(id).classList.toggle('hidden');
-        toggleStorage(id);
+        if (arrowEl.getAttribute('src') === 'right-arrow.svg') {
+            arrowEl.setAttribute('src', 'down-arrow.svg');
+        } else {
+            arrowEl.setAttribute('src', 'right-arrow.svg')
+        }
+        toggleStorage(id, arrow);
     }
 });
+
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', (e) => {
+        // console.log('clicked');
+        e.stopPropagation();
+    })
+})
+
+
 
 
 
