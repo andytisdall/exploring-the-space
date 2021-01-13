@@ -17,10 +17,10 @@ body
             h1 Apprehenchmen
             div(class="add" id='addtier') Add a Tier
                 div(class='addbox hidden')
-                    form(method='POST' action='' id='inputbox')
-                        label(for='tierName' id='inputbox') Tier Name:
-                        input(type='text' id='inputbox' name='tierName' required='true' value='')
-                        input(type='hidden' id='inputbox' name='dataID' value='tier-0')
+                    form(method='POST' action='')
+                        label(for='tierName') Tier Name:
+                        input(type='text' name='tierName' required='true' value='')
+                        input(type='hidden' name='dataID' value='tier-0')
                         button(type='submit') OK
         hr 
         each tier in tiers
@@ -31,10 +31,10 @@ body
                         h2 #{tier.name}
                     div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
                         div(class='addbox hidden')
-                            form(method='POST' action='' id='inputbox')
-                                label(for='titleName' id='inputbox') Title:
-                                input(type='text' id='inputbox' name='titleName' required='true' value='')
-                                input(type='hidden' id='inputbox' name='dataID' value='title-' + tier.id)
+                            form(method='POST' action='')
+                                label(for='titleName') Title:
+                                input(type='text' name='titleName' required='true' value='')
+                                input(type='hidden' name='dataID' value='title-' + tier.id)
                                 button(type='submit') OK
                         div
                             a(class = 'delete' href=('/delete/tier/' + tier.id)) delete
@@ -43,37 +43,51 @@ body
                     each title in tier.trackList
                         div(class="row title" id=title.id)
                             div(class="marqee")
-                                h3 Title: #{title.title}
+                                div(class='row-name')
+                                    img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
+                                    h3 #{title.title}
                                 div(class="add" id=('addversion-' + title.id)) Add a New Version
                                     div(class='addbox hidden')
                                         form(method='POST' action='' id='versionform')
-                                            label(for='versionName' id='inputbox') Name:
-                                            input(type='text' id='inputbox' name='versionName' required='true' value='')
-                                            label(for='versionName' id='inputbox') Version Notes:
-                                            input(type='text' id='inputbox' name='versionNotes' value='')
-                                            input(type='hidden' id='inputbox' name='dataType' value='version-' + title.id)
+                                            label(for='versionName') Name:
+                                            input(type='text' name='versionName' required='true' value='')
+                                            label(for='versionName') Version Notes:
+                                            input(type='textarea' name='versionNotes' value='')
+                                            input(type='hidden' name='dataID' value='version-' + title.id)
                                             button(type='submit') OK
                                     div
                                         a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete
                             div(class='versioncontainer hidden' id=('version-' + title.id))
-                            //- each version in title.version
-                            //-     div(class="row version hidden" id=tier.id)
-                            //-         div(class='marqee')
-                            //-             h4 #{version.name}
-                            //-             div(class="add" id='addbounce-' + tier.id) Add a New Bounce
-                            //-                 div(class='addbox hidden' id=tier.id) form       
-                            //-         div(class="row song-con hidden"  id=tier.id)
-                            //-             div(class="row song")
-                            //-                 h5 Latest -- #{version.songs[0]}
-                            //-                 div(class="row comments")
-                            //-                     p Comments for this particular bounce.
-                            //-             div(class="row older")
-                            //-                 older dates:   
-                            //-                 select(name="oldselect")
-                            //-                     each song in version.songs
-                            //-                         option #{song.date}
-                            //- else
-                            //-     p Somehow no versions of this song.
+                                each version in title.versions
+                                    div(class="row version" id=version.id)
+                                        div(class='marqee')
+                                            div(class='row-name')
+                                                img(class='arrow' src='right-arrow.svg' id=('arrow-' + version.id))
+                                                h3 Version: #{version.name}
+                                            div(class="add" id='addbounce-' + version.id) Add a New Bounce
+                                                div(class='addbox hidden')
+                                                    form(method='POST' action='' id='songform')
+                                                        label(for='songDate') Date:
+                                                        input(type='text' name='songDate' required='true' value='')
+                                                        label(for='songComments') Comments:
+                                                        input(type='textarea' name='songComments' value='')
+                                                        input(type='hidden' name='dataID' value='song-' + version.id)
+                                                        button(type='submit') OK
+                                                div
+                                                    a(class = 'delete' href=('/delete/version/' + version.id + '/' + title.id)) delete     
+                                        div(class="row song-con hidden"  id=('song-' + version.id))
+                                            div(class="row song")
+                                                - const latestsong = version.songs.filter(s => s.latest === true)
+                                                h5 Latest -- #{latestsong} #{latestsong.date}
+                                                div(class="row comments")
+                                                    p #{latestsong.comments}
+                                            div(class="row older")
+                                                label(for='oldselect') older dates:   
+                                                select(name="oldselect")
+                                                    each song in version.songs
+                                                        option #{song.date}
+                                else
+                                    p Somehow no versions of this song.
                     else
                         p(class='row title') No songs in this tier.
         else

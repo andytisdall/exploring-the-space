@@ -70,6 +70,7 @@ h2 {
 h3 {
     font-size: 1.9rem;
     line-height: 30%;
+    padding-left: 1rem;
 }
 
 h4 {
@@ -94,7 +95,7 @@ h5 {
     margin-left: 4rem;
     border-bottom: rgb(151, 235, 68); solid 1px;
     border-left: rgb(151, 235, 68); solid 1px;
-    padding-bottom: 1rem;
+
 }
 
 .version {
@@ -143,5 +144,5 @@ hr {
 }
 
 .arrow {
-    width: 70%;
+    width: 30px;
 }

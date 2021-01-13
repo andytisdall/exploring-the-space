@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
+const Song = mongoose.model('Song');
 
 // const update = async () => {
 //     const allSongs = await Title.find({});
@@ -69,24 +70,32 @@ exports.addItem = async (req, res) => {
                 res.redirect('/');
             }
             break;
-        // case 'version':
-        //     const { versionName, versionNotes } = req.body;
-        //     const newVersion = new Version({name: versionName, notes: versionNotes});
-        //     newVersion.save(async (err, song) => {
-        //         //update track list of tier using id
-        //         if (err) {
-        //             res.send(err);
-        //         } else {
-        //             await Title.findOneAndUpdate({ _id: id }, { $push: { 'versions': song } }, { useFindAndModify: false }, (err) => {
-        //                 if (err) {
-        //                     res.send(err);
-        //                 } else {
-        //                     res.redirect('/');
-        //                 }
-        //             });
-        //         }
-        //     });
-        //     break;
+        case 'version':
+            // console.log(req.body);
+            const { versionName, versionNotes } = req.body;
+            const newVersion = new Version({name: versionName, versionNotes});
+            try {
+                await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
+                await newVersion.save();
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'There was an error creating the version or updating the version list.';
+                res.redirect('/');
+            }
+            break;
+        case 'song':
+            // console.log(req.body);
+            const { songDate, songComments, songLocation } = req.body;
+            const newSong = new Song({});
+            try {
+                await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
+                await newVersion.save();
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'There was an error creating the version or updating the version list.';
+                res.redirect('/');
+            }
+            break;
         default:
             res.send('data type invalid shit fuck');
     }

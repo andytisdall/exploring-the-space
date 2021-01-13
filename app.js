@@ -29,11 +29,11 @@ mongoose.connection.on('connected', () => {
 
 mongoose.connection.on('error', (err) => {
     console.error('Error connecting to mongo');
+    console.log(err);
 });
 
 app.get('/', controller.index);
-app.get('/delete/:rowtype/:id/', controller.deleteItem);
-app.get('/delete/:rowtype/:id/:parentid', controller.deleteItem);
+app.get('/delete/:rowtype/:id/:parentid?', controller.deleteItem);
 app.post('/', controller.addItem);
 
 

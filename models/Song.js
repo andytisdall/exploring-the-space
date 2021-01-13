@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const songSchema = new mongoose.Schema({
-    date: { type: Date, unique: true },
+    date: { type: Date, default: Date.now(), unique: true },
     latest: { type: Boolean, default: true },
     location: String,
     comments: String,
