@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const songSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now(), unique: true },
-    latest: { type: Boolean, default: true },
-    location: String,
+    latest: { type: Boolean, default: false },
+    file: Buffer,
     comments: String,
 });
 

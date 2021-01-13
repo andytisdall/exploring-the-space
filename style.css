@@ -17,8 +17,9 @@ a {
 
 .error {
     color: rgb(20, 1, 100);
-    background-color: rgb(204, 39, 39);
+    background-color: rgb(230, 142, 142);
     padding: 1rem;
+    border: 2px solid white;
 }
 
 .container {
@@ -42,6 +43,7 @@ a {
     margin-left: -2.8rem;
     padding: 1rem;
     box-sizing: border-box;
+
 }
 
 .delete {
@@ -80,7 +82,7 @@ h4 {
 
 h5 {
     font-size: 1.3rem;
-    line-height: 20%;
+    line-height: 100%;
 }
 
 .row {
@@ -121,6 +123,10 @@ h5 {
     justify-content: space-between;
     color: rgb(236, 83, 108);
 }
+/* 
+.song {
+    line-height: 100%;
+} */
 
 .older {
     padding-right: 2rem;
@@ -145,4 +151,13 @@ hr {
 
 .arrow {
     width: 30px;
+}
+
+.bounce {
+    height: 250px;
+    width: 350px;
+}
+
+.inputfile {
+    width: 300px;
 }

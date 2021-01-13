@@ -85,14 +85,29 @@ exports.addItem = async (req, res) => {
             break;
         case 'song':
             // console.log(req.body);
-            const { songDate, songComments, songLocation } = req.body;
-            const newSong = new Song({});
+            const { songDate, songComments, songFile, songLatest } = req.body;
+            const newSong = new Song({date: songDate, comments: songComments, file: songFile});
+            if (songLatest) {
+                try {
+                    const parentVersion = await Version.find({ _id: id }).populate('songs');
+                    let songList = parentVersion[0].songs;
+                    let oldLatest = songList.find(s => s.latest);
+                    if (oldLatest) {
+                        await Song.updateOne({_id: oldLatest._id}, {latest: false});
+                    }
+                    newSong.latest = true;
+                } catch {
+                    req.session.errorMessage = 'There was an updating the latest tag.';
+                    res.redirect('/');
+                    break;
+                }
+            }
             try {
-                await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
-                await newVersion.save();
+                await Version.updateOne({ _id: id }, {$push: { songs: newSong }});
+                await newSong.save();
                 res.redirect('/');
             } catch (err) {
-                req.session.errorMessage = 'There was an error creating the version or updating the version list.';
+                req.session.errorMessage = 'There was an error creating the bounce.';
                 res.redirect('/');
             }
             break;
@@ -131,4 +146,19 @@ exports.deleteItem = async (req, res) => {
         default:
             console.log('i dunno');
     }
+};
+
+exports.changeLatest = async (req, res) => {
+
+    req.session.errorMessage = '';
+    const { newLatest, currentLatest } = req.body;
+    try {
+        await Song.updateOne({ _id: newLatest }, { latest: true });
+        await Song.updateOne({ _id: currentLatest }, { latest: false });
+        res.redirect('/');
+    } catch {
+        req.session.errorMessage = 'could not change latest status';
+        res.redirect('/');
+    }
+
 };
