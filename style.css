@@ -116,17 +116,21 @@ h5 {
 
 .song-con {
     display: flex;
-    height: 15rem;
-    width: 700px;
-    border: 1px solid rgb(241, 131, 149);
+
+    
     margin-left: 5rem;
     justify-content: space-between;
     color: rgb(236, 83, 108);
+
 }
-/* 
+
 .song {
     line-height: 100%;
-} */
+    width: 100%;
+    border: 1px solid rgb(241, 131, 149);
+    padding: 30px;
+    box-sizing: border-box;
+}
 
 .older {
     padding-right: 2rem;
@@ -163,5 +167,5 @@ hr {
 }
 
 .player {
-    width: 500px;
+    width: 400px;
 }

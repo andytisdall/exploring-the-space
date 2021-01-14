@@ -88,13 +88,14 @@ body
                                                     a(class = 'delete' href=('/delete/version/' + version.id + '/' + title.id)) delete
                                         if version.songs.length > 0     
                                             div(class="row song-con hidden"  id=('song-' + version.id))
-                                                div(class="row song")
+                                                div(class="song")
                                                     - const thisSong = version.songs.find(s => s.latest)
                                                     - const displayDate = moment(thisSong.date).format('MM/DD/YY')
                                                     h5 #{displayDate}
                                                     audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
                                                     div(class="comments")
                                                         p Comments: #{thisSong.comments}
+                                                    a(class='delete' href=('/delete/song/' + thisSong.id + '/' + version.id)) delete
                                                 form(class="row older" method='POST' action='/changelatest')
                                                     input(type='hidden' name='currentLatest' value=thisSong.id)
                                                     label(for='oldselect') change current bounce:   
@@ -104,8 +105,9 @@ body
                                                         - const formattedDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
                                                         each date in formattedDates
                                                             option(value=date.slice(8)) #{date.slice(0,8)}
+
                                 else
-                                    p Somehow no versions of this song.
+                                    p No versions of this song.
                     else
                         p(class='row title') No songs in this tier.
         else

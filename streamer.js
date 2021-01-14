@@ -1,8 +1,14 @@
-// const fs = require('fs');
 const mongoose = require('mongoose');
 const { Readable } = require('stream');
-const ObjectID = require('mongodb').ObjectID;
-const streamifier = require('streamifier');
+let bucket;
+
+mongoose.connection.on('connected', () => {
+    bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+        chunkSizeBytes: 1024,
+        bucketName: 'mp3s'
+    });
+});
+
 
 exports.addMp3 = async (file) => {
 
@@ -11,12 +17,9 @@ exports.addMp3 = async (file) => {
     // readableMp3Stream.push(null);
 
 
-    const gridfsbucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-        chunkSizeBytes: 1024,
-        bucketName: 'mp3s'
-    });
 
-    let uploadStream = gridfsbucket.openUploadStream(file.name);
+
+    let uploadStream = bucket.openUploadStream(file.name);
 
     let id = uploadStream.id;
 
@@ -24,8 +27,6 @@ exports.addMp3 = async (file) => {
     readableStream.push(file.data);
     readableStream.push(null);
     readableStream.pipe(uploadStream);
-
-    // let stream = streamifier.createReadStream(file.data).pipe(uploadStream);
 
     uploadStream.on('error', (err) => {
             console.log(err);
@@ -39,26 +40,24 @@ exports.addMp3 = async (file) => {
 
 };
 
-exports.getMp3 = (id) => {
+exports.getMp3 = (mp3Id) => {
 
-    let mp3Id = new ObjectID(id);
 
-    const gridfsbucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-        chunkSizeBytes: 1024,
-        bucketName: 'mp3s'
-    });
-
-    const stream = gridfsbucket.openDownloadStream(mp3Id);
-
-    // const streamify = streamifier.createReadStream(stream);
-
-    // const writable = Writable;
-
-    // stream.pipe(writable);
+    const stream = bucket.openDownloadStream(mp3Id);
 
     return stream;
 
 
 };
 
+exports.deleteMp3 = (mp3Id) => {
+    
+
+    try {
+        bucket.delete(mp3Id);
+    } catch (err) {
+        console.log(err.message);
+    }
+
+};
 

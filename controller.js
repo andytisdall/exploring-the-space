@@ -5,6 +5,7 @@ const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
 const streamer = require('./streamer');
+const ObjectID = require('mongodb').ObjectID;
 
 
 
@@ -82,7 +83,6 @@ exports.addItem = async (req, res) => {
             const newSong = new Song({date: songDate, comments: songComments});
 
             newSong.mp3 = await streamer.addMp3(req.files.songFile);
-            
 
             if (songLatest) {
                 try {
@@ -101,6 +101,7 @@ exports.addItem = async (req, res) => {
             }
             try {
                 await Version.updateOne({ _id: id }, {$push: { songs: newSong }});
+                console.log(newSong);
                 await newSong.save();
                 res.redirect('/');
             } catch (err) {
@@ -160,15 +161,42 @@ exports.deleteItem = async (req, res) => {
             break;
         case 'title':
             try {
-                const title = await Title.find({ _id: id });
-                const versions = title.versions;
+                // const title = await Title.find({ _id: id });
                 const parentId = req.params.parentid;
                 cascade('title', id);
-                await Tier.updateOne({ _id: parentId }, { $pull: {trackList: title} });
+                await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
                 await Title.deleteOne({ _id: id });
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not delete the title or update the tier trackist.';
+                res.redirect('/');
+            }
+            break;
+        case 'version':
+            try {
+                // const version = await Version.findOne({ _id: id });
+                const parentId = req.params.parentid;
+                cascade('version', id);
+                await Title.updateOne({ _id: parentId }, { $pull: {versions: id} });
+                await Version.deleteOne({ _id: id });
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = 'Could not delete the version or update the title version list.';
+                res.redirect('/');
+            }
+            break;
+        case 'song':
+            try {
+                const song = await Song.findOne({ _id: id });
+                console.log(song);
+                const parentId = req.params.parentid;
+                const mp3Id = new ObjectID(song.mp3);
+                await Version.updateOne({ _id: parentId }, { $pull: {songs: id} });
+                await Song.deleteOne({ _id: id });
+                streamer.deleteMp3(mp3Id);
+                res.redirect('/');
+            } catch (err) {
+                req.session.errorMessage = err.message;
                 res.redirect('/');
             }
             break;
@@ -200,7 +228,8 @@ exports.playMp3 = async (req,res) => {
 
     const id = req.params.id.split('.')[0];
     const thisSong = await Song.findOne({ _id: id });
-    const stream = streamer.getMp3(thisSong.mp3);
+    let mp3Id = new ObjectID(thisSong.mp3);
+    const stream = streamer.getMp3(mp3Id);
 
     // console.log(stream);
 
