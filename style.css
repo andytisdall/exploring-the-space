@@ -117,7 +117,7 @@ h5 {
 .song-con {
     display: flex;
     height: 15rem;
-    width: 28rem;
+    width: 700px;
     border: 1px solid rgb(241, 131, 149);
     margin-left: 5rem;
     justify-content: space-between;
@@ -155,9 +155,13 @@ hr {
 
 .bounce {
     height: 250px;
-    width: 350px;
+    width: 550px;
 }
 
 .inputfile {
     width: 300px;
+}
+
+.player {
+    width: 500px;
 }

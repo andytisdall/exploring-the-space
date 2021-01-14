@@ -66,7 +66,7 @@ body
                                                 h3 Version: #{version.name}
                                             div(class="add" id='addbounce-' + version.id) Add a New Bounce
                                                 div(class='addbox bounce hidden')
-                                                    form(method='POST' action='' id='songform')
+                                                    form(method='POST' action='' id='songform' encType="multipart/form-data")
                                                         label(for='songFile') File:
                                                         br
                                                         input(type='file' name='songFile' required='true' class='inputfile')
@@ -85,23 +85,25 @@ body
                                                         input(type='hidden' name='dataID' value='song-' + version.id)
                                                         button(type='submit') OK
                                                 div
-                                                    a(class = 'delete' href=('/delete/version/' + version.id + '/' + title.id)) delete     
-                                        div(class="row song-con hidden"  id=('song-' + version.id))
-                                            div(class="row song")
-                                                - const thisSong = version.songs.find(s => s.latest)
-                                                - const displayDate = moment(thisSong.date).format('MM/DD/YY')
-                                                h5 #{displayDate}
-                                                div(class="comments")
-                                                    p Comments: #{thisSong.comments}
-                                            form(class="row older" method='POST' action='/changelatest')
-                                                input(type='hidden' name='currentLatest' value=thisSong.id)
-                                                label(for='oldselect') other dates:   
-                                                select(name="newLatest" onchange='this.form.submit()')
-                                                    option(value='placeholder' selected) ---
-                                                    - const songDates = version.songs.map(s => moment(s.date).format('YY/MM/DD') + s._id).sort().reverse()
-                                                    - const formattedDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
-                                                    each date in formattedDates
-                                                        option(value=date.slice(8)) #{date.slice(0,8)}
+                                                    a(class = 'delete' href=('/delete/version/' + version.id + '/' + title.id)) delete
+                                        if version.songs.length > 0     
+                                            div(class="row song-con hidden"  id=('song-' + version.id))
+                                                div(class="row song")
+                                                    - const thisSong = version.songs.find(s => s.latest)
+                                                    - const displayDate = moment(thisSong.date).format('MM/DD/YY')
+                                                    h5 #{displayDate}
+                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
+                                                    div(class="comments")
+                                                        p Comments: #{thisSong.comments}
+                                                form(class="row older" method='POST' action='/changelatest')
+                                                    input(type='hidden' name='currentLatest' value=thisSong.id)
+                                                    label(for='oldselect') change current bounce:   
+                                                    select(name="newLatest" onchange='this.form.submit()')
+                                                        option(value='placeholder' selected) ---
+                                                        - const songDates = version.songs.map(s => moment(s.date).format('YY/MM/DD') + s._id).sort().reverse()
+                                                        - const formattedDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+                                                        each date in formattedDates
+                                                            option(value=date.slice(8)) #{date.slice(0,8)}
                                 else
                                     p Somehow no versions of this song.
                     else

@@ -4,15 +4,8 @@ const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
+const streamer = require('./streamer');
 
-// const update = async () => {
-//     const allSongs = await Title.find({});
-//     // console.log(allSongs);
-//     allSongs.forEach(async (song) => {
-//         await Tier.findOneAndUpdate({ name: 'a'}, { $push: {'trackList': song} }, {useFindAndModify: false});
-//     });
-// };
-// update();
 
 
 exports.index = async (req, res) => {
@@ -85,12 +78,16 @@ exports.addItem = async (req, res) => {
             break;
         case 'song':
             // console.log(req.body);
-            const { songDate, songComments, songFile, songLatest } = req.body;
-            const newSong = new Song({date: songDate, comments: songComments, file: songFile});
+            const { songDate, songComments, songLatest } = req.body;
+            const newSong = new Song({date: songDate, comments: songComments});
+
+            newSong.mp3 = await streamer.addMp3(req.files.songFile);
+            
+
             if (songLatest) {
                 try {
-                    const parentVersion = await Version.find({ _id: id }).populate('songs');
-                    let songList = parentVersion[0].songs;
+                    const parentVersion = await Version.findOne({ _id: id }).populate('songs');
+                    let songList = parentVersion.songs;
                     let oldLatest = songList.find(s => s.latest);
                     if (oldLatest) {
                         await Song.updateOne({_id: oldLatest._id}, {latest: false});
@@ -107,7 +104,7 @@ exports.addItem = async (req, res) => {
                 await newSong.save();
                 res.redirect('/');
             } catch (err) {
-                req.session.errorMessage = 'There was an error creating the bounce.';
+                req.session.errorMessage = err.message;
                 res.redirect('/');
             }
             break;
@@ -117,6 +114,35 @@ exports.addItem = async (req, res) => {
 };
 
 exports.deleteItem = async (req, res) => {
+
+    const cascade = async (type, id) => {
+        try {
+            if (type === 'tier') {
+                let thisTier = await Tier.findOne({_id: id}).populate('trackList');
+                thisTier.trackList.forEach(async (title) => {                
+                    cascade('title', title.id);
+                    await Title.deleteOne({ _id: title.id });
+                });
+            } else if (type === 'title') {
+                let thisTitle = await Title.findOne({_id: id}).populate('versions');
+                // console.log(thisTitle);
+                thisTitle.versions.forEach(async (version) => {                
+                    cascade('version', version.id);
+                    await Version.deleteOne({ _id: version.id });
+                });
+            } else if (type === 'version') {
+                let thisVersion = await Version.findOne({_id: id}).populate('songs');
+                thisVersion.songs.forEach(async (song) => {                
+                    await Song.deleteOne({ _id: song.id});
+                });
+            }
+            console.log('cascaded');
+        } catch {
+            console.log('somthing happened with the cascade function');
+        }
+    };
+
+
     req.session.errorMessage = '';
     // console.log(req.params);
     const rowType = req.params.rowtype;
@@ -124,6 +150,7 @@ exports.deleteItem = async (req, res) => {
     switch (rowType) {
         case 'tier':
             try {
+                cascade('tier', id);
                 await Tier.deleteOne({ _id: id });
                 res.redirect('/');
             } catch (err) {
@@ -133,10 +160,12 @@ exports.deleteItem = async (req, res) => {
             break;
         case 'title':
             try {
-                await Title.deleteOne({ _id: id });
                 const title = await Title.find({ _id: id });
+                const versions = title.versions;
                 const parentId = req.params.parentid;
+                cascade('title', id);
                 await Tier.updateOne({ _id: parentId }, { $pull: {trackList: title} });
+                await Title.deleteOne({ _id: id });
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not delete the title or update the tier trackist.';
@@ -152,6 +181,10 @@ exports.changeLatest = async (req, res) => {
 
     req.session.errorMessage = '';
     const { newLatest, currentLatest } = req.body;
+    if (newLatest === currentLatest) {
+        res.redirect('/');
+        return;
+    }
     try {
         await Song.updateOne({ _id: newLatest }, { latest: true });
         await Song.updateOne({ _id: currentLatest }, { latest: false });
@@ -160,5 +193,33 @@ exports.changeLatest = async (req, res) => {
         req.session.errorMessage = 'could not change latest status';
         res.redirect('/');
     }
+
+};
+
+exports.playMp3 = async (req,res) => {
+
+    const id = req.params.id.split('.')[0];
+    const thisSong = await Song.findOne({ _id: id });
+    const stream = streamer.getMp3(thisSong.mp3);
+
+    // console.log(stream);
+
+    res.type('audio/mpeg');
+
+    // stream.on('data', (chunk) => {
+    //     res.write(chunk);
+    // });
+    
+    // stream.on('error', () => {
+    //     res.sendStatus(404);
+    // });
+    
+    // stream.on('end', () => {
+    //     res.end();
+    // });
+
+    stream.pipe(res);
+
+
 
 };
