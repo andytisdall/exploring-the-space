@@ -34,13 +34,10 @@ exports.addItem = async (req, res) => {
     req.session.errorMessage = '';
 
     const {dataID} = req.body;
-    // console.log(dataID);
     const [dataType, id] = dataID.split('-');
-    
 
     switch(dataType) {
         case 'tier':
-            // console.log('gagaga')
             const { tierName } = req.body;
             const newTier = new Tier({name: tierName});
             try {
@@ -65,16 +62,15 @@ exports.addItem = async (req, res) => {
             }
             break;
         case 'version':
-            // console.log(req.body);
-            const { versionName, versionNotes, versionCurrent } = req.body;
-            const newVersion = new Version({name: versionName, versionNotes});
+            console.log(req.body);
+            const { versionName, versionNotes} = req.body;
+            const newVersion = new Version({name: versionName, notes: versionNotes});
 
             const parentTitle = await Title.findOne({ _id: id }).populate('versions');
             let versionList = parentTitle.versions;
 
-            if (versionCurrent) {
+            if (req.body.versionCurrent) {
                 try {
-
                     let oldCurrent = versionList.find(v => v.current);
                     if (oldCurrent) {
                         await Version.updateOne({_id: oldCurrent._id}, {current: false});
@@ -100,15 +96,16 @@ exports.addItem = async (req, res) => {
             break;
         case 'song':
             // console.log(req.body);
-            const { songDate, songComments, songLatest } = req.body;
+            const { songDate, songComments } = req.body;
             const newSong = new Song({date: songDate, comments: songComments});
 
+            newSong.length = req.files.songFile.size;
             newSong.mp3 = await streamer.addMp3(req.files.songFile);
 
             const parentVersion = await Version.findOne({ _id: id }).populate('songs');
             let songList = parentVersion.songs;
 
-            if (songLatest) {
+            if (req.body.songLatest) {
                 try {
                     let oldLatest = songList.find(s => s.latest);
                     if (oldLatest) {
@@ -191,7 +188,7 @@ exports.deleteItem = async (req, res) => {
     switch (rowType) {
         case 'tier':
             try {
-                cascade('tier', id);
+                await cascade('tier', id);
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not delete the tier or update the tier trackist.';
@@ -201,7 +198,7 @@ exports.deleteItem = async (req, res) => {
         case 'title':
             try {
                 // const title = await Title.find({ _id: id });
-                cascade('title', id, parentId);
+                await cascade('title', id, parentId);
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not delete the title or update the tier trackist.';
@@ -211,7 +208,7 @@ exports.deleteItem = async (req, res) => {
         case 'version':
             try {
                 // const version = await Version.findOne({ _id: id });
-                cascade('version', id, parentId);
+                await cascade('version', id, parentId);
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not delete the version or update the title version list.';
@@ -220,7 +217,8 @@ exports.deleteItem = async (req, res) => {
             break;
         case 'song':
             try {
-                cascade('song', id, parentId);
+                await cascade('song', id, parentId);
+                await 
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = err.message;
@@ -251,19 +249,33 @@ exports.editItem = async (req, res) => {
             }
             break;
         case 'title':
-            const { titleName } = req.body;
+            const { titleName, moveTier, parentID } = req.body;
             try {
-                await Title.updateOne({ _id: id }, { name: titleName });
-                res.redirect('/');
+                await Title.updateOne({ _id: id }, { title: titleName });
             } catch (err) {
                 req.session.errorMessage = err.message;
                 res.redirect('/');
             }
+            if (moveTier !== parentID) {
+                try {
+                    await Tier.updateOne({ _id: parentID }, { $pull: { trackList: id } });
+                    await Tier.updateOne({ _id: moveTier }, { $push: { trackList: id } });
+                    res.redirect('/');
+                } catch (err) {
+                    req.session.errorMessage = err.message;
+                    res.redirect('/');
+                }
+            }
             break;
         case 'version':
-            const { versionName, versionNotes, versionCurrent } = req.body;
+            const { versionName, versionNotes } = req.body;
+            let current = false;
+            if (req.body.versionCurrent) {
+                current = true;
+            }
+            // console.log(req.body);
             try {
-                await Version.updateOne({ _id: id }, { name: versionName, notes: versionNotes, current: versionCurrent });
+                await Version.updateOne({ _id: id }, { name: versionName, notes: versionNotes, current });
                 res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = err.message;
@@ -271,10 +283,13 @@ exports.editItem = async (req, res) => {
             }
             break;
         case 'song':
-            const { songDate, songComments, songLatest } = req.body;
+            const { songDate, songComments } = req.body;
+            let latest = false;
+            if (req.body.songLatest) {
+                latest = true;
+            }
             try {
-                await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest:songLatest });
-                res.redirect('/');
+                await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest });
             } catch (err) {
                 req.session.errorMessage = err.message;
                 res.redirect('/');
@@ -288,7 +303,7 @@ exports.editItem = async (req, res) => {
             const parentVersion = await Version.findOne({ _id: id }).populate('songs');
             let songList = parentVersion.songs;
 
-            if (songLatest) {
+            if (latest) {
                 try {
                     let oldLatest = songList.find(s => s.latest);
                     if (oldLatest) {
@@ -303,6 +318,7 @@ exports.editItem = async (req, res) => {
             } else if (!songList.find(s => s.latest)) {
                 newSong.latest = true;
             }
+            res.redirect('/');
             break;
     }
 
@@ -356,6 +372,10 @@ exports.playMp3 = async (req,res) => {
     try {
         const stream = streamer.getMp3(mp3Id);
         res.type('audio/mpeg');
+        res.set({
+            'Accept-Ranges': 'bytes',
+            'Content-Length': thisSong.length
+        });
         stream.pipe(res);
     } catch {
         res.set({status: 404});

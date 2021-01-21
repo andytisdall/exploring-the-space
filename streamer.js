@@ -55,6 +55,7 @@ exports.deleteMp3 = (mp3Id) => {
     
     try {
         bucket.delete(mp3Id);
+        console.log('DELETING MP3S I THOUGHT');
     } catch (err) {
         console.log(err.message);
     }

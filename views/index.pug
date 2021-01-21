@@ -20,8 +20,9 @@ body
                     form(method='POST' action='')
                         label(for='tierName') Tier Name:
                         input(type='text' name='tierName' required='true' value='')
+                        input(type='hidden' name='dataID' value='tier-0')
                         button(type='submit') OK
-                        div(class="add") Add a Tier
+                        div(class="add")
 
         hr 
         each tier in tiers
@@ -54,37 +55,55 @@ body
                                 div(class="marqee")
                                     div(class='row-name')
                                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
-                                        h3 #{title.title}
-                                        if title.versions.length > 0
-                                            - const thisVersion = title.versions.find(v => v.current)
-                                            if thisVersion.songs.length > 0
-                                                - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                div(class='playcontainer')
+                                        div(class='name-spot')
+                                            h3 #{title.title}
+                                        div(class='playcontainer')
+                                            if title.versions.length > 0
+                                                - const thisVersion = title.versions.find(v => v.current)
+                                                if thisVersion.songs.length > 0
+                                                    - const thisSong = thisVersion.songs.find(s => s.latest)                                                
                                                     audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
-                                                    div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
                                     div(class="edit" id=('edittitle-' + title.id)) Edit This Title
                                         div(class='addbox hidden')
                                             form(method='POST' action='/edit' class='add-form')
                                                 label(for='titleName') Title:
-                                                input(type='text' name='titleName' required='true' value=title.name)
+                                                input(type='text' name='titleName' required='true' value=title.title)
+                                                label(for='moveTier') Change Tier:
+                                                select(name='moveTier')
+                                                    option(selected value=tier.id) #{tier.name}
+                                                    if tiers.length > 1
+                                                        - let tierlist = tiers.filter(t => t.id !== tier.id)
+                                                        each otherTier in tierlist
+                                                            option(value=otherTier.id) #{otherTier.name}
+                                                br
+                                                br                                                            
                                                 input(type='hidden' name='dataID' value='title-' + title.id)
+                                                input(type='hidden' name='parentID' value=tier.id)
                                                 button(type='submit') OK
                                     a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete this title
     
                                 div(class='versioncontainer hidden' id=('version-' + title.id))
                                     if title.versions.length > 0 
                                         div(class='version-info')
-                                            - const thisVersion = title.versions.find(v => v.current) 
-                                            h4 Version: #{thisVersion.name}
-                                            form(class="row version-select" method='POST' action='/change-version')
-                                                input(type='hidden' name='currentVersion' value=thisVersion.id)
-                                                label(for='changeVersion' class='selector') choose current version:   
-                                                select(name="changeVersion" onchange='this.form.submit()')
-                                                    option(value='placeholder' selected disabled) ---
-                                                    - const versionDates = title.versions.map(v => [v.name, v.id])
-                                                    each version in versionDates
-                                                        option(value=version[1]) #{version[0]}
-                                            div(class='version-buttons')
+                                            div(class='info-header')
+                                                div(class='info-name')
+                                                    - const thisVersion = title.versions.find(v => v.current) 
+                                                    h5 Version:
+                                                    p #{thisVersion.name}
+                                                    form(class="row version-select" method='POST' action='/change-version')
+                                                        input(type='hidden' name='currentVersion' value=thisVersion.id)
+                                                        label(for='changeVersion' class='selector') choose version:   
+                                                        select(name="changeVersion" onchange='this.form.submit()')
+                                                            option(value='placeholder' selected disabled) ---
+                                                            - const versionDates = title.versions.map(v => [v.name, v.id])
+                                                            each version in versionDates
+                                                                - let short = version[0].length > 14 ? version[0].slice(0,15) + '...' : version[0]
+                                                                option(value=version[1]) #{short}
+                                                div(class='note-box')
+                                                    p Notes:
+                                                    p(class='notes') #{thisVersion.notes}   
+                                            
+                                            div(class='info-buttons')
                                                 div(class="edit" id=('editversion-' + thisVersion.id)) Edit This Version
                                                         div(class='addbox hidden')
                                                             form(method='POST' action='/edit')
@@ -110,23 +129,25 @@ body
                                                 a(class = 'delete' href=('/delete/version/' + thisVersion.id + '/' + title.id)) delete this version
                                         if thisVersion.songs.length > 0     
                                             div(class="row song-con"  id=('song-' + thisVersion.id))
-                                                div(class="song")
-                                                    - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                    - const displayDate = moment(thisSong.date).format('MM/DD/YY')
-                                                    h5 #{displayDate}
-                                                    div(class="comments")
-                                                        p Comments: #{thisSong.comments}
-                                                div(class='bounce-control')
-                                                
-                                                    form(class="row version-select" method='POST' action='/changelatest')
-                                                        input(type='hidden' name='currentLatest' value=thisSong.id)
-                                                        label(for='newLatest'  class='selector') choose latest bounce:   
-                                                        select(name="newLatest" onchange='this.form.submit()')
-                                                            option(value='placeholder' selected disabled) ---
-                                                            - const songDates = thisVersion.songs.map(s => moment(s.date).format('YY/MM/DD') + s.id).sort().reverse()
-                                                            - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
-                                                            each date in formattedSongDates
-                                                                option(value=date.slice(8)) #{date.slice(0,8)}
+                                                div(class='info-header')
+                                                    div(class='info-name')
+                                                    
+                                                        - const thisSong = thisVersion.songs.find(s => s.latest)
+                                                        - const displayDate = moment(thisSong.date).format('MM/DD/YY')
+                                                        h5 Bounce Date: #{displayDate}
+                                                        form(class="row version-select" method='POST' action='/changelatest')
+                                                            input(type='hidden' name='currentLatest' value=thisSong.id)
+                                                            label(for='newLatest'  class='selector') choose bounce:   
+                                                            select(name="newLatest" onchange='this.form.submit()')
+                                                                option(value='placeholder' selected disabled) ---
+                                                                - const songDates = thisVersion.songs.map(s => moment(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                                                - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+                                                                each date in formattedSongDates
+                                                                    option(value=date.slice(8)) #{date.slice(0,8)}
+                                                    div(class="note-box")
+                                                            p Comments:
+                                                            p(class='notes') #{thisSong.comments}    
+                                                div(class='info-buttons')
                                                     div(class="edit" id='editbounce-' + thisSong.id) Edit This Bounce
                                                             div(class='addbox bounce hidden')
                                                                 form(method='POST' action='/edit' encType="multipart/form-data")

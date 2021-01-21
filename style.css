@@ -5,9 +5,17 @@ body {
   margin: 2rem;
 }
 
+p {
+  margin: 5px;
+}
+
 a {
   color: white;
   text-decoration: none;
+}
+
+.row {
+  padding-left: 10px;
 }
 
 .marqee {
@@ -23,8 +31,16 @@ a {
 }
 
 .container {
-  max-width: 60rem;
+  max-width: 65rem;
 }
+
+hr {
+  border-color: rgb(151, 235, 68);
+  text-align: left;
+  margin-left: 0;
+}
+
+/* input elements */
 
 .edit {
   font-size: small;
@@ -32,7 +48,8 @@ a {
   display: flex;
   padding-top: 1.5rem;
   padding-bottom: 1rem;
-  padding-right: 3rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 .add {
@@ -41,7 +58,7 @@ a {
   display: flex;
   padding-top: 1.5rem;
   padding-bottom: 1rem;
-  padding-right: 3rem;
+  padding-right: 1rem;
 }
 
 .addbox {
@@ -68,40 +85,38 @@ input {
   margin-bottom: 0.5rem;
 }
 
+.inputfile {
+  width: 300px;
+}
+
 h1 {
   font-size: 2.5rem;
   line-height: 40%;
+  color: white;
 }
 
-h2 {
-  font-size: 2.2rem;
-  line-height: 10%;
-  padding-left: 1rem;
-}
-
-h3 {
-  font-size: 1.9rem;
-  line-height: 30%;
-  padding-left: 1rem;
-}
-
-h4 {
-  font-size: 1.6rem;
-  line-height: 120%;
-}
-
-h5 {
-  font-size: 1.3rem;
-  line-height: 100%;
-}
-
-.row {
-  padding-left: 10px;
-}
+/* tier */
 
 .tier {
   margin-left: 2rem;
 }
+
+h2 {
+  font-size: 2.2rem;
+  margin: 10px;
+  padding-left: 1rem;
+  color: rgb(235, 155, 118);
+}
+
+.arrow {
+  width: 30px;
+}
+
+.tier-display {
+  display: flex;
+}
+
+/* title */
 
 .title-margin {
   margin-left: 4rem;
@@ -109,49 +124,112 @@ h5 {
   border-left: rgb(151, 235, 68) solid 1px;
 }
 
-.versioncontainer {
-  margin-left: 3rem;
-  display: flex;
-  padding-bottom: 20px;
-  color: rgb(219, 197, 240);
+.name-spot {
+  width: 160px;
+  color: rgb(224, 222, 52);
 }
 
-.comments {
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 3rem;
-}
-
-.song-con {
-  display: flex;
-  justify-content: space-between;
-  color: rgb(236, 83, 108);
-}
-
-.song {
-  line-height: 100%;
-  border-left: 1px solid rgb(241, 131, 149);
-  width: 200px;
-  padding-left: 3rem;
-}
-
-hr {
-  border-color: rgb(151, 235, 68);
-  text-align: left;
-  margin-left: 0;
-  line-height: 0%;
-}
-
-.hidden {
-  display: none;
+h3 {
+  font-size: 1.9rem;
+  margin-top: 17px;
+  margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .row-name {
   display: flex;
 }
 
-.arrow {
-  width: 30px;
+.playcontainer {
+  margin-left: 1rem;
+  margin-top: 0.2rem;
+  width: 500px;
+}
+
+.player {
+  width: 500px;
+}
+
+/* version */
+
+.versioncontainer {
+  margin-top: 1rem;
+  margin-left: 3rem;
+  display: flex;
+  color: rgb(219, 197, 240);
+}
+
+.version-info {
+  width: 400px;
+}
+
+.noversion {
+  line-height: 20%;
+}
+
+.info-buttons {
+  display: flex;
+}
+
+.info-header {
+  display: flex;
+}
+
+.note-box {
+  margin-left: 25px;
+  border: solid white 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 120px;
+  width: 150px;
+  line-height: 120%;
+}
+
+.info-name {
+  background-color: rgba(30, 255, 0, 0.151);
+  padding: 0.4rem;
+  width: 160px;
+  height: 110px;
+}
+
+.notes {
+  font-size: 0.8rem;
+}
+
+.selector {
+  line-height: 140%;
+}
+
+h4 {
+  font-size: 1.6rem;
+  margin-top: 0px;
+  margin-bottom: 1.5rem;
+}
+
+/* song */
+
+.song-con {
+  justify-content: space-between;
+  color: rgb(224, 222, 52);
+  line-height: 100%;
+  border-left: 1px solid rgb(241, 131, 149);
+
+  padding-left: 2rem;
+}
+
+.calendar {
+  width: 130px;
+}
+
+h5 {
+  font-size: 1.3rem;
+  margin-top: 0.3px;
+  margin-bottom: 0.7rem;
+  line-height: 120%;
+}
+
+.nosong {
+  margin-left: 3rem;
 }
 
 .bounce {
@@ -159,56 +237,6 @@ hr {
   width: 550px;
 }
 
-.inputfile {
-  width: 300px;
-}
-
-.player {
-  width: 500px;
-}
-
-.calendar {
-  width: 130px;
-}
-
-.bounce-control {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.version-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  line-height: 80%;
-}
-
-.playcontainer {
-  padding-left: 2rem;
-  padding-top: 0.3rem;
-}
-
-.selector {
-  line-height: 200%;
-}
-
-.noversion {
-  display: flex;
-  justify-content: space-between;
-  width: 500px;
-}
-
-.tier-display {
-  display: flex;
-}
-
-.nosong {
-  margin-left: 3rem;
-}
-
-.version-buttons {
-  display: flex;
+.hidden {
+  display: none;
 }

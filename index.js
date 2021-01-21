@@ -55,7 +55,7 @@ const collapseButton = (button) => {
 };
 
 const showAddbox = (target) => {
-    let selected = document.getElementById(target.id).childNodes[1];
+    let selected = target.childNodes[1];
     let addbox = state.addboxIsVisible;
     if (addbox) {
         if (addbox !== selected) {
@@ -68,6 +68,7 @@ const showAddbox = (target) => {
         state.addboxIsVisible = selected;
     }
     selected.classList.toggle('hidden');
+    selected.childNodes[0].childNodes[1].focus();
 };
 
 const hideAddbox = (target) => {
@@ -79,7 +80,7 @@ const hideAddbox = (target) => {
 };
 
 
-const formElements = ['INPUT', 'LABEL', 'FORM'];
+const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
 
 document.addEventListener("DOMContentLoaded", () => { 
     readStorage();
@@ -130,14 +131,5 @@ document.querySelectorAll('.delete').forEach(button => {
         e.stopPropagation();
     });
 });
-
-document.querySelectorAll('.add-form').forEach(form => {
-    form.addEventListener('submit', e => {
-        let id = e.target.id.split('-')[1];
-        collapseButton(document.getElementById(id));
-    });
-});
-
-
 
 

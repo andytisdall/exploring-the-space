@@ -4,13 +4,14 @@ const songSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now(), unique: true },
     latest: { type: Boolean, default: false },
     comments: String,
-    mp3: String
+    mp3: String,
+    length: Number
 });
 
 const versionSchema = new mongoose.Schema({
     name: { type: String, unique: true },
     current: { type: Boolean, default: true },
-    versionNotes: String,
+    notes: String,
     songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song'}]
 });
 
