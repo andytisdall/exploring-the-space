@@ -15,99 +15,198 @@ body
         div(class="marqee")
             
             h1 Apprehenchmen
-            div(class="add" id='addtier') Add a Tier
+            div(class="add") Add a Tier
                 div(class='addbox hidden')
                     form(method='POST' action='')
                         label(for='tierName') Tier Name:
                         input(type='text' name='tierName' required='true' value='')
-                        input(type='hidden' name='dataID' value='tier-0')
                         button(type='submit') OK
+                        div(class="add") Add a Tier
+
         hr 
         each tier in tiers
             div(class="row tier" id=tier.id)
                 div(class="marqee")
                     div(class='row-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
-                        h2 #{tier.name}
-                    div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
-                        div(class='addbox hidden')
-                            form(method='POST' action='')
-                                label(for='titleName') Title:
-                                input(type='text' name='titleName' required='true' value='')
-                                input(type='hidden' name='dataID' value='title-' + tier.id)
-                                button(type='submit') OK
-                        div
-                            a(class = 'delete' href=('/delete/tier/' + tier.id)) delete
+                        h2 #{tier.name}                   
+                    div(class='tier-display')
+                        div(class="edit" id=('edittier-' + tier.id)) Edit This Tier
+                            div(class='addbox hidden')
+                                form(method='POST' action='/edit')
+                                    label(for='tierName') Tier Name:
+                                    input(type='text' name='tierName' required='true' value=tier.name)
+                                    input(type='hidden' name='dataID' value='tier-' + tier.id)
+                                    button(type='submit') OK
+                        div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
+                            div(class='addbox hidden')
+                                form(method='POST' action='' class='add-form')
+                                    label(for='titleName') Title:
+                                    input(type='text' name='titleName' required='true' value='')
+                                    input(type='hidden' name='dataID' value='title-' + tier.id)
+                                    button(type='submit') OK
+                        a(class = 'delete' href=('/delete/tier/' + tier.id)) delete this tier
                 hr
                 div(class='titlecontainer hidden' id=('title-' + tier.id))
                     each title in tier.trackList
                         div(class="row title" id=title.id)
-                            div(class="marqee")
-                                div(class='row-name')
-                                    img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
-                                    h3 #{title.title}
-                                div(class="add" id=('addversion-' + title.id)) Add a New Version
-                                    div(class='addbox hidden')
-                                        form(method='POST' action='' id='versionform')
-                                            label(for='versionName') Name:
-                                            input(type='text' name='versionName' required='true' value='')
-                                            label(for='versionName') Version Notes:
-                                            input(type='textarea' name='versionNotes' value='')
-                                            input(type='hidden' name='dataID' value='version-' + title.id)
-                                            button(type='submit') OK
-                                    div
-                                        a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete
-                            div(class='versioncontainer hidden' id=('version-' + title.id))
-                                each version in title.versions
-                                    div(class="row version" id=version.id)
-                                        div(class='marqee')
-                                            div(class='row-name')
-                                                img(class='arrow' src='right-arrow.svg' id=('arrow-' + version.id))
-                                                h3 Version: #{version.name}
-                                            div(class="add" id='addbounce-' + version.id) Add a New Bounce
-                                                div(class='addbox bounce hidden')
-                                                    form(method='POST' action='' id='songform' encType="multipart/form-data")
-                                                        label(for='songFile') File:
-                                                        br
-                                                        input(type='file' name='songFile' required='true' class='inputfile')
-                                                        br
-                                                        label(for='songDate') Date:
-                                                        br
-                                                        input(type='date' name='songDate' required='true')
-                                                        br
-                                                        label(for='songComments') Comments:
-                                                        br
-                                                        input(type='textarea' name='songComments' value='')
-                                                        br
-                                                        label(for="songLatest") Latest
-                                                        input(type="checkbox" name="songLatest" checked)
-                                                        p
-                                                        input(type='hidden' name='dataID' value='song-' + version.id)
-                                                        button(type='submit') OK
-                                                div
-                                                    a(class = 'delete' href=('/delete/version/' + version.id + '/' + title.id)) delete
-                                        if version.songs.length > 0     
-                                            div(class="row song-con hidden"  id=('song-' + version.id))
+                            div(class='title-margin')
+                                div(class="marqee")
+                                    div(class='row-name')
+                                        img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
+                                        h3 #{title.title}
+                                        if title.versions.length > 0
+                                            - const thisVersion = title.versions.find(v => v.current)
+                                            if thisVersion.songs.length > 0
+                                                - const thisSong = thisVersion.songs.find(s => s.latest)
+                                                div(class='playcontainer')
+                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
+                                                    div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
+                                    div(class="edit" id=('edittitle-' + title.id)) Edit This Title
+                                        div(class='addbox hidden')
+                                            form(method='POST' action='/edit' class='add-form')
+                                                label(for='titleName') Title:
+                                                input(type='text' name='titleName' required='true' value=title.name)
+                                                input(type='hidden' name='dataID' value='title-' + title.id)
+                                                button(type='submit') OK
+                                    a(class = 'delete' href=('/delete/title/' + title.id + '/' + tier.id)) delete this title
+    
+                                div(class='versioncontainer hidden' id=('version-' + title.id))
+                                    if title.versions.length > 0 
+                                        div(class='version-info')
+                                            - const thisVersion = title.versions.find(v => v.current) 
+                                            h4 Version: #{thisVersion.name}
+                                            form(class="row version-select" method='POST' action='/change-version')
+                                                input(type='hidden' name='currentVersion' value=thisVersion.id)
+                                                label(for='changeVersion' class='selector') choose current version:   
+                                                select(name="changeVersion" onchange='this.form.submit()')
+                                                    option(value='placeholder' selected disabled) ---
+                                                    - const versionDates = title.versions.map(v => [v.name, v.id])
+                                                    each version in versionDates
+                                                        option(value=version[1]) #{version[0]}
+                                            div(class='version-buttons')
+                                                div(class="edit" id=('editversion-' + thisVersion.id)) Edit This Version
+                                                        div(class='addbox hidden')
+                                                            form(method='POST' action='/edit')
+                                                                label(for='versionName') Name:
+                                                                input(type='text' name='versionName' required='true' value=thisVersion.name)
+                                                                label(for='versionName') Version Notes:
+                                                                input(type='textarea' name='versionNotes' value=thisVersion.notes)
+                                                                label(for="versionCurrent") Current version
+                                                                input(type="checkbox" name="versionCurrent" checked=thisVersion.current ? 'checked' : '')
+                                                                input(type='hidden' name='dataID' value='version-' + thisVersion.id)
+                                                                button(type='submit') OK
+                                                div(class="add" id=('addversion-' + title.id)) Add a New Version
+                                                    div(class='addbox hidden')
+                                                        form(method='POST' action='')
+                                                            label(for='versionName') Name:
+                                                            input(type='text' name='versionName' required='true' value='')
+                                                            label(for='versionName') Version Notes:
+                                                            input(type='textarea' name='versionNotes' value='')
+                                                            label(for="versionCurrent") Current version
+                                                            input(type="checkbox" name="versionCurrent" checked)
+                                                            input(type='hidden' name='dataID' value='version-' + title.id)
+                                                            button(type='submit') OK
+                                                a(class = 'delete' href=('/delete/version/' + thisVersion.id + '/' + title.id)) delete this version
+                                        if thisVersion.songs.length > 0     
+                                            div(class="row song-con"  id=('song-' + thisVersion.id))
                                                 div(class="song")
-                                                    - const thisSong = version.songs.find(s => s.latest)
+                                                    - const thisSong = thisVersion.songs.find(s => s.latest)
                                                     - const displayDate = moment(thisSong.date).format('MM/DD/YY')
                                                     h5 #{displayDate}
-                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
                                                     div(class="comments")
                                                         p Comments: #{thisSong.comments}
-                                                    a(class='delete' href=('/delete/song/' + thisSong.id + '/' + version.id)) delete
-                                                form(class="row older" method='POST' action='/changelatest')
-                                                    input(type='hidden' name='currentLatest' value=thisSong.id)
-                                                    label(for='oldselect') change current bounce:   
-                                                    select(name="newLatest" onchange='this.form.submit()')
-                                                        option(value='placeholder' selected) ---
-                                                        - const songDates = version.songs.map(s => moment(s.date).format('YY/MM/DD') + s._id).sort().reverse()
-                                                        - const formattedDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
-                                                        each date in formattedDates
-                                                            option(value=date.slice(8)) #{date.slice(0,8)}
-
-                                else
-                                    p No versions of this song.
+                                                div(class='bounce-control')
+                                                
+                                                    form(class="row version-select" method='POST' action='/changelatest')
+                                                        input(type='hidden' name='currentLatest' value=thisSong.id)
+                                                        label(for='newLatest'  class='selector') choose latest bounce:   
+                                                        select(name="newLatest" onchange='this.form.submit()')
+                                                            option(value='placeholder' selected disabled) ---
+                                                            - const songDates = thisVersion.songs.map(s => moment(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                                            - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+                                                            each date in formattedSongDates
+                                                                option(value=date.slice(8)) #{date.slice(0,8)}
+                                                    div(class="edit" id='editbounce-' + thisSong.id) Edit This Bounce
+                                                            div(class='addbox bounce hidden')
+                                                                form(method='POST' action='/edit' encType="multipart/form-data")
+                                                                    label(for='songFile') File:
+                                                                    br
+                                                                    input(type='file' name='songFile' class='inputfile')
+                                                                    br
+                                                                    label(for='songDate') Date:
+                                                                    br
+                                                                    input(type='date' name='songDate' required='true' value=moment(thisSong.date).format('YYYY-MM-DD') class='calendar')
+                                                                    br
+                                                                    label(for='songComments') Comments:
+                                                                    br
+                                                                    input(type='textarea' name='songComments' value=thisSong.comments)
+                                                                    br
+                                                                    label(for="songLatest") Latest
+                                                                    input(type="checkbox" name="songLatest" checked=thisSong.latest ? 'checked' : '')
+                                                                    p
+                                                                    input(type='hidden' name='dataID' value='song-' + thisSong.id)
+                                                                    button(type='submit') OK
+                                                    div(class="add" id='addbounce-' + thisVersion.id) Add a New Bounce
+                                                        div(class='addbox bounce hidden')
+                                                            form(method='POST' action='' encType="multipart/form-data")
+                                                                label(for='songFile') File:
+                                                                br
+                                                                input(type='file' name='songFile' required='true' class='inputfile')
+                                                                br
+                                                                label(for='songDate') Date:
+                                                                br
+                                                                input(type='date' name='songDate' required='true' class='calendar')
+                                                                br
+                                                                label(for='songComments') Comments:
+                                                                br
+                                                                input(type='textarea' name='songComments' value='')
+                                                                br
+                                                                label(for="songLatest") Latest
+                                                                input(type="checkbox" name="songLatest" checked)
+                                                                p
+                                                                input(type='hidden' name='dataID' value='song-' + thisVersion.id)
+                                                                button(type='submit') OK
+                                                    a(class='delete' href=('/delete/song/' + thisSong.id + '/' + thisVersion.id)) delete this bounce
+                                        else
+                                            div(class='song-con')
+                                                div(class='nosong')
+                                                    div(class='song')
+                                                        p There are no bounces for this version.
+                                                        div(class="add" id='addbounce-' + thisVersion.id) Add a New Bounce
+                                                            div(class='addbox bounce hidden')
+                                                                form(method='POST' action='' id='songform' encType="multipart/form-data")
+                                                                    label(for='songFile') File:
+                                                                    br
+                                                                    input(type='file' name='songFile' required='true' class='inputfile')
+                                                                    br
+                                                                    label(for='songDate') Date:
+                                                                    br
+                                                                    input(type='date' name='songDate' required='true' class='calendar')
+                                                                    br
+                                                                    label(for='songComments') Comments:
+                                                                    br
+                                                                    input(type='textarea' name='songComments' value='')
+                                                                    br
+                                                                    label(for="songLatest") Latest
+                                                                    input(type="checkbox" name="songLatest" checked)
+                                                                    p
+                                                                    input(type='hidden' name='dataID' value='song-' + thisVersion.id)
+                                                                    button(type='submit') OK
+                                    else
+                                        div(class='noversion')
+                                            p No versions of this title.
+                                            div(class="add" id=('addversion-' + title.id)) Add a New Version
+                                                div(class='addbox hidden')
+                                                    form(method='POST' action='' id='versionform')
+                                                        label(for='versionName') Name:
+                                                        input(type='text' name='versionName' required='true' value='')
+                                                        label(for='versionName') Version Notes:
+                                                        input(type='textarea' name='versionNotes' value='')
+                                                        label(for="versionCurrent") Current version
+                                                        input(type="checkbox" name="versionCurrent" checked)
+                                                        input(type='hidden' name='dataID' value='version-' + title.id)
+                                                        button(type='submit') OK
                     else
                         p(class='row title') No songs in this tier.
         else

@@ -10,7 +10,7 @@ mongoose.connection.on('connected', () => {
 });
 
 
-exports.addMp3 = async (file) => {
+exports.addMp3 = (file) => {
 
     // const readableMp3Stream = new Readable();
     // readableMp3Stream.push(file.buffer);
@@ -42,17 +42,17 @@ exports.addMp3 = async (file) => {
 
 exports.getMp3 = (mp3Id) => {
 
-
-    const stream = bucket.openDownloadStream(mp3Id);
-
-    return stream;
-
+    try {
+        const stream = bucket.openDownloadStream(mp3Id);
+        return stream;
+    } catch (err) {
+        return (err);
+    }
 
 };
 
 exports.deleteMp3 = (mp3Id) => {
     
-
     try {
         bucket.delete(mp3Id);
     } catch (err) {

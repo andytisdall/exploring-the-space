@@ -43,7 +43,9 @@ app.get('/', controller.index);
 app.get('/delete/:rowtype/:id/:parentid?', controller.deleteItem);
 app.get('/audio/:id', controller.playMp3);
 app.post('/', controller.addItem);
-app.post('/changelatest', controller.changeLatest)
+app.post('/edit', controller.editItem);
+app.post('/changelatest', controller.changeLatest);
+app.post('/change-version', controller.changeVersion);
 
 
 app.listen(3000);

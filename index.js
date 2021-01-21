@@ -72,7 +72,7 @@ const showAddbox = (target) => {
 
 const hideAddbox = (target) => {
     const addbox = state.addboxIsVisible;
-    if (addbox && target.className !== 'add') {
+    if (addbox && target.className !== 'add' && target.className !== 'edit') {
         addbox.classList.toggle('hidden');
         state.addboxIsVisible = false;
     }
@@ -108,6 +108,8 @@ document.addEventListener('click', e => {
     const button = e.target.closest('.row');
     if (e.target.className === 'add') {
         showAddbox(e.target);
+    } else if (e.target.className === 'edit') {
+        showAddbox(e.target);
     } else if (button && !state.addboxIsVisible) {   
         collapseButton(button);
     }
@@ -129,7 +131,12 @@ document.querySelectorAll('.delete').forEach(button => {
     });
 });
 
-
+document.querySelectorAll('.add-form').forEach(form => {
+    form.addEventListener('submit', e => {
+        let id = e.target.id.split('-')[1];
+        collapseButton(document.getElementById(id));
+    });
+});
 
 
 

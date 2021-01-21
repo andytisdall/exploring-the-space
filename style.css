@@ -1,171 +1,214 @@
 body {
-    background-color: rgb(56, 56, 56);
-    color: rgb(151, 235, 68);
-    font-family: 'Fira Sans', sans-serif;
-    margin: 2rem;
+  background-color: rgb(56, 56, 56);
+  color: rgb(151, 235, 68);
+  font-family: 'Fira Sans', sans-serif;
+  margin: 2rem;
 }
 
 a {
-    color:white;
-    text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
 
 .marqee {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .error {
-    color: rgb(20, 1, 100);
-    background-color: rgb(230, 142, 142);
-    padding: 1rem;
-    border: 2px solid white;
+  color: rgb(20, 1, 100);
+  background-color: rgb(230, 142, 142);
+  padding: 1rem;
+  border: 2px solid white;
 }
 
 .container {
-    max-width: 60rem;
+  max-width: 60rem;
+}
+
+.edit {
+  font-size: small;
+  color: rgb(235, 190, 132);
+  display: flex;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  padding-right: 3rem;
 }
 
 .add {
-    font-size: small;
-    padding-top: 2.5rem;
-    color:rgb(94, 235, 245);
-    display: flex;
+  font-size: small;
+  color: rgb(94, 235, 245);
+  display: flex;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+  padding-right: 3rem;
 }
 
 .addbox {
-    height: 200px;
-    width: 150px;
-    position: fixed;
-    border: 1px solid rgb(94, 235, 245);
-    background-color: black;
-    margin-top: 1.3rem;
-    margin-left: -2.8rem;
-    padding: 1rem;
-    box-sizing: border-box;
-
+  height: 200px;
+  width: 150px;
+  position: fixed;
+  border: 1px solid rgb(94, 235, 245);
+  background-color: black;
+  margin-top: 1.3rem;
+  margin-left: -2.8rem;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .delete {
-    color: red;
-    font-size: .8rem;
-    margin-left: 5rem;
+  padding-top: 1.5rem;
+  color: red;
+  font-size: 0.8rem;
 }
 
 input {
-    width: 7rem;
-    margin-top: .5rem;
-    margin-bottom: .5rem;
+  width: 7rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 h1 {
-    font-size: 2.5rem;
-    line-height: 40%;
+  font-size: 2.5rem;
+  line-height: 40%;
 }
 
 h2 {
-    font-size: 2.2rem;
-    line-height: 10%;
-    padding-left: 1rem;
+  font-size: 2.2rem;
+  line-height: 10%;
+  padding-left: 1rem;
 }
 
 h3 {
-    font-size: 1.9rem;
-    line-height: 30%;
-    padding-left: 1rem;
+  font-size: 1.9rem;
+  line-height: 30%;
+  padding-left: 1rem;
 }
 
 h4 {
-    font-size: 1.6rem;
-    line-height: 30%;
+  font-size: 1.6rem;
+  line-height: 120%;
 }
 
 h5 {
-    font-size: 1.3rem;
-    line-height: 100%;
+  font-size: 1.3rem;
+  line-height: 100%;
 }
 
 .row {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 
 .tier {
-    margin-left: 2rem;;
+  margin-left: 2rem;
 }
 
-.title {
-    margin-left: 4rem;
-    border-bottom: rgb(151, 235, 68); solid 1px;
-    border-left: rgb(151, 235, 68); solid 1px;
-
+.title-margin {
+  margin-left: 4rem;
+  border-bottom: rgb(151, 235, 68) solid 1px;
+  border-left: rgb(151, 235, 68) solid 1px;
 }
 
-.version {
-    margin-left: 3rem;
-    border-top: solid 1px rgb(151, 235, 68);;
+.versioncontainer {
+  margin-left: 3rem;
+  display: flex;
+  padding-bottom: 20px;
+  color: rgb(219, 197, 240);
 }
 
 .comments {
-    height: 10rem;
-    width: 15rem;
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 3rem;
-    box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 3rem;
 }
 
 .song-con {
-    display: flex;
-
-    
-    margin-left: 5rem;
-    justify-content: space-between;
-    color: rgb(236, 83, 108);
-
+  display: flex;
+  justify-content: space-between;
+  color: rgb(236, 83, 108);
 }
 
 .song {
-    line-height: 100%;
-    width: 100%;
-    border: 1px solid rgb(241, 131, 149);
-    padding: 30px;
-    box-sizing: border-box;
-}
-
-.older {
-    padding-right: 2rem;
-    height: 2rem;
-    margin-top: 3rem;
+  line-height: 100%;
+  border-left: 1px solid rgb(241, 131, 149);
+  width: 200px;
+  padding-left: 3rem;
 }
 
 hr {
-    border-color: rgb(151, 235, 68);
-    text-align: left;
-    margin-left: 0;
-    line-height: 0%;
+  border-color: rgb(151, 235, 68);
+  text-align: left;
+  margin-left: 0;
+  line-height: 0%;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .row-name {
-    display: flex;
+  display: flex;
 }
 
 .arrow {
-    width: 30px;
+  width: 30px;
 }
 
 .bounce {
-    height: 250px;
-    width: 550px;
+  height: 250px;
+  width: 550px;
 }
 
 .inputfile {
-    width: 300px;
+  width: 300px;
 }
 
 .player {
-    width: 400px;
+  width: 500px;
+}
+
+.calendar {
+  width: 130px;
+}
+
+.bounce-control {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.version-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  line-height: 80%;
+}
+
+.playcontainer {
+  padding-left: 2rem;
+  padding-top: 0.3rem;
+}
+
+.selector {
+  line-height: 200%;
+}
+
+.noversion {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+
+.tier-display {
+  display: flex;
+}
+
+.nosong {
+  margin-left: 3rem;
+}
+
+.version-buttons {
+  display: flex;
 }
