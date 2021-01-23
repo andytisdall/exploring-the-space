@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const songSchema = new mongoose.Schema({
-    date: { type: Date, default: Date.now(), unique: true },
+    date: { type: Date, default: Date.now() },
     latest: { type: Boolean, default: false },
     comments: String,
     mp3: String,
@@ -9,7 +9,7 @@ const songSchema = new mongoose.Schema({
 });
 
 const versionSchema = new mongoose.Schema({
-    name: { type: String, unique: true },
+    name: { type: String },
     current: { type: Boolean, default: true },
     notes: String,
     songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song'}]
@@ -22,7 +22,8 @@ const titleSchema = new mongoose.Schema({
 
 const tierSchema = new mongoose.Schema({
     name: String,
-    trackList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Title'}]
+    trackList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Title'}],
+    position: Number
 });
 
 

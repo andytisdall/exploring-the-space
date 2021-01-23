@@ -9,11 +9,11 @@ head
         include ../style.css
     title Greenhouse
 body
-    if errorMessage
-        div(class='error') #{errorMessage}
+
     div(class='container')
-        div(class="marqee")
-            
+        if errorMessage
+            div(class='error') #{errorMessage}
+        div(class="marqee")            
             h1 Apprehenchmen
             div(class="add") Add a Tier
                 div(class='addbox hidden')
@@ -30,17 +30,23 @@ body
                 div(class="marqee")
                     div(class='row-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
-                        h2 #{tier.name}                   
+                        h2 #{tier.name}     
+                        div(class='song-count') #{tier.trackList.length} songs
                     div(class='tier-display')
                         div(class="edit" id=('edittier-' + tier.id)) Edit This Tier
                             div(class='addbox hidden')
                                 form(method='POST' action='/edit')
                                     label(for='tierName') Tier Name:
                                     input(type='text' name='tierName' required='true' value=tier.name)
+                                    label(for='tierPosition') Tier Position:
+                                    select(name='tierPosition')
+                                        option(selected disabled value=tier.position) #{tier.position}
+                                        each item in tiers
+                                            option(value=item.position) #{item.position}
                                     input(type='hidden' name='dataID' value='tier-' + tier.id)
                                     button(type='submit') OK
                         div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
-                            div(class='addbox hidden')
+                            div(class='addbox hidden title-add')
                                 form(method='POST' action='' class='add-form')
                                     label(for='titleName') Title:
                                     input(type='text' name='titleName' required='true' value='')
@@ -116,7 +122,7 @@ body
                                                                 input(type='hidden' name='dataID' value='version-' + thisVersion.id)
                                                                 button(type='submit') OK
                                                 div(class="add" id=('addversion-' + title.id)) Add a New Version
-                                                    div(class='addbox hidden')
+                                                    div(class='addbox hidden version-add')
                                                         form(method='POST' action='')
                                                             label(for='versionName') Name:
                                                             input(type='text' name='versionName' required='true' value='')
@@ -167,6 +173,7 @@ body
                                                                     input(type="checkbox" name="songLatest" checked=thisSong.latest ? 'checked' : '')
                                                                     p
                                                                     input(type='hidden' name='dataID' value='song-' + thisSong.id)
+                                                                    input(type='hidden' name='versionID' value=thisVersion.id)
                                                                     button(type='submit') OK
                                                     div(class="add" id='addbounce-' + thisVersion.id) Add a New Bounce
                                                         div(class='addbox bounce hidden')
@@ -218,7 +225,7 @@ body
                                         div(class='noversion')
                                             p No versions of this title.
                                             div(class="add" id=('addversion-' + title.id)) Add a New Version
-                                                div(class='addbox hidden')
+                                                div(class='addbox hidden version-add')
                                                     form(method='POST' action='' id='versionform')
                                                         label(for='versionName') Name:
                                                         input(type='text' name='versionName' required='true' value='')
@@ -229,7 +236,7 @@ body
                                                         input(type='hidden' name='dataID' value='version-' + title.id)
                                                         button(type='submit') OK
                     else
-                        p(class='row title') No songs in this tier.
+                        p(class='row notitle') No songs in this tier.
         else
             p(class='row tier') There are no tiers.                       
     script

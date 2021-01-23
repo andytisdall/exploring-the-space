@@ -28,37 +28,39 @@ exports.addMp3 = (file) => {
     readableStream.push(null);
     readableStream.pipe(uploadStream);
 
-    uploadStream.on('error', (err) => {
-            console.log(err);
-    })
-    
-    uploadStream.on('finish', () => {
-            console.log('uploaded');
-    });
+    return uploadStream;
 
-    return id;
+
 
 };
 
 exports.getMp3 = (mp3Id) => {
-
+    let stream;
     try {
-        const stream = bucket.openDownloadStream(mp3Id);
-        return stream;
+        // console.log('looking for mp3');
+        stream = bucket.openDownloadStream(mp3Id);
+        stream.on('error', (err) => {
+            console.log('cannot find mp3');
+            return;
+        });
     } catch (err) {
         return (err);
     }
+    return stream;
 
 };
 
 exports.deleteMp3 = (mp3Id) => {
     
-    try {
-        bucket.delete(mp3Id);
-        console.log('DELETING MP3S I THOUGHT');
-    } catch (err) {
-        console.log(err.message);
-    }
+    bucket.delete(mp3Id, (err) => {
+        if (err) {
+            return err;
+        } else {
+            console.log('mp3 deleted');
+            return;
+        }
+    });
+
 
 };
 

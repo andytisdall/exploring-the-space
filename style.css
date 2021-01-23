@@ -14,15 +14,6 @@ a {
   text-decoration: none;
 }
 
-.row {
-  padding-left: 10px;
-}
-
-.marqee {
-  display: flex;
-  justify-content: space-between;
-}
-
 .error {
   color: rgb(20, 1, 100);
   background-color: rgb(230, 142, 142);
@@ -45,18 +36,13 @@ hr {
 .edit {
   font-size: small;
   color: rgb(235, 190, 132);
-  display: flex;
-  padding-top: 1.5rem;
-  padding-bottom: 1rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  padding: 1rem;
 }
 
 .add {
   font-size: small;
   color: rgb(94, 235, 245);
-  display: flex;
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   padding-bottom: 1rem;
   padding-right: 1rem;
 }
@@ -64,17 +50,25 @@ hr {
 .addbox {
   height: 200px;
   width: 150px;
-  position: fixed;
+  position: absolute;
   border: 1px solid rgb(94, 235, 245);
   background-color: black;
   margin-top: 1.3rem;
-  margin-left: -2.8rem;
+  margin-left: 6rem;
   padding: 1rem;
   box-sizing: border-box;
 }
 
+.title-add {
+  margin-left: 3rem;
+}
+
+.version-add {
+  margin-left: 0rem;
+}
+
 .delete {
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   color: red;
   font-size: 0.8rem;
 }
@@ -91,19 +85,28 @@ input {
 
 h1 {
   font-size: 2.5rem;
-  line-height: 40%;
+  margin: 10px;
   color: white;
 }
 
 /* tier */
+
+.row {
+  padding-right: 10px;
+}
+
+.marqee {
+  display: flex;
+  justify-content: space-between;
+}
 
 .tier {
   margin-left: 2rem;
 }
 
 h2 {
-  font-size: 2.2rem;
-  margin: 10px;
+  font-size: 2rem;
+  margin: 3px;
   padding-left: 1rem;
   color: rgb(235, 155, 118);
 }
@@ -116,10 +119,16 @@ h2 {
   display: flex;
 }
 
+.song-count {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
 /* title */
 
 .title-margin {
   margin-left: 4rem;
+  padding-left: 1rem;
   border-bottom: rgb(151, 235, 68) solid 1px;
   border-left: rgb(151, 235, 68) solid 1px;
 }
@@ -130,7 +139,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1.9rem;
+  font-size: 1.6rem;
   margin-top: 17px;
   margin-bottom: 5px;
   margin-left: 5px;
@@ -140,14 +149,11 @@ h3 {
   display: flex;
 }
 
-.playcontainer {
-  margin-left: 1rem;
-  margin-top: 0.2rem;
-  width: 500px;
-}
-
-.player {
-  width: 500px;
+.notitle {
+  margin-left: 4rem;
+  color: rgb(218, 122, 241);
+  border-left: solid 1px chartreuse;
+  padding-left: 1rem;
 }
 
 /* version */
@@ -156,7 +162,7 @@ h3 {
   margin-top: 1rem;
   margin-left: 3rem;
   display: flex;
-  color: rgb(219, 197, 240);
+  color: rgb(248, 147, 240);
 }
 
 .version-info {
@@ -234,8 +240,24 @@ h5 {
 
 .bounce {
   height: 250px;
-  width: 550px;
+  width: 300px;
+  margin-top: -270px;
 }
+
+/* Mp3 player */
+
+.playcontainer {
+  margin-left: 1rem;
+  margin-top: 0.3rem;
+  width: 500px;
+}
+
+.player {
+  margin: 0px;
+  width: 500px;
+}
+
+/*  hidden */
 
 .hidden {
   display: none;
