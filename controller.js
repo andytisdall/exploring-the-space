@@ -19,8 +19,6 @@ exports.index = async (req, res) => {
                 }
             }
         });
-        // console.log(tiers);
-        // console.log('index');
         res.render('index', {tiers, errorMessage});
     } catch (err) {
         res.send(err);
@@ -106,7 +104,8 @@ exports.addItem = async (req, res) => {
             // Get parameters from post request and exit if there's an existing bounce with that date.
 
             const { songDate, songComments } = req.body;
-            const duplicateDate = await Song.findOne({ date: songDate });
+            const vers = await Version.findOne({ _id: id });
+            let duplicateDate = vers.songs.find(s => s.date === songDate);
             if (duplicateDate) {
                 req.session.errorMessage = 'There is already a bounce with that date.'
                 res.redirect('/');
@@ -179,7 +178,6 @@ exports.deleteItem = async (req, res) => {
                 let thisTier = await Tier.findOne({_id: id}).populate('trackList');
                 thisTier.trackList.forEach(async (title) => {                
                     cascade('title', title.id);
-                    await Title.deleteOne({ _id: title.id });
                 });
                 const changePosition = await Tier.find({ position: { $gt: thisTier.position }});
                 changePosition.forEach(async (tier) => {
@@ -190,7 +188,6 @@ exports.deleteItem = async (req, res) => {
                 let thisTitle = await Title.findOne({_id: id}).populate('versions');
                 thisTitle.versions.forEach(async (version) => {                
                     cascade('version', version.id);
-                    await Version.deleteOne({ _id: version.id });
                 });
                 if (parentId) {
                     await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
@@ -348,6 +345,8 @@ exports.editItem = async (req, res) => {
                     req.session.errorMessage = err.message;
                     res.redirect('/');
                 }
+            } else {
+                res.redirect('/');
             }
             break;
         case 'version':
@@ -368,7 +367,7 @@ exports.editItem = async (req, res) => {
         case 'song':
             //Get paramaters
             const { songDate, songComments, versionID } = req.body;
-
+            console.log(songDate);
             // Update mp3 if there's a new one
             if (req.files) {
                 req.socket.setTimeout(10 * 60 * 1000);

@@ -1,3 +1,5 @@
+
+
 // Define the container and get an array of each class
 // Elements in a tier will share an ID
 
@@ -82,6 +84,9 @@ const hideAddbox = (target) => {
 
 const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
 
+
+// Get session storage on page load and save the scroll position before reload
+
 document.addEventListener("DOMContentLoaded", () => { 
     readStorage();
 });
@@ -129,7 +134,44 @@ document.querySelectorAll('button').forEach(button => {
 document.querySelectorAll('.delete').forEach(button => {
     button.addEventListener('click', e => {
         e.stopPropagation();
+        if (!confirm('Confirm Deletion')) {
+            e.preventDefault();
+        }
     });
 });
 
+document.querySelectorAll('.player').forEach(player => {
 
+
+    player.addEventListener('canplaythrough', (mp3) => {
+
+        // Get audio duration after mp3 has loaded
+        // Add it to the total duration of that tier
+
+        if (!player.className.includes('calculated')) {
+
+            let tierId = player.id.split('-')[0];
+            let tierTime = 'tiertime' + tierId;
+
+            let duration = mp3.target.duration;
+            let totalTime
+            let currentTime = document.getElementById(tierTime).textContent;
+            if (currentTime) {
+                let [currentMin, currentSec] = currentTime.split(':');
+                let totalCurrentSecs = (parseInt(currentMin) * 60) + parseInt(currentSec);
+                totalTime = duration + totalCurrentSecs;
+            } else {
+                totalTime = duration;
+            }
+
+            let seconds = Math.floor(totalTime % 60);
+            if (seconds < 10) {
+                seconds = '0' + seconds.toString();
+            }
+            let minutes = Math.floor(totalTime/60);
+            document.getElementById(tierTime).textContent = `${minutes}:${seconds}`;
+            player.classList.add('calculated');
+        }
+    });
+    
+});

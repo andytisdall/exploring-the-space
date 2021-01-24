@@ -16,10 +16,10 @@ body
         div(class="marqee")            
             h1 Apprehenchmen
             div(class="add") Add a Tier
-                div(class='addbox hidden')
+                div(class='addbox hidden tier-add')
                     form(method='POST' action='')
                         label(for='tierName') Tier Name:
-                        input(type='text' name='tierName' required='true' value='')
+                        input(type='text' spellcheck='false' name='tierName' required='true' value='')
                         input(type='hidden' name='dataID' value='tier-0')
                         button(type='submit') OK
                         div(class="add")
@@ -32,12 +32,13 @@ body
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
                         h2 #{tier.name}     
                         div(class='song-count') #{tier.trackList.length} songs
+                        div(class='song-count' id='tiertime'+tier.id)
                     div(class='tier-display')
                         div(class="edit" id=('edittier-' + tier.id)) Edit This Tier
                             div(class='addbox hidden')
                                 form(method='POST' action='/edit')
                                     label(for='tierName') Tier Name:
-                                    input(type='text' name='tierName' required='true' value=tier.name)
+                                    input(type='text' spellcheck='false' name='tierName' required='true' value=tier.name)
                                     label(for='tierPosition') Tier Position:
                                     select(name='tierPosition')
                                         option(selected disabled value=tier.position) #{tier.position}
@@ -46,10 +47,10 @@ body
                                     input(type='hidden' name='dataID' value='tier-' + tier.id)
                                     button(type='submit') OK
                         div(class="add" id=('addtitle-' + tier.id)) Add a Song to this Tier
-                            div(class='addbox hidden title-add')
+                            div(class='addbox hidden')
                                 form(method='POST' action='' class='add-form')
                                     label(for='titleName') Title:
-                                    input(type='text' name='titleName' required='true' value='')
+                                    input(type='text' spellcheck='false' name='titleName' required='true' value='')
                                     input(type='hidden' name='dataID' value='title-' + tier.id)
                                     button(type='submit') OK
                         a(class = 'delete' href=('/delete/tier/' + tier.id)) delete this tier
@@ -68,12 +69,12 @@ body
                                                 - const thisVersion = title.versions.find(v => v.current)
                                                 if thisVersion.songs.length > 0
                                                     - const thisSong = thisVersion.songs.find(s => s.latest)                                                
-                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player')
+                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player' id=tier.id + '-' + thisSong.id)
                                     div(class="edit" id=('edittitle-' + title.id)) Edit This Title
                                         div(class='addbox hidden')
                                             form(method='POST' action='/edit' class='add-form')
                                                 label(for='titleName') Title:
-                                                input(type='text' name='titleName' required='true' value=title.title)
+                                                input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
                                                 label(for='moveTier') Change Tier:
                                                 select(name='moveTier')
                                                     option(selected value=tier.id) #{tier.name}
@@ -94,8 +95,8 @@ body
                                             div(class='info-header')
                                                 div(class='info-name')
                                                     - const thisVersion = title.versions.find(v => v.current) 
-                                                    h5 Version:
-                                                    p #{thisVersion.name}
+                                                    p Version:
+                                                    h5 #{thisVersion.name}
                                                     form(class="row version-select" method='POST' action='/change-version')
                                                         input(type='hidden' name='currentVersion' value=thisVersion.id)
                                                         label(for='changeVersion' class='selector') choose version:   
@@ -114,20 +115,20 @@ body
                                                         div(class='addbox hidden')
                                                             form(method='POST' action='/edit')
                                                                 label(for='versionName') Name:
-                                                                input(type='text' name='versionName' required='true' value=thisVersion.name)
+                                                                input(type='text' spellcheck='false' name='versionName' required='true' value=thisVersion.name)
                                                                 label(for='versionName') Version Notes:
-                                                                input(type='textarea' name='versionNotes' value=thisVersion.notes)
+                                                                input(type='textarea' spellcheck='false' name='versionNotes' value=thisVersion.notes)
                                                                 label(for="versionCurrent") Current version
                                                                 input(type="checkbox" name="versionCurrent" checked=thisVersion.current ? 'checked' : '')
                                                                 input(type='hidden' name='dataID' value='version-' + thisVersion.id)
                                                                 button(type='submit') OK
                                                 div(class="add" id=('addversion-' + title.id)) Add a New Version
-                                                    div(class='addbox hidden version-add')
+                                                    div(class='addbox hidden')
                                                         form(method='POST' action='')
                                                             label(for='versionName') Name:
-                                                            input(type='text' name='versionName' required='true' value='')
+                                                            input(type='text' spellcheck='false' name='versionName' required='true' value='')
                                                             label(for='versionName') Version Notes:
-                                                            input(type='textarea' name='versionNotes' value='')
+                                                            input(type='textarea' spellcheck='false' name='versionNotes' value='')
                                                             label(for="versionCurrent") Current version
                                                             input(type="checkbox" name="versionCurrent" checked)
                                                             input(type='hidden' name='dataID' value='version-' + title.id)
@@ -139,14 +140,14 @@ body
                                                     div(class='info-name')
                                                     
                                                         - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                        - const displayDate = moment(thisSong.date).format('MM/DD/YY')
+                                                        - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
                                                         h5 Bounce Date: #{displayDate}
                                                         form(class="row version-select" method='POST' action='/changelatest')
                                                             input(type='hidden' name='currentLatest' value=thisSong.id)
                                                             label(for='newLatest'  class='selector') choose bounce:   
                                                             select(name="newLatest" onchange='this.form.submit()')
                                                                 option(value='placeholder' selected disabled) ---
-                                                                - const songDates = thisVersion.songs.map(s => moment(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                                                - const songDates = thisVersion.songs.map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
                                                                 - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
                                                                 each date in formattedSongDates
                                                                     option(value=date.slice(8)) #{date.slice(0,8)}
@@ -163,11 +164,11 @@ body
                                                                     br
                                                                     label(for='songDate') Date:
                                                                     br
-                                                                    input(type='date' name='songDate' required='true' value=moment(thisSong.date).format('YYYY-MM-DD') class='calendar')
+                                                                    input(type='date' name='songDate' required='true' value=moment.utc(thisSong.date).format('YYYY-MM-DD') class='calendar')
                                                                     br
                                                                     label(for='songComments') Comments:
                                                                     br
-                                                                    input(type='textarea' name='songComments' value=thisSong.comments)
+                                                                    input(type='textarea' spellcheck='false' name='songComments' value=thisSong.comments)
                                                                     br
                                                                     label(for="songLatest") Latest
                                                                     input(type="checkbox" name="songLatest" checked=thisSong.latest ? 'checked' : '')
@@ -188,7 +189,7 @@ body
                                                                 br
                                                                 label(for='songComments') Comments:
                                                                 br
-                                                                input(type='textarea' name='songComments' value='')
+                                                                input(type='textarea' spellcheck='false' name='songComments' value='')
                                                                 br
                                                                 label(for="songLatest") Latest
                                                                 input(type="checkbox" name="songLatest" checked)
@@ -214,7 +215,7 @@ body
                                                                     br
                                                                     label(for='songComments') Comments:
                                                                     br
-                                                                    input(type='textarea' name='songComments' value='')
+                                                                    input(type='textarea' spellcheck='false' name='songComments' value='')
                                                                     br
                                                                     label(for="songLatest") Latest
                                                                     input(type="checkbox" name="songLatest" checked)
@@ -228,9 +229,9 @@ body
                                                 div(class='addbox hidden version-add')
                                                     form(method='POST' action='' id='versionform')
                                                         label(for='versionName') Name:
-                                                        input(type='text' name='versionName' required='true' value='')
+                                                        input(type='text' spellcheck='false' name='versionName' required='true' value='')
                                                         label(for='versionName') Version Notes:
-                                                        input(type='textarea' name='versionNotes' value='')
+                                                        input(type='textarea' spellcheck='false' name='versionNotes' value='')
                                                         label(for="versionCurrent") Current version
                                                         input(type="checkbox" name="versionCurrent" checked)
                                                         input(type='hidden' name='dataID' value='version-' + title.id)

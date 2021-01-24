@@ -31,6 +31,19 @@ hr {
   margin-left: 0;
 }
 
+/* Mp3 player */
+
+.playcontainer {
+  margin-left: 1rem;
+  margin-top: 0.3rem;
+  width: 500px;
+}
+
+.player {
+  margin: 0px;
+  width: 500px;
+}
+
 /* input elements */
 
 .edit {
@@ -54,17 +67,13 @@ hr {
   border: 1px solid rgb(94, 235, 245);
   background-color: black;
   margin-top: 1.3rem;
-  margin-left: 6rem;
   padding: 1rem;
   box-sizing: border-box;
+  z-index: 1;
 }
 
-.title-add {
-  margin-left: 3rem;
-}
-
-.version-add {
-  margin-left: 0rem;
+.tier-add {
+  margin-left: -50px;
 }
 
 .delete {
@@ -241,20 +250,6 @@ h5 {
 .bounce {
   height: 250px;
   width: 300px;
-  margin-top: -270px;
-}
-
-/* Mp3 player */
-
-.playcontainer {
-  margin-left: 1rem;
-  margin-top: 0.3rem;
-  width: 500px;
-}
-
-.player {
-  margin: 0px;
-  width: 500px;
 }
 
 /*  hidden */
