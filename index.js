@@ -17,11 +17,8 @@ const toggleStorage = (key, id) => {
 };
 const readStorage = () => {
     const rows = Object.keys(sessionStorage);
-    // console.log(rows);
     rows.forEach(id => {
-        if (id == 'scrollpos') {
-            window.scrollTo(0, sessionStorage.getItem(id));
-        } else {
+        if (id !== 'scrollpos') {
             const row = document.getElementById(id);
             if (row) {
                 row.classList.toggle('hidden');
@@ -31,6 +28,7 @@ const readStorage = () => {
                 sessionStorage.removeItem(id);
             }
         }
+        window.scrollTo(0, sessionStorage.getItem('scrollpos'));    
     });
 };
 
@@ -92,8 +90,50 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.onbeforeunload = () => {
+    
     sessionStorage.setItem('scrollpos', window.scrollY);
 };
+
+
+// Playlist creation
+
+const createPlaylist = (tier) => {
+    let containerId = `title-${tier.id}`
+    const children = document.getElementById(containerId).childNodes;
+    const playlist = [];
+    children.forEach(title => {
+        let playerId = `player-${tier.id}-${title.id}`;
+        let playElement = document.getElementById(playerId);
+        playlist.push(playElement);
+    });
+    return playlist;
+};
+
+// On play, playlist is created.  On end, next song is played.
+
+const allPlayers = document.querySelectorAll('.player');
+allPlayers.forEach(player => {
+    player.addEventListener('play', () => {
+        let tierId = player.id.split('-')[1];
+        let tier = document.getElementById(tierId);
+        const playlist = createPlaylist(tier); 
+        let index = playlist.indexOf(player);
+        state.currentPlaylist = playlist.slice(index+1);
+    });
+    player.addEventListener('ended', () => {
+        if (state.currentPlaylist) {
+            let nextSong = state.currentPlaylist.shift();
+            nextSong.play();
+        }
+    });
+
+});
+
+
+
+
+
+
 
 // Add click event to container- 
 // turn off any addboxes that are visible
@@ -150,7 +190,7 @@ document.querySelectorAll('.player').forEach(player => {
 
         if (!player.className.includes('calculated')) {
 
-            let tierId = player.id.split('-')[0];
+            let tierId = player.id.split('-')[1];
             let tierTime = 'tiertime' + tierId;
 
             let duration = mp3.target.duration;
@@ -174,4 +214,29 @@ document.querySelectorAll('.player').forEach(player => {
         }
     });
     
+});
+
+// upload progress indicator
+
+// const uploadFile = form => {
+//     const formData = new FormData(form);
+//     const xml = new XMLHttpRequest();
+//     xml.open('POST', '/');
+//     xml.upload.addEventListener('progress', p => {
+//         let completed = (p.loaded / p.total) * 100;
+//         document.getElementById(`progress-${form.id}`).textContent = completed;
+//     });
+//     xml.send(formData);
+//     for (let i of formData.entries()) {
+//         console.log(i);
+//     }
+// };
+
+
+const fileforms = document.querySelectorAll('.fileform');
+fileforms.forEach(form => {
+    form.addEventListener('submit', e => {
+        document.querySelector('.upload-container').classList.remove('hidden');
+        document.querySelector('.container').classList.add('hidden');
+    });
 });

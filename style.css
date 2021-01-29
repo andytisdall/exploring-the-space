@@ -5,6 +5,45 @@ body {
   margin: 2rem;
 }
 
+.upload-container {
+  max-width: 65rem;
+}
+
+input {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+select {
+  margin: 0.2rem;
+}
+
+.upload-progress {
+  position: fixed;
+  height: 500px;
+  width: 500px;
+  border: 3px solid orange;
+  display: flex;
+  margin-left: 18rem;
+  margin-top: 10rem;
+}
+
+.upload-image {
+  color: orangered;
+  font-size: 3.5rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-image p {
+  padding: 30px;
+}
+
+.windmill {
+  margin: auto;
+}
+
 p {
   margin: 5px;
 }
@@ -42,6 +81,7 @@ hr {
 .player {
   margin: 0px;
   width: 500px;
+  height: 30px;
 }
 
 /* input elements */
@@ -49,19 +89,16 @@ hr {
 .edit {
   font-size: small;
   color: rgb(235, 190, 132);
-  padding: 1rem;
 }
 
 .add {
   font-size: small;
   color: rgb(94, 235, 245);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 .addbox {
-  height: 200px;
+  height: 100;
   width: 150px;
   position: absolute;
   border: 1px solid rgb(94, 235, 245);
@@ -77,15 +114,14 @@ hr {
 }
 
 .delete {
-  padding-top: 1rem;
   color: red;
   font-size: 0.8rem;
+  padding-left: 1rem;
 }
 
 input {
   width: 7rem;
   margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .inputfile {
@@ -93,7 +129,7 @@ input {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 10px;
   color: white;
 }
@@ -114,9 +150,9 @@ h1 {
 }
 
 h2 {
-  font-size: 2rem;
-  margin: 3px;
+  font-size: 1.7rem;
   padding-left: 1rem;
+  margin: 0px;
   color: rgb(235, 155, 118);
 }
 
@@ -126,14 +162,19 @@ h2 {
 
 .tier-display {
   display: flex;
+  margin-top: 0.5rem;
 }
 
 .song-count {
-  margin-top: 1rem;
-  margin-left: 1rem;
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
 }
 
 /* title */
+
+.titlecontainer {
+  margin-bottom: 1rem;
+}
 
 .title-margin {
   margin-left: 4rem;
@@ -148,10 +189,9 @@ h2 {
 }
 
 h3 {
-  font-size: 1.6rem;
-  margin-top: 17px;
-  margin-bottom: 5px;
-  margin-left: 5px;
+  font-size: 1.2rem;
+  margin: 0px;
+  margin-top: 0.5rem;
 }
 
 .row-name {
@@ -174,6 +214,10 @@ h3 {
   color: rgb(248, 147, 240);
 }
 
+.add-version {
+  height: 230px;
+}
+
 .version-info {
   width: 400px;
 }
@@ -184,6 +228,7 @@ h3 {
 
 .info-buttons {
   display: flex;
+  padding: 1rem;
 }
 
 .info-header {
@@ -216,7 +261,7 @@ h3 {
 }
 
 h4 {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   margin-top: 0px;
   margin-bottom: 1.5rem;
 }
@@ -237,7 +282,7 @@ h4 {
 }
 
 h5 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   margin-top: 0.3px;
   margin-bottom: 0.7rem;
   line-height: 120%;

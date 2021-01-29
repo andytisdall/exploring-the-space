@@ -217,7 +217,7 @@ exports.deleteItem = async (req, res) => {
                     if (song.latest) {
                         let parentVersion = await Version.findOne({ _id: parentId }).populate('songs');
                         let songList = parentVersion.songs;
-                        if (songList.length > 1) {
+                        if (songList.length >= 1) {
                             await Song.updateOne({ _id: songList[songList.length-1] }, { latest: true });
                         }
                     }
@@ -367,7 +367,22 @@ exports.editItem = async (req, res) => {
         case 'song':
             //Get paramaters
             const { songDate, songComments, versionID } = req.body;
-            console.log(songDate);
+            //Exit if this date exists in the version's song list
+            const vers = await Version.findOne({ _id: versionID });
+            let duplicateDate = vers.songs.find(s => s.date === songDate);
+            if (duplicateDate) {
+                req.session.errorMessage = 'There is already a bounce with that date.'
+                res.redirect('/');
+                return;
+            }
+            //Update song with new data
+            try {
+                await Song.updateOne({ _id: id }, { date: songDate, comments: songComments });
+            } catch {
+                req.session.errorMessage = 'Not able to update song record.'
+                res.redirect('/');
+                return;
+            }
             // Update mp3 if there's a new one
             if (req.files) {
                 req.socket.setTimeout(10 * 60 * 1000);
@@ -381,12 +396,11 @@ exports.editItem = async (req, res) => {
 
                     //update mp3 id for bounce
                     let mp3 = stream.id;
-                    await Song.updateOne({ _id: id }, { mp3 });
-
+                    let oldMp3 = await Song.findOne({ _id: id }).mp3;
+                    await Song.updateOne({ _id: id }, { mp3, length: req.files.songFile.size });
                     console.log('Uploaded new mp3');
-
                     // Delete old mp3
-                    let mp3Id = new ObjectID(song.mp3);
+                    let mp3Id = new ObjectID(oldMp3);
                     streamer.deleteMp3(mp3Id);
                 });
             }
