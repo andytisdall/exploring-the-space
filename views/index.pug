@@ -74,7 +74,7 @@ body
                                                 - const thisVersion = title.versions.find(v => v.current)
                                                 if thisVersion.songs.length > 0
                                                     - const thisSong = thisVersion.songs.find(s => s.latest)                  
-                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id)
+                                                    audio(controls src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
                                     div(class='tier-display')
                                         div(class="edit" id=('edittitle-' + title.id)) Edit This Title
                                             div(class='addbox hidden')
@@ -89,7 +89,7 @@ body
                                                             each otherTier in tierlist
                                                                 option(value=otherTier.id) #{otherTier.name}
                                                     br
-                                                    br                                                            
+                                                    br                                 
                                                     input(type='hidden' name='dataID' value='title-' + title.id)
                                                     input(type='hidden' name='parentID' value=tier.id)
                                                     button(type='submit') OK

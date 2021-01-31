@@ -1,4 +1,4 @@
-require('./models/Song');
+require('./models/models');
 const mongoose = require('mongoose');
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');

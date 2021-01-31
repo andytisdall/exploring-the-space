@@ -7,7 +7,6 @@ const state = {
     addboxIsVisible: false
 };
 
-
 const toggleStorage = (key, id) => {
     if (sessionStorage.getItem(key)) {
         sessionStorage.removeItem(key)
@@ -31,6 +30,54 @@ const readStorage = () => {
         window.scrollTo(0, sessionStorage.getItem('scrollpos'));    
     });
 };
+
+// Add click event to container- 
+// turn off any addboxes that are visible
+// find nearest row, find the class of the row
+// if the target is an add button, show the add box
+// otherwise find the ID of the row and toggle the row underneath with the same ID
+// to collapse or decollapse the items within that row
+
+const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
+document.addEventListener('click', e => {
+
+    // console.log(e.target);
+    // console.log(state.addboxIsVisible);
+
+    if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
+        return;
+    }
+    hideAddbox(e.target);
+    const button = e.target.closest('.row');
+    if (e.target.className === 'add') {
+        showAddbox(e.target);
+    } else if (e.target.className === 'edit') {
+        showAddbox(e.target);
+    } else if (button && !state.addboxIsVisible) {   
+        collapseButton(button);
+    }
+
+});
+
+
+// stop propagation for the add item sumbit buttons and the delete links
+
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', e => {
+        e.stopPropagation();
+    });
+});
+
+document.querySelectorAll('.delete').forEach(button => {
+    button.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!confirm('Confirm Deletion')) {
+            e.preventDefault();
+        }
+    });
+});
+
+
 
 const collapseButton = (button) => {
     let id;
@@ -80,7 +127,6 @@ const hideAddbox = (target) => {
 };
 
 
-const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
 
 
 // Get session storage on page load and save the scroll position before reload
@@ -90,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.onbeforeunload = () => {
-    
     sessionStorage.setItem('scrollpos', window.scrollY);
 };
 
@@ -119,6 +164,10 @@ allPlayers.forEach(player => {
         const playlist = createPlaylist(tier); 
         let index = playlist.indexOf(player);
         state.currentPlaylist = playlist.slice(index+1);
+        if (state.currentSong && state.currentSong !== player) {
+            state.currentSong.pause()
+        }
+        state.currentSong = player;
     });
     player.addEventListener('ended', () => {
         if (state.currentPlaylist) {
@@ -126,63 +175,6 @@ allPlayers.forEach(player => {
             nextSong.play();
         }
     });
-
-});
-
-
-
-
-
-
-
-// Add click event to container- 
-// turn off any addboxes that are visible
-// find nearest row, find the class of the row
-// if the target is an add button, show the add box
-// otherwise find the ID of the row and toggle the row underneath with the same ID
-// to collapse or decollapse the items within that row
-
-document.addEventListener('click', e => {
-
-    // console.log(e.target);
-    // console.log(state.addboxIsVisible);
-
-    if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
-        return;
-    }
-    hideAddbox(e.target);
-    const button = e.target.closest('.row');
-    if (e.target.className === 'add') {
-        showAddbox(e.target);
-    } else if (e.target.className === 'edit') {
-        showAddbox(e.target);
-    } else if (button && !state.addboxIsVisible) {   
-        collapseButton(button);
-    }
-
-});
-
-
-// stop propagation for the add item sumbit buttons and the delete links
-
-document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', e => {
-        e.stopPropagation();
-    });
-});
-
-document.querySelectorAll('.delete').forEach(button => {
-    button.addEventListener('click', e => {
-        e.stopPropagation();
-        if (!confirm('Confirm Deletion')) {
-            e.preventDefault();
-        }
-    });
-});
-
-document.querySelectorAll('.player').forEach(player => {
-
-
     player.addEventListener('canplaythrough', (mp3) => {
 
         // Get audio duration after mp3 has loaded
@@ -213,25 +205,9 @@ document.querySelectorAll('.player').forEach(player => {
             player.classList.add('calculated');
         }
     });
-    
 });
 
-// upload progress indicator
-
-// const uploadFile = form => {
-//     const formData = new FormData(form);
-//     const xml = new XMLHttpRequest();
-//     xml.open('POST', '/');
-//     xml.upload.addEventListener('progress', p => {
-//         let completed = (p.loaded / p.total) * 100;
-//         document.getElementById(`progress-${form.id}`).textContent = completed;
-//     });
-//     xml.send(formData);
-//     for (let i of formData.entries()) {
-//         console.log(i);
-//     }
-// };
-
+//Un-hide upload gif class and hide everyting else
 
 const fileforms = document.querySelectorAll('.fileform');
 fileforms.forEach(form => {

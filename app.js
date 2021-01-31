@@ -1,4 +1,5 @@
 const controller = require('./controller');
+const playlist = require('./playlist');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -46,6 +47,7 @@ app.post('/', controller.addItem);
 app.post('/edit', controller.editItem);
 app.post('/changelatest', controller.changeLatest);
 app.post('/change-version', controller.changeVersion);
+app.post('/playlist/create', playlist.createPlaylist);
 
 
 app.listen(3000);

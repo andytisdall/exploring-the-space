@@ -26,8 +26,23 @@ const tierSchema = new mongoose.Schema({
     position: Number
 });
 
+const playlistSongSchema = new mongoose.Schema({
+    title: { type: mongoose.Schema.Types.ObjectId, ref: 'Title'},
+    version: { type: mongoose.Schema.Types.ObjectId, ref: 'Version'},
+    position: Number,
+    playlist: { type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'},
+    bounce: { type: mongoose.Schema.Types.ObjectId, ref: 'Song'}
+});
+
+const playlistSchema = new mongoose.Schema({
+    name: { type: String, unique: true },
+    position: Number
+});
+
 
 mongoose.model('Tier', tierSchema);
 mongoose.model('Title', titleSchema);
 mongoose.model('Version', versionSchema);
 mongoose.model('Song', songSchema);
+mongoose.model('Playlist', playlistSchema);
+mongoose.model('PlaylistSong', playlistSongSchema);
