@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Readable } = require('stream');
+import mongoose from 'mongoose';
+import { Readable } from 'stream';
 let bucket;
 
 mongoose.connection.on('connected', () => {
@@ -10,7 +10,7 @@ mongoose.connection.on('connected', () => {
 });
 
 
-exports.addMp3 = (file) => {
+export function addMp3(file) {
 
     // const readableMp3Stream = new Readable();
     // readableMp3Stream.push(file.buffer);
@@ -32,9 +32,9 @@ exports.addMp3 = (file) => {
 
 
 
-};
+}
 
-exports.getMp3 = (mp3Id) => {
+export function getMp3(mp3Id) {
     let stream;
     try {
         // console.log('looking for mp3');
@@ -48,9 +48,9 @@ exports.getMp3 = (mp3Id) => {
     }
     return stream;
 
-};
+}
 
-exports.deleteMp3 = (mp3Id) => {
+export function deleteMp3(mp3Id) {
     
     bucket.delete(mp3Id, (err) => {
         if (err) {
@@ -62,5 +62,5 @@ exports.deleteMp3 = (mp3Id) => {
     });
 
 
-};
+}
 

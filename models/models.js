@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
-const songSchema = new mongoose.Schema({
+const songSchema = new Schema({
     date: { type: Date, default: Date.now() },
     latest: { type: Boolean, default: false },
     comments: String,
@@ -8,33 +9,33 @@ const songSchema = new mongoose.Schema({
     length: Number
 });
 
-const versionSchema = new mongoose.Schema({
+const versionSchema = new Schema({
     name: { type: String },
     current: { type: Boolean, default: true },
     notes: String,
-    songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song'}]
+    songs: [{ type: Schema.Types.ObjectId, ref: 'Song'}]
 });
 
-const titleSchema = new mongoose.Schema({
+const titleSchema = new Schema({
     title: { type: String, unique: true },
-    versions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Version'}],
+    versions: [{ type: Schema.Types.ObjectId, ref: 'Version'}],
 });
 
-const tierSchema = new mongoose.Schema({
+const tierSchema = new Schema({
     name: String,
-    trackList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Title'}],
+    trackList: [{ type: Schema.Types.ObjectId, ref: 'Title'}],
     position: Number
 });
 
-const playlistSongSchema = new mongoose.Schema({
-    title: { type: mongoose.Schema.Types.ObjectId, ref: 'Title'},
-    version: { type: mongoose.Schema.Types.ObjectId, ref: 'Version'},
+const playlistSongSchema = new Schema({
+    title: { type: Schema.Types.ObjectId, ref: 'Title'},
+    version: { type: Schema.Types.ObjectId, ref: 'Version'},
     position: Number,
-    playlist: { type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'},
-    bounce: { type: mongoose.Schema.Types.ObjectId, ref: 'Song'}
+    playlist: { type: Schema.Types.ObjectId, ref: 'Playlist'},
+    bounce: { type: Schema.Types.ObjectId, ref: 'Song'}
 });
 
-const playlistSchema = new mongoose.Schema({
+const playlistSchema = new Schema({
     name: { type: String, unique: true },
     position: Number
 });

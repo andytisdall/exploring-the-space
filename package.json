@@ -2,10 +2,10 @@
   "name": "progress-server",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "type": "commonjs",
+  "main": "src/app.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon src/app.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Playlist = mongoose.models('Playlist');
-const PlaylistSong = mongoose.models('PlaylistSong');
+import mongoose from 'mongoose';
+const Playlist = mongoose.model('Playlist');
+const PlaylistSong = mongoose.model('PlaylistSong');
 
-exports.createPlaylist = async (req, res) => {
+export async function createPlaylist(req, res) {
     try {
         const { playlistName } = req.body;
         const allPlaylists = await Playlist.find({});
@@ -13,9 +13,9 @@ exports.createPlaylist = async (req, res) => {
         req.session.errormessage = err.message;
         res.redirect('/');
     }
-};
+}
 
-exports.createPlaylistSong = async (req, res) => {
+export async function createPlaylistSong(req, res) {
     try {
         const { songTitle, songVersion, songBounce, playlist } = req.body;
         const allPlaylistSongs = await PlaylistSong.find({});
@@ -32,9 +32,9 @@ exports.createPlaylistSong = async (req, res) => {
         req.session.errormessage = err.message;
         res.redirect('/');
     }
-};
+}
 
-exports.deletePlaylistSong = async (req, res) => {
+export async function deletePlaylistSong(req, res) {
     try {
         const { ID } = req.body;
         await PlaylistSong.deleteOne({ _id: ID });
@@ -43,9 +43,9 @@ exports.deletePlaylistSong = async (req, res) => {
         req.session.errormessage = err.message;
         res.redirect('/');
     }
-};
+}
 
-exports.deletePlaylist = async (req, res) => {
+export async function deletePlaylist(req, res) {
     try {
         const { ID } = req.body;
         await Playlist.deleteOne({ _id: ID });
@@ -54,4 +54,4 @@ exports.deletePlaylist = async (req, res) => {
         req.session.errormessage = err.message;
         res.redirect('/');
     }
-};
+}
