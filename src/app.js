@@ -2,7 +2,7 @@ import { index, playMp3  } from './controller.js';
 import deleteItem from './deleteItem.js';
 import addItem from './addItem.js';
 import { editItem, changeLatest, changeVersion } from './editItem.js';
-import { createPlaylist } from './playlist.js';
+import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './playlist.js';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -10,6 +10,7 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import moment from 'moment';
+import { mongoKey } from './mongo-key';
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.set('view engine', 'pug');
 
 app.locals.moment = moment;
 
-const mongo = 'mongodb+srv://apprehenchmen:bethlehem@cluster0.xix0t.mongodb.net/<dbname>?retryWrites=true&w=majority';
+const mongo = `mongodb+srv://apprehenchmen:${mongoKey}@cluster0.xix0t.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 
 mongoose.connect(mongo, {
     useNewUrlParser: true,
@@ -49,6 +50,8 @@ app.post('/edit', editItem);
 app.post('/changelatest', changeLatest);
 app.post('/change-version', changeVersion);
 app.post('/playlist/create', createPlaylist);
-
+app.post('/playlist/create-song', createPlaylistSong);
+app.post('/playlist/delete', deletePlaylist);
+app.post('/playlist/delete-song', deletePlaylistSong);
 
 app.listen(3000);
