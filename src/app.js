@@ -10,7 +10,7 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import moment from 'moment';
-import { mongoKey } from './mongo-key';
+
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.set('view engine', 'pug');
 
 app.locals.moment = moment;
 
-const mongo = `mongodb+srv://apprehenchmen:${mongoKey}@cluster0.xix0t.mongodb.net/<dbname>?retryWrites=true&w=majority`;
+const mongo = 'mongodb://localhost/greenhouse';
 
 mongoose.connect(mongo, {
     useNewUrlParser: true,
