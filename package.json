@@ -2,11 +2,12 @@
   "name": "progress-server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
   "type": "module",
   "scripts": {
     "start": "nodemon src/app.js",
-    "site": "node src/app.js"
+    "site": "node src/app.js",
+    "build": "webpack",
+    "server": "babel-node .src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +24,12 @@
     "pug": "^3.0.2",
     "stream": "0.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/node": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "webpack": "^5.26.2",
+    "webpack-cli": "^4.5.0"
+  }
 }

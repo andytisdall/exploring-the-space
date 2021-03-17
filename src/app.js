@@ -14,12 +14,12 @@ import moment from 'moment';
 
 const app = express();
 
-app.use(express.static('images'));
+app.use(express.static('src/static/images'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(fileUpload());
 
-app.set('views', path.join(path.resolve(), './views'));
+app.set('views', path.join(path.resolve(), './src/views'));
 app.set('view engine', 'pug');
 
 app.locals.moment = moment;

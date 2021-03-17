@@ -1,4 +1,4 @@
-import '../models/models.js';
+import './models/models.js';
 import mongoose from 'mongoose';
 import { getMp3 } from './streamer.js';
 import mongodb from 'mongodb';

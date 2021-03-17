@@ -1,2 +1,4 @@
 node_modules
 src/mongo-key.js
+.gitignore
+webpack.configs.js

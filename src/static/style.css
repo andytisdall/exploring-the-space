@@ -1,5 +1,6 @@
 body {
   background-color: rgb(56, 56, 56);
+
   color: rgb(151, 235, 68);
   font-family: 'Fira Sans', sans-serif;
   margin: 2rem;
@@ -75,13 +76,14 @@ hr {
 .playcontainer {
   margin-left: 1rem;
   margin-top: 0.3rem;
-  width: 500px;
+  width: 50%;
 }
 
 .player {
   margin: 0px;
   width: 500px;
   height: 30px;
+  display: block;
 }
 
 /* input elements */
@@ -138,6 +140,11 @@ h1 {
 
 .row {
   padding-right: 10px;
+  padding-bottom: 10px;
+  /* background: radial-gradient(
+    rgba(128, 128, 128, 0),
+    rgba(255, 255, 255, 0.281)
+  ); */
 }
 
 .marqee {
@@ -223,7 +230,7 @@ h3 {
 }
 
 .noversion {
-  line-height: 20%;
+  padding-bottom: 1rem;
 }
 
 .info-buttons {
