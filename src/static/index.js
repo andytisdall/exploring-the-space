@@ -7,6 +7,8 @@ const state = {
     addboxIsVisible: false
 };
 
+const masterVol = document.getElementById('mastervol');
+
 const toggleStorage = (key, id) => {
     if (sessionStorage.getItem(key)) {
         sessionStorage.removeItem(key)
@@ -17,7 +19,7 @@ const toggleStorage = (key, id) => {
 const readStorage = () => {
     const rows = Object.keys(sessionStorage);
     rows.forEach(id => {
-        if (id !== 'scrollpos') {
+        if (id !== 'scrollpos' && id !== 'volume') {
             const row = document.getElementById(id);
             if (row) {
                 row.classList.toggle('hidden');
@@ -27,8 +29,10 @@ const readStorage = () => {
                 sessionStorage.removeItem(id);
             }
         }
-        window.scrollTo(0, sessionStorage.getItem('scrollpos'));    
     });
+    window.scrollTo(0, sessionStorage.getItem('scrollpos'));
+    masterVol.value = sessionStorage.getItem('volume');
+    setMasterVolume();
 };
 
 // Add click event to container- 
@@ -137,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.onbeforeunload = () => {
     sessionStorage.setItem('scrollpos', window.scrollY);
+    sessionStorage.setItem('volume', masterVol.value);
 };
 
 
@@ -216,3 +221,13 @@ fileforms.forEach(form => {
         document.querySelector('.container').classList.add('hidden');
     });
 });
+
+
+
+const setMasterVolume = () => {
+    allPlayers.forEach(player => {
+        player.volume = masterVol.value / 100;
+    });
+};
+
+masterVol.addEventListener('input', setMasterVolume);

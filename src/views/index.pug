@@ -19,6 +19,8 @@ body
             div(class='error') #{errorMessage}
         div(class="marqee")            
             h1 Apprehenchmen
+            div(class="slidecontainer")
+                input(type="range" min="0" max="100" value="50" class="master-volume" id="mastervol")
             div(class="add") Add a Tier
                 div(class='addbox hidden tier-add')
                     form(method='POST' action='')
@@ -205,7 +207,7 @@ body
                                             div(class='song-con')
                                                 div(class='nosong')
                                                     div(class='song')
-                                                        p There are no bounces for this version.
+                                                        p(class='empty') There are no bounces for this version.
                                                         div(class="add" id='addbounce-' + thisVersion.id) Add a New Bounce
                                                             div(class='addbox bounce hidden')
                                                                 form(method='POST' action='' id='songform' class='fileform' encType="multipart/form-data")
@@ -227,7 +229,7 @@ body
                                                                     button(type='submit') OK
                                     else
                                         div(class='noversion')
-                                            p No versions of this title.
+                                            p(class='empty') No versions of this title.
                                             div(class="add" id=('addversion-' + title.id)) Add a New Version
                                                 div(class='addbox hidden add-version')
                                                     form(method='POST' action='' id='versionform')
@@ -240,7 +242,7 @@ body
                                                         input(type='hidden' name='dataID' value='version-' + title.id)
                                                         button(type='submit') OK
                     else
-                        p(class='row notitle') No songs in this tier.
+                        p(class='row notitle empty') No songs in this tier.
         else
             p(class='row tier') There are no tiers.    
     //- div(class='playlist-container')
