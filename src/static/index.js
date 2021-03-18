@@ -58,7 +58,7 @@ document.addEventListener('click', e => {
     }
     hideAddbox(e.target.parentNode);
     const button = e.target.closest('.row');
-    if (e.target.parentNode.className === 'add' || e.target.parentNode.className === 'edit') {
+    if (e.target.parentNode.className.includes('add') || e.target.parentNode.className.includes('edit')) {
         showAddbox(e.target.parentNode);
     } else if (button && !state.addboxIsVisible) {   
         collapseButton(button);
@@ -158,8 +158,8 @@ const createPlaylist = (tier) => {
         let playerId = `player-${tier.id}-${title.id}`;
         let playElement = document.getElementById(playerId);
         let titleName = document.getElementById(`name-spot-${title.id}`).textContent;
-        let versionName = document.getElementById(`version-name-${title.id}`).value;
-        let bounceDate = document.getElementById(`bounce-date-${title.id}`).value;
+        let versionName = document.getElementById(`version-name-${title.id}`).textContent;
+        let bounceDate = document.getElementById(`bounce-date-${title.id}`).textContent;
         playlist.push({
             audio: playElement,
             title: titleName,
@@ -287,5 +287,31 @@ playButtons.forEach(playButton => {
         }
         state.currentSong = currentSong
         getPlaySlider();
+    });
+});
+
+const versionDropdowns = document.querySelectorAll('.change-version');
+versionDropdowns.forEach(link => {
+    link.addEventListener('click', async e => {
+        const [currentVersion, changeVersion] = link.id.split('-');
+        e.stopPropagation();
+        await axios.post('/change-version', {
+            currentVersion, changeVersion
+        });
+        window.location.reload();
+
+    });
+});
+
+const songDropdowns = document.querySelectorAll('.change-song');
+songDropdowns.forEach(link => {
+    link.addEventListener('click', async e => {
+        const [currentSong, changeSong] = link.id.split('-');
+        e.stopPropagation();
+        await axios.post('/change-song', {
+            currentSong, changeSong
+        });
+        window.location.reload();
+
     });
 });

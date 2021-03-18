@@ -163,17 +163,13 @@ export async function editItem(req, res) {
 
 
 
-export async function changeLatest(req, res) {
+export async function changeSong(req, res) {
 
     req.session.errorMessage = '';
-    const { newLatest, currentLatest } = req.body;
-    if (newLatest === currentLatest) {
-        res.redirect('/');
-        return;
-    }
+    const { currentSong, changeSong } = req.body;
     try {
-        await Song.updateOne({ _id: newLatest }, { latest: true });
-        await Song.updateOne({ _id: currentLatest }, { latest: false });
+        await Song.updateOne({ _id: changeSong }, { latest: true });
+        await Song.updateOne({ _id: currentSong }, { latest: false });
         res.redirect('/');
     } catch {
         req.session.errorMessage = 'could not change latest status';
@@ -183,13 +179,10 @@ export async function changeLatest(req, res) {
 }
 
 export async function changeVersion(req, res) {
+    
 
     req.session.errorMessage = '';
     const { currentVersion, changeVersion } = req.body;
-    if (currentVersion === changeVersion) {
-        res.redirect('/');
-        return;
-    }
     try {
         await Version.updateOne({ _id: changeVersion }, { current: true });
         await Version.updateOne({ _id: currentVersion }, { current: false });

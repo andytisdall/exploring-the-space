@@ -19,27 +19,22 @@ body
         if errorMessage
             div(class='error') #{errorMessage}
         div(class='playbar')
-            p(id='currentsongheader')           
+            div(class='playbar-header')
+                p(id='currentsongheader' class='playbar-title')
+                div(class='playbar-info')
+                    p(id='currentversion')
+                    p(id='currentdate')         
             div(class='playslidercontainer')
                 div(class='playslidertime' id='playcurrenttime')
                 input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
                 div(class='playslidertime' id='playtotaltime') 
-            div(class='playbar-info')
-                p(id='currentversion')
-                p(id='currentdate')
+            
         div(class="marqee")            
             h1 Apprehenchmen
             div(class="slidecontainer")
                 input(type="range" min="0" max="100" value="50" class="master-volume" id="mastervol")
-            div(class='tier-display')
-                div(class="add addtier")
-                    img(src='add.png')
-                    div(class='addbox hidden tier-add')
-                        form(method='POST' action='')
-                            label(for='tierName') Tier Name:
-                            input(type='text' spellcheck='false' name='tierName' required='true' value='')
-                            input(type='hidden' name='dataID' value='tier-0')
-                            button(type='submit') OK
+
+                
 
         hr
         each tier in tiers
@@ -47,10 +42,9 @@ body
                 div(class="marqee")
                     div(class='row-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
-                        h2 #{tier.name} 
-                        div(class='count-container')    
-                            div(class='song-count') #{tier.trackList.length} songs
-                            div(class='song-count' id='tiertime'+tier.id)
+                        h2 #{tier.name}  
+                        div(class='song-count') #{tier.trackList.length} songs
+                        div(class='song-count' id='tiertime'+tier.id)
                     div(class='tier-display')
                         div(class="edit" id=('edittier-' + tier.id))
                             img(src='edit.png')
@@ -86,15 +80,19 @@ body
                                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
                                         div(class='name-spot' id='name-spot-'+title.id)
                                             h3 #{title.title}
-                                        div(class='playcontainer')
-                                            if title.versions.length > 0
-                                                - const thisVersion = title.versions.find(v => v.current)
-                                                if thisVersion.songs.length > 0
-                                                    - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                    img(class='pausebutton hidden' src='pause.svg' id='pause-'+title.id)             
-                                                    div(class='playbutton')
-                                                        img(src='play.svg' class='playicon')
-                                                        audio(src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
+                                    div(class='playcontainer')
+                                        if title.versions.length > 0
+                                            - const thisVersion = title.versions.find(v => v.current)
+                                            if thisVersion.songs.length > 0
+                                                - const thisSong = thisVersion.songs.find(s => s.latest)
+                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
+                                                img(class='pausebutton hidden' src='pause.svg' id='pause-'+title.id)             
+                                                div(class='playbutton')
+                                                    img(src='play.svg' class='playicon')
+                                                    audio(src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
+                                                div(class='title-display')
+                                                    p #{thisVersion.name}
+                                                    p #{displayDate}
                                     div(class='tier-display')
                                         div(class="edit" id=('edittitle-' + title.id))
                                             img(src='edit.png')
@@ -122,16 +120,38 @@ body
                                         div(class='detail-info')
                                             div(class='detail-header')
                                                 div(class='detail-box')
-                                                    - const thisVersion = title.versions.find(v => v.current) 
-                                                    form(class="row version-select" method='POST' action='/change-version')
-                                                        input(type='hidden' name='currentVersion' value=thisVersion.id)
-                                                        label(for='changeVersion' class='selector') Version:   
-                                                        select(name="changeVersion" onchange='this.form.submit()' id='version-name-'+title.id)
-                                                            option(value=thisVersion.name selected disabled) #{thisVersion.name}
-                                                            - const versionDates = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
-                                                            each version in versionDates
-                                                                - let short = version[0].length > 14 ? version[0].slice(0,14) + '..' : version[0]
-                                                                option(value=version[1]) #{short}
+                                                    - const thisVersion = title.versions.find(v => v.current)
+                                                    - const versionList = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
+                                                    
+                                                    
+                                                    div(class='dropdown')
+                                                        button(class='dropbtn' id='version-name-'+title.id) #{thisVersion.name}
+                                                        div(class='dropdown-content')
+                                                            each version in versionList
+                                                                - let short = version[0].length > 14 ? version[0].slice(0,20) + '..' : version[0]
+                                                                div(class='dropdown-link change-version' id=thisVersion.id + '-' + version[1]) #{short}
+
+
+
+
+
+
+
+                                                    //- form(class="row version-select hidden" method='POST' action='/change-version')
+                                                    //-     input(type='hidden' name='changeVersion')
+                                                    //-     label(for='changeVersion' class='selector') Version:   
+
+                                                        //- select(name="changeVersion" onchange='this.form.submit()' id='version-name-'+title.id)
+                                                        //-     option(value=thisVersion.name selected disabled) #{thisVersion.name}
+                                                        //-     - const versionDates = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
+                                                        //-     each version in versionDates
+                                                        //-         - let short = version[0].length > 14 ? version[0].slice(0,14) + '..' : version[0]
+                                                        //-         option(value=version[1]) #{short}
+
+
+
+
+
                                                     p(class='notes') #{thisVersion.notes}   
                                             
                                             div(class='detail-buttons')
@@ -161,21 +181,43 @@ body
                                                             button(type='submit') OK
                                                 a(class = 'delete' href=('/delete/version/' + thisVersion.id + '/' + title.id))
                                                     img(src='delete.png')
+
+
                                         if thisVersion.songs.length > 0     
                                             div(class="detail-info"  id=('song-' + thisVersion.id))
                                                 div(class='detail-header')
                                                     div(class='detail-box')
                                                         - const thisSong = thisVersion.songs.find(s => s.latest)
                                                         - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
-                                                        form(class="row version-select" method='POST' action='/changelatest')
-                                                            input(type='hidden' name='currentLatest' value=thisSong.id)
-                                                            label(for='newLatest'  class='selector') Date:   
-                                                            select(name="newLatest" onchange='this.form.submit()' id='bounce-date-'+title.id)
-                                                                option(value=displayDate selected disabled) #{displayDate}
-                                                                - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
-                                                                - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+                                                        - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                                        - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+
+                                                        div(class='dropdown')
+                                                            button(class='dropbtn' id='bounce-date-'+title.id)  #{displayDate}
+                                                            div(class='dropdown-content')
                                                                 each date in formattedSongDates
-                                                                    option(value=date.slice(8)) #{date.slice(0,8)}
+                                                                    - let dateId = date.slice(8)
+                                                                    - let dateDisplay = date.slice(0,8)
+                                                                    div(class='dropdown-link change-song' id=thisSong.id + '-' + dateId) #{dateDisplay}
+
+
+
+
+
+
+                                                        //- form(class="row version-select" method='POST' action='/changelatest')
+                                                        //-     input(type='hidden' name='currentLatest' value=thisSong.id)
+                                                        //-     label(for='newLatest'  class='selector') Date:   
+                                                        //-     select(name="newLatest" onchange='this.form.submit()' id='bounce-date-'+title.id)
+                                                        //-         option(value=displayDate selected disabled) #{displayDate}
+                                                        //-         - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                                        //-         - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+                                                        //-         each date in formattedSongDates
+                                                        //-             option(value=date.slice(8)) #{date.slice(0,8)}
+
+
+
+
                                                         p(class='notes') #{thisSong.comments}    
                                                 div(class='detail-buttons')
                                                     div(class="edit" id='editbounce-' + thisSong.id)
@@ -264,8 +306,17 @@ body
                     else
                         p(class='row notitle empty') No songs in this tier.
         else
-            p(class='row tier') There are no tiers.    
+            p(class='row tier') There are no tiers.
+        div(class="add addtier")
+                    img(src='add.png')
+                    div(class='addbox hidden tier-add')
+                        form(method='POST' action='')
+                            label(for='tierName') Tier Name:
+                            input(type='text' spellcheck='false' name='tierName' required='true' value='')
+                            input(type='hidden' name='dataID' value='tier-0')
+                            button(type='submit') OK    
     //- div(class='playlist-container')
-    //-     each playlist in playlists                   
+    //-     each playlist in playlists
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
         include ../static/index.js

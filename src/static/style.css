@@ -1,3 +1,7 @@
+html {
+  width: 100%;
+}
+
 body {
   background-color: rgb(56, 56, 56);
 
@@ -20,16 +24,18 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.playbar p {
-  font-size: 1.5rem;
+.playbar-title {
+  font-size: 2rem;
 }
 
-.playbar-info p {
-  font-size: 1rem;
+.playbar-header {
+  display: flex;
+  width: 30%;
+  justify-content: space-between;
 }
 
 .playslidercontainer {
-  width: 400px;
+  width: 70%;
   padding-left: 1rem;
   padding-top: 1rem;
   display: flex;
@@ -142,9 +148,15 @@ hr {
 /* Mp3 player */
 
 .playcontainer {
+  display: flex;
   margin-left: 1rem;
   margin-top: 0.3rem;
   width: 50%;
+  justify-content: space-around;
+}
+
+.title-display {
+  display: flex;
 }
 
 .player {
@@ -205,6 +217,8 @@ h1 {
 }
 
 .addtier {
+  display: flex;
+  justify-content: center;
   padding-top: 1.2rem;
   padding-bottom: 0px;
 }
@@ -425,30 +439,87 @@ h5 {
   cursor: pointer;
 }
 
+.dropbtn {
+  background-color: #76cdff;
+  color: rgb(5, 0, 0);
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  width: 100%;
+}
+
+.dropdown-link {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-link:hover {
+  background-color: #fcc4c4;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
 @media (max-width: 400px) {
   body {
     padding: 0px;
-    margin: 0.1rem;
+    margin: 0.3rem;
     font-size: 0.7rem;
     max-width: 100%;
   }
 
-  /* .playbar {
+  .playbar {
     display: block;
-  } */
+    padding: 0.3rem;
+  }
 
-  .playbar p {
-    font-size: 0.5rem;
+  .playbar-title {
+    font-size: 1rem;
+  }
+
+  .playbar-header {
+    display: flex;
+    margin-bottom: 0.2rem;
+    height: 40%;
+    width: 100%;
+  }
+
+  .playbar-info {
+    padding-top: 0.3rem;
+    display: flex;
   }
 
   .playslidercontainer {
     width: 90%;
+    padding-bottom: 0.2rem;
+    padding-top: 0.2rem;
   }
 
   .container {
     margin: 0px;
     padding: 0px;
-    max-width: 90%;
+    max-width: 100%;
   }
 
   .row {
@@ -459,7 +530,7 @@ h5 {
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 
   .arrow {
@@ -492,7 +563,12 @@ h5 {
   }
 
   .name-spot {
-    min-width: 120px;
+    min-width: 0px;
+    width: 70px;
+  }
+
+  .title-display p {
+    font-size: 0.5rem;
   }
 
   .playicon {
@@ -511,6 +587,6 @@ h5 {
   .song-count {
     margin: 0px;
     margin-left: 1rem;
-    margin-top: 0.3rem;
+    margin-top: 0.8rem;
   }
 }
