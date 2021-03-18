@@ -1,7 +1,10 @@
 
 
-// Define the container and get an array of each class
 // Elements in a tier will share an ID
+
+// boolean for seeing if there's an open form somewhere on the page
+// will also have a 'current song' attribute
+// and a current playlist
 
 const state = {
     addboxIsVisible: false
@@ -17,6 +20,8 @@ const toggleStorage = (key, id) => {
     }
 };
 const readStorage = () => {
+    // list of expanded rows that were saved
+    // get each row from storage and expand them
     const rows = Object.keys(sessionStorage);
     rows.forEach(id => {
         if (id !== 'scrollpos' && id !== 'volume') {
@@ -30,7 +35,9 @@ const readStorage = () => {
             }
         }
     });
+    // scroll to saved scroll position
     window.scrollTo(0, sessionStorage.getItem('scrollpos'));
+    // get volume from storage
     masterVol.value = sessionStorage.getItem('volume');
     setMasterVolume();
 };
@@ -40,23 +47,19 @@ const readStorage = () => {
 // find nearest row, find the class of the row
 // if the target is an add button, show the add box
 // otherwise find the ID of the row and toggle the row underneath with the same ID
-// to collapse or decollapse the items within that row
+// to collapse or expand the items within that row
+
 
 const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
 document.addEventListener('click', e => {
 
-    // console.log(e.target);
-    // console.log(state.addboxIsVisible);
-
     if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
         return;
     }
-    hideAddbox(e.target);
+    hideAddbox(e.target.parentNode);
     const button = e.target.closest('.row');
-    if (e.target.className === 'add') {
-        showAddbox(e.target);
-    } else if (e.target.className === 'edit') {
-        showAddbox(e.target);
+    if (e.target.parentNode.className === 'add' || e.target.parentNode.className === 'edit') {
+        showAddbox(e.target.parentNode);
     } else if (button && !state.addboxIsVisible) {   
         collapseButton(button);
     }
@@ -81,7 +84,7 @@ document.querySelectorAll('.delete').forEach(button => {
     });
 });
 
-
+// toggles expansion of title and tier rows
 
 const collapseButton = (button) => {
     let id;
@@ -104,6 +107,8 @@ const collapseButton = (button) => {
     }
     toggleStorage(id, arrow);
 };
+
+// show and hide hidden forms
 
 const showAddbox = (target) => {
     let selected = target.childNodes[1];
@@ -131,9 +136,7 @@ const hideAddbox = (target) => {
 };
 
 
-
-
-// Get session storage on page load and save the scroll position before reload
+// Get session storage on page load and save the scroll position and volume level before reload
 
 document.addEventListener("DOMContentLoaded", () => { 
     readStorage();
@@ -145,7 +148,7 @@ window.onbeforeunload = () => {
 };
 
 
-// Playlist creation
+// creates a playlist of all songs in a tier
 
 const createPlaylist = (tier) => {
     let containerId = `title-${tier.id}`
@@ -154,36 +157,37 @@ const createPlaylist = (tier) => {
     children.forEach(title => {
         let playerId = `player-${tier.id}-${title.id}`;
         let playElement = document.getElementById(playerId);
-        playlist.push(playElement);
+        let titleName = document.getElementById(`name-spot-${title.id}`).textContent;
+        let versionName = document.getElementById(`version-name-${title.id}`).value;
+        let bounceDate = document.getElementById(`bounce-date-${title.id}`).value;
+        playlist.push({
+            audio: playElement,
+            title: titleName,
+            id: playerId,
+            version: versionName,
+            date: bounceDate
+        });
     });
     return playlist;
 };
 
-// On play, playlist is created.  On end, next song is played.
+// On play, playlist is created that starts with the played song.  On end, next song is played.
 
 const allPlayers = document.querySelectorAll('.player');
 allPlayers.forEach(player => {
-    player.addEventListener('play', () => {
-        let tierId = player.id.split('-')[1];
-        let tier = document.getElementById(tierId);
-        const playlist = createPlaylist(tier); 
-        let index = playlist.indexOf(player);
-        state.currentPlaylist = playlist.slice(index+1);
-        if (state.currentSong && state.currentSong !== player) {
-            state.currentSong.pause()
-        }
-        state.currentSong = player;
-    });
     player.addEventListener('ended', () => {
         if (state.currentPlaylist) {
             let nextSong = state.currentPlaylist.shift();
-            nextSong.play();
+            console.log(nextSong);
+            nextSong.audio.play();
+            getPlaySlider();
         }
     });
-    player.addEventListener('canplaythrough', (mp3) => {
 
         // Get audio duration after mp3 has loaded
         // Add it to the total duration of that tier
+
+    player.addEventListener('canplaythrough', (mp3) => {
 
         if (!player.className.includes('calculated')) {
 
@@ -212,7 +216,7 @@ allPlayers.forEach(player => {
     });
 });
 
-//Un-hide upload gif class and hide everyting else
+// show upload gif and hide everything else
 
 const fileforms = document.querySelectorAll('.fileform');
 fileforms.forEach(form => {
@@ -222,7 +226,7 @@ fileforms.forEach(form => {
     });
 });
 
-
+// link master volume to each audio element's volume
 
 const setMasterVolume = () => {
     allPlayers.forEach(player => {
@@ -231,3 +235,57 @@ const setMasterVolume = () => {
 };
 
 masterVol.addEventListener('input', setMasterVolume);
+
+// playbar
+
+const playSlider = document.getElementById('playslider');
+const playSliderCurrentTime = document.getElementById('playcurrenttime');
+const playSliderTotalTime = document.getElementById('playtotaltime');
+const currentSongHeader = document.getElementById('currentsongheader');
+const currentVersion = document.getElementById('currentversion');
+const currentDate = document.getElementById('currentdate');
+const getPlaySlider = () => {
+    currentSongHeader.textContent = state.currentSong.title;
+    currentVersion.textContent = state.currentSong.version;
+    currentDate.textContent = state.currentSong.date;
+    const audio = state.currentSong.audio
+    let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
+    let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
+    playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
+    audio.addEventListener('timeupdate', () => {
+        const position = (audio.currentTime / audio.duration) * 1000;
+        playSlider.value = position;
+        let minutes = audio.currentTime < 10 ? `0${Math.floor(audio.currentTime/60)}` : Math.floor(audio.currentTime/60);
+        let seconds = audio.currentTime % 60 < 10 ? `0${Math.floor(audio.currentTime % 60)}` : Math.floor(audio.currentTime % 60);
+        playSliderCurrentTime.textContent = `${minutes}:${seconds}`;
+    });
+    playSlider.addEventListener('input', () => {
+        audio.currentTime = (playSlider.value / 1000) * audio.duration;
+    });
+};
+
+// play button
+// creates playlist, pauses currently playing song, updates play slider
+
+const playButtons = document.querySelectorAll('.playbutton');
+playButtons.forEach(playButton => {
+    playButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        let audioPlayer = playButton.childNodes[1];
+        if (state.currentSong && state.currentSong.audio === audioPlayer) {
+            return;
+        }       
+        audioPlayer.play();
+        let tierId = audioPlayer.id.split('-')[1];
+        let tier = document.getElementById(tierId);
+        const playlist = createPlaylist(tier);
+        let currentSong = playlist.find(song => song.id === audioPlayer.id);
+        let index = playlist.indexOf(currentSong);
+        state.currentPlaylist = playlist.slice(index+1);
+        if (state.currentSong && state.currentSong !== currentSong) {
+            state.currentSong.audio.pause();
+        }
+        state.currentSong = currentSong
+        getPlaySlider();
+    });
+});
