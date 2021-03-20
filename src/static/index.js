@@ -197,7 +197,7 @@ allPlayers.forEach(player => {
            
 
             let duration = e.target.duration;
-            console.log(duration);
+            
             let totalTime;
             let currentTime = document.getElementById(tierTime).textContent;
             if (currentTime) {
@@ -207,7 +207,7 @@ allPlayers.forEach(player => {
             } else {
                 totalTime = duration;
             }
-
+            currentSongHeader.textContent = duration;
             let seconds = Math.floor(totalTime % 60);
             if (seconds < 10) {
                 seconds = '0' + seconds.toString();
@@ -250,7 +250,7 @@ const currentDate = document.getElementById('currentdate');
 
 
 const getPlaySlider = () => {
-    currentSongHeader.textContent = state.currentSong.title;
+    // currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
     const audio = state.currentSong.audio;
