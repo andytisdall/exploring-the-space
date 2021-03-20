@@ -178,24 +178,27 @@ allPlayers.forEach(player => {
     player.addEventListener('ended', () => {
         if (state.currentPlaylist) {
             let nextSong = state.currentPlaylist.shift();
-            console.log(nextSong);
-            nextSong.audio.play();
-            getPlaySlider();
+            if (nextSong) {
+                nextSong.audio.play();
+                getPlaySlider();
+            }
         }
     });
 
         // Get audio duration after mp3 has loaded
         // Add it to the total duration of that tier
 
-    player.addEventListener('canplaythrough', (mp3) => {
+    player.addEventListener('canplaythrough', (e) => {
 
         if (!player.className.includes('calculated')) {
 
             let tierId = player.id.split('-')[1];
             let tierTime = 'tiertime' + tierId;
+           
 
-            let duration = mp3.target.duration;
-            let totalTime
+            let duration = e.target.duration;
+            console.log(duration);
+            let totalTime;
             let currentTime = document.getElementById(tierTime).textContent;
             if (currentTime) {
                 let [currentMin, currentSec] = currentTime.split(':');
@@ -244,11 +247,13 @@ const playSliderTotalTime = document.getElementById('playtotaltime');
 const currentSongHeader = document.getElementById('currentsongheader');
 const currentVersion = document.getElementById('currentversion');
 const currentDate = document.getElementById('currentdate');
+
+
 const getPlaySlider = () => {
     currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
-    const audio = state.currentSong.audio
+    const audio = state.currentSong.audio;
     let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
     let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
     playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
@@ -285,7 +290,7 @@ playButtons.forEach(playButton => {
         if (state.currentSong && state.currentSong !== currentSong) {
             state.currentSong.audio.pause();
         }
-        state.currentSong = currentSong
+        state.currentSong = currentSong;
         getPlaySlider();
     });
 });
