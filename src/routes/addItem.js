@@ -5,7 +5,7 @@ const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
 
-export default async function addItem(req, res) {
+export const addItem = async (req, res) => {
 
     req.session.errorMessage = '';
 

@@ -1,9 +1,9 @@
-import { index  } from './index.js';
-import deleteItem from './deleteItem.js';
-import addItem from './addItem.js';
-import { editItem, changeSong, changeVersion } from './editItem.js';
-import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './playlist.js';
-import { playMp3 } from './streamer.js';
+import { index  } from './routes/index.js';
+import { deleteItem } from './routes/deleteItem.js';
+import { addItem } from './routes/addItem.js';
+import { editItem, changeSong, changeVersion } from './routes/editItem.js';
+import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './routes/playlist.js';
+import { playMp3 } from './routes/streamer.js';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import express from 'express';

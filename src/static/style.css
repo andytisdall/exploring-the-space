@@ -10,6 +10,12 @@ body {
   margin: 1rem;
 }
 
+img {
+  height: 1rem;
+  width: auto;
+  margin: 0rem;
+}
+
 .playbar {
   height: 5rem;
   border: 1px pink solid;
@@ -22,6 +28,11 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+}
+
+.pausebutton {
+  height: 40px;
+  padding-top: 1rem;
 }
 
 .playbar-title {
@@ -257,12 +268,6 @@ h2 {
   height: 35px;
 }
 
-img {
-  height: 1rem;
-  width: auto;
-  margin: 0rem;
-}
-
 .tier-display {
   display: flex;
   justify-content: space-between;
@@ -403,6 +408,7 @@ h5 {
 .slidecontainer {
   padding-top: 1rem;
   width: 200px;
+  padding-right: 0.4rem;
 }
 
 .master-volume {
@@ -516,6 +522,11 @@ h5 {
     padding-top: 0.2rem;
   }
 
+  .slidecontainer {
+    padding-top: 1rem;
+    width: 150px;
+  }
+
   .container {
     margin: 0px;
     padding: 0px;
@@ -588,5 +599,10 @@ h5 {
     margin: 0px;
     margin-left: 1rem;
     margin-top: 0.8rem;
+  }
+
+  .pausebutton {
+    height: 20px;
+    padding-top: 0.5rem;
   }
 }

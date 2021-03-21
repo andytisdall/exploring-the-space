@@ -1,4 +1,4 @@
-import './models/models.js';
+import '../models/models.js';
 import mongoose from 'mongoose';
 const Tier = mongoose.model('Tier');
 

@@ -266,7 +266,7 @@ const getPlaySlider = () => {
 
 
 
-const play = async (mp3Id) => {
+const play = (mp3Id) => {
     const audioHTML = `<audio src='/audio/${mp3Id}.mp3' class='player' id=${mp3Id}>`;
     const currentPlayer = playerTag.childNodes[0];
     if (currentPlayer) {
@@ -275,7 +275,7 @@ const play = async (mp3Id) => {
     playerTag.insertAdjacentHTML("beforeend", audioHTML);
     
     let audioPlayer = playerTag.childNodes[0];
-    await audioPlayer.play(); 
+    audioPlayer.play(); 
     
     
     audioPlayer.addEventListener('ended', () => {
@@ -290,6 +290,7 @@ const play = async (mp3Id) => {
 
     audioPlayer.volume = masterVol.value / 100;
     setMasterVolume(audioPlayer);
+    showPause(audioPlayer);
 
     getPlaySlider();
 };
@@ -338,6 +339,16 @@ songDropdowns.forEach(link => {
 
     });
 });
+
+
+const pause = document.getElementById('pause');
+const showPause = (player) => {
+    pause.classList.remove('hidden');
+    pause.addEventListener('click', () => {
+        player.pause();
+        pause.classList.add('hidden');
+    });
+};
 
 // make pause button appear on play
 // click event on pause button makes current song pause
