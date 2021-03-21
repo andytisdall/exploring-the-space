@@ -1,8 +1,9 @@
-import { index, playMp3  } from './controller.js';
+import { index  } from './index.js';
 import deleteItem from './deleteItem.js';
 import addItem from './addItem.js';
 import { editItem, changeSong, changeVersion } from './editItem.js';
 import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './playlist.js';
+import { playMp3 } from './streamer.js';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import express from 'express';

@@ -39,7 +39,7 @@ const readStorage = () => {
     window.scrollTo(0, sessionStorage.getItem('scrollpos'));
     // get volume from storage
     masterVol.value = sessionStorage.getItem('volume');
-    setMasterVolume();
+    
 };
 
 // Add click event to container- 
@@ -155,17 +155,15 @@ const createPlaylist = (tier) => {
     const children = document.getElementById(containerId).childNodes;
     const playlist = [];
     children.forEach(title => {
-        let playerId = `player-${tier.id}-${title.id}`;
-        let playElement = document.getElementById(playerId);
+        let mp3Id = document.getElementById(`mp3Id-${title.id}`).textContent.trim();
         let titleName = document.getElementById(`name-spot-${title.id}`).textContent;
         let versionName = document.getElementById(`version-name-${title.id}`).textContent;
         let bounceDate = document.getElementById(`bounce-date-${title.id}`).textContent;
         playlist.push({
-            audio: playElement,
+            audio: mp3Id,
             title: titleName,
-            id: playerId,
             version: versionName,
-            date: bounceDate
+            date: bounceDate,
         });
     });
     return playlist;
@@ -173,51 +171,44 @@ const createPlaylist = (tier) => {
 
 // On play, playlist is created that starts with the played song.  On end, next song is played.
 
-const allPlayers = document.querySelectorAll('.player');
-allPlayers.forEach(player => {
-    player.addEventListener('ended', () => {
-        if (state.currentPlaylist) {
-            let nextSong = state.currentPlaylist.shift();
-            if (nextSong) {
-                nextSong.audio.play();
-                getPlaySlider();
-            }
-        }
-    });
+const playerTag = document.getElementById('player-spot');
+
+
+
 
         // Get audio duration after mp3 has loaded
         // Add it to the total duration of that tier
 
-    player.addEventListener('canplaythrough', (e) => {
+playerTag.addEventListener('canplaythrough', (e) => {
 
-        if (!player.className.includes('calculated')) {
+    if (!player.className.includes('calculated')) {
 
-            let tierId = player.id.split('-')[1];
-            let tierTime = 'tiertime' + tierId;
-           
-
-            let duration = e.target.duration;
-            
-            let totalTime;
-            let currentTime = document.getElementById(tierTime).textContent;
-            if (currentTime) {
-                let [currentMin, currentSec] = currentTime.split(':');
-                let totalCurrentSecs = (parseInt(currentMin) * 60) + parseInt(currentSec);
-                totalTime = duration + totalCurrentSecs;
-            } else {
-                totalTime = duration;
-            }
-            currentSongHeader.textContent = duration;
-            let seconds = Math.floor(totalTime % 60);
-            if (seconds < 10) {
-                seconds = '0' + seconds.toString();
-            }
-            let minutes = Math.floor(totalTime/60);
-            document.getElementById(tierTime).textContent = `${minutes}:${seconds}`;
-            player.classList.add('calculated');
+        let tierId = player.id.split('-')[1];
+        let tierTime = 'tiertime' + tierId;
+        
+//
+        let duration = e.target.duration;
+        
+        let totalTime;
+        let currentTime = document.getElementById(tierTime).textContent;
+        if (currentTime) {
+            let [currentMin, currentSec] = currentTime.split(':');
+            let totalCurrentSecs = (parseInt(currentMin) * 60) + parseInt(currentSec);
+            totalTime = duration + totalCurrentSecs;
+        } else {
+            totalTime = duration;
         }
-    });
+        
+        let seconds = Math.floor(totalTime % 60);
+        if (seconds < 10) {
+            seconds = '0' + seconds.toString();
+        }
+        let minutes = Math.floor(totalTime/60);
+        document.getElementById(tierTime).textContent = `${minutes}:${seconds}`;
+        player.classList.add('calculated');
+    }
 });
+
 
 // show upload gif and hide everything else
 
@@ -231,13 +222,11 @@ fileforms.forEach(form => {
 
 // link master volume to each audio element's volume
 
-const setMasterVolume = () => {
-    allPlayers.forEach(player => {
-        player.volume = masterVol.value / 100;
+const setMasterVolume = (audioPlayer) => {
+    masterVol.addEventListener('input', () => {
+        audioPlayer.volume = masterVol.value / 100;
     });
 };
-
-masterVol.addEventListener('input', setMasterVolume);
 
 // playbar
 
@@ -250,13 +239,11 @@ const currentDate = document.getElementById('currentdate');
 
 
 const getPlaySlider = () => {
-    // currentSongHeader.textContent = state.currentSong.title;
+    currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
-    const audio = state.currentSong.audio;
-    let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
-    let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
-    playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
+    const audio = document.getElementById(state.currentSong.audio);
+    
     audio.addEventListener('timeupdate', () => {
         const position = (audio.currentTime / audio.duration) * 1000;
         playSlider.value = position;
@@ -267,32 +254,63 @@ const getPlaySlider = () => {
     playSlider.addEventListener('input', () => {
         audio.currentTime = (playSlider.value / 1000) * audio.duration;
     });
+    audio.addEventListener('canplaythrough', () => {
+        let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
+        let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
+        playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
+    });
 };
 
 // play button
 // creates playlist, pauses currently playing song, updates play slider
 
+
+
+const play = async (mp3Id) => {
+    const audioHTML = `<audio src='/audio/${mp3Id}.mp3' class='player' id=${mp3Id}>`;
+    const currentPlayer = playerTag.childNodes[0];
+    if (currentPlayer) {
+        playerTag.removeChild(currentPlayer);
+    }
+    playerTag.insertAdjacentHTML("beforeend", audioHTML);
+    
+    let audioPlayer = playerTag.childNodes[0];
+    await audioPlayer.play(); 
+    
+    
+    audioPlayer.addEventListener('ended', () => {
+        if (state.currentPlaylist) {
+            let nextSong = state.currentPlaylist.shift();
+            if (nextSong) {
+                play(nextSong.audio);
+                state.currentSong = nextSong;
+            }
+        }
+    });
+
+    audioPlayer.volume = masterVol.value / 100;
+    setMasterVolume(audioPlayer);
+
+    getPlaySlider();
+};
+
 const playButtons = document.querySelectorAll('.playbutton');
 playButtons.forEach(playButton => {
     playButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        let audioPlayer = playButton.childNodes[1];
-        if (state.currentSong && state.currentSong.audio === audioPlayer) {
-            return;
-        }       
-        audioPlayer.play();
-        let tierId = audioPlayer.id.split('-')[1];
+        const [mp3Id, tierId] = playButton.id.split('-');
         let tier = document.getElementById(tierId);
         const playlist = createPlaylist(tier);
-        let currentSong = playlist.find(song => song.id === audioPlayer.id);
+
+        let currentSong = playlist.find(song => song.audio === mp3Id);
         let index = playlist.indexOf(currentSong);
+        state.currentSong = currentSong;
         state.currentPlaylist = playlist.slice(index+1);
         if (state.currentSong && state.currentSong !== currentSong) {
             state.currentSong.audio.pause();
         }
-        state.currentSong = currentSong;
-        getPlaySlider();
-    });
+        play(mp3Id);
+    }); 
 });
 
 const versionDropdowns = document.querySelectorAll('.change-version');
@@ -320,3 +338,7 @@ songDropdowns.forEach(link => {
 
     });
 });
+
+// make pause button appear on play
+// click event on pause button makes current song pause
+// pause event on current player or no next song causes pause to be hidden

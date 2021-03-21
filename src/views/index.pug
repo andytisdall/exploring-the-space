@@ -18,9 +18,12 @@ body
     div(class='container')
         if errorMessage
             div(class='error') #{errorMessage}
+
+        div(id='player-spot' class='hidden')
         div(class='playbar')
             div(class='playbar-header')
                 p(id='currentsongheader' class='playbar-title')
+                img(class='pausebutton hidden' src='pause.svg' id='pause')
                 div(class='playbar-info')
                     p(id='currentversion')
                     p(id='currentdate')         
@@ -34,8 +37,7 @@ body
             div(class="slidecontainer")
                 input(type="range" min="0" max="100" value="50" class="master-volume" id="mastervol")
 
-                
-
+            
         hr
         each tier in tiers
             div(class="row tier" id=tier.id)
@@ -85,11 +87,11 @@ body
                                             - const thisVersion = title.versions.find(v => v.current)
                                             if thisVersion.songs.length > 0
                                                 - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
-                                                img(class='pausebutton hidden' src='pause.svg' id='pause-'+title.id)             
-                                                div(class='playbutton')
+                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')                                               
+                                                div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}         
+                                                div(class='playbutton' id=thisSong.id + '-' + tier.id)
                                                     img(src='play.svg' class='playicon')
-                                                    audio(src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
+                                                    //- audio(src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
                                                 div(class='title-display')
                                                     p #{thisVersion.name}
                                                     p #{displayDate}
