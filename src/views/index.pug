@@ -14,27 +14,28 @@ body
             div(class='upload-image')
                 p UPLOADING...
                 img(class='windmill' src='windmill.gif' height='120px' width='110px')
-    
+    div(id='player-spot' class='hidden')
+    div(class='playbar')
+        div(class='playbar-header')
+            p(id='currentsongheader' class='playbar-title')
+            
+            div(class='playbar-info')
+                p(id='currentversion')
+                p(id='currentdate')         
+        div(class='playslidercontainer')
+            div(class='playslidertime' id='playcurrenttime')
+            input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
+            div(class='playslidertime' id='playtotaltime') 
+            
     div(class='container')
         if errorMessage
             div(class='error') #{errorMessage}
 
-        div(id='player-spot' class='hidden')
-        div(class='playbar')
-            div(class='playbar-header')
-                p(id='currentsongheader' class='playbar-title')
-                
-                div(class='playbar-info')
-                    p(id='currentversion')
-                    p(id='currentdate')         
-            div(class='playslidercontainer')
-                div(class='playslidertime' id='playcurrenttime')
-                input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
-                div(class='playslidertime' id='playtotaltime') 
-            
-        div(class="marqee")            
+        
+        div(class="marqee header")            
             h1 Apprehenchmen
             img(class='pausebutton hidden' src='pause.svg' id='pause')
+            img(class='unpause hidden' src='play.svg' id='unpause')
             div(class="slidecontainer")
                 input(type="range" min="0" max="100" value="50" class="master-volume" id="mastervol")
 
@@ -120,13 +121,13 @@ body
     
                                 div(class='versioncontainer hidden' id=('version-' + title.id))
                                     if title.versions.length > 0 
-                                        div(class='detail-info')
-                                            div(class='detail-header')
-                                                div(class='detail-box')
+                                        div(class='detail-box')
+                                            div(class='detail-content')
+                                                div(class='detail-header')
                                                     - const thisVersion = title.versions.find(v => v.current)
                                                     - const versionList = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
                                                     
-                                                    
+                                                    h5 Version:       
                                                     div(class='dropdown')
                                                         button(class='dropbtn' id='version-name-'+title.id) #{thisVersion.name}
                                                         div(class='dropdown-content')
@@ -134,28 +135,7 @@ body
                                                                 - let short = version[0].length > 14 ? version[0].slice(0,20) + '..' : version[0]
                                                                 div(class='dropdown-link change-version' id=thisVersion.id + '-' + version[1]) #{short}
 
-
-
-
-
-
-
-                                                    //- form(class="row version-select hidden" method='POST' action='/change-version')
-                                                    //-     input(type='hidden' name='changeVersion')
-                                                    //-     label(for='changeVersion' class='selector') Version:   
-
-                                                        //- select(name="changeVersion" onchange='this.form.submit()' id='version-name-'+title.id)
-                                                        //-     option(value=thisVersion.name selected disabled) #{thisVersion.name}
-                                                        //-     - const versionDates = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
-                                                        //-     each version in versionDates
-                                                        //-         - let short = version[0].length > 14 ? version[0].slice(0,14) + '..' : version[0]
-                                                        //-         option(value=version[1]) #{short}
-
-
-
-
-
-                                                    p(class='notes') #{thisVersion.notes}   
+                                                div(class='detail-notes') #{thisVersion.notes}   
                                             
                                             div(class='detail-buttons')
                                                 div(class="edit" id=('editversion-' + thisVersion.id))
@@ -187,14 +167,16 @@ body
 
 
                                         if thisVersion.songs.length > 0     
-                                            div(class="detail-info"  id=('song-' + thisVersion.id))
-                                                div(class='detail-header')
-                                                    div(class='detail-box')
+                                            div(class="detail-box"  id=('song-' + thisVersion.id))
+                                                div(class='detail-content')
+                                                    div(class='detail-header')
+                                                    
                                                         - const thisSong = thisVersion.songs.find(s => s.latest)
                                                         - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
                                                         - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
                                                         - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
 
+                                                        h5 Date:
                                                         div(class='dropdown')
                                                             button(class='dropbtn' id='bounce-date-'+title.id)  #{displayDate}
                                                             div(class='dropdown-content')
@@ -203,25 +185,7 @@ body
                                                                     - let dateDisplay = date.slice(0,8)
                                                                     div(class='dropdown-link change-song' id=thisSong.id + '-' + dateId) #{dateDisplay}
 
-
-
-
-
-
-                                                        //- form(class="row version-select" method='POST' action='/changelatest')
-                                                        //-     input(type='hidden' name='currentLatest' value=thisSong.id)
-                                                        //-     label(for='newLatest'  class='selector') Date:   
-                                                        //-     select(name="newLatest" onchange='this.form.submit()' id='bounce-date-'+title.id)
-                                                        //-         option(value=displayDate selected disabled) #{displayDate}
-                                                        //-         - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
-                                                        //-         - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
-                                                        //-         each date in formattedSongDates
-                                                        //-             option(value=date.slice(8)) #{date.slice(0,8)}
-
-
-
-
-                                                        p(class='notes') #{thisSong.comments}    
+                                                    div(class='detail-notes') #{thisSong.comments}    
                                                 div(class='detail-buttons')
                                                     div(class="edit" id='editbounce-' + thisSong.id)
                                                         img(src='edit.png')

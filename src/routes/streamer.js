@@ -91,12 +91,12 @@ export async function playMp3(req,res) {
             res.status(206).set({
                 'Accept-Ranges': 'bytes',
                 'Content-Length': chunksize,
-                'Content-Range': 'bytes 0 -' + end + '/' + thisSong.length,
+                'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.length,
                 'Content-Type': 'audio/mpeg',
                 
             });
         
-        } else if (start === 0 && end === 1 ) {
+        } else {
 
             //for the initial safari request
             const stream = bucket.openDownloadStream(mp3Id, { start, end: end -1 });
@@ -151,11 +151,6 @@ export async function playMp3(req,res) {
             //     file = Buffer.concat(file);
             //     res.send(file);
             // })
-        } else {
-            //if there's a range request that does not follow any of the patterns :(
-            console.log('something else')
-            console.log(req.headers.range);
-            res.end()
         }
 
     } 

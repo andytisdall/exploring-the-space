@@ -10,13 +10,13 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import moment from 'moment';
-import {mongoKey} from './mongo-key.js'
+// import {mongoKey} from './mongo-key.js'
 
 
 const app = express();
 
 app.use(express.static('src/static/images'));
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(fileUpload());
@@ -26,7 +26,8 @@ app.set('view engine', 'pug');
 
 app.locals.moment = moment;
 
-const mongo = mongoKey;
+// const mongo = mongoKey;
+const mongo = 'mongodb://localhost/greenhouse';
 
 mongoose.connect(mongo, {
     useNewUrlParser: true,

@@ -28,6 +28,8 @@ img {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+  /* position: fixed; */
+  width: 100%;
 }
 
 .pausebutton {
@@ -35,28 +37,35 @@ img {
   padding-top: 1rem;
 }
 
+.unpause {
+  height: 40px;
+  padding-top: 1rem;
+}
+
 .playbar-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  color: rgb(235, 155, 118);
 }
 
 .playbar-header {
   display: flex;
-  width: 30%;
+  width: 35%;
   justify-content: space-between;
 }
 
 .playslidercontainer {
-  width: 70%;
+  width: 65%;
   padding-left: 1rem;
   padding-top: 1rem;
   display: flex;
 }
 
 .playslidertime {
-  width: 35px;
+  width: 60px;
   padding-top: 5px;
   padding-right: 10px;
   padding-left: 10px;
+  color: rgb(151, 235, 68);
 }
 
 .playslider {
@@ -167,15 +176,16 @@ hr {
 }
 
 .title-display {
+  width: 70%;
   display: flex;
 }
 
-.player {
+/* .player {
   margin: 0px;
   width: 350px;
   height: 30px;
   display: block;
-}
+} */
 
 /* input elements */
 
@@ -335,38 +345,76 @@ h3 {
   height: 230px;
 }
 
-.detail-info {
-  width: 50%;
-  padding-bottom: 0.6rem;
-}
-
 .noversion {
   padding-bottom: 1rem;
 }
 
-.detail-buttons {
+.detail-box {
+  width: 50%;
+  border: solid white 1px;
+  padding: 0.7rem;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
   display: flex;
-  padding-top: 0.7rem;
-  padding-left: 1rem;
-  padding-right: 1.3rem;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.detail-content {
+  display: flex;
+  padding-bottom: 1.2rem;
 }
 
 .detail-header {
-  display: flex;
+  width: 100%;
 }
 
-.detail-box {
-  border: solid white 1px;
-  box-sizing: border-box;
-  padding: 0.7rem;
-  height: 120px;
-  width: 90%;
-  line-height: 120%;
-}
-
-.notes {
+.detail-notes {
+  margin-top: 0.7rem;
+  margin-left: 2rem;
   font-size: 0.8rem;
+}
+
+.detail-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.dropdown {
+  width: 100%;
+}
+
+.dropbtn {
+  background-color: #76cdff;
+  color: rgb(5, 0, 0);
+  padding: 0.5rem;
+  border: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-link {
+  color: black;
+  padding: 0.5rem;
+  display: block;
+}
+
+.dropdown-link:hover {
+  background-color: #fcc4c4;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
 }
 
 .selector {
@@ -407,7 +455,7 @@ h5 {
 
 .slidecontainer {
   padding-top: 1rem;
-  width: 200px;
+  width: 30%;
   padding-right: 0.4rem;
 }
 
@@ -445,49 +493,7 @@ h5 {
   cursor: pointer;
 }
 
-.dropbtn {
-  background-color: #76cdff;
-  color: rgb(5, 0, 0);
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  width: 100%;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  width: 100%;
-}
-
-.dropdown-link {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-link:hover {
-  background-color: #fcc4c4;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   body {
     padding: 0px;
     margin: 0.3rem;
@@ -589,10 +595,6 @@ h5 {
   .versioncontainer {
     margin-left: 0.3rem;
     margin-top: 0.3rem;
-  }
-
-  .detail-box {
-    padding: 0.3rem;
   }
 
   .song-count {

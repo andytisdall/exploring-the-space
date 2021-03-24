@@ -81,7 +81,7 @@ export const deleteItem = async (req, res) => {
             res.redirect('/');
             break;
         case 'title':
-            deletTitle(id, parentId);
+            deleteTitle(id, parentId);
             res.redirect('/');
             break;
         case 'version':

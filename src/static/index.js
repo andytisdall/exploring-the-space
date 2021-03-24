@@ -78,7 +78,8 @@ document.querySelectorAll('button').forEach(button => {
 document.querySelectorAll('.delete').forEach(button => {
     button.addEventListener('click', e => {
         e.stopPropagation();
-        if (!confirm('Confirm Deletion')) {
+        const deletion = prompt('type the word delete to confirm deletion');
+        if (deletion !== 'delete') {
             e.preventDefault();
         }
     });
@@ -155,10 +156,19 @@ const createPlaylist = (tier) => {
     const children = document.getElementById(containerId).childNodes;
     const playlist = [];
     children.forEach(title => {
-        let mp3Id = document.getElementById(`mp3Id-${title.id}`).textContent.trim();
+        let mp3Id = document.getElementById(`mp3Id-${title.id}`);
+        if (mp3Id) {
+            mp3Id = mp3Id.textContent.trim();
+        }
         let titleName = document.getElementById(`name-spot-${title.id}`).textContent;
-        let versionName = document.getElementById(`version-name-${title.id}`).textContent;
-        let bounceDate = document.getElementById(`bounce-date-${title.id}`).textContent;
+        let versionName = document.getElementById(`version-name-${title.id}`);
+        if (versionName) {
+            versionName = versionName.textContent;
+        }
+        let bounceDate = document.getElementById(`bounce-date-${title.id}`);
+        if (bounceDate) {
+            bounceDate = bounceDate.textContent;
+        }
         playlist.push({
             audio: mp3Id,
             title: titleName,
@@ -178,6 +188,28 @@ const playerTag = document.getElementById('player-spot');
 
         // Get audio duration after mp3 has loaded
         // Add it to the total duration of that tier
+
+const titles = document.querySelectorAll('.title');
+titles.forEach(async title => {
+    let mp3Id = document.getElementById(`mp3Id-${title.id}`);
+    if (mp3Id) {
+        mp3Id = mp3Id.textContent.trim();
+    } else {
+        return;
+    }
+    const mp3 = await axios.get(
+        `/audio/${mp3Id}.mp3`,
+        {
+        headers: {
+            'Range': 'bytes=0-'
+        },
+        responseType: 'arraybuffer'
+    });
+    const audioContext = new window.AudioContext;
+    audioContext.decodeAudioData(mp3.data, (buffer) => {
+        console.log(buffer.duration);
+    })
+});
 
 playerTag.addEventListener('canplaythrough', (e) => {
 
@@ -238,16 +270,17 @@ const currentVersion = document.getElementById('currentversion');
 const currentDate = document.getElementById('currentdate');
 
 
-const getPlaySlider = () => {
+const getPlaySlider = (audio) => {
+    
     currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
-    const audio = document.getElementById(state.currentSong.audio);
+    
     
     audio.addEventListener('timeupdate', () => {
         const position = (audio.currentTime / audio.duration) * 1000;
         playSlider.value = position;
-        let minutes = audio.currentTime < 10 ? `0${Math.floor(audio.currentTime/60)}` : Math.floor(audio.currentTime/60);
+        let minutes = audio.currentTime < 600 ? `0${Math.floor(audio.currentTime/60)}` : Math.floor(audio.currentTime/60);
         let seconds = audio.currentTime % 60 < 10 ? `0${Math.floor(audio.currentTime % 60)}` : Math.floor(audio.currentTime % 60);
         playSliderCurrentTime.textContent = `${minutes}:${seconds}`;
     });
@@ -282,8 +315,8 @@ const play = (mp3Id) => {
         if (state.currentPlaylist) {
             let nextSong = state.currentPlaylist.shift();
             if (nextSong) {
-                play(nextSong.audio);
                 state.currentSong = nextSong;
+                play(nextSong.audio);
             }
         }
     });
@@ -292,7 +325,7 @@ const play = (mp3Id) => {
     setMasterVolume(audioPlayer);
     showPause(audioPlayer);
 
-    getPlaySlider();
+    getPlaySlider(audioPlayer);
 };
 
 const playButtons = document.querySelectorAll('.playbutton');
@@ -342,14 +375,19 @@ songDropdowns.forEach(link => {
 
 
 const pause = document.getElementById('pause');
+const unpause = document.getElementById('unpause');
 const showPause = (player) => {
     pause.classList.remove('hidden');
     pause.addEventListener('click', () => {
         player.pause();
         pause.classList.add('hidden');
+        unpause.classList.remove('hidden');
     });
 };
 
-// make pause button appear on play
-// click event on pause button makes current song pause
-// pause event on current player or no next song causes pause to be hidden
+unpause.addEventListener('click', () => {
+    pause.classList.remove('hidden');
+    const audio = document.getElementById(state.currentSong.audio);
+    audio.play();
+    unpause.classList.add('hidden');
+});
