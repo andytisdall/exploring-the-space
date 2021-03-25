@@ -280,11 +280,17 @@ const currentDate = document.getElementById('currentdate');
 
 const getPlaySlider = (audio) => {
     
+    // displays song info on playbar
     currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
+
+    // updates total time for the mp3
+    let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
+    let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
+    playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
     
-    
+    // updates current time on play slider
     audio.addEventListener('timeupdate', () => {
         const position = (audio.currentTime / audio.duration) * 1000;
         playSlider.value = position;
@@ -292,14 +298,12 @@ const getPlaySlider = (audio) => {
         let seconds = audio.currentTime % 60 < 10 ? `0${Math.floor(audio.currentTime % 60)}` : Math.floor(audio.currentTime % 60);
         playSliderCurrentTime.textContent = `${minutes}:${seconds}`;
     });
+
+    // moving the slider will update the current position in the mp3
     playSlider.addEventListener('input', () => {
         audio.currentTime = (playSlider.value / 1000) * audio.duration;
     });
-    audio.addEventListener('canplaythrough', () => {
-        let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
-        let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
-        playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
-    });
+
 };
 
 // play button
@@ -429,31 +433,32 @@ fileInputs.forEach(input => {
     input.addEventListener('submit', (e) => {
         e.preventDefault();
         // Obtain the uploaded file, you can change the logic if you are working with multiupload
+        if (input.childNodes[2].files) {
+            const file = input.childNodes[2].files[0];
+            
+            
+            // Create instance of FileReader
+            const reader = new FileReader();
 
-        const file = input.childNodes[2].files[0];
-        
-        
-        // Create instance of FileReader
-        const reader = new FileReader();
+            // When the file has been succesfully read
+            reader.onload = event => {
 
-        // When the file has been succesfully read
-        reader.onload = event => {
+                // Create an instance of AudioContext
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-            // Create an instance of AudioContext
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Asynchronously decode audio file data contained in an ArrayBuffer.
+                audioContext.decodeAudioData(event.target.result, buffer => {
+                    // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+                    const duration = parseInt(buffer.duration);
 
-            // Asynchronously decode audio file data contained in an ArrayBuffer.
-            audioContext.decodeAudioData(event.target.result, buffer => {
-                // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
-                const duration = parseInt(buffer.duration);
+                    const formData = new FormData(input)
+                    formData.append('duration', duration);
+                    axios.post('/', formData).then(() => {
+                        window.location.reload();
+                    });
 
-                const formData = new FormData(input)
-                formData.append('duration', duration);
-                axios.post('/', formData).then(() => {
-                    window.location.reload();
                 });
-
-            });
+            }
         };
 
         // In case that the file couldn't be read

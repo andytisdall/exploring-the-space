@@ -97,7 +97,7 @@ export const editItem = async (req, res) => {
                     //update mp3 id for bounce
                     let mp3 = stream.id;
                     let oldMp3 = await Song.findOne({ _id: id }).mp3;
-                    await Song.updateOne({ _id: id }, { mp3, length: req.files.songFile.size });
+                    await Song.updateOne({ _id: id }, { mp3, size: req.files.songFile.size, duration: req.body.duration });
                     console.log('Uploaded new mp3');
                     // Delete old mp3
                     let mp3Id = new ObjectID(oldMp3);
