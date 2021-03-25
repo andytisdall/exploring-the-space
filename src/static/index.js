@@ -51,8 +51,11 @@ const readStorage = () => {
 
 
 const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
-document.addEventListener('click', e => {
 
+const container = document.querySelector('.container');
+
+container.addEventListener('click', e => {
+    
     if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
         return;
     }
@@ -78,7 +81,10 @@ document.querySelectorAll('button').forEach(button => {
 document.querySelectorAll('.delete').forEach(button => {
     button.addEventListener('click', e => {
         e.stopPropagation();
-        const deletion = prompt('type the word delete to confirm deletion');
+        const parsedUrl = e.target.parentNode.href.split('/');
+        const itemType = parsedUrl[4];
+        const message = `This ${itemType} and all of its children will be deleted. Type the word delete to confirm`;
+        const deletion = prompt(message);
         if (deletion !== 'delete') {
             e.preventDefault();
         }
@@ -189,56 +195,58 @@ const playerTag = document.getElementById('player-spot');
         // Get audio duration after mp3 has loaded
         // Add it to the total duration of that tier
 
-const titles = document.querySelectorAll('.title');
-titles.forEach(async title => {
-    let mp3Id = document.getElementById(`mp3Id-${title.id}`);
-    if (mp3Id) {
-        mp3Id = mp3Id.textContent.trim();
+
+// titles.forEach(async title => {
+//     let mp3Id = document.getElementById(`mp3Id-${title.id}`);
+//     if (mp3Id) {
+//         mp3Id = mp3Id.textContent.trim();
+//     } else {
+//         return;
+//     }
+//     const mp3 = await axios.get(
+//         `/audio/${mp3Id}.mp3`,
+//         {
+//         headers: {
+//             'Range': 'bytes=0-'
+//         },
+//         responseType: 'arraybuffer'
+//     });
+//     const audioContext = new window.AudioContext;
+//     audioContext.decodeAudioData(mp3.data, (buffer) => {
+//         console.log(buffer.duration);
+//     })
+// });
+
+const timeDisplays = document.querySelectorAll('.songtime');
+
+timeDisplays.forEach(time => {
+
+
+    let tierId = time.id.split('-')[[1]];
+    let tierTime = 'tiertime' + tierId;
+    
+    let duration = time.textContent;
+
+    let [durMin, durSec] = duration.split(':');
+    duration = (parseInt(durMin) * 60) + parseInt(durSec);
+    
+    let totalTime;
+    let currentTime = document.getElementById(tierTime).textContent;
+    if (currentTime) {
+        let [currentMin, currentSec] = currentTime.split(':');
+        let totalCurrentSecs = (parseInt(currentMin) * 60) + parseInt(currentSec);
+        totalTime = duration + totalCurrentSecs;
     } else {
-        return;
+        totalTime = duration;
     }
-    const mp3 = await axios.get(
-        `/audio/${mp3Id}.mp3`,
-        {
-        headers: {
-            'Range': 'bytes=0-'
-        },
-        responseType: 'arraybuffer'
-    });
-    const audioContext = new window.AudioContext;
-    audioContext.decodeAudioData(mp3.data, (buffer) => {
-        console.log(buffer.duration);
-    })
-});
-
-playerTag.addEventListener('canplaythrough', (e) => {
-
-    if (!player.className.includes('calculated')) {
-
-        let tierId = player.id.split('-')[1];
-        let tierTime = 'tiertime' + tierId;
-        
-//
-        let duration = e.target.duration;
-        
-        let totalTime;
-        let currentTime = document.getElementById(tierTime).textContent;
-        if (currentTime) {
-            let [currentMin, currentSec] = currentTime.split(':');
-            let totalCurrentSecs = (parseInt(currentMin) * 60) + parseInt(currentSec);
-            totalTime = duration + totalCurrentSecs;
-        } else {
-            totalTime = duration;
-        }
-        
-        let seconds = Math.floor(totalTime % 60);
-        if (seconds < 10) {
-            seconds = '0' + seconds.toString();
-        }
-        let minutes = Math.floor(totalTime/60);
-        document.getElementById(tierTime).textContent = `${minutes}:${seconds}`;
-        player.classList.add('calculated');
+    
+    let seconds = Math.floor(totalTime % 60);
+    if (seconds < 10) {
+        seconds = '0' + seconds.toString();
     }
+    let minutes = Math.floor(totalTime/60);
+    document.getElementById(tierTime).textContent = `${minutes}:${seconds}`;
+
 });
 
 
@@ -341,7 +349,7 @@ playButtons.forEach(playButton => {
         state.currentSong = currentSong;
         state.currentPlaylist = playlist.slice(index+1);
         if (state.currentSong && state.currentSong !== currentSong) {
-            state.currentSong.audio.pause();
+            pausePlayer(state.currentSong.audio);
         }
         play(mp3Id);
     }); 
@@ -376,18 +384,85 @@ songDropdowns.forEach(link => {
 
 const pause = document.getElementById('pause');
 const unpause = document.getElementById('unpause');
+
 const showPause = (player) => {
     pause.classList.remove('hidden');
     pause.addEventListener('click', () => {
-        player.pause();
-        pause.classList.add('hidden');
-        unpause.classList.remove('hidden');
+        pausePlayer(player);
     });
 };
 
-unpause.addEventListener('click', () => {
+const pausePlayer = (player) => {
+    player.pause();
+    pause.classList.add('hidden');
+    unpause.classList.remove('hidden');
+}
+
+const unpausePlayer = (player) => {
     pause.classList.remove('hidden');
-    const audio = document.getElementById(state.currentSong.audio);
-    audio.play();
+    player.play();
     unpause.classList.add('hidden');
+}
+
+unpause.addEventListener('click', () => {
+    const audio = document.getElementById(state.currentSong.audio);
+    unpausePlayer(audio);
 });
+
+// document.addEventListener('keydown', (e) => {
+//     if (e.code === 'Space') {
+//         e.preventDefault();
+//         if (state.currentSong) {
+//             const audio = document.getElementById(state.currentSong.audio);
+//             if (audio.paused) {
+//                 unpausePlayer(audio);
+//             } else {
+//                 pausePlayer(audio);
+//             }
+//         }
+//     }
+// });
+
+
+const fileInputs = document.querySelectorAll('.fileform');
+fileInputs.forEach(input => {
+    input.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Obtain the uploaded file, you can change the logic if you are working with multiupload
+
+        const file = input.childNodes[2].files[0];
+        
+        
+        // Create instance of FileReader
+        const reader = new FileReader();
+
+        // When the file has been succesfully read
+        reader.onload = event => {
+
+            // Create an instance of AudioContext
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Asynchronously decode audio file data contained in an ArrayBuffer.
+            audioContext.decodeAudioData(event.target.result, buffer => {
+                // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+                const duration = parseInt(buffer.duration);
+
+                const formData = new FormData(input)
+                formData.append('duration', duration);
+                axios.post('/', formData).then(() => {
+                    window.location.reload();
+                });
+
+            });
+        };
+
+        // In case that the file couldn't be read
+        reader.onerror =  event => {
+            console.error("An error ocurred reading the file: ", event);
+        };
+
+        // Read file as an ArrayBuffer, important !
+        reader.readAsArrayBuffer(file);
+    });
+});
+

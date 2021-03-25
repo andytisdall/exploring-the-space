@@ -6,7 +6,8 @@ const songSchema = new Schema({
     latest: { type: Boolean, default: false },
     comments: String,
     mp3: String,
-    length: Number
+    size: Number,
+    duration: Number
 });
 
 const versionSchema = new Schema({

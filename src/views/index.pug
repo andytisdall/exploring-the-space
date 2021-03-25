@@ -12,25 +12,23 @@ body
     div(class='upload-container hidden')
         div(class='upload-progress')
             div(class='upload-image')
-                p UPLOADING...
-                img(class='windmill' src='windmill.gif' height='120px' width='110px')
+                p Uploading...
+                img(class='windmill' src='windmill.gif')
     div(id='player-spot' class='hidden')
-    div(class='playbar')
-        div(class='playbar-header')
-            p(id='currentsongheader' class='playbar-title')
-            
-            div(class='playbar-info')
-                p(id='currentversion')
-                p(id='currentdate')         
-        div(class='playslidercontainer')
-            div(class='playslidertime' id='playcurrenttime')
-            input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
-            div(class='playslidertime' id='playtotaltime') 
-            
+   
     div(class='container')
         if errorMessage
             div(class='error') #{errorMessage}
-
+        div(class='playbar')
+            div(class='playbar-header')
+                p(id='currentsongheader' class='playbar-title')                
+                div(class='playbar-info')
+                    p(id='currentversion')
+                    p(id='currentdate')         
+            div(class='playslidercontainer')
+                div(class='playslidertime' id='playcurrenttime')
+                input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
+                div(class='playslidertime' id='playtotaltime') 
         
         div(class="marqee header")            
             h1 Apprehenchmen
@@ -89,11 +87,14 @@ body
                                             - const thisVersion = title.versions.find(v => v.current)
                                             if thisVersion.songs.length > 0
                                                 - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')                                               
-                                                div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}         
+                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
+                                                - const minutes = Math.floor(thisSong.duration / 60)
+                                                - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
+                                                - const displayTime = `${minutes}:${seconds}`
+                                                div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
+                                                div(class='songtime' id='duration-' + tier.id) #{displayTime}
                                                 div(class='playbutton' id=thisSong.id + '-' + tier.id)
                                                     img(src='play.svg' class='playicon')
-                                                    //- audio(src='/audio/' + thisSong.id + '.mp3' class='player' id='player-' + tier.id + '-' + title.id title=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
                                                 div(class='title-display')
                                                     p #{thisVersion.name}
                                                     p #{displayDate}
@@ -238,7 +239,7 @@ body
                                                         div(class="add" id='addbounce-' + thisVersion.id)
                                                             img(src='add.png')
                                                             div(class='addbox bounce hidden')
-                                                                form(method='POST' action='' id='songform' class='fileform' encType="multipart/form-data")
+                                                                form(method='POST' action='' class='fileform' encType="multipart/form-data")
                                                                     label(for='songFile') File:
                                                                     br
                                                                     input(type='file' name='songFile' required='true' class='inputfile')
@@ -254,6 +255,7 @@ body
                                                                     label(for="songLatest") Latest
                                                                     input(type="checkbox" name="songLatest" checked)
                                                                     input(type='hidden' name='dataID' value='song-' + thisVersion.id)
+                                                                    input(type='hidden' name='duration' value='')
                                                                     button(type='submit') OK
                                     else
                                         div(class='noversion')
@@ -275,13 +277,13 @@ body
         else
             p(class='row tier') There are no tiers.
         div(class="add addtier")
-                    img(src='add.png')
-                    div(class='addbox hidden tier-add')
-                        form(method='POST' action='')
-                            label(for='tierName') Tier Name:
-                            input(type='text' spellcheck='false' name='tierName' required='true' value='')
-                            input(type='hidden' name='dataID' value='tier-0')
-                            button(type='submit') OK    
+            img(src='add.png')
+            div(class='addbox hidden tier-add')
+                form(method='POST' action='')
+                    label(for='tierName') Tier Name:
+                    input(type='text' spellcheck='false' name='tierName' required='true' value='')
+                    input(type='hidden' name='dataID' value='tier-0')
+                    button(type='submit') OK    
     //- div(class='playlist-container')
     //-     each playlist in playlists
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")

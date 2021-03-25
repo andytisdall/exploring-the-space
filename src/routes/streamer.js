@@ -16,16 +16,7 @@ mongoose.connection.on('connected', () => {
 
 export function addMp3(file) {
 
-    // const readableMp3Stream = new Readable();
-    // readableMp3Stream.push(file.buffer);
-    // readableMp3Stream.push(null);
-
-
-
-
     let uploadStream = bucket.openUploadStream(file.name);
-
-    let id = uploadStream.id;
 
     const readableStream = new Readable();
     readableStream.push(file.data);
@@ -33,8 +24,6 @@ export function addMp3(file) {
     readableStream.pipe(uploadStream);
 
     return uploadStream;
-
-
 
 }
 
@@ -51,28 +40,30 @@ export async function playMp3(req,res) {
         const partialstart = parts[0];
         const partialend = parts[1];
         const start = parseInt(partialstart, 10);
-        const end = parseInt(partialend, 10);
+        const end = partialend ? parseInt(partialend, 10) : thisSong.size -1;
         const chunksize = (end - start) + 1;
 
-        // chrome sends a range request as bytes=0-
-        if (!partialend) {
+        res.set({
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'audio/mpeg',
+            'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.size,
+        });
+
+        // chrome sends the first range request as bytes=0-
+        // and it wants the whole file
+        if ((start === 0 || start === end-1) && !partialend) {
             
             const stream = bucket.openDownloadStream(mp3Id);
             stream.on('error', (err) => {
                 console.log('cannot find mp3');
                 return;
             });
-    
-            res.set({
-                'Accept-Ranges': 'bytes',
-                'Content-Length': thisSong.length,
-                'Content-Type': 'audio/mpeg',
-                'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.length,
-            });
+            
             stream.pipe(res);
         
         // safari sends a range request of bytes=0-1 and then one for bytes=0-(end of file)
-        } else if (chunksize === thisSong.length) {
+        } else if (chunksize === thisSong.size) {
             const stream = bucket.openDownloadStream(mp3Id);
 
 
@@ -88,69 +79,15 @@ export async function playMp3(req,res) {
                 res.send(file);
             })
 
-            res.status(206).set({
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize,
-                'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.length,
-                'Content-Type': 'audio/mpeg',
-                
-            });
+            res.status(206);
         
         } else {
-
-            //for the initial safari request
+            // for partial chrome requests and
+            // for the initial safari request
             const stream = bucket.openDownloadStream(mp3Id, { start, end: end -1 });
-            res.status(206).set({
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize,
-                'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.length,
-                'Content-Type': 'audio/mpeg',
-            });
+            res.status(206);
             stream.pipe(res);
-        // } else if (start === thisSong.length-2 && end === thisSong.length -1) {
-        //     console.log('requesting last 2 bytes');
-        //     const stream = bucket.openDownloadStream(mp3Id, { start, end: end -1 });
-        //     res.status(206).set({
-        //         'Accept-Ranges': 'bytes',
-        //         'Content-Length': chunksize,
-        //         'Content-Range': 'bytes ' + start + '-' + end + '/' + thisSong.length,
-        //         'Content-Type': 'audio/mpeg',
-        //         // 'Transfer-Encoding': 'chunked'
-        //     });
 
-        //     let file = [];
-        //     stream.on('data', (chunk) => {
-        //         file.push(chunk);
-    
-        //     });
-
-        //     stream.on('end', () => {
-        //         const bytes = new Uint8Array.from(Buffer.from(file));
-        //         res.send(Buffer.concat([bytes[-2], bytes[-1]]));
-        //     });
-
-        //     stream.on('error', (err) => {
-        //         console.log('cannot find mp3');
-        //         res.end();
-        //     });
-    
-            
-        //     stream.pipe(res);
-            // let file = [];
-            // stream.on('data', (chunk) => {
-            //     file.push(chunk);
-    
-            // });
-
-            // stream.on('error', (err) => {
-            //     console.log('cannot find mp3');
-            //     return;
-            // });
-
-            // stream.on('end', () => {
-            //     file = Buffer.concat(file);
-            //     res.send(file);
-            // })
         }
 
     } 
