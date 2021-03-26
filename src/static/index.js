@@ -175,11 +175,13 @@ const createPlaylist = (tier) => {
         if (bounceDate) {
             bounceDate = bounceDate.textContent;
         }
+        let duration = document.getElementById(`duration-${tier.id}`).textContent;
         playlist.push({
             audio: mp3Id,
             title: titleName,
             version: versionName,
             date: bounceDate,
+            duration
         });
     });
     return playlist;
@@ -284,12 +286,8 @@ const getPlaySlider = (audio) => {
     currentSongHeader.textContent = state.currentSong.title;
     currentVersion.textContent = state.currentSong.version;
     currentDate.textContent = state.currentSong.date;
-
-    // updates total time for the mp3
-    let totalMinutes = audio.duration < 10 ? `0${Math.floor(audio.duration/60)}` : Math.floor(audio.duration/60);
-    let totalSeconds = audio.duration % 60 < 10 ? `0${Math.floor(audio.duration % 60)}` : Math.floor(audio.duration % 60);
-    playSliderTotalTime.textContent = `${totalMinutes}:${totalSeconds}`;
-    
+    playSliderTotalTime.textContent = state.currentSong.duration
+ 
     // updates current time on play slider
     audio.addEventListener('timeupdate', () => {
         const position = (audio.currentTime / audio.duration) * 1000;
