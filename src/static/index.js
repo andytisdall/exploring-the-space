@@ -429,9 +429,10 @@ unpause.addEventListener('click', () => {
 const fileInputs = document.querySelectorAll('.fileform');
 fileInputs.forEach(input => {
     input.addEventListener('submit', (e) => {
-        e.preventDefault();
+
         // Obtain the uploaded file, you can change the logic if you are working with multiupload
         if (input.childNodes[2].files) {
+            e.preventDefault();
             const file = input.childNodes[2].files[0];
             
             
@@ -456,16 +457,18 @@ fileInputs.forEach(input => {
                     });
 
                 });
-            }
-        };
+            };
+                
+    
 
-        // In case that the file couldn't be read
-        reader.onerror =  event => {
-            console.error("An error ocurred reading the file: ", event);
-        };
+            // In case that the file couldn't be read
+            reader.onerror =  event => {
+                console.error("An error ocurred reading the file: ", event);
+            };
 
-        // Read file as an ArrayBuffer, important !
-        reader.readAsArrayBuffer(file);
+            // Read file as an ArrayBuffer, important !
+            reader.readAsArrayBuffer(file);
+        }
     });
 });
 
