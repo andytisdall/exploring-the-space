@@ -500,6 +500,18 @@ h5 {
   cursor: pointer;
 }
 
+.signin {
+  display: flex;
+  flex-direction: column;
+  margin-left: 3rem;
+  margin-top: 2rem;
+}
+
+.signin-submit {
+  margin-top: 1rem;
+  width: 100px;
+}
+
 @media (max-width: 550px) {
   body {
     margin: 0.3rem;

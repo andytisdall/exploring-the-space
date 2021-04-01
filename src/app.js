@@ -3,6 +3,7 @@ import { deleteItem } from './routes/deleteItem.js';
 import { addItem } from './routes/addItem.js';
 import { editItem, changeSong, changeVersion } from './routes/editItem.js';
 import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './routes/playlist.js';
+import { signinRouter } from './routes/signin.js';
 import { playMp3 } from './routes/streamer.js';
 import mongoose from 'mongoose';
 import session from 'express-session';
@@ -44,9 +45,11 @@ mongoose.connection.on('error', (err) => {
     console.log(err);
 });
 
+app.use(signinRouter);
+app.use(signinRouter);
 
 app.get('/', index);
-app.get('/delete/:rowtype/:id/:parentid?', deleteItem);
+app.post('/delete', deleteItem);
 app.get('/audio/:id', playMp3);
 app.post('/', addItem);
 app.post('/edit', editItem);

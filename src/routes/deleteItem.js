@@ -69,27 +69,27 @@ export const deleteItem = async (req, res) => {
     };
 
     req.session.errorMessage = '';
-    const rowType = req.params.rowtype;
-    const id = req.params.id;
+    const rowType = req.body.rowtype;
+    const id = req.body.id;
     let parentId;
-    if (req.params.parentid) {
-        parentId = req.params.parentid;
+    if (req.body.parentid) {
+        parentId = req.body.parentid;
     }
     switch (rowType) {
         case 'tier':
-            deleteTier(id);
+            await deleteTier(id);
             res.redirect('/');
             break;
         case 'title':
-            deleteTitle(id, parentId);
+            await deleteTitle(id, parentId);
             res.redirect('/');
             break;
         case 'version':
-            deleteVersion(id, parentId);
+            await deleteVersion(id, parentId);
             res.redirect('/');
             break;
         case 'song':
-            deleteSong(id, parentId);
+            await deleteSong(id, parentId);
             res.redirect('/');
             break;
         default:
