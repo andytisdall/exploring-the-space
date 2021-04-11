@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/signout', (req, res) => {
     req.session = null;
 
-    res.send({});
+    res.redirect('/');
 });
 
 export { router as signoutRouter };

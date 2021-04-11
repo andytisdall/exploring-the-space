@@ -1,20 +1,32 @@
 import '../models/models.js';
-import mongoose from 'mongoose';
-const Tier = mongoose.model('Tier');
+import '../models/user.js';
+import '../models/band.js';
+import express from 'express';
+import { currentUser } from '../middlewares/current-user.js';
+import {requireAuth} from '../middlewares/require-auth.js';
+import { Band } from '../models/band.js'
 
-export async function index(req, res) {
+const router = express.Router();
+
+router.get('/', (req, res) => {
+    res.redirect('/user');
+});
+
+router.get('/:bandName', currentUser, requireAuth, async (req, res) => {
+
     const errorMessage = req.session.errorMessage;
-    try {
-        const tiers = await Tier.find({}).sort({ position: 'ascending' }).populate({
+
+    const band = await Band.findOne({ name: req.params.bandName }).populate({      
+        path: 'tiers', populate: {     
             path: 'trackList', populate: {
                 path: 'versions', populate: {
                     path: 'songs'
                 }
             }
-        });
-        res.render('index', {tiers, errorMessage});
-    } catch (err) {
-        res.send(err);
-    }
-}
-// 
+        }   
+    });
+
+    res.render('index', {band, errorMessage});
+});
+
+export { router as indexRouter };

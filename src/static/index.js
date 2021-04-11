@@ -372,6 +372,8 @@ versionDropdowns.forEach(link => {
     });
 });
 
+const bandName = document.getElementById('band-name').textContent;
+
 const songDropdowns = document.querySelectorAll('.change-song');
 songDropdowns.forEach(link => {
     link.addEventListener('click', async e => {
@@ -455,7 +457,7 @@ fileInputs.forEach(input => {
 
                     const formData = new FormData(input)
                     formData.append('duration', duration);
-                    axios.post('/', formData).then(() => {
+                    axios.post(`/${bandName}`, formData).then(() => {
                         window.location.reload();
                     });
 

@@ -1,8 +1,9 @@
 
 
 export const requireAuth = (req, res, next) => {
+    // console.log(req.currentUser);
     if (!req.currentUser) {
-        throw new Error('no fucking user');
+        return res.redirect('/signin');
     }
     next();
 };

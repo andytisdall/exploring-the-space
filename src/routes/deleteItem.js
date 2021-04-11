@@ -69,6 +69,9 @@ export const deleteItem = async (req, res) => {
     };
 
     req.session.errorMessage = '';
+
+    const bandName = req.params.bandName;
+    
     const rowType = req.body.rowtype;
     const id = req.body.id;
     let parentId;
@@ -78,19 +81,19 @@ export const deleteItem = async (req, res) => {
     switch (rowType) {
         case 'tier':
             await deleteTier(id);
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
             break;
         case 'title':
             await deleteTitle(id, parentId);
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
             break;
         case 'version':
             await deleteVersion(id, parentId);
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
             break;
         case 'song':
             await deleteSong(id, parentId);
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
             break;
         default:
             console.log('incorrect data type for deletion');

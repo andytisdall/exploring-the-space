@@ -6,7 +6,7 @@ const Song = mongoose.model('Song');
 
 export const editItem = async (req, res) => {
 
-   
+    const bandName = req.params.bandName;
     const {dataID} = req.body;
     const [dataType, id] = dataID.split('-');
 
@@ -38,7 +38,7 @@ export const editItem = async (req, res) => {
             }
 
             await Tier.updateOne({ _id: id }, { name: tierName });
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
 
             break;
         case 'title':
@@ -50,10 +50,10 @@ export const editItem = async (req, res) => {
            
                 await Tier.updateOne({ _id: parentID }, { $pull: { trackList: id } });
                 await Tier.updateOne({ _id: moveTier }, { $push: { trackList: id } });
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
 
             } else {
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             }
             break;
         case 'version':
@@ -64,7 +64,7 @@ export const editItem = async (req, res) => {
             }
 
             await Version.updateOne({ _id: id }, { name: versionName, notes: versionNotes, current });
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
   
             break;
         case 'song':
@@ -75,7 +75,7 @@ export const editItem = async (req, res) => {
             let duplicateDate = vers.songs.find(s => s.date === songDate);
             if (duplicateDate) {
                 req.session.errorMessage = 'There is already a bounce with that date.'
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
                 return;
             }
             //Update song with new data
@@ -89,7 +89,7 @@ export const editItem = async (req, res) => {
                 const stream = streamer.addMp3(req.files.songFile);
                 stream.on('error', (err) => {
                     req.session.errorMessage = 'error uploading mp3';
-                    res.redirect('/');
+                    res.redirect(`/${bandName}`);
                     return;
                 });
                 stream.on('finish', async () => {
@@ -126,7 +126,7 @@ export const editItem = async (req, res) => {
 
 
             await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest });
-            res.redirect('/');
+            res.redirect(`/${bandName}`);
 
             break;
     }
@@ -142,7 +142,7 @@ export const changeSong = async (req, res) => {
 
     await Song.updateOne({ _id: changeSong }, { latest: true });
     await Song.updateOne({ _id: currentSong }, { latest: false });
-    res.redirect('/');
+    res.redirect(`/${bandName}`);
 
 
 }
@@ -155,6 +155,6 @@ export const changeVersion = async (req, res) => {
 
     await Version.updateOne({ _id: changeVersion }, { current: true });
     await Version.updateOne({ _id: currentVersion }, { current: false });
-    res.redirect('/');
+    res.redirect(`/${bandName}`);
 
 }

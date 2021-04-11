@@ -7,7 +7,7 @@ head
     link(href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet")
     style
         include ../static/style.css
-    title Greenhouse
+    title Exploring the Space
 body
     div(class='upload-container hidden')
         div(class='upload-progress')
@@ -31,7 +31,7 @@ body
                 div(class='playslidertime' id='playtotaltime') 
         
         div(class="marqee header")            
-            h1 Apprehenchmen
+            h1(id="band-name") #{band.name}
             img(class='pausebutton hidden' src='pause.svg' id='pause')
             img(class='unpause hidden' src='play.svg' id='unpause')
             div(class="slidecontainer")
@@ -39,7 +39,8 @@ body
 
             
         hr
-        each tier in tiers
+
+        each tier in band.tiers
             div(class="row tier" id=tier.id)
                 div(class="marqee")
                     div(class='row-name')
@@ -51,13 +52,13 @@ body
                         div(class="edit" id=('edittier-' + tier.id))
                             img(src='edit.png')
                             div(class='addbox hidden')
-                                form(method='POST' action='/edit')
+                                form(method='POST' action='/' + band.name + '/edit')
                                     label(for='tierName') Tier Name:
                                     input(type='text' spellcheck='false' name='tierName' required='true' value=tier.name)
                                     label(for='tierPosition') Tier Position:
                                     select(name='tierPosition')
                                         option(selected disabled value=tier.position) #{tier.position}
-                                        each item in tiers
+                                        each item in band.tiers
                                             option(value=item.position) #{item.position}
                                     input(type='hidden' name='dataID' value='tier-' + tier.id)
                                     p
@@ -70,7 +71,7 @@ body
                                     input(type='text' spellcheck='false' name='titleName' required='true' value='')
                                     input(type='hidden' name='dataID' value='title-' + tier.id)
                                     button(type='submit') OK
-                        form(class='hidden' action='/delete' method="POST" id='delete-' + tier.id + '-form')
+                        form(class='hidden' action='/' + band.name + '/delete' method="POST" id='delete-' + tier.id + '-form')
                             input(type='hidden' name='id' value=tier.id)
                             input(type='hidden' name='rowtype' value='tier')
                         img(src='delete.png' class='delete' id='delete-' + tier.id)
@@ -104,13 +105,13 @@ body
                                         div(class="edit" id=('edittitle-' + title.id))
                                             img(src='edit.png')
                                             div(class='addbox hidden')
-                                                form(method='POST' action='/edit' class='add-form')
+                                                form(method='POST' action='/' + band.name + '/edit' class='add-form')
                                                     label(for='titleName') Title:
                                                     input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
                                                     label(for='moveTier') Change Tier:
                                                     select(name='moveTier')
                                                         option(selected value=tier.id) #{tier.name}
-                                                        if tiers.length > 1
+                                                        if band.tiers.length > 1
                                                             - let tierlist = tiers.filter(t => t.id !== tier.id)
                                                             each otherTier in tierlist
                                                                 option(value=otherTier.id) #{otherTier.name}
@@ -119,7 +120,7 @@ body
                                                     input(type='hidden' name='dataID' value='title-' + title.id)
                                                     input(type='hidden' name='parentID' value=tier.id)
                                                     button(type='submit') OK
-                                        form(class='hidden' action='/delete' method="POST" id='delete-' + title.id + '-form')
+                                        form(class='hidden' action='/' + band.name + '/delete' method="POST" id='delete-' + title.id + '-form')
                                             input(type='hidden' name='id' value=title.id)
                                             input(type='hidden' name='parentid' value=tier.id)
                                             input(type='hidden' name='rowtype' value='title')
@@ -147,7 +148,7 @@ body
                                                 div(class="edit" id=('editversion-' + thisVersion.id))
                                                     img(src='edit.png')
                                                     div(class='addbox hidden add-version')
-                                                        form(method='POST' action='/edit')
+                                                        form(method='POST' action='/' + band.name + '/edit')
                                                             label(for='versionName') Name:
                                                             input(type='text' spellcheck='false' name='versionName' required='true' value=thisVersion.name)
                                                             label(for='versionName') Version Notes:
@@ -168,7 +169,7 @@ body
                                                             input(type="checkbox" name="versionCurrent" checked)
                                                             input(type='hidden' name='dataID' value='version-' + title.id)
                                                             button(type='submit') OK
-                                                form(class='hidden' action='/delete' method="POST" id='delete-' + thisVersion.id + '-form')
+                                                form(class='hidden' action='/' + band.name + '/delete' method="POST" id='delete-' + thisVersion.id + '-form')
                                                     input(type='hidden' name='id' value=thisVersion.id)
                                                     input(type='hidden' name='parentid' value=title.id)
                                                     input(type='hidden' name='rowtype' value='version')
@@ -200,7 +201,7 @@ body
                                                     div(class="edit" id='editbounce-' + thisSong.id)
                                                         img(src='edit.png')
                                                         div(class='addbox bounce hidden')
-                                                            form(method='POST' action='/edit' class='fileform' encType="multipart/form-data")
+                                                            form(method='POST' action='/' + band.name + '/edit' class='fileform' encType="multipart/form-data")
                                                                 label(for='songFile') File:
                                                                 br
                                                                 input(type='file' name='songFile' class='inputfile')
@@ -238,7 +239,7 @@ body
                                                                 input(type="checkbox" name="songLatest" checked)
                                                                 input(type='hidden' name='dataID' value='song-' + thisVersion.id)
                                                                 button(type='submit') OK          
-                                                    form(class='hidden' action='/delete' method="POST" id='delete-' + thisSong.id + '-form')
+                                                    form(class='hidden' action='/' + band.name + '/delete' method="POST" id='delete-' + thisSong.id + '-form')
                                                         input(type='hidden' name='id' value=thisSong.id)
                                                         input(type='hidden' name='parentid' value=thisVersion.id)
                                                         input(type='hidden' name='rowtype' value='song')
@@ -291,7 +292,7 @@ body
         div(class="add addtier")
             img(src='add.png')
             div(class='addbox hidden tier-add')
-                form(method='POST' action='')
+                form(method='POST' action='/' + band.name)
                     label(for='tierName') Tier Name:
                     input(type='text' spellcheck='false' name='tierName' required='true' value='')
                     input(type='hidden' name='dataID' value='tier-0')

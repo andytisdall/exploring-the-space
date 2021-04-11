@@ -1,0 +1,32 @@
+doctype html
+html(lang="en")
+head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="preconnect" href="https://fonts.gstatic.com")
+    link(href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet")
+    style
+        include ../static/style.css
+    title User Home
+body
+if errorMessage
+    div(class='error') #{errorMessage}
+div(class="container")
+    h1 #{user.username}'s bands
+    div(class='row band-list')
+        each band in user.bands
+                a(href="/" + band.name) 
+                    h2 #{band.name}
+        else
+                h3 No bands here.
+    hr
+    br
+    div(class='row')
+        div(class="add")
+            div(class='addbox add-band')
+                h3 Add a Band:
+                br
+                form(class="add" method="POST" action="/create-band")
+                    label(for="bandName") Band Name
+                    input(type="text" name="bandName")
+                    button(type="submit" class="signin-submit") Create Band

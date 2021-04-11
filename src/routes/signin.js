@@ -1,16 +1,16 @@
 import express from 'express';
-// import { validationResult } from 'express-validator';
-import { User } from '../models/user.js';
+
 import { Password } from '../services/password.js';
 import jwt from 'jsonwebtoken';
 import JWT_KEY from '../jwt-key.js';
+import { User } from '../models/user.js';
 
 const router = express.Router();
 
 
 
 router.get('/signin', (req, res) => {
-    res.render('signin');
+    res.render('signin', { errors: req.session.errorMessage });
 });
 
 router.post('/signin',
@@ -26,26 +26,25 @@ router.post('/signin',
         //     res.send(errors.array());
         // }
 
-        const { email, password } = req.body;
-        const existingUser = await User.findOne({ email });
+        const { username, password } = req.body;
+        const existingUser = await User.findOne({ username });
         if (!existingUser) {
-            throw new BadRequestError('Invalid Creds');
+            return res.redirect('/');
         }
         const passwordsMatch = await Password.compare(
             existingUser.password,
             password
         );
         if (!passwordsMatch) {
-            throw new BadRequestError('invalid creds');
+            return res.redirect('/');
         }
         const userJwt = jwt.sign({
             id: existingUser.id,
-            email: existingUser.email
+            username: existingUser.usename
         }, JWT_KEY);
-        req.session = {
-            jwt: userJwt
-        }
-        res.status(200).send(existingUser);
+        req.session.jwt = userJwt;
+        
+        res.redirect('/user');
     }
 );
 

@@ -32,13 +32,13 @@ const playlistSongSchema = new Schema({
     title: { type: Schema.Types.ObjectId, ref: 'Title'},
     version: { type: Schema.Types.ObjectId, ref: 'Version'},
     position: Number,
-    playlist: { type: Schema.Types.ObjectId, ref: 'Playlist'},
     bounce: { type: Schema.Types.ObjectId, ref: 'Song'}
 });
 
 const playlistSchema = new Schema({
     name: { type: String, unique: true },
-    position: Number
+    position: Number,
+    songs: [{ type: Schema.Types.ObjectId, ref: 'PlaylistSong'}]
 });
 
 

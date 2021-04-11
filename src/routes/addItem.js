@@ -4,10 +4,13 @@ const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
+const Band = mongoose.model('Band');
 
 export const addItem = async (req, res) => {
 
     req.session.errorMessage = '';
+
+    const bandName = req.params.bandName;
 
     const {dataID} = req.body;
     const [dataType, id] = dataID.split('-');
@@ -17,6 +20,7 @@ export const addItem = async (req, res) => {
             const { tierName } = req.body;
             const newTier = new Tier({name: tierName});
             try {
+                await Band.findOneAndUpdate({ name: bandName }, { $push: { tiers: newTier }});
                 const allTiers = await Tier.find({}).sort({ position: 'descending' });
                 if (allTiers[0]) {
                     newTier.position = allTiers[0].position + 1;
@@ -24,22 +28,20 @@ export const addItem = async (req, res) => {
                     newTier.position = 1;
                 }
                 await newTier.save();
-                res.redirect('/');
             } catch (err) {
                 req.session.errorMessage = 'Could not create that tier.';
-                res.redirect('/');
             }
-            break;
+            return res.redirect(`/${bandName}`);
         case 'title':
             const { titleName } = req.body;
             const newTitle = new Title({title: titleName});
             try {
                 await Tier.updateOne({ _id: id }, {$push: { trackList: newTitle }});
                 await newTitle.save();
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             } catch (err) {
                 req.session.errorMessage = 'There was an error creating the title or updating the tier tracklist.';
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             }
             break;
         case 'version':
@@ -58,7 +60,7 @@ export const addItem = async (req, res) => {
                     newVersion.current = true;
                 } catch {
                     req.session.errorMessage = 'There was an error updating the current tag.';
-                    res.redirect('/');
+                    res.redirect(`/${bandName}`);
                     break;
                 }
             } else if (!versionList.find(v => v.current)) {
@@ -68,10 +70,10 @@ export const addItem = async (req, res) => {
             try {
                 await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
                 await newVersion.save();
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             } catch (err) {
                 req.session.errorMessage = err.message;
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             }
             break;
         case 'song':
@@ -86,7 +88,7 @@ export const addItem = async (req, res) => {
             let duplicateDate = vers.songs.find(s => s.date === songDate);
             if (duplicateDate) {
                 req.session.errorMessage = 'There is already a bounce with that date.'
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
                 return;
             }
 
@@ -101,7 +103,7 @@ export const addItem = async (req, res) => {
 
             stream.on('error', (err) => {
                 req.session.errorMessage = 'error uploading mp3';
-                res.redirect('/');
+                res.redirect(`/${bandName}`);
             });
 
             // Finish up on completed upload

@@ -1,33 +1,36 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/user';
-import JWT_KEY from '../jwt-key';
+import { User } from '../models/user.js';
+import JWT_KEY from '../jwt-key.js';
 
 const router = express.Router();
 
-router.post('/api/users/signup', async (req, res) => {
+router.get('/signup', (req, res) => {
+    res.render('signup');
+});
 
-    const { email, password } = req.body;
+router.post('/signup', async (req, res) => {
 
-    const existingUser = await User.findOne({ email });
+    const { username, password } = req.body;
+
+    const existingUser = await User.findOne({ username });
     
     if (existingUser) {
-        throw new Error('Email already in use.');
+        throw new Error('Username already in use.');
     }
 
-    const user = new User({ email, password });
+    const user = new User({ username, password });
     await user.save();
 
     const userJwt = jwt.sign({
         id: user.id,
-        email: user.email
+        username: user.username
     }, JWT_KEY);
 
-    req.session = {
-        jwt: userJwt
-    }
+    req.session.jwt = userJwt;
 
-    res.status(201).send(user);
+
+    res.status(201).redirect('/user');
 
 });
 

@@ -2,14 +2,16 @@ import mongoose from 'mongoose';
 import { Password } from '../services/password.js';
 
 const userSchema = new mongoose.Schema({
-    email: {
+    username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: { 
         type: String,
         required: true
-    }
+    },
+    bands: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Band'}]
 });
 
 userSchema.pre('save', async function(done) {

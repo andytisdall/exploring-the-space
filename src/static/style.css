@@ -512,6 +512,16 @@ h5 {
   width: 100px;
 }
 
+.band-list {
+  margin: 3rem;
+}
+
+.add-band {
+  margin: 0px;
+  margin-top: 3rem;
+  width: 200px;
+}
+
 @media (max-width: 550px) {
   body {
     margin: 0.3rem;
