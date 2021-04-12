@@ -67,7 +67,7 @@ app.use(bandIndexRouter);
 app.use(addItemRouter);
 
 app.get('/', (req, res) => {
-    res.redirect('/Apprehenchmen');
+    res.redirect('/signin');
 });
 
 app.use(errorHandler);
