@@ -7,9 +7,11 @@ const router = express.Router();
 
 router.get('/user', currentUser, requireAuth, async (req, res) => {
 
+    const errorMessage = req.session.errorMessage;
+
     const user = await User.findById(req.currentUser.id).populate('bands');
 
-    res.render('user', { user, errorMessage: req.session.errorMessage });
+    res.render('user', { user, errorMessage });
 });
 
 export { router as userRouter };
