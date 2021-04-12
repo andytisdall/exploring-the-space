@@ -1,5 +1,5 @@
 import express from 'express';
-
+import { currentUser } from '../middlewares/current-user.js';
 import { Password } from '../services/password.js';
 import jwt from 'jsonwebtoken';
 import JWT_KEY from '../jwt-key.js';
@@ -9,9 +9,14 @@ const router = express.Router();
 
 
 
-router.get('/signin', (req, res) => {
+router.get('/signin', currentUser, (req, res) => {
+
     const errorMessage = req.session.errorMessage;
     req.session.errorMessage = '';
+
+    if (req.currentUser) {
+        return res.render('user', { errorMessage });
+    }
 
     res.render('signin', { errorMessage });
 });

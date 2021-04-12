@@ -24,7 +24,7 @@ router.get('/:bandName', currentUser, async (req, res) => {
     });
 
     if (!band) {
-        return res.redirect('/');
+        return res.redirect('/signin');
     }
 
     if (req.currentUser) {
