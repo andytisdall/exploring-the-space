@@ -2,14 +2,15 @@
 
 export const errorHandler = (err, req, res, next) => {
 
-    let navigateTo = '/';
+    let navigateTo = '/signin';
 
     if (req.params.bandName) {
-        navigateTo = `/${req.params.bandName}`
+        navigateTo = `/${req.params.bandName}`;
+    } else if (req.session.currentUser) {
+        navigateTo = '/user';
     }
 
-    console.log('fuck fuck fuck');
-
+    console.log(err.message);
     req.session.errorMessage = err.message;
     res.redirect(navigateTo);
 

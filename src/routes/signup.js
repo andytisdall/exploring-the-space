@@ -6,11 +6,15 @@ import JWT_KEY from '../jwt-key.js';
 const router = express.Router();
 
 router.get('/signup', (req, res) => {
-    res.render('signup');
+    const errorMessage = req.session.errorMessage;
+    req.session.errorMessage = '';
+
+    res.render('signup', { errorMessage });
 });
 
 router.post('/signup', async (req, res) => {
 
+    
     const { username, password } = req.body;
 
     const existingUser = await User.findOne({ username });

@@ -1,14 +1,21 @@
 import { addMp3 } from './streamer.js';
 import mongoose from 'mongoose';
+import express from 'express';
+import { requireAuth } from '../middlewares/require-auth.js';
+import { currentUser } from '../middlewares/current-user.js';
+
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
 const Band = mongoose.model('Band');
 
-export const addItem = async (req, res) => {
 
-    req.session.errorMessage = '';
+const router = express.Router();
+
+router.post('/:bandName', currentUser, requireAuth, async (req, res) => {
+
+
 
     const bandName = req.params.bandName;
 
@@ -141,4 +148,6 @@ export const addItem = async (req, res) => {
         default:
             res.send('got invalid info for adding an item');
     }
-}
+});
+
+export { router as addItemRouter };

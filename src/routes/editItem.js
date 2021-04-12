@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
+import express from 'express';
+import { currentUser } from '../middlewares/current-user.js';
+import { requireAuth } from '../middlewares/require-auth.js';
+
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Song = mongoose.model('Song');
 
-export const editItem = async (req, res) => {
+const router = express.Router();
+
+router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
 
     const bandName = req.params.bandName;
     const {dataID} = req.body;
@@ -130,13 +136,14 @@ export const editItem = async (req, res) => {
 
             break;
     }
-}
+});
 
 
 
 
-export const changeSong = async (req, res) => {
+router.post('/:bandName/change-song', async (req, res) => {
 
+    const bandName = req.params.bandName;
     
     const { currentSong, changeSong } = req.body;
 
@@ -145,11 +152,12 @@ export const changeSong = async (req, res) => {
     res.redirect(`/${bandName}`);
 
 
-}
+});
 
-export const changeVersion = async (req, res) => {
+router.post('/:bandName/change-version', async (req, res) => {
     
 
+    const bandName = req.params.bandName;
     
     const { currentVersion, changeVersion } = req.body;
 
@@ -157,4 +165,6 @@ export const changeVersion = async (req, res) => {
     await Version.updateOne({ _id: currentVersion }, { current: false });
     res.redirect(`/${bandName}`);
 
-}
+});
+
+export { router as editRouter };

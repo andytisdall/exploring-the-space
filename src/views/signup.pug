@@ -9,12 +9,13 @@ head
         include ../static/style.css
     title Sign Up
 body
-
+if errorMessage
+    div(class='error') #{errorMessage}
 div(class="container")
     h1 Sign Up
     form(class="signin" method="POST" action="/signup")
         label(for="username") Username
-        input(type="text" name="username")
+        input(type="text" name="username" required="true")
         label(for="password") Passwyrd
-        input(type="password" name="password")
+        input(type="password" name="password" required="true")
         button(type="submit" class="signin-submit") Sign Up

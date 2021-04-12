@@ -359,12 +359,14 @@ playButtons.forEach(playButton => {
     }); 
 });
 
+const bandName = document.getElementById('band-name').textContent;
+
 const versionDropdowns = document.querySelectorAll('.change-version');
 versionDropdowns.forEach(link => {
     link.addEventListener('click', async e => {
         const [currentVersion, changeVersion] = link.id.split('-');
         e.stopPropagation();
-        await axios.post('/change-version', {
+        await axios.post(`/${bandName}/change-version`, {
             currentVersion, changeVersion
         });
         window.location.reload();
@@ -372,14 +374,14 @@ versionDropdowns.forEach(link => {
     });
 });
 
-const bandName = document.getElementById('band-name').textContent;
+
 
 const songDropdowns = document.querySelectorAll('.change-song');
 songDropdowns.forEach(link => {
     link.addEventListener('click', async e => {
         const [currentSong, changeSong] = link.id.split('-');
         e.stopPropagation();
-        await axios.post('/change-song', {
+        await axios.post(`/${bandName}/change-song`, {
             currentSong, changeSong
         });
         window.location.reload();

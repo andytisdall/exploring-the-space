@@ -2,10 +2,11 @@ import express from 'express';
 
 const router = express.Router();
 
-router.post('/signout', (req, res) => {
+router.get('/signout', (req, res) => {
     req.session = null;
+    console.log('ok');
 
-    res.redirect('/');
+    res.redirect('/signin');
 });
 
 export { router as signoutRouter };

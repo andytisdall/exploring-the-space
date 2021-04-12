@@ -183,6 +183,10 @@ hr {
   padding-left: 1rem;
 }
 
+.title-add {
+  display: flex;
+}
+
 .addbox {
   height: 100;
   width: 150px;

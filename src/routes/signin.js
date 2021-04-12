@@ -10,7 +10,10 @@ const router = express.Router();
 
 
 router.get('/signin', (req, res) => {
-    res.render('signin', { errors: req.session.errorMessage });
+    const errorMessage = req.session.errorMessage;
+    req.session.errorMessage = '';
+
+    res.render('signin', { errorMessage });
 });
 
 router.post('/signin',
@@ -20,6 +23,8 @@ router.post('/signin',
     // ],
     async (req, res) => {
 
+        
+        
         // const errors = validationResult(req);
 
         // if (!errors.isEmpty()) {
@@ -29,19 +34,20 @@ router.post('/signin',
         const { username, password } = req.body;
         const existingUser = await User.findOne({ username });
         if (!existingUser) {
-            return res.redirect('/');
+            throw new Error('Credentials Invalid');
         }
         const passwordsMatch = await Password.compare(
             existingUser.password,
             password
         );
         if (!passwordsMatch) {
-            return res.redirect('/');
+            throw new Error('Credentials Invalid');
         }
         const userJwt = jwt.sign({
             id: existingUser.id,
-            username: existingUser.usename
+            username: existingUser.username
         }, JWT_KEY);
+
         req.session.jwt = userJwt;
         
         res.redirect('/user');
