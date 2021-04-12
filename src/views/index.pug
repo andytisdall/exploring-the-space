@@ -113,7 +113,7 @@ body
                                                     select(name='moveTier')
                                                         option(selected value=tier.id) #{tier.name}
                                                         if band.tiers.length > 1
-                                                            - let tierlist = tiers.filter(t => t.id !== tier.id)
+                                                            - let tierlist = band.tiers.filter(t => t.id !== tier.id)
                                                             each otherTier in tierlist
                                                                 option(value=otherTier.id) #{otherTier.name}
                                                     br

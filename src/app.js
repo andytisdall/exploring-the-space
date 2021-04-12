@@ -63,8 +63,13 @@ app.use(createBandRouter);
 app.get('/audio/:id', playMp3);
 app.use(editRouter);
 app.post('/:bandName/delete', deleteItem);
+app.get('/apprehenchmen', (req, res) => {
+    res.redirect('/Apprehenchmen');
+});
 app.use(bandIndexRouter);
 app.use(addItemRouter);
+
+
 
 app.get('/', (req, res) => {
     res.redirect('/signin');
