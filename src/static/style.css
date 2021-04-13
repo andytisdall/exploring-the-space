@@ -248,6 +248,12 @@ h1 {
   ); */
 }
 
+.tier-name {
+  align-items: center;
+  width: 40%;
+  display: flex;
+}
+
 .marqee {
   display: flex;
   padding-bottom: 0.2rem;
@@ -319,7 +325,6 @@ h3 {
 .playcontainer {
   display: flex;
   min-width: 60%;
-
   align-items: center;
 }
 
@@ -576,15 +581,23 @@ h5 {
     height: 2.3rem;
   }
 
+  .tier-name {
+    width: 50%;
+  }
+
   .row {
     padding-top: 0px;
-    padding-bottom: 0px;
+    padding-bottom: 5px;
     min-width: 90%;
     max-width: 100%;
   }
 
+  .row-name {
+    width: 120px;
+  }
+
   img {
-    height: 0.75rem;
+    height: 0.6rem;
   }
 
   h1 {
@@ -592,6 +605,7 @@ h5 {
   }
 
   .arrow {
+    height: 20px;
     width: 15px;
   }
 
@@ -613,20 +627,32 @@ h5 {
   }
 
   h3 {
+    padding-left: 5px;
     font-size: 0.8rem;
   }
 
   .title-margin {
-    margin-left: 1rem;
+    margin-left: 0.6rem;
+    padding-left: 0.2rem;
   }
 
   .name-spot {
     min-width: 0px;
-    width: 70px;
+    width: 200px;
+  }
+
+  .playcontainer {
+    min-width: 40%;
+  }
+
+  .title-display {
+    max-width: 80px;
+    margin-right: 10px;
   }
 
   .title-display p {
-    font-size: 0.7rem;
+    margin: 0px;
+    font-size: 0.5rem;
   }
 
   .playicon {

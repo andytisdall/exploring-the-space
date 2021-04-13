@@ -43,7 +43,7 @@ body
         each tier in band.tiers
             div(class="row tier" id=tier.id)
                 div(class="marqee tier-info")
-                    div(class='row-name')
+                    div(class='tier-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
                         h2 #{tier.name}  
                         div(class="add" id=('addtitle-' + tier.id))
@@ -99,7 +99,7 @@ body
                                                 - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
                                                 - const displayTime = `${minutes}:${seconds}`
                                                 div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-                                                div(class='songtime' id='duration-' + title.id = '-' + tier.id) #{displayTime}
+                                                div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
                                                 div(class='playbutton' id=thisSong.id + '-' + tier.id)
                                                     img(src='play.svg' class='playicon')
                                                 div(class='title-display')

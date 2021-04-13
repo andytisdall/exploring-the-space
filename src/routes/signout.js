@@ -3,8 +3,8 @@ import express from 'express';
 const router = express.Router();
 
 router.get('/signout', (req, res) => {
-    req.session = null;
-    console.log('ok');
+    req.session.jwt = null;
+    console.log('signing out');
 
     res.redirect('/signin');
 });
