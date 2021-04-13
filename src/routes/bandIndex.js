@@ -13,7 +13,13 @@ router.get('/:bandName', currentUser, async (req, res) => {
     const errorMessage = req.session.errorMessage;
     req.session.errorMessage = '';
 
-    const band = await Band.findOne({ name: req.params.bandName }).populate({      
+    let bandName = req.params.bandName
+
+    if (bandName === 'apprehenchmen') {
+        bandName = 'Apprehenchmen';
+    }
+
+    const band = await Band.findOne({ name: bandName }).populate({      
         path: 'tiers', populate: {     
             path: 'trackList', populate: {
                 path: 'versions', populate: {

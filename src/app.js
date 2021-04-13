@@ -68,12 +68,6 @@ app.post('/:bandName/delete', deleteItem);
 app.use(bandIndexRouter);
 app.use(addItemRouter);
 
-
-
-app.get('/apprehenchmen', (req, res) => {
-    res.redirect('/Apprehenchmen');
-});
-
 app.get('/', (req, res) => {
     res.redirect('/signin');
 });

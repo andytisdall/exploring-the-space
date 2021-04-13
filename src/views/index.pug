@@ -55,7 +55,7 @@ body
                                     input(type='text' spellcheck='false' name='titleName' required='true' value='')
                                     input(type='hidden' name='dataID' value='title-' + tier.id)
                                     button(type='submit') OK
-                    div(class='playcontainer')
+                    div(class='tier-count')
                         div(class='song-count') #{tier.trackList.length} songs
                         div(class='song-count' id='tiertime'+tier.id)
                     div(class='tier-display')

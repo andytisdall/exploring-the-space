@@ -250,7 +250,7 @@ h1 {
 
 .tier-name {
   align-items: center;
-  width: 40%;
+  width: 30%;
   display: flex;
 }
 
@@ -279,6 +279,12 @@ h2 {
   height: 35px;
 }
 
+.tier-count {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .tier-display {
   display: flex;
   justify-content: space-between;
@@ -290,10 +296,6 @@ h2 {
 .song-count {
   margin-left: 1.5rem;
   margin-top: 0.5rem;
-}
-
-.tier-info {
-  justify-content: space-between;
 }
 
 /* title */
@@ -582,7 +584,7 @@ h5 {
   }
 
   .tier-name {
-    width: 50%;
+    min-width: 40%;
   }
 
   .row {
@@ -636,18 +638,22 @@ h5 {
     padding-left: 0.2rem;
   }
 
+  .tier-count {
+    width: 200px;
+  }
+
+  .playcontainer {
+    min-width: 50%;
+  }
+
   .name-spot {
     min-width: 0px;
     width: 200px;
   }
 
-  .playcontainer {
-    min-width: 40%;
-  }
-
   .title-display {
-    max-width: 80px;
-    margin-right: 10px;
+    max-width: 100px;
+    margin-right: 5px;
   }
 
   .title-display p {
