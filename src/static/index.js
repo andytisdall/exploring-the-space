@@ -395,7 +395,7 @@ const pause = document.getElementById('pause');
 const unpause = document.getElementById('unpause');
 
 const showPause = (player) => {
-    pause.classList.remove('hidden');
+    unpausePlayer();
     pause.addEventListener('click', () => {
         pausePlayer(player);
     });
@@ -407,15 +407,14 @@ const pausePlayer = (player) => {
     unpause.classList.remove('hidden');
 }
 
-const unpausePlayer = (player) => {
+const unpausePlayer = () => {
     pause.classList.remove('hidden');
-    player.play();
     unpause.classList.add('hidden');
 }
 
 unpause.addEventListener('click', () => {
-    const audio = document.getElementById(state.currentSong.audio);
-    unpausePlayer(audio);
+    state.currentSong.audio.play();
+    unpausePlayer();
 });
 
 // document.addEventListener('keydown', (e) => {

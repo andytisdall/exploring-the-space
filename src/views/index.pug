@@ -152,7 +152,7 @@ body
                                             div(class='detail-buttons')
                                                 div(class="edit" id=('editversion-' + thisVersion.id))
                                                     img(src='edit.png')
-                                                    div(class='addbox hidden add-version')
+                                                    div(class='addbox hidden left-box add-version')
                                                         form(method='POST' action=band.name + '/edit')
                                                             label(for='versionName') Name:
                                                             input(type='text' spellcheck='false' name='versionName' required='true' value=thisVersion.name)
@@ -205,7 +205,7 @@ body
                                                 div(class='detail-buttons')
                                                     div(class="edit" id='editbounce-' + thisSong.id)
                                                         img(src='edit.png')
-                                                        div(class='addbox bounce hidden')
+                                                        div(class='addbox bounce left-box hidden')
                                                             form(method='POST' action=band.name + '/edit' class='fileform' encType="multipart/form-data")
                                                                 label(for='songFile') File:
                                                                 br

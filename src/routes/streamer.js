@@ -93,6 +93,28 @@ export async function playMp3(req,res) {
     } 
 }
 
+export async function downloadMp3(req, res) {
+
+    const id = req.params.id.split('.')[0];
+    const thisSong = await Song.findOne({ _id: id });
+    let mp3Id = new mongodb.ObjectID(thisSong.mp3);
+    const stream = bucket.openDownloadStream(mp3Id);
+
+
+    // read the whole stream to an array and then send the buffer with the response
+    let file = [];
+    stream.on('data', (chunk) => {
+        file.push(chunk);
+
+    });
+
+    stream.on('end', () => {
+        file = Buffer.concat(file);
+        res.send(file);
+    });
+
+}
+
 
 
 

@@ -76,6 +76,8 @@ body
                                                 div(class='title-display')
                                                     p #{thisVersion.name}
                                                     p #{displayDate}
+                                                div(class='download')
+                                                    a(href="/audio/download/" + thisSong.id + ".mp3" download=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3') download
                                     
     
                                 div(class='versioncontainer hidden' id=('version-' + title.id))

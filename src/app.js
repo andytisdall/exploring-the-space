@@ -14,7 +14,7 @@ import { signinRouter } from './routes/signin.js';
 import { signupRouter } from './routes/signup.js';
 import { signoutRouter } from './routes/signout.js';
 import { createBandRouter } from './routes/createBand.js';
-import { playMp3 } from './routes/streamer.js';
+import { playMp3, downloadMp3 } from './routes/streamer.js';
 import { userRouter } from './routes/user.js';
 import { errorHandler } from './middlewares/error-handler.js';
 
@@ -60,6 +60,7 @@ app.use(signoutRouter);
 app.use(userRouter);
 
 app.use(createBandRouter);
+app.get('/audio/download/:id', downloadMp3)
 app.get('/audio/:id', playMp3);
 app.use(editRouter);
 app.post('/:bandName/delete', deleteItem);

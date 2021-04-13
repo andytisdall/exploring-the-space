@@ -308,7 +308,6 @@ h2 {
 }
 
 .name-spot {
-  min-width: 140px;
   color: rgb(224, 222, 52);
 }
 
@@ -357,6 +356,11 @@ h3 {
   height: 1.3rem;
   margin-right: 1rem;
   margin-top: 0.2rem;
+}
+
+.download a {
+  color: rgb(218, 122, 241);
+  margin-left: 2rem;
 }
 
 /* version */
@@ -543,7 +547,7 @@ h5 {
   width: 200px;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 700px) {
   body {
     margin: 0.3rem;
     font-size: 0.7rem;
@@ -594,8 +598,8 @@ h5 {
     max-width: 100%;
   }
 
-  .row-name {
-    width: 120px;
+  .notitle {
+    margin-left: 1rem;
   }
 
   img {
@@ -644,11 +648,6 @@ h5 {
 
   .playcontainer {
     min-width: 50%;
-  }
-
-  .name-spot {
-    min-width: 0px;
-    width: 200px;
   }
 
   .title-display {
@@ -703,6 +702,10 @@ h5 {
     margin-left: 0.5rem;
   }
 
+  .left-box {
+    margin-left: 0px;
+  }
+
   .song-count {
     margin-left: 1rem;
   }
@@ -719,5 +722,44 @@ h5 {
 
   .hidden {
     display: none;
+  }
+}
+
+@media (max-width: 350px) {
+  h1 {
+    font-size: 0.7rem;
+  }
+
+  h2 {
+    padding-top: 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  h3 {
+    padding-left: 5px;
+    font-size: 0.6rem;
+  }
+
+  img {
+    height: 0.5rem;
+  }
+
+  .title-display {
+    max-width: 20%;
+    margin-right: 5px;
+  }
+
+  .title-display p {
+    margin: 0px;
+    font-size: 0.3rem;
+  }
+
+  .playcontainer {
+    min-width: 60%;
+    justify-content: flex-end;
+  }
+
+  .tier-name {
+    width: 100%;
   }
 }
