@@ -42,25 +42,28 @@ body
 
         each tier in band.tiers
             div(class="row tier" id=tier.id)
-                div(class="marqee")
+                div(class="marqee tier-info")
                     div(class='row-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
                         h2 #{tier.name}  
                         div(class="add" id=('addtitle-' + tier.id))
                             img(src='add.png')
                             div(class='addbox hidden')
+                                h3 Add a Song
                                 form(method='POST' action=band.name class='add-form')
                                     label(for='titleName') Title:
                                     input(type='text' spellcheck='false' name='titleName' required='true' value='')
                                     input(type='hidden' name='dataID' value='title-' + tier.id)
                                     button(type='submit') OK
+                    div(class='playcontainer')
                         div(class='song-count') #{tier.trackList.length} songs
                         div(class='song-count' id='tiertime'+tier.id)
                     div(class='tier-display')
                         div(class="edit" id=('edittier-' + tier.id))
                             img(src='edit.png')
                             div(class='addbox hidden')
-                                form(method='POST' action=band.name + '/edit')
+                                h3 Edit #{tier.name}
+                                form(method='POST' class='add-form' action=band.name + '/edit')
                                     label(for='tierName') Tier Name:
                                     input(type='text' spellcheck='false' name='tierName' required='true' value=tier.name)
                                     label(for='tierPosition') Tier Position:
@@ -96,7 +99,7 @@ body
                                                 - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
                                                 - const displayTime = `${minutes}:${seconds}`
                                                 div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-                                                div(class='songtime' id='duration-' + tier.id) #{displayTime}
+                                                div(class='songtime' id='duration-' + title.id = '-' + tier.id) #{displayTime}
                                                 div(class='playbutton' id=thisSong.id + '-' + tier.id)
                                                     img(src='play.svg' class='playicon')
                                                 div(class='title-display')
@@ -106,6 +109,7 @@ body
                                         div(class="edit" id=('edittitle-' + title.id))
                                             img(src='edit.png')
                                             div(class='addbox hidden')
+                                                h3 Edit #{title.title}
                                                 form(method='POST' action=band.name + '/edit' class='add-form')
                                                     label(for='titleName') Title:
                                                     input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)

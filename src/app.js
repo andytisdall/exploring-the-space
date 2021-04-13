@@ -9,7 +9,7 @@ import { bandIndexRouter  } from './routes/bandIndex.js';
 import { deleteItem } from './routes/deleteItem.js';
 import { addItemRouter } from './routes/addItem.js';
 import { editRouter } from './routes/editItem.js';
-import { createPlaylist, createPlaylistSong, deletePlaylist, deletePlaylistSong } from './routes/playlist.js';
+import { playlistRouter } from './routes/playlist.js';
 import { signinRouter } from './routes/signin.js';
 import { signupRouter } from './routes/signup.js';
 import { signoutRouter } from './routes/signout.js';

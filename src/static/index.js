@@ -177,7 +177,7 @@ const createPlaylist = (tier) => {
         if (bounceDate) {
             bounceDate = bounceDate.textContent;
         }
-        let duration = document.getElementById(`duration-${tier.id}`).textContent;
+        let duration = document.getElementById(`duration-${title.id}-${tier.id}`).textContent;
         playlist.push({
             audio: mp3Id,
             title: titleName,
@@ -226,7 +226,7 @@ const timeDisplays = document.querySelectorAll('.songtime');
 timeDisplays.forEach(time => {
 
 
-    let tierId = time.id.split('-')[[1]];
+    let tierId = time.id.split('-')[[2]];
     let tierTime = 'tiertime' + tierId;
     
     let duration = time.textContent;
@@ -283,6 +283,7 @@ const currentDate = document.getElementById('currentdate');
 
 
 const getPlaySlider = (audio) => {
+    
     
     // displays song info on playbar
     currentSongHeader.textContent = state.currentSong.title;

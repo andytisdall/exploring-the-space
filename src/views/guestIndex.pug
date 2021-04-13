@@ -69,7 +69,7 @@ body
                                                 - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
                                                 - const displayTime = `${minutes}:${seconds}`
                                                 div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-                                                div(class='songtime' id='duration-' + tier.id) #{displayTime}
+                                                div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
                                                 div(class='playbutton' id=thisSong.id + '-' + tier.id)
                                                     img(src='play.svg' class='playicon')
                                                 div(class='title-display')

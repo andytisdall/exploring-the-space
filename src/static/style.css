@@ -183,6 +183,10 @@ hr {
   padding-left: 1rem;
 }
 
+.add-form {
+  margin-top: 1rem;
+}
+
 .title-add {
   display: flex;
 }
@@ -246,8 +250,11 @@ h1 {
 
 .marqee {
   display: flex;
-  justify-content: space-between;
   padding-bottom: 0.2rem;
+}
+
+.header {
+  justify-content: space-between;
 }
 
 .tier {
@@ -279,11 +286,11 @@ h2 {
   margin-top: 0.5rem;
 }
 
-/* title */
-
-.titlecontainer {
-  margin-bottom: 1rem;
+.tier-info {
+  justify-content: space-between;
 }
+
+/* title */
 
 .title-margin {
   margin-left: 3rem;
@@ -305,13 +312,14 @@ h3 {
 
 .row-name {
   align-items: center;
+  width: 40%;
   display: flex;
 }
 
 .playcontainer {
   display: flex;
+  min-width: 60%;
 
-  justify-content: space-between;
   align-items: center;
 }
 
@@ -321,10 +329,12 @@ h3 {
 
 .title-display {
   display: flex;
+  justify-content: space-between;
 }
 
 .title-display p {
   margin-left: 1rem;
+  width: 5rem;
 }
 
 .notitle {
