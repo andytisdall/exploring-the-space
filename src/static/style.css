@@ -360,7 +360,7 @@ h3 {
 
 .download a {
   color: rgb(218, 122, 241);
-  margin-left: 2rem;
+  margin-left: 1.5rem;
 }
 
 /* version */
@@ -558,6 +558,10 @@ h5 {
     padding-top: 0.2rem;
     margin-bottom: 0.2rem;
     height: 4rem;
+  }
+
+  .download {
+    margin-left: 1rem;
   }
 
   .playbar-title {
