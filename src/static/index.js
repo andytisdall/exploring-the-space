@@ -479,3 +479,9 @@ fileInputs.forEach(input => {
     });
 });
 
+const downloadLinks = document.querySelectorAll('.download');
+downloadLinks.forEach(parent => {
+    parent.firstChild.addEventListener('click', e => {
+        e.preventDefault();
+    });
+});
