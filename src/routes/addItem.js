@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post('/:bandName', currentUser, requireAuth, async (req, res) => {
 
-
+    console.log(req.body);
 
     const bandName = req.params.bandName;
 
@@ -59,30 +59,23 @@ router.post('/:bandName', currentUser, requireAuth, async (req, res) => {
             let versionList = parentTitle.versions;
 
             if (req.body.versionCurrent) {
-                try {
-                    let oldCurrent = versionList.find(v => v.current);
-                    if (oldCurrent) {
-                        await Version.updateOne({_id: oldCurrent._id}, {current: false});
-                    }
-                    newVersion.current = true;
-                } catch {
-                    req.session.errorMessage = 'There was an error updating the current tag.';
-                    res.redirect(`/${bandName}`);
-                    break;
+
+     
+                let oldCurrent = versionList.find(v => v.current);
+                if (oldCurrent) {
+                    await Version.updateOne({_id: oldCurrent._id}, {current: false});
                 }
+                newVersion.current = true;
+  
             } else if (!versionList.find(v => v.current)) {
                 newVersion.current = true;
             }
+            console.log(newVersion);
+            await newVersion.save();
+            await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
 
-            try {
-                await Title.updateOne({ _id: id }, {$push: { versions: newVersion }});
-                await newVersion.save();
-                res.redirect(`/${bandName}`);
-            } catch (err) {
-                req.session.errorMessage = err.message;
-                res.redirect(`/${bandName}`);
-            }
-            break;
+            return res.redirect(`/${bandName}`);
+
         case 'song':
             // Increase timeout length for long uploads
 

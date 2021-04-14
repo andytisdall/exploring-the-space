@@ -12,7 +12,7 @@ const songSchema = new Schema({
 
 const versionSchema = new Schema({
     name: { type: String },
-    current: { type: Boolean, default: true },
+    current: { type: Boolean, default: false },
     notes: String,
     songs: [{ type: Schema.Types.ObjectId, ref: 'Song'}]
 });

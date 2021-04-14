@@ -81,13 +81,13 @@ document.querySelectorAll('button').forEach(button => {
 document.querySelectorAll('.delete').forEach(button => {
     button.addEventListener('click', e => {
         e.stopPropagation();
-        // const parsedUrl = e.target.parentNode.href.split('/');
-        // const itemType = parsedUrl[4];
-        // const message = `This ${itemType} and all of its children will be deleted. Type the word delete to confirm`;
-        // const deletion = prompt(message);
-        // if (deletion !== 'delete') {
-        //     e.preventDefault();
-        // }
+        const parsedUrl = e.target.parentNode.href.split('/');
+        const itemType = parsedUrl[5];
+        const message = `This ${itemType} and all of its children will be deleted. Type the word delete to confirm`;
+        const deletion = prompt(message);
+        if (deletion !== 'delete') {
+            e.preventDefault();
+        }
         const deleteForm = document.getElementById(button.id + '-form');
         deleteForm.submit();
     });
@@ -468,7 +468,7 @@ fileInputs.forEach(input => {
                 
     
 
-            // In case that the file couldn't be read
+            // In case the file couldn't be read
             reader.onerror =  event => {
                 console.error("An error ocurred reading the file: ", event);
             };
