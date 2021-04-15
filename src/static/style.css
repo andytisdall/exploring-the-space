@@ -340,7 +340,8 @@ h3 {
 
 .title-display p {
   margin-left: 1rem;
-  width: 5rem;
+
+  font-size: 0.8rem;
 }
 
 .notitle {
@@ -358,8 +359,8 @@ h3 {
   margin-top: 0.2rem;
 }
 
-.download a {
-  color: rgb(218, 122, 241);
+.download img {
+  height: 17px;
   margin-left: 1.5rem;
 }
 
@@ -560,7 +561,8 @@ h5 {
     height: 4rem;
   }
 
-  .download a {
+  .download img {
+    height: 12px;
     margin-left: 1rem;
   }
 
@@ -655,12 +657,11 @@ h5 {
   }
 
   .title-display {
-    max-width: 100px;
     margin-right: 5px;
   }
 
   .title-display p {
-    margin: 0px;
+    margin: 5px;
     font-size: 0.5rem;
   }
 
@@ -707,7 +708,7 @@ h5 {
   }
 
   .left-box {
-    margin-left: 0px;
+    margin-left: -3rem;
   }
 
   .song-count {
@@ -749,7 +750,6 @@ h5 {
   }
 
   .title-display {
-    max-width: 40%;
     margin-right: 5px;
   }
 
@@ -767,9 +767,5 @@ h5 {
 
   .tier-name {
     width: 100%;
-  }
-
-  .download a {
-    font-size: 0.2rem;
   }
 }

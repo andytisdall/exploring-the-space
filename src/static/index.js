@@ -133,7 +133,7 @@ const showAddbox = (target) => {
         state.addboxIsVisible = selected;
     }
     selected.classList.toggle('hidden');
-    selected.childNodes[0].childNodes[1].focus();
+    selected.childNodes[0].childNodes[2].focus();
 };
 
 const hideAddbox = (target) => {
