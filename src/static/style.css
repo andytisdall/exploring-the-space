@@ -240,7 +240,7 @@ h1 {
 
 .row {
   padding-right: 10px;
-  padding-bottom: 10px;
+  padding-top: 7px;
   min-width: 500px;
   /* background: radial-gradient(
     rgba(128, 128, 128, 0),
@@ -360,6 +360,7 @@ h3 {
 }
 
 .download img {
+  padding-top: 10px;
   height: 17px;
   margin-left: 1.5rem;
 }

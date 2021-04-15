@@ -81,15 +81,22 @@ document.querySelectorAll('button').forEach(button => {
 document.querySelectorAll('.delete').forEach(button => {
     button.addEventListener('click', e => {
         e.stopPropagation();
-        const parsedUrl = e.target.parentNode.href.split('/');
-        const itemType = parsedUrl[5];
+        const deleteForm = document.getElementById(button.id + '-form');
+
+        let itemType
+
+        deleteForm.childNodes.forEach(input => {
+            if (input.name === 'rowType') {
+                itemType = input.value;
+            }
+        });
+
         const message = `This ${itemType} and all of its children will be deleted. Type the word delete to confirm`;
         const deletion = prompt(message);
-        if (deletion !== 'delete') {
-            e.preventDefault();
+        if (deletion === 'delete') {
+            deleteForm.submit();
         }
-        const deleteForm = document.getElementById(button.id + '-form');
-        deleteForm.submit();
+    
     });
 });
 

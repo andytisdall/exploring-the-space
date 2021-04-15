@@ -60,22 +60,22 @@ body
                                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
                                         div(class='name-spot' id='name-spot-'+title.id)
                                             h3 #{title.title}
-                                    div(class='playcontainer')
-                                        if title.versions.length > 0
+                                    if title.versions.length > 0
                                             - const thisVersion = title.versions.find(v => v.current)
                                             if thisVersion.songs.length > 0
                                                 - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
-                                                - const minutes = Math.floor(thisSong.duration / 60)
-                                                - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
-                                                - const displayTime = `${minutes}:${seconds}`
-                                                div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-                                                div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
-                                                div(class='playbutton' id=thisSong.id + '-' + tier.id)
-                                                    img(src='play.svg' class='playicon')
-                                                div(class='title-display')
-                                                    p #{thisVersion.name}
-                                                    p #{displayDate}
+                                                div(class='playcontainer')                 
+                                                    - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
+                                                    - const minutes = Math.floor(thisSong.duration / 60)
+                                                    - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
+                                                    - const displayTime = `${minutes}:${seconds}`
+                                                    div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
+                                                    div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
+                                                    div(class='playbutton' id=thisSong.id + '-' + tier.id)
+                                                        img(src='play.svg' class='playicon')
+                                                    div(class='title-display')
+                                                        p #{thisVersion.name}
+                                                        p #{displayDate}
                                                 div(class='download')
                                                     a(href="/audio/download/" + thisSong.id + ".mp3" download=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
                                                         img(src="download.svg")
