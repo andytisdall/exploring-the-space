@@ -64,12 +64,12 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
             break;
         case 'version':
             const { versionName, versionNotes } = req.body;
-            let current = false;
-            if (req.body.versionCurrent) {
-                current = true;
-            }
+            // let current = false;
+            // if (req.body.versionCurrent) {
+            //     current = true;
+            // }
 
-            await Version.updateOne({ _id: id }, { name: versionName, notes: versionNotes, current });
+            await Version.updateOne({ _id: id }, { name: versionName, notes: versionNotes });
             res.redirect(`/${bandName}`);
   
             break;
