@@ -137,7 +137,7 @@ body
                                             div(class='detail-content')
                                                 div(class='detail-header')
                                                     - const thisVersion = title.versions.find(v => v.current)
-                                                    - const versionList = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
+                                                    - const versionList = title.versions.filter(v => v !== thisVersion).map(v => [v.name, v.id])
                                                     
                                                     h5 Version:       
                                                     div(class='dropdown')
@@ -301,8 +301,106 @@ body
                     input(type='text' spellcheck='false' name='tierName' required='true' value='')
                     input(type='hidden' name='dataID' value='tier-0')
                     button(type='submit') OK    
-    //- div(class='playlist-container')
-    //-     each playlist in playlists
+        //- each playlist in playlists
+        //-     div(class="row playlist" id=playlist.id)
+        //-         div(class="marqee playlist-info")
+        //-             div(class='playlist-name')
+        //-                 img(class='arrow' src='right-arrow.svg' id=('arrow-' + playlist.id))
+        //-                 h2 #{playlist.name}  
+        //-                 div(class="add" id=('addtitle-' + playlist.id))
+        //-                     img(src='add.png')
+        //-                     div(class='addbox hidden')
+        //-                         h3 Add a Song
+        //-                         form(method='POST' action=band.name class='add-form')
+        //-                             label(for='titleName') Title:
+        //-                             input(type='text' spellcheck='false' name='titleName' required='true' value='')
+        //-                             input(type='hidden' name='dataID' value='title-' + playlist.id)
+        //-                             button(type='submit') OK
+        //-             div(class='playlist-count')
+        //-                 div(class='song-count') #{playlist.trackList.length} songs
+        //-                 div(class='song-count' id='playlisttime'+playlist.id)
+        //-             div(class='tier-display')
+        //-                 div(class="edit" id=('editplaylist-' + playlist.id))
+        //-                     img(src='edit.png')
+        //-                     div(class='addbox hidden')
+        //-                         h3 Edit #{playlist.name}
+        //-                         form(method='POST' class='add-form' action=band.name + '/edit')
+        //-                             label(for='playlistName') playlist Name:
+        //-                             input(type='text' spellcheck='false' name='playlistName' required='true' value=playlist.name)
+        //-                             label(for='playlistPosition') playlist Position:
+        //-                             select(name='playlistPosition')
+        //-                                 option(selected disabled value=playlist.position) #{playlist.position}
+        //-                                 each item in playlists
+        //-                                     option(value=item.position) #{item.position}
+        //-                             input(type='hidden' name='dataID' value='playlist-' + playlist.id)
+        //-                             p
+        //-                             button(type='submit') OK
+                        
+        //-                 form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + playlist.id + '-form')
+        //-                     input(type='hidden' name='id' value=playlist.id)
+        //-                     input(type='hidden' name='rowtype' value='playlist')
+        //-                 img(src='delete.png' class='delete' id='delete-' + playlist.id)
+        //-         hr
+        //-         div(class='titlecontainer hidden' id=('title-' + playlist.id))
+        //-             each title in playlist.songs
+        //-                 div(class="row title" id=title.id)
+        //-                     div(class='title-margin')
+        //-                         div(class="marqee")
+        //-                             div(class='row-name')
+        //-                                 img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
+        //-                                 div(class='name-spot' id='name-spot-'+title.id)
+        //-                                     h3 #{title.title}
+        //-                             div(class='playcontainer')
+        //-                                 if title.versions.length > 0
+        //-                                     - const thisVersion = title.versions.find(v => v.current)
+        //-                                     if thisVersion.songs.length > 0
+        //-                                         - const thisSong = thisVersion.songs.find(s => s.latest)
+        //-                                         - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
+        //-                                         - const minutes = Math.floor(thisSong.duration / 60)
+        //-                                         - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
+        //-                                         - const displayTime = `${minutes}:${seconds}`
+        //-                                         div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
+        //-                                         div(class='songtime' id='duration-' + title.id + '-' + playlist.id) #{displayTime}
+        //-                                         div(class='playbutton' id=thisSong.id + '-' + playlist.id)
+        //-                                             img(src='play.svg' class='playicon')
+        //-                                         div(class='title-display')
+        //-                                             p #{thisVersion.name}
+        //-                                             p #{displayDate}
+        //-                             div(class='tier-display')
+        //-                                 div(class="edit" id=('edittitle-' + title.id))
+        //-                                     img(src='edit.png')
+        //-                                     div(class='addbox hidden')
+        //-                                         h3 Edit #{title.title}
+        //-                                         form(method='POST' action=band.name + '/edit' class='add-form')
+        //-                                             label(for='titleName') Title:
+        //-                                             input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
+        //-                                             label(for='moveplaylist') Change playlist:
+        //-                                             select(name='moveplaylist')
+        //-                                                 option(selected value=playlist.id) #{playlist.name}
+        //-                                                 if playlists.length > 1
+        //-                                                     - let playlistlist = playlists.filter(t => t.id !== playlist.id)
+        //-                                                     each otherplaylist in playlistlist
+        //-                                                         option(value=otherplaylist.id) #{otherplaylist.name}
+        //-                                             br
+        //-                                             br                                 
+        //-                                             input(type='hidden' name='dataID' value='title-' + title.id)
+        //-                                             input(type='hidden' name='parentID' value=playlist.id)
+        //-                                             button(type='submit') OK
+        //-                                 form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + title.id + '-form')
+        //-                                     input(type='hidden' name='id' value=title.id)
+        //-                                     input(type='hidden' name='parentid' value=playlist.id)
+        //-                                     input(type='hidden' name='rowtype' value='title')
+        //-                                 img(src='delete.png' class='delete' id='delete-' + title.id)
+        //- else
+        //-     p(class='row tier') There are no playlists.
+        //- div(class="add addtier")
+        //-     img(src='add.png')
+        //-     div(class='addbox hidden tier-add')
+        //-         form(method='POST' action=band.name)
+        //-             label(for='playlistName') playlist Name:
+        //-             input(type='text' spellcheck='false' name='playlistName' required='true' value='')
+        //-             input(type='hidden' name='dataID' value='playlist-0')
+        //-             button(type='submit') OK    
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
         include ../static/index.js

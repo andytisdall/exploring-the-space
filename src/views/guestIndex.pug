@@ -87,7 +87,7 @@ body
                                             div(class='detail-content')
                                                 div(class='detail-header')
                                                     - const thisVersion = title.versions.find(v => v.current)
-                                                    - const versionList = title.versions.filter(v => v.current !== true).map(v => [v.name, v.id])
+                                                    - const versionList = title.versions.filter(v => v !== thisVersion).map(v => [v.name, v.id])
                                                     
                                                     h5 Version:       
                                                     div(class='dropdown')
