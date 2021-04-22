@@ -466,7 +466,7 @@ fileInputs.forEach(input => {
 
                     const formData = new FormData(input)
                     formData.append('duration', duration);
-                    axios.post(`/${bandName}`, formData).then(() => {
+                    axios.post(input.action, formData).then(() => {
                         window.location.reload();
                     });
 

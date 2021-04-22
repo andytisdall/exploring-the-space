@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
 import { requireAuth } from '../middlewares/require-auth.js';
+import { addMp3, deleteMp3 } from './streamer.js';
+import mongodb from 'mongodb';
 
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
@@ -74,7 +76,7 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
   
             break;
         case 'song':
-            //Get paramaters
+            //Get data
             const { songDate, songComments, versionID } = req.body;
             //Exit if this date exists in the version's song list
             const vers = await Version.findOne({ _id: versionID });
@@ -92,7 +94,7 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
             // Update mp3 if there's a new one
             if (req.files) {
                 req.socket.setTimeout(10 * 60 * 1000);
-                const stream = streamer.addMp3(req.files.songFile);
+                const stream = addMp3(req.files.songFile);
                 stream.on('error', (err) => {
                     req.session.errorMessage = 'error uploading mp3';
                     res.redirect(`/${bandName}`);
@@ -106,8 +108,8 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
                     await Song.updateOne({ _id: id }, { mp3, size: req.files.songFile.size, duration: req.body.duration });
                     console.log('Uploaded new mp3');
                     // Delete old mp3
-                    let mp3Id = new ObjectID(oldMp3);
-                    streamer.deleteMp3(mp3Id);
+                    let mp3Id = new mongodb.ObjectID(oldMp3);
+                    deleteMp3(mp3Id);
                 });
             }
 
@@ -132,9 +134,7 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
 
 
             await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest });
-            res.redirect(`/${bandName}`);
-
-            break;
+            return res.redirect(`/${bandName}`);
     }
 });
 
