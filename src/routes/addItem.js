@@ -139,7 +139,7 @@ router.post('/:bandName', currentUser, requireAuth, async (req, res) => {
             });
             break;
         default:
-            res.send('got invalid info for adding an item');
+            throw new Error('got invalid info for adding an item');
     }
 });
 

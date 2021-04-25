@@ -30,8 +30,14 @@ body
                 input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
                 div(class='playslidertime' id='playtotaltime') 
         
-        div(class="marqee header")            
-            h1(id="band-name") #{band.name}
+        div(class="marqee header")
+            div(class="band-name")           
+                h1(id="band-name") #{band.name}
+                if editMode
+                    div(class="menu-button")
+                        img(src="dots.png")
+                        div(class="menu")
+                            a(href="/signout") Sign Out
             img(class='pausebutton hidden' src='pause.svg' id='pause')
             img(class='unpause hidden' src='play.svg' id='unpause')
             div(class="slidecontainer")
@@ -45,362 +51,388 @@ body
                 div(class="marqee tier-info")
                     div(class='tier-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
-                        h2 #{tier.name}  
-                        div(class="add" id=('addtitle-' + tier.id))
-                            img(src='add.png')
-                            div(class='addbox hidden')
-                                h3 Add a Song
-                                form(method='POST' action=band.name class='add-form')
-                                    label(for='titleName') Title:
-                                    input(type='text' spellcheck='false' name='titleName' required='true' value='')
-                                    input(type='hidden' name='dataID' value='title-' + tier.id)
-                                    button(type='submit') OK
+                        h2 #{tier.name}
+                        if editMode
+                            div(class="add" id=('addtitle-' + tier.id))
+                                img(src='add.png')
+                                div(class='addbox hidden')
+                                    h3 Add a Song
+                                    form(method='POST' action=band.name class='add-form')
+                                        label(for='titleName') Title:
+                                        input(type='text' spellcheck='false' name='titleName' required='true' value='')
+                                        input(type='hidden' name='dataID' value='title-' + tier.id)
+                                        button(type='submit') OK
                     div(class='tier-count')
                         div(class='song-count') #{tier.trackList.length} songs
                         div(class='song-count' id='tiertime'+tier.id)
-                    div(class='tier-display')
-                        div(class="edit" id=('edittier-' + tier.id))
-                            img(src='edit.png')
-                            div(class='addbox hidden')
-                                h3 Edit #{tier.name}
-                                form(method='POST' class='add-form' action=band.name + '/edit')
-                                    label(for='tierName') Tier Name:
-                                    input(type='text' spellcheck='false' name='tierName' required='true' value=tier.name)
-                                    label(for='tierPosition') Tier Position:
-                                    select(name='tierPosition')
-                                        option(selected disabled value=tier.position) #{tier.position}
-                                        each item in band.tiers
-                                            option(value=item.position) #{item.position}
-                                    input(type='hidden' name='dataID' value='tier-' + tier.id)
-                                    p
-                                    button(type='submit') OK
-                        
-                        form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + tier.id + '-form')
-                            input(type='hidden' name='id' value=tier.id)
-                            input(type='hidden' name='rowtype' value='tier')
-                        img(src='delete.png' class='delete' id='delete-' + tier.id)
+                    if editMode
+                        div(class='tier-display')
+                            div(class="add" id=('edittier-' + tier.id))
+                                img(src='edit.png')
+                                div(class='addbox hidden')
+                                    h3 Edit #{tier.name}
+                                    form(method='POST' class='add-form' action=band.name + '/edit')
+                                        label(for='tierName') Tier Name:
+                                        input(type='text' spellcheck='false' name='tierName' required='true' value=tier.name)
+                                        label(for='tierPosition') Tier Position:
+                                        select(name='tierPosition')
+                                            option(selected disabled value=tier.position) #{tier.position}
+                                            each item in band.tiers
+                                                option(value=item.position) #{item.position}
+                                        input(type='hidden' name='dataID' value='tier-' + tier.id)
+                                        p
+                                        button(type='submit') OK
+                            
+                            form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + tier.id + '-form')
+                                input(type='hidden' name='id' value=tier.id)
+                                input(type='hidden' name='rowtype' value='tier')
+                            img(src='delete.png' class='delete' id='delete-' + tier.id)
                 hr
-                div(class='titlecontainer hidden' id=('title-' + tier.id))
-                    each title in tier.trackList
-                        div(class="row title" id=title.id)
+            div(class='titlecontainer hidden' id=('title-' + tier.id))
+                each title in tier.trackList
+                    div(class="row title" id=title.id)
+                        div(class='title-margin')
+                            div(class="marqee")
+                                div(class='row-name')
+                                    img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
+                                    div(class='name-spot' id='name-spot-'+title.id)
+                                        h3 #{title.title}
+                                
+                                if title.versions.length > 0
+                                    - const thisVersion = title.versions.find(v => v.current)
+                                    if thisVersion.songs.length > 0
+                                        - const thisSong = thisVersion.songs.find(s => s.latest)
+                                        div(class='playcontainer')
+                                            - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
+                                            - const minutes = Math.floor(thisSong.duration / 60)
+                                            - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
+                                            - const displayTime = `${minutes}:${seconds}`
+                                            div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
+                                            div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
+                                            div(class='playbutton' id=thisSong.id + '-' + tier.id)
+                                                img(src='play.svg' class='playicon')
+                                            div(class='title-display')
+                                                p #{thisVersion.name}
+                                                p #{displayDate}
+                                        if editMode
+                                            div(class='tier-display')
+                                                if band.playlists.length > 0
+                                                    div(class="add")
+                                                        p Plaaa
+                                                        div(class='addbox hidden')
+                                                            h3 Add to Playlist
+                                                            form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
+                                                                select(name='playlistId') 
+                                                                    each playlist in band.playlists
+                                                                        option(value=playlist.id) #{playlist.name}
+                                                                input(type="hidden" name="title" value=title.id)
+                                                                input(type="hidden" name="version" value=thisVersion.id)
+                                                                input(type="hidden" name="bounce" value=thisSong.id)
+                                                                button(type='submit') OK
+
+                                                div(class="add" id=('edittitle-' + title.id))
+                                                    img(src='edit.png')
+                                                    div(class='addbox hidden')
+                                                        h3 Edit #{title.title}
+                                                        form(method='POST' action=band.name + '/edit' class='add-form')
+                                                            label(for='titleName') Title:
+                                                            input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
+                                                            label(for='moveTier') Change Tier:
+                                                            select(name='moveTier')
+                                                                option(selected value=tier.id) #{tier.name}
+                                                                if band.tiers.length > 1
+                                                                    - let tierlist = band.tiers.filter(t => t.id !== tier.id)
+                                                                    each otherTier in tierlist
+                                                                        option(value=otherTier.id) #{otherTier.name}
+                                                            br
+                                                            br                                 
+                                                            input(type='hidden' name='dataID' value='title-' + title.id)
+                                                            input(type='hidden' name='parentID' value=tier.id)
+                                                            button(type='submit') OK
+                                                form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + title.id + '-form')
+                                                    input(type='hidden' name='id' value=title.id)
+                                                    input(type='hidden' name='parentid' value=tier.id)
+                                                    input(type='hidden' name='rowtype' value='title')
+                                                img(src='delete.png' class='delete' id='delete-' + title.id)
+                                        else
+                                            div(class='download')
+                                                a(href="/audio/download/" + thisSong.id + ".mp3" download=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
+                                                    img(src="download.svg")
+
+                    div(class='versioncontainer hidden' id=('version-' + title.id))
+                        if title.versions.length > 0 
+                            div(class='detail-box')
+                                div(class='detail-content')
+                                    div(class='detail-header')
+                                        - const thisVersion = title.versions.find(v => v.current)
+                                        - const versionList = title.versions.filter(v => v !== thisVersion).map(v => [v.name, v.id])
+                                        
+                                        h5 Version:       
+                                        div(class='dropdown')
+                                            button(class='dropbtn' id='version-name-'+title.id) #{thisVersion.name}
+                                            div(class='dropdown-content')
+                                                each version in versionList
+                                                    div(class='dropdown-link change-version' id=thisVersion.id + '-' + version[1]) #{version[0]}
+
+                                    div(class='detail-notes') #{thisVersion.notes}   
+                                if editMode
+                                    div(class='detail-buttons')
+                                        div(class="add" id=('editversion-' + thisVersion.id))
+                                            img(src='edit.png')
+                                            div(class='addbox hidden left-box add-version')
+                                                form(method='POST' action=band.name + '/edit')
+                                                    label(for='versionName') Name:
+                                                    input(type='text' spellcheck='false' name='versionName' required='true' value=thisVersion.name)
+                                                    label(for='versionName') Version Notes:
+                                                    input(type='textarea' spellcheck='false' name='versionNotes' value=thisVersion.notes)
+                                                    label(for="versionCurrent") Current version
+                                                    input(type="checkbox" name="versionCurrent" checked=thisVersion.current ? 'checked' : '')
+                                                    input(type='hidden' name='dataID' value='version-' + thisVersion.id)
+                                                    button(type='submit') OK
+                                        div(class="add" id=('addversion-' + title.id))
+                                            img(src='add.png')
+                                            div(class='addbox hidden add-version')
+                                                form(method='POST' action=band.name)
+                                                    label(for='versionName') Name:
+                                                    input(type='text' spellcheck='false' name='versionName' required='true' value='')
+                                                    label(for='versionName') Version Notes:
+                                                    input(type='textarea' spellcheck='false' name='versionNotes' value='')
+                                                    label(for="versionCurrent") Current version
+                                                    input(type="checkbox" name="versionCurrent" checked)
+                                                    input(type='hidden' name='dataID' value='version-' + title.id)
+                                                    button(type='submit') OK
+                                        form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + thisVersion.id + '-form')
+                                            input(type='hidden' name='id' value=thisVersion.id)
+                                            input(type='hidden' name='parentid' value=title.id)
+                                            input(type='hidden' name='rowtype' value='version')
+                                        img(src='delete.png' class='delete' id='delete-' + thisVersion.id)
+                                        
+
+
+                            if thisVersion.songs.length > 0     
+                                div(class="detail-box"  id=('song-' + thisVersion.id))
+                                    div(class='detail-content')
+                                        div(class='detail-header')
+                                        
+                                            - const thisSong = thisVersion.songs.find(s => s.latest)
+                                            - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
+                                            - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
+                                            - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
+
+                                            h5 Date:
+                                            div(class='dropdown')
+                                                button(class='dropbtn' id='bounce-date-'+title.id)  #{displayDate}
+                                                div(class='dropdown-content')
+                                                    each date in formattedSongDates
+                                                        - let dateId = date.slice(8)
+                                                        - let dateDisplay = date.slice(0,8)
+                                                        div(class='dropdown-link change-song' id=thisSong.id + '-' + dateId) #{dateDisplay}
+
+                                        div(class='detail-notes') #{thisSong.comments}    
+
+                                    if editMode
+                                        div(class='detail-buttons')
+                                            div(class="add" id='editbounce-' + thisSong.id)
+                                                img(src='edit.png')
+                                                div(class='addbox bounce left-box hidden')
+                                                    form(method='POST' action=band.name + '/edit' class='fileform' encType="multipart/form-data")
+                                                        label(for='songFile') File:
+                                                        br
+                                                        input(type='file' name='songFile' class='inputfile')
+                                                        br
+                                                        label(for='songDate') Date:
+                                                        br
+                                                        input(type='date' name='songDate' required='true' value=moment.utc(thisSong.date).format('YYYY-MM-DD') class='calendar')
+                                                        br
+                                                        label(for='songComments') Comments:
+                                                        br
+                                                        input(type='textarea' spellcheck='false' name='songComments' value=thisSong.comments)
+                                                        br
+                                                        label(for="songLatest") Latest
+                                                        input(type="checkbox" name="songLatest" checked=thisSong.latest ? 'checked' : '')
+                                                        input(type='hidden' name='dataID' value='song-' + thisSong.id)
+                                                        input(type='hidden' name='versionID' value=thisVersion.id)
+                                                        button(type='submit') OK
+                                            div(class="add" id='addbounce-' + thisVersion.id)
+                                                img(src='add.png')
+                                                div(class='addbox bounce hidden')
+                                                    form(method='POST' action=band.name encType='multipart/form-data' class='fileform' id='bounce-form-' + thisVersion.id)
+                                                        label(for='songFile') File:
+                                                        br
+                                                        input(type='file' name='songFile' required='true' class='inputfile')
+                                                        br
+                                                        label(for='songDate') Date:
+                                                        br
+                                                        input(type='date' name='songDate' required='true' class='calendar')
+                                                        br
+                                                        label(for='songComments') Comments:
+                                                        br
+                                                        input(type='textarea' spellcheck='false' name='songComments' value='')
+                                                        br
+                                                        label(for="songLatest") Latest
+                                                        input(type="checkbox" name="songLatest" checked)
+                                                        input(type='hidden' name='dataID' value='song-' + thisVersion.id)
+                                                        button(type='submit') OK          
+                                            form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + thisSong.id + '-form')
+                                                input(type='hidden' name='id' value=thisSong.id)
+                                                input(type='hidden' name='parentid' value=thisVersion.id)
+                                                input(type='hidden' name='rowtype' value='song')
+                                            img(src='delete.png' class='delete' id='delete-' + thisSong.id)
+                            else
+                                div(class='song-con')
+                                    div(class='nosong')
+                                        div(class='song')
+                                            p(class='empty') There are no bounces for this version.
+                                            if editMode
+                                                div(class="add" id='addbounce-' + thisVersion.id)
+                                                    img(src='add.png')
+                                                    div(class='addbox bounce hidden')
+                                                        form(method='POST' action=band.name class='fileform' encType="multipart/form-data")
+                                                            label(for='songFile') File:
+                                                            br
+                                                            input(type='file' name='songFile' required='true' class='inputfile')
+                                                            br
+                                                            label(for='songDate') Date:
+                                                            br
+                                                            input(type='date' name='songDate' required='true' class='calendar')
+                                                            br
+                                                            label(for='songComments') Comments:
+                                                            br
+                                                            input(type='textarea' spellcheck='false' name='songComments' value='')
+                                                            br
+                                                            label(for="songLatest") Latest
+                                                            input(type="checkbox" name="songLatest" checked)
+                                                            input(type='hidden' name='dataID' value='song-' + thisVersion.id)
+                                                            input(type='hidden' name='duration' value='')
+                                                            button(type='submit') OK
+                        else
+                            div(class='noversion')
+                                p(class='empty') No versions of this title.
+                                if editMode
+                                    div(class="add" id=('addversion-' + title.id))
+                                        img(src='add.png')
+                                        div(class='addbox hidden add-version')
+                                            form(method='POST' action=band.name id='versionform')
+                                                label(for='versionName') Name:
+                                                input(type='text' spellcheck='false' name='versionName' required='true' value='')
+                                                label(for='versionName') Version Notes:
+                                                input(type='textarea' spellcheck='false' name='versionNotes' value='')
+                                                label(for="versionCurrent") Current version
+                                                input(type="checkbox" name="versionCurrent" checked)
+                                                input(type='hidden' name='dataID' value='version-' + title.id)
+                                                button(type='submit') OK
+                else
+                    p(class='row notitle empty') No songs in this tier.
+
+        else
+            p(class='row tier') There are no tiers.
+        if editMode
+            div(class="add addtier")
+                img(src='add.png')
+                div(class='addbox hidden tier-add')
+                    h3 Add a Tier
+                    form(method='POST' action=band.name)
+
+                        label(for='tierName') Tier Name:
+                        input(type='text' spellcheck='false' name='tierName' required='true' value='')
+                        input(type='hidden' name='dataID' value='tier-0')
+                        button(type='submit') OK
+        div(class="playlists")
+            h2 Playlists
+            hr
+            each playlist in band.playlists
+                div(class="row tier" id=playlist.id)
+                    div(class="marqee tier-info")
+                        div(class='tier-name')
+                            img(class='arrow' src='right-arrow.svg' id=('arrow-' + playlist.id))
+                            h2 #{playlist.name}  
+                            //- div(class="add" id=('addtitle-' + playlist.id))
+                            //-     img(src='add.png')
+                            //-     div(class='addbox hidden')
+                            //-         h3 Add a Song
+                            //-         form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
+                            //-             label(for='titleName') Title:
+                            //-             input(type='text' spellcheck='false' name='titleName' required='true' value='')
+                            //-             input(type='hidden' name='dataID' value='title-' + playlist.id)
+                            //-             button(type='submit') OK
+                        div(class='tier-count')
+                            div(class='song-count') #{playlist.songs.length} songs
+                            div(class='song-count' id='tiertime'+playlist.id)
+                        if editMode
+                            div(class='tier-display')
+                                div(class="edit" id=('editplaylist-' + playlist.id))
+                                    img(src='edit.png')
+                                    div(class='addbox hidden')
+                                        h3 Edit #{playlist.name}
+                                        form(method='POST' class='add-form' action=band.name + '/edit')
+                                            label(for='playlistName') playlist Name:
+                                            input(type='text' spellcheck='false' name='playlistName' required='true' value=playlist.name)
+                                            label(for='playlistPosition') playlist Position:
+                                            select(name='playlistPosition')
+                                                option(selected disabled value=playlist.position) #{playlist.position}
+                                                each item in band.playlists
+                                                    option(value=item.position) #{item.position}
+                                            input(type='hidden' name='dataID' value='playlist-' + playlist.id)
+                                            p
+                                            button(type='submit') OK
+                                
+                                form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + playlist.id + '-form')
+                                    input(type='hidden' name='id' value=playlist.id)
+                                    input(type='hidden' name='rowtype' value='playlist')
+                                img(src='delete.png' class='delete' id='delete-' + playlist.id)
+                    hr
+                div(class='titlecontainer hidden' id=('title-' + playlist.id))
+                    each song in playlist.songs
+                        div(class="title" id=song.id)
                             div(class='title-margin')
                                 div(class="marqee")
                                     div(class='row-name')
-                                        img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
-                                        div(class='name-spot' id='name-spot-'+title.id)
-                                            h3 #{title.title}
+                                        
+                                        div(class='name-spot' id='name-spot-'+song.id)
+                                            h3 #{song.title.title}
                                     div(class='playcontainer')
-                                        if title.versions.length > 0
-                                            - const thisVersion = title.versions.find(v => v.current)
-                                            if thisVersion.songs.length > 0
-                                                - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
-                                                - const minutes = Math.floor(thisSong.duration / 60)
-                                                - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
-                                                - const displayTime = `${minutes}:${seconds}`
-                                                div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-                                                div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
-                                                div(class='playbutton' id=thisSong.id + '-' + tier.id)
-                                                    img(src='play.svg' class='playicon')
-                                                div(class='title-display')
-                                                    p #{thisVersion.name}
-                                                    p #{displayDate}
-                                    div(class='tier-display')
-                                        div(class="edit" id=('edittitle-' + title.id))
-                                            img(src='edit.png')
-                                            div(class='addbox hidden')
-                                                h3 Edit #{title.title}
-                                                form(method='POST' action=band.name + '/edit' class='add-form')
-                                                    label(for='titleName') Title:
-                                                    input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
-                                                    label(for='moveTier') Change Tier:
-                                                    select(name='moveTier')
-                                                        option(selected value=tier.id) #{tier.name}
-                                                        if band.tiers.length > 1
-                                                            - let tierlist = band.tiers.filter(t => t.id !== tier.id)
-                                                            each otherTier in tierlist
-                                                                option(value=otherTier.id) #{otherTier.name}
-                                                    br
-                                                    br                                 
-                                                    input(type='hidden' name='dataID' value='title-' + title.id)
-                                                    input(type='hidden' name='parentID' value=tier.id)
-                                                    button(type='submit') OK
-                                        form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + title.id + '-form')
-                                            input(type='hidden' name='id' value=title.id)
-                                            input(type='hidden' name='parentid' value=tier.id)
-                                            input(type='hidden' name='rowtype' value='title')
-                                        img(src='delete.png' class='delete' id='delete-' + title.id)
-    
-                                div(class='versioncontainer hidden' id=('version-' + title.id))
-                                    if title.versions.length > 0 
-                                        div(class='detail-box')
-                                            div(class='detail-content')
-                                                div(class='detail-header')
-                                                    - const thisVersion = title.versions.find(v => v.current)
-                                                    - const versionList = title.versions.filter(v => v !== thisVersion).map(v => [v.name, v.id])
-                                                    
-                                                    h5 Version:       
-                                                    div(class='dropdown')
-                                                        button(class='dropbtn' id='version-name-'+title.id) #{thisVersion.name}
-                                                        div(class='dropdown-content')
-                                                            each version in versionList
-                                                                div(class='dropdown-link change-version' id=thisVersion.id + '-' + version[1]) #{version[0]}
+                                        
 
-                                                div(class='detail-notes') #{thisVersion.notes}   
-                                            
-                                            div(class='detail-buttons')
-                                                div(class="edit" id=('editversion-' + thisVersion.id))
-                                                    img(src='edit.png')
-                                                    div(class='addbox hidden left-box add-version')
-                                                        form(method='POST' action=band.name + '/edit')
-                                                            label(for='versionName') Name:
-                                                            input(type='text' spellcheck='false' name='versionName' required='true' value=thisVersion.name)
-                                                            label(for='versionName') Version Notes:
-                                                            input(type='textarea' spellcheck='false' name='versionNotes' value=thisVersion.notes)
-                                                            label(for="versionCurrent") Current version
-                                                            input(type="checkbox" name="versionCurrent" checked=thisVersion.current ? 'checked' : '')
-                                                            input(type='hidden' name='dataID' value='version-' + thisVersion.id)
-                                                            button(type='submit') OK
-                                                div(class="add" id=('addversion-' + title.id))
-                                                    img(src='add.png')
-                                                    div(class='addbox hidden add-version')
-                                                        form(method='POST' action=band.name)
-                                                            label(for='versionName') Name:
-                                                            input(type='text' spellcheck='false' name='versionName' required='true' value='')
-                                                            label(for='versionName') Version Notes:
-                                                            input(type='textarea' spellcheck='false' name='versionNotes' value='')
-                                                            label(for="versionCurrent") Current version
-                                                            input(type="checkbox" name="versionCurrent" checked)
-                                                            input(type='hidden' name='dataID' value='version-' + title.id)
-                                                            button(type='submit') OK
-                                                form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + thisVersion.id + '-form')
-                                                    input(type='hidden' name='id' value=thisVersion.id)
-                                                    input(type='hidden' name='parentid' value=title.id)
-                                                    input(type='hidden' name='rowtype' value='version')
-                                                img(src='delete.png' class='delete' id='delete-' + thisVersion.id)
-                                                
-
-
-                                        if thisVersion.songs.length > 0     
-                                            div(class="detail-box"  id=('song-' + thisVersion.id))
-                                                div(class='detail-content')
-                                                    div(class='detail-header')
-                                                    
-                                                        - const thisSong = thisVersion.songs.find(s => s.latest)
-                                                        - const displayDate = moment.utc(thisSong.date).format('MM/DD/yy')
-                                                        - const songDates = thisVersion.songs.filter(s=> s.latest !== true).map(s => moment.utc(s.date).format('YY/MM/DD') + s.id).sort().reverse()
-                                                        - const formattedSongDates = songDates.map(d => d[3]+d[4]+'/'+d[6]+d[7]+'/'+d[0]+d[1] + d.slice(8))
-
-                                                        h5 Date:
-                                                        div(class='dropdown')
-                                                            button(class='dropbtn' id='bounce-date-'+title.id)  #{displayDate}
-                                                            div(class='dropdown-content')
-                                                                each date in formattedSongDates
-                                                                    - let dateId = date.slice(8)
-                                                                    - let dateDisplay = date.slice(0,8)
-                                                                    div(class='dropdown-link change-song' id=thisSong.id + '-' + dateId) #{dateDisplay}
-
-                                                    div(class='detail-notes') #{thisSong.comments}    
-                                                div(class='detail-buttons')
-                                                    div(class="edit" id='editbounce-' + thisSong.id)
-                                                        img(src='edit.png')
-                                                        div(class='addbox bounce left-box hidden')
-                                                            form(method='POST' action=band.name + '/edit' class='fileform' encType="multipart/form-data")
-                                                                label(for='songFile') File:
-                                                                br
-                                                                input(type='file' name='songFile' class='inputfile')
-                                                                br
-                                                                label(for='songDate') Date:
-                                                                br
-                                                                input(type='date' name='songDate' required='true' value=moment.utc(thisSong.date).format('YYYY-MM-DD') class='calendar')
-                                                                br
-                                                                label(for='songComments') Comments:
-                                                                br
-                                                                input(type='textarea' spellcheck='false' name='songComments' value=thisSong.comments)
-                                                                br
-                                                                label(for="songLatest") Latest
-                                                                input(type="checkbox" name="songLatest" checked=thisSong.latest ? 'checked' : '')
-                                                                input(type='hidden' name='dataID' value='song-' + thisSong.id)
-                                                                input(type='hidden' name='versionID' value=thisVersion.id)
-                                                                button(type='submit') OK
-                                                    div(class="add" id='addbounce-' + thisVersion.id)
-                                                        img(src='add.png')
-                                                        div(class='addbox bounce hidden')
-                                                            form(method='POST' action=band.name encType='multipart/form-data' class='fileform' id='bounce-form-' + thisVersion.id)
-                                                                label(for='songFile') File:
-                                                                br
-                                                                input(type='file' name='songFile' required='true' class='inputfile')
-                                                                br
-                                                                label(for='songDate') Date:
-                                                                br
-                                                                input(type='date' name='songDate' required='true' class='calendar')
-                                                                br
-                                                                label(for='songComments') Comments:
-                                                                br
-                                                                input(type='textarea' spellcheck='false' name='songComments' value='')
-                                                                br
-                                                                label(for="songLatest") Latest
-                                                                input(type="checkbox" name="songLatest" checked)
-                                                                input(type='hidden' name='dataID' value='song-' + thisVersion.id)
-                                                                button(type='submit') OK          
-                                                    form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + thisSong.id + '-form')
-                                                        input(type='hidden' name='id' value=thisSong.id)
-                                                        input(type='hidden' name='parentid' value=thisVersion.id)
-                                                        input(type='hidden' name='rowtype' value='song')
-                                                    img(src='delete.png' class='delete' id='delete-' + thisSong.id)
-                                        else
-                                            div(class='song-con')
-                                                div(class='nosong')
-                                                    div(class='song')
-                                                        p(class='empty') There are no bounces for this version.
-                                                        div(class="add" id='addbounce-' + thisVersion.id)
-                                                            img(src='add.png')
-                                                            div(class='addbox bounce hidden')
-                                                                form(method='POST' action=band.name class='fileform' encType="multipart/form-data")
-                                                                    label(for='songFile') File:
-                                                                    br
-                                                                    input(type='file' name='songFile' required='true' class='inputfile')
-                                                                    br
-                                                                    label(for='songDate') Date:
-                                                                    br
-                                                                    input(type='date' name='songDate' required='true' class='calendar')
-                                                                    br
-                                                                    label(for='songComments') Comments:
-                                                                    br
-                                                                    input(type='textarea' spellcheck='false' name='songComments' value='')
-                                                                    br
-                                                                    label(for="songLatest") Latest
-                                                                    input(type="checkbox" name="songLatest" checked)
-                                                                    input(type='hidden' name='dataID' value='song-' + thisVersion.id)
-                                                                    input(type='hidden' name='duration' value='')
-                                                                    button(type='submit') OK
-                                    else
-                                        div(class='noversion')
-                                            p(class='empty') No versions of this title.
-                                            div(class="add" id=('addversion-' + title.id))
-                                                img(src='add.png')
-                                                div(class='addbox hidden add-version')
-                                                    form(method='POST' action=band.name id='versionform')
-                                                        label(for='versionName') Name:
-                                                        input(type='text' spellcheck='false' name='versionName' required='true' value='')
-                                                        label(for='versionName') Version Notes:
-                                                        input(type='textarea' spellcheck='false' name='versionNotes' value='')
-                                                        label(for="versionCurrent") Current version
-                                                        input(type="checkbox" name="versionCurrent" checked)
-                                                        input(type='hidden' name='dataID' value='version-' + title.id)
+                                        - const displayDate = moment.utc(song.bounce.date).format('MM/DD/YY')
+                                        - const minutes = Math.floor(song.bounce.duration / 60)
+                                        - const seconds = Math.floor(song.bounce.duration % 60) < 10 ? '0' + Math.floor(song.bounce.duration % 60) : Math.floor(song.bounce.duration % 60)
+                                        - const displayTime = `${minutes}:${seconds}`
+                                        div(class='hidden' id='mp3Id-' + song.id)  #{song.bounce.id}
+                                        div(class='songtime' id='duration-' + song.id + '-' + playlist.id) #{displayTime}
+                                        div(class='playbutton' id=song.bounce.id + '-' + playlist.id)
+                                            img(src='play.svg' class='playicon')
+                                        div(class='title-display')
+                                            p #{song.version.name}
+                                            p #{displayDate}
+                                    if editMode
+                                        div(class='tier-display')
+                                            div(class="add")
+                                                img(src='edit.png')
+                                                div(class='addbox hidden')
+                                                    h3 Edit #{song.title.title}
+                                                    form(method='POST' action=band.name + '/change-position' class='add-form')
+                                                        label(for='titleName') Position:
+                                                        select(name='newPosition')
+                                                            option(selected disabled value=song.position) #{song.position}
+                                                            each item in playlist.songs
+                                                                option(value=item.position) #{item.position}                           
+                                                        input(type='hidden' name='songId' value=song.id)
                                                         button(type='submit') OK
-                    else
-                        p(class='row notitle empty') No songs in this tier.
-        else
-            p(class='row tier') There are no tiers.
-        div(class="add addtier")
-            img(src='add.png')
-            div(class='addbox hidden tier-add')
-                form(method='POST' action=band.name)
-                    label(for='tierName') Tier Name:
-                    input(type='text' spellcheck='false' name='tierName' required='true' value='')
-                    input(type='hidden' name='dataID' value='tier-0')
-                    button(type='submit') OK    
-        //- each playlist in playlists
-        //-     div(class="row playlist" id=playlist.id)
-        //-         div(class="marqee playlist-info")
-        //-             div(class='playlist-name')
-        //-                 img(class='arrow' src='right-arrow.svg' id=('arrow-' + playlist.id))
-        //-                 h2 #{playlist.name}  
-        //-                 div(class="add" id=('addtitle-' + playlist.id))
-        //-                     img(src='add.png')
-        //-                     div(class='addbox hidden')
-        //-                         h3 Add a Song
-        //-                         form(method='POST' action=band.name class='add-form')
-        //-                             label(for='titleName') Title:
-        //-                             input(type='text' spellcheck='false' name='titleName' required='true' value='')
-        //-                             input(type='hidden' name='dataID' value='title-' + playlist.id)
-        //-                             button(type='submit') OK
-        //-             div(class='playlist-count')
-        //-                 div(class='song-count') #{playlist.trackList.length} songs
-        //-                 div(class='song-count' id='playlisttime'+playlist.id)
-        //-             div(class='tier-display')
-        //-                 div(class="edit" id=('editplaylist-' + playlist.id))
-        //-                     img(src='edit.png')
-        //-                     div(class='addbox hidden')
-        //-                         h3 Edit #{playlist.name}
-        //-                         form(method='POST' class='add-form' action=band.name + '/edit')
-        //-                             label(for='playlistName') playlist Name:
-        //-                             input(type='text' spellcheck='false' name='playlistName' required='true' value=playlist.name)
-        //-                             label(for='playlistPosition') playlist Position:
-        //-                             select(name='playlistPosition')
-        //-                                 option(selected disabled value=playlist.position) #{playlist.position}
-        //-                                 each item in playlists
-        //-                                     option(value=item.position) #{item.position}
-        //-                             input(type='hidden' name='dataID' value='playlist-' + playlist.id)
-        //-                             p
-        //-                             button(type='submit') OK
-                        
-        //-                 form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + playlist.id + '-form')
-        //-                     input(type='hidden' name='id' value=playlist.id)
-        //-                     input(type='hidden' name='rowtype' value='playlist')
-        //-                 img(src='delete.png' class='delete' id='delete-' + playlist.id)
-        //-         hr
-        //-         div(class='titlecontainer hidden' id=('title-' + playlist.id))
-        //-             each title in playlist.songs
-        //-                 div(class="row title" id=title.id)
-        //-                     div(class='title-margin')
-        //-                         div(class="marqee")
-        //-                             div(class='row-name')
-        //-                                 img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
-        //-                                 div(class='name-spot' id='name-spot-'+title.id)
-        //-                                     h3 #{title.title}
-        //-                             div(class='playcontainer')
-        //-                                 if title.versions.length > 0
-        //-                                     - const thisVersion = title.versions.find(v => v.current)
-        //-                                     if thisVersion.songs.length > 0
-        //-                                         - const thisSong = thisVersion.songs.find(s => s.latest)
-        //-                                         - const displayDate = moment.utc(thisSong.date).format('MM/DD/YY')
-        //-                                         - const minutes = Math.floor(thisSong.duration / 60)
-        //-                                         - const seconds = Math.floor(thisSong.duration % 60) < 10 ? '0' + Math.floor(thisSong.duration % 60) : Math.floor(thisSong.duration % 60)
-        //-                                         - const displayTime = `${minutes}:${seconds}`
-        //-                                         div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
-        //-                                         div(class='songtime' id='duration-' + title.id + '-' + playlist.id) #{displayTime}
-        //-                                         div(class='playbutton' id=thisSong.id + '-' + playlist.id)
-        //-                                             img(src='play.svg' class='playicon')
-        //-                                         div(class='title-display')
-        //-                                             p #{thisVersion.name}
-        //-                                             p #{displayDate}
-        //-                             div(class='tier-display')
-        //-                                 div(class="edit" id=('edittitle-' + title.id))
-        //-                                     img(src='edit.png')
-        //-                                     div(class='addbox hidden')
-        //-                                         h3 Edit #{title.title}
-        //-                                         form(method='POST' action=band.name + '/edit' class='add-form')
-        //-                                             label(for='titleName') Title:
-        //-                                             input(type='text' spellcheck='false' name='titleName' required='true' value=title.title)
-        //-                                             label(for='moveplaylist') Change playlist:
-        //-                                             select(name='moveplaylist')
-        //-                                                 option(selected value=playlist.id) #{playlist.name}
-        //-                                                 if playlists.length > 1
-        //-                                                     - let playlistlist = playlists.filter(t => t.id !== playlist.id)
-        //-                                                     each otherplaylist in playlistlist
-        //-                                                         option(value=otherplaylist.id) #{otherplaylist.name}
-        //-                                             br
-        //-                                             br                                 
-        //-                                             input(type='hidden' name='dataID' value='title-' + title.id)
-        //-                                             input(type='hidden' name='parentID' value=playlist.id)
-        //-                                             button(type='submit') OK
-        //-                                 form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + title.id + '-form')
-        //-                                     input(type='hidden' name='id' value=title.id)
-        //-                                     input(type='hidden' name='parentid' value=playlist.id)
-        //-                                     input(type='hidden' name='rowtype' value='title')
-        //-                                 img(src='delete.png' class='delete' id='delete-' + title.id)
-        //- else
-        //-     p(class='row tier') There are no playlists.
-        //- div(class="add addtier")
-        //-     img(src='add.png')
-        //-     div(class='addbox hidden tier-add')
-        //-         form(method='POST' action=band.name)
-        //-             label(for='playlistName') playlist Name:
-        //-             input(type='text' spellcheck='false' name='playlistName' required='true' value='')
-        //-             input(type='hidden' name='dataID' value='playlist-0')
-        //-             button(type='submit') OK    
+                                            form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + song.id + '-form')
+                                                input(type='hidden' name='id' value=song.id)
+                                                input(type='hidden' name='parentid' value=playlist.id)
+                                                input(type='hidden' name='rowtype' value='playlistsong')
+                                            img(src='delete.png' class='delete' id='delete-' + song.id)
+            else
+                p(class='row tier') There are no playlists.
+            if editMode
+                div(class="add addtier")
+                    img(src='add.png')
+                    div(class='addbox hidden tier-add')
+                        form(method='POST' action=band.name + "/create-playlist")
+                            label(for='playlistName') Playlist Name:
+                            input(type='text' spellcheck='false' name='playlistName' required='true' value='')
+                            button(type='submit') OK    
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
         include ../static/index.js

@@ -50,23 +50,35 @@ const readStorage = () => {
 // to collapse or expand the items within that row
 
 
-const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
+
 
 const container = document.querySelector('.container');
-
 container.addEventListener('click', e => {
+
+    const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
     
     if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
         return;
     }
-    hideAddbox(e.target.parentNode);
-    const button = e.target.closest('.row');
-    if (e.target.parentNode.className.includes('add') || e.target.parentNode.className.includes('edit')) {
-        showAddbox(e.target.parentNode);
-    } else if (button && !state.addboxIsVisible) {   
-        collapseButton(button);
-    }
 
+    hideAddbox(e.target.parentNode);
+
+});
+
+const rows = document.querySelectorAll('.row');
+rows.forEach(row => {
+    row.addEventListener('click', e => {
+        if (!state.addboxIsVisible) {
+            collapseButton(row);
+        }
+    });
+});
+
+const addButtons = document.querySelectorAll('.add');
+addButtons.forEach(ab => {
+    ab.addEventListener('click', e => {
+        showAddbox(ab);
+    });
 });
 
 
@@ -140,7 +152,7 @@ const showAddbox = (target) => {
         state.addboxIsVisible = selected;
     }
     selected.classList.toggle('hidden');
-    selected.childNodes[0].childNodes[2].focus();
+    selected.childNodes[1].childNodes[1].focus();
 };
 
 const hideAddbox = (target) => {
@@ -348,7 +360,7 @@ const play = (mp3Id) => {
     getPlaySlider(audioPlayer);
 };
 
-const playButtons = document.querySelectorAll('.playbutton');
+const playButtons = document.querySelectorAll('.title');
 playButtons.forEach(playButton => {
     playButton.addEventListener('click', (e) => {
         e.stopPropagation();

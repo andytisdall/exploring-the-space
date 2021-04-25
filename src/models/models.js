@@ -46,5 +46,7 @@ mongoose.model('Tier', tierSchema);
 mongoose.model('Title', titleSchema);
 mongoose.model('Version', versionSchema);
 mongoose.model('Song', songSchema);
-mongoose.model('Playlist', playlistSchema);
-mongoose.model('PlaylistSong', playlistSongSchema);
+const Playlist = mongoose.model('Playlist', playlistSchema);
+const PlaylistSong = mongoose.model('PlaylistSong', playlistSongSchema);
+
+export { Playlist, PlaylistSong };

@@ -27,32 +27,32 @@ router.get('/:bandName', currentUser, async (req, res) => {
                 }
             }
         }   
-    });
-
-    const playlists = await Band.findOne({ name: bandName }).populate({
+    }).populate({
         path: 'playlists', populate: {
-            path: 'songs'
+            path: 'songs', populate: [
+                'title', 'version', 'bounce'
+            ]
         }
     });
-
+    
 
     if (!band) {
         return res.redirect('/signin');
     }
+
+    let editMode = false;
 
     if (req.currentUser) {
 
         const thisUser = await User.findById(req.currentUser.id);
 
         if (thisUser.bands.includes(band.id)) {
-            res.render('index', {band, playlists, errorMessage});
-        } else {
-            res.render('guestIndex', { band, playlists, errorMessage });
+            editMode = true;
         }
 
-    } else {
-        res.render('guestIndex', { band, playlists, errorMessage });
     }
+
+    res.render('index', {band, errorMessage, editMode});
 
 
 });

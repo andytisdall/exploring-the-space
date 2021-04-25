@@ -68,6 +68,7 @@ app.post('/:bandName/delete', deleteItem);
 
 app.use(bandIndexRouter);
 app.use(addItemRouter);
+app.use(playlistRouter);
 
 app.get('/', (req, res) => {
     res.redirect('/signin');
@@ -78,8 +79,3 @@ app.use(errorHandler);
 app.listen(3000, () => {
     console.log('Express app started');
 });
-
-// app.post('/playlist/create', createPlaylist);
-// app.post('/playlist/create-song', createPlaylistSong);
-// app.post('/playlist/delete', deletePlaylist);
-// app.post('/playlist/delete-song', deletePlaylistSong);
