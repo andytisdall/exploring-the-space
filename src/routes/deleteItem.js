@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
 import { deleteMp3 } from './streamer.js';
+import { Band } from '../models/band.js';
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
@@ -9,8 +10,11 @@ const Song = mongoose.model('Song');
 
 export const deleteItem = async (req, res) => {
 
-    const deleteTier = async (id) => {
+    const deleteTier = async (id, band) => {
         let thisTier = await Tier.findOne({_id: id}).populate('trackList');
+
+        await Band.updateOne({ name: band }, { $pull: {tiers: id} });
+
         thisTier.trackList.forEach(async (title) => {                
             deleteTitle(title.id);
         });
@@ -80,7 +84,7 @@ export const deleteItem = async (req, res) => {
     }
     switch (rowType) {
         case 'tier':
-            await deleteTier(id);
+            await deleteTier(id, bandName);
             res.redirect(`/${bandName}`);
             break;
         case 'title':

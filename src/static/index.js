@@ -50,20 +50,60 @@ const readStorage = () => {
 // to collapse or expand the items within that row
 
 
+// button for showing hidden forms
 
+const addButtons = document.querySelectorAll('.add');
+addButtons.forEach(ab => {
+    ab.addEventListener('click', e => {
+        e.stopPropagation();
+        const addBox = ab.childNodes[1];
+        showAddbox(addBox);
+    });
+});
+
+// show and hide hidden forms 
+
+const showAddbox = (addbox) => {
+    let openBox = state.addboxIsVisible;
+    if (openBox) {
+        if (openBox !== addbox) {
+            openBox.classList.toggle('hidden');
+            state.addboxIsVisible = addbox;
+        } else {
+            state.addboxIsVisible = false;
+        }
+    } else {
+        state.addboxIsVisible = addbox;
+    }
+
+    addbox.classList.toggle('hidden');
+    // focus the first text field in the box
+
+    addbox.childNodes[1].childNodes[1].focus();
+};
+
+
+// clicking anywhere in the container with an addbox open will close that box
 
 const container = document.querySelector('.container');
 container.addEventListener('click', e => {
-
-    const formElements = ['INPUT', 'LABEL', 'FORM', 'SELECT'];
-    
-    if (formElements.includes(e.target.tagName) || e.target.className === 'addbox') {
-        return;
-    }
-
-    hideAddbox(e.target.parentNode);
+    if (state.addboxIsVisible) {
+        state.addboxIsVisible.classList.toggle('hidden');
+        state.addboxIsVisible = false;
+    } 
 
 });
+
+// prevent clicking inside the add boxes from triggering the hide addbox behavior
+
+const addboxes = document.querySelectorAll('.addbox');
+addboxes.forEach(box => {
+    box.addEventListener('click', e => {
+        e.stopPropagation();
+    });
+});
+
+// collapse rows
 
 const rows = document.querySelectorAll('.row');
 rows.forEach(row => {
@@ -74,12 +114,7 @@ rows.forEach(row => {
     });
 });
 
-const addButtons = document.querySelectorAll('.add');
-addButtons.forEach(ab => {
-    ab.addEventListener('click', e => {
-        showAddbox(ab);
-    });
-});
+
 
 
 // stop propagation for the add item sumbit buttons and the delete links
@@ -136,32 +171,7 @@ const collapseButton = (button) => {
     toggleStorage(id, arrow);
 };
 
-// show and hide hidden forms
 
-const showAddbox = (target) => {
-    let selected = target.childNodes[1];
-    let addbox = state.addboxIsVisible;
-    if (addbox) {
-        if (addbox !== selected) {
-            addbox.classList.toggle('hidden');
-            state.addboxIsVisible = selected;
-        } else {
-            state.addboxIsVisible = false;
-        }
-    } else {
-        state.addboxIsVisible = selected;
-    }
-    selected.classList.toggle('hidden');
-    selected.childNodes[1].childNodes[1].focus();
-};
-
-const hideAddbox = (target) => {
-    const addbox = state.addboxIsVisible;
-    if (addbox && target.className !== 'add' && target.className !== 'edit') {
-        addbox.classList.toggle('hidden');
-        state.addboxIsVisible = false;
-    }
-};
 
 
 // Get session storage on page load and save the scroll position and volume level before reload
@@ -183,6 +193,9 @@ const createPlaylist = (tier) => {
     const children = document.getElementById(containerId).childNodes;
     const playlist = [];
     children.forEach(title => {
+        if (!title.classList.contains('title')) {
+            return;
+        }
         let mp3Id = document.getElementById(`mp3Id-${title.id}`);
         if (mp3Id) {
             mp3Id = mp3Id.textContent.trim();
@@ -196,7 +209,10 @@ const createPlaylist = (tier) => {
         if (bounceDate) {
             bounceDate = bounceDate.textContent;
         }
-        let duration = document.getElementById(`duration-${title.id}-${tier.id}`).textContent;
+        let duration = document.getElementById(`duration-${title.id}-${tier.id}`);
+        if (duration) {
+            duration = duration.textContent;
+        }
         playlist.push({
             audio: mp3Id,
             title: titleName,
@@ -360,7 +376,7 @@ const play = (mp3Id) => {
     getPlaySlider(audioPlayer);
 };
 
-const playButtons = document.querySelectorAll('.title');
+const playButtons = document.querySelectorAll('.playbutton');
 playButtons.forEach(playButton => {
     playButton.addEventListener('click', (e) => {
         e.stopPropagation();

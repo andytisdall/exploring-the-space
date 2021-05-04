@@ -26,18 +26,18 @@ router.get('/:bandName', currentUser, async (req, res) => {
                     path: 'songs'
                 }
             }
-        }   
+        }, options: { sort: 'position' }
     }).populate({
         path: 'playlists', populate: {
             path: 'songs', populate: [
                 'title', 'version', 'bounce'
-            ]
-        }
+            ], options: { sort: 'position' }
+        }, options: { sort: 'position' }
     });
     
 
     if (!band) {
-        return res.redirect('/signin');
+        throw new Error('Band does not exist')
     }
 
     let editMode = false;

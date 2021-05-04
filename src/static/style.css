@@ -324,9 +324,8 @@ h2 {
 
 /* title */
 
-.title .marqee {
+/* .title .marqee {
   /* background-color: rgba(67, 188, 204, 0.623); */
-}
 
 .title-margin {
   margin-left: 3rem;
@@ -403,7 +402,7 @@ h3 {
 }
 
 .add-version {
-  height: 230px;
+  height: 260px;
 }
 
 .noversion {
@@ -505,7 +504,7 @@ h5 {
 }
 
 .bounce {
-  height: 250px;
+  height: 275px;
   width: 300px;
 }
 
@@ -579,6 +578,7 @@ h5 {
 
 .playlists {
   margin-top: 3rem;
+  margin-bottom: 10rem;
 }
 
 .playlists h2 {

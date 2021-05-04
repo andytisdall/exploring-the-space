@@ -135,6 +135,8 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
 
             await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest });
             return res.redirect(`/${bandName}`);
+        default:
+            throw new Error('Incorrect data type for editing');
     }
 });
 
