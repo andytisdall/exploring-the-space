@@ -15,7 +15,8 @@ body
                 p Uploading...
                 img(class='windmill' src='windmill.gif')
     div(id='player-spot' class='hidden')
-   
+    div(class='playbar-background')
+
     div(class='container')
         if errorMessage
             div(class='error') #{errorMessage}
@@ -29,6 +30,7 @@ body
                 div(class='playslidertime' id='playcurrenttime')
                 input(type="range" min="0" max="1000" value="0" class='playslider' id="playslider")
                 div(class='playslidertime' id='playtotaltime') 
+
         
         div(class="marqee header")
             div(class="band-name")           

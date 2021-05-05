@@ -6,7 +6,7 @@ body {
   background-color: rgb(56, 56, 56);
   color: rgb(151, 235, 68);
   font-family: 'Fira Sans', sans-serif;
-  margin: 1rem;
+  margin: 0px;
 }
 
 img {
@@ -20,6 +20,14 @@ img {
   width: 100px;
 }
 
+.playbar-background {
+  z-index: 9;
+  background-color: rgb(56, 56, 56);
+  position: fixed;
+  height: 5rem;
+  width: 100%;
+}
+
 .playbar {
   height: 5rem;
   background-color: rgb(24, 24, 24);
@@ -28,9 +36,11 @@ img {
   padding: 0.3rem;
   box-sizing: border-box;
   justify-content: space-between;
+  margin-top: 1rem;
   margin-bottom: 0.5rem;
-  width: 96%;
+  width: 98%;
   position: fixed;
+  z-index: 10;
 }
 
 .playbar-title {
@@ -163,6 +173,8 @@ a {
 
 .container {
   max-width: 65rem;
+  margin: 0.7rem;
+  margin-top: 0px;
 }
 
 hr {
@@ -220,7 +232,7 @@ input {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin: 10px;
   color: white;
 }
@@ -281,7 +293,8 @@ h1 {
 }
 
 .header {
-  padding-top: 5.5rem;
+  padding-top: 6rem;
+  padding-bottom: 0px;
   justify-content: space-between;
 }
 
@@ -291,7 +304,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   padding-left: 1rem;
   margin: 0px;
   color: rgb(235, 155, 118);
