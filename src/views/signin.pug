@@ -15,7 +15,10 @@ div(class="container")
     h1 Sign In
     form(class="signin" method="POST" action="/signin")
         label(for="username") Username
-        input(type="text" name="username" required="true")
+        input(focus type="text" id="name-input" name="username" required="true")
         label(for="password") Passwyrd
         input(type="password" name="password" required="true")
         button(type="submit" class="signin-submit") Sign In
+
+script
+    include ../static/signin.js

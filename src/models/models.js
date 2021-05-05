@@ -38,7 +38,8 @@ const playlistSongSchema = new Schema({
 const playlistSchema = new Schema({
     name: { type: String, unique: true },
     position: Number,
-    songs: [{ type: Schema.Types.ObjectId, ref: 'PlaylistSong'}]
+    songs: [{ type: Schema.Types.ObjectId, ref: 'PlaylistSong'}],
+    notes: String
 });
 
 

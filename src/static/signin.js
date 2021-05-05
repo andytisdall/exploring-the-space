@@ -1,0 +1,1 @@
+document.querySelector('#name-input').focus();
