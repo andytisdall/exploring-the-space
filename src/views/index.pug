@@ -415,6 +415,20 @@ body
                                     if editMode
                                         div(class='tier-display')
                                             div(class="add")
+                                                img(src='playlist.png') 
+                                                div(class='addbox hidden')
+                                                    h3 Add to Playlist
+                                                    form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
+                                                        select(name='playlistId')
+                                                            option(selected disabled value=playlist.id) #{playlist.name}
+                                                            - const otherPlaylists = band.playlists.filter(p => p !== playlist)
+                                                            each pl in otherPlaylists
+                                                                option(value=pl.id) #{pl.name}
+                                                        input(type="hidden" name="title" value=song.title.id)
+                                                        input(type="hidden" name="version" value=song.version.id)
+                                                        input(type="hidden" name="bounce" value=song.bounce.id)
+                                                        button(type='submit') OK
+                                            div(class="add")
                                                 img(src='edit.png')
                                                 div(class='addbox hidden')
                                                     h3 Edit #{song.title.title}
@@ -424,7 +438,12 @@ body
                                                             option(selected disabled value=song.position) #{song.position}
                                                             - const positions = playlist.songs.filter(p => p.position !== song.position)
                                                             each item in positions
-                                                                option(value=item.position) #{item.position}                           
+                                                                option(value=item.position) #{item.position}
+                                                        //- select(name='version')
+                                                        //-     option(selected disabled value=song.version) #{song.version}
+                                                        //-     - const otherVersions = song.title.versions.filter(v => v !== song.version.id)
+                                                        //-     each version in otherVersions
+                                                        //-         option(value=version) #{version}                   
                                                         input(type='hidden' name='songId' value=song.id)
                                                         button(type='submit') OK
                                             form(class='hidden' action=band.name + '/delete-playlist-song' method="POST" id='delete-' + song.id + '-form')
