@@ -22,13 +22,15 @@ img {
 
 .playbar {
   height: 5rem;
+  background-color: rgb(24, 24, 24);
   border: 1px pink solid;
   color: pink;
   padding: 0.3rem;
   box-sizing: border-box;
   justify-content: space-between;
   margin-bottom: 0.5rem;
-  width: 100%;
+  width: 96%;
+  position: fixed;
 }
 
 .playbar-title {
@@ -120,11 +122,10 @@ select {
 .upload-container {
   position: absolute;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .upload-progress {
+  margin: auto;
   border: 3px solid orange;
   display: flex;
 }
@@ -234,7 +235,7 @@ h1 {
 .band-name {
   display: flex;
   align-items: center;
-  width: 25%;
+  width: 30%;
 }
 
 .menu-button {
@@ -280,6 +281,7 @@ h1 {
 }
 
 .header {
+  padding-top: 5.5rem;
   justify-content: space-between;
 }
 
@@ -289,7 +291,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   padding-left: 1rem;
   margin: 0px;
   color: rgb(235, 155, 118);
@@ -582,11 +584,13 @@ h5 {
 }
 
 .playlists h2 {
+  font-size: 1.3rem;
   color: rgb(82, 236, 236);
 }
 
 .song-position {
   font-size: 1rem;
+  width: 1rem;
 }
 
 @media (max-width: 700px) {

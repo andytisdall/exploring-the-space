@@ -384,8 +384,6 @@ playButtons.forEach(playButton => {
         const [mp3Id, tierId] = playButton.id.split('-');
         let tier = document.getElementById(tierId);
         const playlist = createPlaylist(tier);
-        console.log(playlist);
-        console.log(mp3Id)
         let currentSong = playlist.find(song => song.audio === mp3Id);
         let index = playlist.indexOf(currentSong);
         state.currentSong = currentSong;
@@ -451,9 +449,8 @@ const unpausePlayer = () => {
 }
 
 unpause.addEventListener('click', () => {
-    state.currentSong.audio.play();
+    playerTag.childNodes[0].play();
     unpausePlayer();
-    console.log(state.currentSong.audio);
 });
 
 document.addEventListener('keydown', (e) => {
@@ -463,9 +460,10 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
         if (state.currentSong) {
-            const audio = document.getElementById(state.currentSong.audio);
+            const audio = playerTag.childNodes[0];
             if (audio.paused) {
                 unpausePlayer(audio);
+                playerTag.childNodes[0].play();
             } else {
                 pausePlayer(audio);
             }
