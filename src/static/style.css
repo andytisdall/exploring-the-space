@@ -585,6 +585,10 @@ h5 {
   color: rgb(82, 236, 236);
 }
 
+.song-position {
+  font-size: 1rem;
+}
+
 @media (max-width: 700px) {
   body {
     margin: 0.3rem;

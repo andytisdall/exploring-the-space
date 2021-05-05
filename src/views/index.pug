@@ -51,6 +51,7 @@ body
                     div(class='tier-name')
                         img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
                         h2 #{tier.name}
+                    div(class='tier-count')
                         if editMode
                             div(class="add" id=('addtitle-' + tier.id))
                                 img(src='add.png')
@@ -61,7 +62,6 @@ body
                                         input(type='text' spellcheck='false' name='titleName' required='true' value='')
                                         input(type='hidden' name='dataID' value='title-' + tier.id)
                                         button(type='submit') OK
-                    div(class='tier-count')
                         div(class='song-count') #{tier.trackList.length} songs
                         div(class='song-count' id='tiertime'+tier.id)
                     if editMode
@@ -390,11 +390,12 @@ body
                     hr
                 div(class='titlecontainer hidden' id=('title-' + playlist.id))
                     each song in playlist.songs
-                        div(class="title" id=song.id)
-                            div(class='title-margin')
+                        div(class='title-margin')
+                            div(class="title" id=song.id)
+                            
                                 div(class="marqee")
                                     div(class='row-name')
-                                        
+                                        div(class="song-position") #{song.position}
                                         div(class='name-spot' id='name-spot-'+song.id)
                                             h3 #{song.title.title}
                                     div(class='playcontainer')

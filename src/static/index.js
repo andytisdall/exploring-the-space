@@ -192,7 +192,8 @@ const createPlaylist = (tier) => {
     let containerId = `title-${tier.id}`
     const children = document.getElementById(containerId).childNodes;
     const playlist = [];
-    children.forEach(title => {
+    children.forEach(parent => {
+        const title = parent.childNodes[0];
         if (!title.classList.contains('title')) {
             return;
         }
@@ -383,7 +384,8 @@ playButtons.forEach(playButton => {
         const [mp3Id, tierId] = playButton.id.split('-');
         let tier = document.getElementById(tierId);
         const playlist = createPlaylist(tier);
-
+        console.log(playlist);
+        console.log(mp3Id)
         let currentSong = playlist.find(song => song.audio === mp3Id);
         let index = playlist.indexOf(currentSong);
         state.currentSong = currentSong;
@@ -392,6 +394,7 @@ playButtons.forEach(playButton => {
             pausePlayer(state.currentSong.audio);
         }
         play(mp3Id);
+
     }); 
 });
 
@@ -450,21 +453,25 @@ const unpausePlayer = () => {
 unpause.addEventListener('click', () => {
     state.currentSong.audio.play();
     unpausePlayer();
+    console.log(state.currentSong.audio);
 });
 
-// document.addEventListener('keydown', (e) => {
-//     if (e.code === 'Space') {
-//         e.preventDefault();
-//         if (state.currentSong) {
-//             const audio = document.getElementById(state.currentSong.audio);
-//             if (audio.paused) {
-//                 unpausePlayer(audio);
-//             } else {
-//                 pausePlayer(audio);
-//             }
-//         }
-//     }
-// });
+document.addEventListener('keydown', (e) => {
+    if (state.addboxIsVisible) {
+        return;
+    }
+    if (e.code === 'Space') {
+        e.preventDefault();
+        if (state.currentSong) {
+            const audio = document.getElementById(state.currentSong.audio);
+            if (audio.paused) {
+                unpausePlayer(audio);
+            } else {
+                pausePlayer(audio);
+            }
+        }
+    }
+});
 
 
 const fileInputs = document.querySelectorAll('.fileform');
