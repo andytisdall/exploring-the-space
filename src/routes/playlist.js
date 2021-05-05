@@ -105,33 +105,40 @@ router.post('/:bandName/change-playlist-position', currentUser, requireAuth, asy
 router.post('/:bandName/change-position', currentUser, requireAuth, async (req, res) => {
   
     const bandName = req.params.bandName;
-    const { songId, newPosition, playlistId } = req.body;
+    const { songId, newPosition, playlistId, newBounce } = req.body;
     const song = await PlaylistSong.findById(songId);
     if (!song) {
         throw new Error('Playlist song not found');
     }
-    const oldPosition = song.position;
-    let greaterPlaylistSongs;
-    if (oldPosition > newPosition) {
-        greaterPlaylistSongs = await PlaylistSong.find({
-            playlist: playlistId,
-            position: { $gte: newPosition, $lt: oldPosition }
-        });
-        greaterPlaylistSongs.forEach(async (gps) => {
-            gps.position += 1;
-            await gps.save();
-        });
-    } else if (oldPosition < newPosition) {
-        greaterPlaylistSongs = await PlaylistSong.find({
-            playlist: playlistId,
-            position: { $gt: oldPosition, $lte: newPosition }
-        });
-        greaterPlaylistSongs.forEach(async (gps) => {
-            gps.position -= 1;
-            await gps.save();
-        });
+    if (newPosition && newPosition !== song.position) {
+        const oldPosition = song.position;
+        let greaterPlaylistSongs;
+        if (oldPosition > newPosition) {
+            greaterPlaylistSongs = await PlaylistSong.find({
+                playlist: playlistId,
+                position: { $gte: newPosition, $lt: oldPosition }
+            });
+            greaterPlaylistSongs.forEach(async (gps) => {
+                gps.position += 1;
+                await gps.save();
+            });
+        } else if (oldPosition < newPosition) {
+            greaterPlaylistSongs = await PlaylistSong.find({
+                playlist: playlistId,
+                position: { $gt: oldPosition, $lte: newPosition }
+            });
+            greaterPlaylistSongs.forEach(async (gps) => {
+                gps.position -= 1;
+                await gps.save();
+            });
+        }
+        song.position = newPosition;
     }
-    song.position = newPosition;
+    if (newBounce && newBounce !== songId) {
+        const [versionId, bounceId] = newBounce.split('-');
+        song.version = versionId;
+        song.bounce = bounceId;
+    }
     await song.save();
     res.redirect(`/${bandName}`);
 

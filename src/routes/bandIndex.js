@@ -30,7 +30,9 @@ router.get('/:bandName', currentUser, async (req, res) => {
     }).populate({
         path: 'playlists', populate: {
             path: 'songs', populate: [
-                'title', 'version', 'bounce'
+                { path: 'title', populate: { path: 'versions', populate: 'songs' } },
+                'version',
+                'bounce'
             ], options: { sort: 'position' }
         }, options: { sort: 'position' }
     });
