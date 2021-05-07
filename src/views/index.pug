@@ -22,7 +22,10 @@ body
             div(class='error') #{errorMessage}
         div(class='playbar')
             div(class='playbar-header')
-                p(id='currentsongheader' class='playbar-title')                
+                p(id='currentsongheader' class='playbar-title')
+                div(class='pause-container')
+                    img(class='pausebutton hidden' src='pause.svg' id='pause')
+                    img(class='unpause hidden' src='play.svg' id='unpause')           
                 div(class='playbar-info')
                     p(id='currentversion')
                     p(id='currentdate')         
@@ -40,8 +43,7 @@ body
                         img(src="dots.png")
                         div(class="menu")
                             a(href="/signout") Sign Out
-            img(class='pausebutton hidden' src='pause.svg' id='pause')
-            img(class='unpause hidden' src='play.svg' id='unpause')
+
             div(class="slidecontainer")
                 input(type="range" min="0" max="100" value="50" class="master-volume" id="mastervol")
 

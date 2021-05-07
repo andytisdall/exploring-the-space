@@ -44,14 +44,29 @@ img {
 }
 
 .playbar-title {
+  width: 33%;
   font-size: 1.7rem;
   color: rgb(235, 155, 118);
+}
+
+.pausebutton {
+  height: 35px;
+}
+
+.unpause {
+  height: 35px;
+}
+
+.pause-container {
+  padding-top: 0.2rem;
+  width: 33%;
+  display: flex;
+  justify-content: space-around;
 }
 
 .playbar-header {
   display: flex;
   height: 40%;
-  justify-content: space-between;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 0.5rem;
@@ -59,6 +74,8 @@ img {
 
 .playbar-info {
   display: flex;
+  justify-content: flex-end;
+  width: 33%;
 }
 
 .playbar-info p {
@@ -111,13 +128,11 @@ img {
 }
 
 .pausebutton {
-  height: 40px;
-  padding-top: 0.5rem;
+  height: 35px;
 }
 
 .unpause {
-  height: 40px;
-  padding-top: 0.5rem;
+  height: 35px;
 }
 
 input {
@@ -608,7 +623,6 @@ h5 {
 
 @media (max-width: 700px) {
   body {
-    margin: 0.3rem;
     font-size: 0.7rem;
     max-width: 100%;
   }
@@ -617,6 +631,7 @@ h5 {
     padding-top: 0.2rem;
     margin-bottom: 0.2rem;
     height: 4rem;
+    width: 96%;
   }
 
   .download img {
@@ -633,7 +648,13 @@ h5 {
   }
 
   .playbar-info {
-    padding-top: 0.3rem;
+    display: inline;
+  }
+
+  .playbar-info p {
+    margin: 0px;
+    margin-left: 2rem;
+    font-size: 0.7rem;
   }
 
   .slidecontainer {
@@ -642,7 +663,6 @@ h5 {
   }
 
   .container {
-    margin: 0px;
     padding: 0px;
     max-width: 100%;
   }
@@ -775,12 +795,12 @@ h5 {
   }
 
   .pausebutton {
-    height: 30px;
+    height: 25px;
     padding-top: 0.2rem;
   }
 
   .unpause {
-    height: 30px;
+    height: 25px;
     padding-top: 0.2rem;
   }
 
@@ -790,6 +810,10 @@ h5 {
 }
 
 @media (max-width: 400px) {
+  .playbar {
+    width: auto;
+  }
+
   h1 {
     font-size: 0.7rem;
   }
