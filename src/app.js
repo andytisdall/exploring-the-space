@@ -24,6 +24,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 const app = express();
 
 app.use(express.static('src/static/images'));
+app.use(express.static('src/static/public'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));

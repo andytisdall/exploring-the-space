@@ -91,7 +91,7 @@ body
                                 input(type='hidden' name='rowtype' value='tier')
                             img(src='delete.png' class='delete' id='delete-' + tier.id)
                 hr
-            div(class='titlecontainer hidden' id=('title-' + tier.id))
+            div(class='title-container hidden' id=('title-' + tier.id))
                 each title in tier.trackList
                     div(class='title-margin')
                         div(class="row title" id=title.id)
@@ -163,7 +163,7 @@ body
                                                 a(href="/audio/download/" + thisSong.id + ".mp3" download=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
                                                     img(src="download.svg")
 
-                        div(class='versioncontainer hidden' id=('version-' + title.id))
+                        div(class='version-container hidden' id=('version-' + title.id))
                             if title.versions.length > 0 
                                 div(class='detail-box')
                                     div(class='detail-content')

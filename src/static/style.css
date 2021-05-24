@@ -9,6 +9,12 @@ body {
   margin: 0px;
 }
 
+.container {
+  max-width: 65rem;
+  margin: 0.7rem;
+  margin-top: 0px;
+}
+
 img {
   height: 1rem;
   width: auto;
@@ -39,6 +45,7 @@ img {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   width: 98%;
+  max-width: 65rem;
   position: fixed;
   z-index: 10;
 }
@@ -184,12 +191,6 @@ a {
   background-color: rgb(230, 142, 142);
   padding: 1rem;
   border: 2px solid white;
-}
-
-.container {
-  max-width: 65rem;
-  margin: 0.7rem;
-  margin-top: 0px;
 }
 
 hr {
@@ -424,7 +425,7 @@ h3 {
 
 /* version */
 
-.versioncontainer {
+.version-container {
   margin-top: 0.5rem;
   margin-left: 5rem;
   display: flex;
