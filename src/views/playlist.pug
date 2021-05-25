@@ -83,6 +83,9 @@ body
                                     div(class='title-display')
                                         p #{song.version.name}
                                         p #{displayDate}
+                                div(class='download')
+                                    a(href="https://exploring-the-space.com/audio/download/" + song.id + ".mp3" download=song.title.title+'-'+moment.utc(song.date).format('MM-DD-yy') +'.mp3')
+                                        img(src="https://exploring-the-space.com/download.svg")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
         include ../static/index.js
