@@ -59,7 +59,7 @@ body
                         div(class='song-count') #{playlist.songs.length} songs
                         div(class='song-count' id='tiertime'+playlist.id)
                 hr
-            div(class='titlecontainer' id=('title-' + playlist.id))
+            div(class='titlecontainer')
                 each song in playlist.songs
                     div(class='title-margin')
                         div(class="title" id=song.id)
