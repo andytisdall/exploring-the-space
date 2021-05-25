@@ -10,7 +10,7 @@ const state = {
     addboxIsVisible: false
 };
 
-console.log(window.location)
+
 
 const masterVol = document.getElementById('mastervol');
 

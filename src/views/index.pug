@@ -391,6 +391,9 @@ body
                                 form(class='hidden' action=band.name + '/delete-playlist' method="POST" id='delete-' + playlist.id + '-form')
                                     input(type='hidden' name='playlistId' value=playlist.id)
                                 img(src='/images/delete.png' class='delete' id='delete-' + playlist.id)
+                        div(class='download')
+                            a(href= '/' + band.name + '/playlist/' + playlist.id target='blank')
+                                img(src='/images/page.png')
                     hr
                 div(class='titlecontainer hidden' id=('title-' + playlist.id))
                     each song in playlist.songs
