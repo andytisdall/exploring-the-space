@@ -10,6 +10,8 @@ const state = {
     addboxIsVisible: false
 };
 
+console.log(window.location)
+
 const masterVol = document.getElementById('mastervol');
 
 const toggleStorage = (key, id) => {
@@ -20,6 +22,9 @@ const toggleStorage = (key, id) => {
     }
 };
 const readStorage = () => {
+    if (window.location.pathname.includes('playlist')) {
+        return;
+    }
     // list of expanded rows that were saved
     // get each row from storage and expand them
     const rows = Object.keys(sessionStorage);
