@@ -29,7 +29,7 @@ const readStorage = () => {
             if (row) {
                 row.classList.toggle('hidden');
                 const arrow = sessionStorage.getItem(id);
-                document.getElementById(arrow).setAttribute('src', 'down-arrow.svg');
+                document.getElementById(arrow).setAttribute('src', '/images/down-arrow.svg');
             } else {
                 sessionStorage.removeItem(id);
             }
@@ -163,10 +163,10 @@ const collapseButton = (button) => {
         return;
     }
     document.getElementById(id).classList.toggle('hidden');
-    if (arrowEl.getAttribute('src') === 'right-arrow.svg') {
-        arrowEl.setAttribute('src', 'down-arrow.svg');
+    if (arrowEl.getAttribute('src') === '/images/right-arrow.svg') {
+        arrowEl.setAttribute('src', '/images/down-arrow.svg');
     } else {
-        arrowEl.setAttribute('src', 'right-arrow.svg')
+        arrowEl.setAttribute('src', '/images/right-arrow.svg')
     }
     toggleStorage(id, arrow);
 };
