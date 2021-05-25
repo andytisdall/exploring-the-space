@@ -189,7 +189,7 @@ window.onbeforeunload = () => {
 // creates a playlist of all songs in a tier
 
 const createPlaylist = (tier) => {
-    let containerId = `title-${tier.id}`
+    let containerId = `title-${tier.id}`;
     const children = document.getElementById(containerId).childNodes;
     const playlist = [];
     children.forEach(parent => {

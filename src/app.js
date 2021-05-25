@@ -6,6 +6,7 @@ import fileUpload from 'express-fileupload';
 import path from 'path';
 import moment from 'moment';
 import { bandIndexRouter  } from './routes/bandIndex.js';
+import { playlistDetailRouter } from './routes/playlistDetail.js';
 import { deleteItem } from './routes/deleteItem.js';
 import { addItemRouter } from './routes/addItem.js';
 import { editRouter } from './routes/editItem.js';
@@ -60,6 +61,8 @@ app.use(signupRouter);
 app.use(signoutRouter);
 app.use(userRouter);
 
+
+
 app.use(createBandRouter);
 app.get('/audio/download/:id', downloadMp3)
 app.get('/audio/:id', playMp3);
@@ -67,10 +70,13 @@ app.use(editRouter);
 app.post('/:bandName/delete', deleteItem);
 
 
-app.use(bandIndexRouter);
+
+
 app.use(addItemRouter);
 app.use(playlistRouter);
 
+app.use(bandIndexRouter);
+app.use(playlistDetailRouter);
 app.get('/', (req, res) => {
     res.redirect('/signin');
 });
