@@ -14,7 +14,7 @@ router.get('/:bandName', currentUser, async (req, res) => {
     req.session.errorMessage = '';
 
     let bandName = req.params.bandName
-
+    console.log(bandName);
     if (bandName === 'apprehenchmen') {
         bandName = 'Apprehenchmen';
     }

@@ -6,7 +6,7 @@ head
     link(rel="preconnect" href="https://fonts.gstatic.com")
     link(href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet")
     style
-        include ../static/style.css
+        include ../../public/style.css
     title Exploring the Space
 body
     div(id='player-spot' class='hidden')
@@ -18,8 +18,8 @@ body
             div(class='playbar-header')
                 p(id='currentsongheader' class='playbar-title')
                 div(class='pause-container')
-                    img(class='pausebutton hidden' src='https://exploring-the-space.com/pause.svg' id='pause')
-                    img(class='unpause hidden' src='https://exploring-the-space.com/play.svg' id='unpause')           
+                    img(class='pausebutton hidden' src='/images/pause.svg' id='pause')
+                    img(class='unpause hidden' src='/images/play.svg' id='unpause')           
                 div(class='playbar-info')
                     p(id='currentversion')
                     p(id='currentdate')         
@@ -31,7 +31,7 @@ body
         
         div(class="marqee header")
             div(class="band-name")
-                a(href="https://exploring-the-space.com/" + band.name)         
+                a(href="" + band.name)         
                     h1(id="band-name") #{band.name}
 
             div(class="slidecontainer")
@@ -47,7 +47,7 @@ body
                         
                         h2 #{playlist.name}  
                         //- div(class="add" id=('addtitle-' + playlist.id))
-                        //-     img(src='add.png')
+                        //-     img(src='/images/add.png')
                         //-     div(class='addbox hidden')
                         //-         h3 Add a Song
                         //-         form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
@@ -79,13 +79,13 @@ body
                                     div(class='hidden' id='mp3Id-' + song.id)  #{song.bounce.id}
                                     div(class='songtime' id='duration-' + song.id + '-' + playlist.id) #{displayTime}
                                     div(class='playbutton' id=song.bounce.id + '-' + playlist.id)
-                                        img(src='https://exploring-the-space.com/play.svg' class='playicon')
+                                        img(src='/images/play.svg' class='playicon')
                                     div(class='title-display')
                                         p #{song.version.name}
                                         p #{displayDate}
                                 div(class='download')
-                                    a(href="https://exploring-the-space.com/audio/download/" + song.id + ".mp3" download=song.title.title+'-'+moment.utc(song.date).format('MM-DD-yy') +'.mp3')
-                                        img(src="https://exploring-the-space.com/download.svg")
+                                    a(href="/audio/download/" + song.bounce.id + ".mp3" download=song.title.title+'-'+moment.utc(song.date).format('MM-DD-yy') +'.mp3')
+                                        img(src="/images/download.svg")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
-        include ../static/index.js
+        include ../../public/index.js

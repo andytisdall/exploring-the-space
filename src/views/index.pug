@@ -6,14 +6,14 @@ head
     link(rel="preconnect" href="https://fonts.gstatic.com")
     link(href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet")
     style
-        include ../static/style.css
+        include ../../public/style.css
     title Exploring the Space
 body
     div(class='upload-container hidden')
         div(class='upload-progress')
             div(class='upload-image')
                 p Uploading...
-                img(class='windmill' src='windmill.gif')
+                img(class='windmill' src='/images/windmill.gif')
     div(id='player-spot' class='hidden')
     div(class='playbar-background')
 
@@ -24,8 +24,8 @@ body
             div(class='playbar-header')
                 p(id='currentsongheader' class='playbar-title')
                 div(class='pause-container')
-                    img(class='pausebutton hidden' src='pause.svg' id='pause')
-                    img(class='unpause hidden' src='play.svg' id='unpause')           
+                    img(class='pausebutton hidden' src='/images/pause.svg' id='pause')
+                    img(class='unpause hidden' src='/images/play.svg' id='unpause')           
                 div(class='playbar-info')
                     p(id='currentversion')
                     p(id='currentdate')         
@@ -40,7 +40,7 @@ body
                 h1(id="band-name") #{band.name}
                 if editMode
                     div(class="menu-button")
-                        img(src="dots.png")
+                        img(src="/images/dots.png")
                         div(class="menu")
                             a(href="/signout") Sign Out
 
@@ -53,12 +53,12 @@ body
             div(class="row tier" id=tier.id)
                 div(class="marqee tier-info")
                     div(class='tier-name')
-                        img(class='arrow' src='right-arrow.svg' id=('arrow-' + tier.id))
+                        img(class='arrow' src='/images/right-arrow.svg' id=('arrow-' + tier.id))
                         h2 #{tier.name}
                     div(class='tier-count')
                         if editMode
                             div(class="add" id=('addtitle-' + tier.id))
-                                img(src='add.png')
+                                img(src='/images/add.png')
                                 div(class='addbox hidden')
                                     h3 Add a Song
                                     form(method='POST' action=band.name class='add-form')
@@ -71,7 +71,7 @@ body
                     if editMode
                         div(class='tier-display')
                             div(class="add" id=('edittier-' + tier.id))
-                                img(src='edit.png')
+                                img(src='/images/edit.png')
                                 div(class='addbox hidden')
                                     h3 Edit #{tier.name}
                                     form(method='POST' class='add-form' action=band.name + '/edit')
@@ -89,7 +89,7 @@ body
                             form(class='hidden' action=band.name + '/delete' method="POST" id='delete-' + tier.id + '-form')
                                 input(type='hidden' name='id' value=tier.id)
                                 input(type='hidden' name='rowtype' value='tier')
-                            img(src='delete.png' class='delete' id='delete-' + tier.id)
+                            img(src='/images/delete.png' class='delete' id='delete-' + tier.id)
                 hr
             div(class='title-container hidden' id=('title-' + tier.id))
                 each title in tier.trackList
@@ -98,7 +98,7 @@ body
                         
                             div(class="marqee")
                                 div(class='row-name')
-                                    img(class='arrow' src='right-arrow.svg' id=('arrow-' + title.id))
+                                    img(class='arrow' src='/images/right-arrow.svg' id=('arrow-' + title.id))
                                     div(class='name-spot' id='name-spot-'+title.id)
                                         h3 #{title.title}
                                 
@@ -114,7 +114,7 @@ body
                                             div(class='hidden' id='mp3Id-' + title.id)  #{thisSong.id}
                                             div(class='songtime' id='duration-' + title.id + '-' + tier.id) #{displayTime}
                                             div(class='playbutton' id=thisSong.id + '-' + tier.id)
-                                                img(src='play.svg' class='playicon')
+                                                img(src='/images/play.svg' class='playicon')
                                             div(class='title-display')
                                                 p #{thisVersion.name}
                                                 p #{displayDate}
@@ -122,7 +122,7 @@ body
                                             div(class='tier-display')
                                                 if band.playlists.length > 0
                                                     div(class="add")
-                                                        img(src='playlist.png') 
+                                                        img(src='/images/playlist.png') 
                                                         div(class='addbox hidden')
                                                             h3 Add to Playlist
                                                             form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
@@ -135,7 +135,7 @@ body
                                                                 button(type='submit') OK
 
                                                 div(class="add" id=('edittitle-' + title.id))
-                                                    img(src='edit.png')
+                                                    img(src='/images/edit.png')
                                                     div(class='addbox hidden')
                                                         h3 Edit #{title.title}
                                                         form(method='POST' action=band.name + '/edit' class='add-form')
@@ -157,11 +157,11 @@ body
                                                     input(type='hidden' name='id' value=title.id)
                                                     input(type='hidden' name='parentid' value=tier.id)
                                                     input(type='hidden' name='rowtype' value='title')
-                                                img(src='delete.png' class='delete' id='delete-' + title.id)
+                                                img(src='/images/delete.png' class='delete' id='delete-' + title.id)
                                         else
                                             div(class='download')
                                                 a(href="/audio/download/" + thisSong.id + ".mp3" download=title.title+'-'+moment.utc(thisSong.date).format('MM-DD-yy') +'.mp3')
-                                                    img(src="download.svg")
+                                                    img(src="/images/download.svg")
 
                         div(class='version-container hidden' id=('version-' + title.id))
                             if title.versions.length > 0 
@@ -182,7 +182,7 @@ body
                                     if editMode
                                         div(class='detail-buttons')
                                             div(class="add" id=('editversion-' + thisVersion.id))
-                                                img(src='edit.png')
+                                                img(src='/images/edit.png')
                                                 div(class='addbox hidden left-box add-version')
                                                     h3 Edit this Version
                                                     form(method='POST' action=band.name + '/edit')
@@ -195,7 +195,7 @@ body
                                                         input(type='hidden' name='dataID' value='version-' + thisVersion.id)
                                                         button(type='submit') OK
                                             div(class="add" id=('addversion-' + title.id))
-                                                img(src='add.png')
+                                                img(src='/images/add.png')
                                                 div(class='addbox hidden add-version')
                                                     h3 Add a Version
                                                     form(method='POST' action=band.name)
@@ -211,7 +211,7 @@ body
                                                 input(type='hidden' name='id' value=thisVersion.id)
                                                 input(type='hidden' name='parentid' value=title.id)
                                                 input(type='hidden' name='rowtype' value='version')
-                                            img(src='delete.png' class='delete' id='delete-' + thisVersion.id)
+                                            img(src='/images/delete.png' class='delete' id='delete-' + thisVersion.id)
                                             
 
 
@@ -239,7 +239,7 @@ body
                                         if editMode
                                             div(class='detail-buttons')
                                                 div(class="add" id='editbounce-' + thisSong.id)
-                                                    img(src='edit.png')
+                                                    img(src='/images/edit.png')
                                                     div(class='addbox bounce left-box hidden')
                                                         h3 Edit this Bounce
                                                         form(method='POST' action=band.name + '/edit' class='fileform' encType="multipart/form-data")
@@ -261,7 +261,7 @@ body
                                                             input(type='hidden' name='versionID' value=thisVersion.id)
                                                             button(type='submit') OK
                                                 div(class="add" id='addbounce-' + thisVersion.id)
-                                                    img(src='add.png')
+                                                    img(src='/images/add.png')
                                                     div(class='addbox bounce hidden')
                                                         h3 Add a New Bounce
                                                         form(method='POST' action=band.name encType='multipart/form-data' class='fileform' id='bounce-form-' + thisVersion.id)
@@ -285,7 +285,7 @@ body
                                                     input(type='hidden' name='id' value=thisSong.id)
                                                     input(type='hidden' name='parentid' value=thisVersion.id)
                                                     input(type='hidden' name='rowtype' value='song')
-                                                img(src='delete.png' class='delete' id='delete-' + thisSong.id)
+                                                img(src='/images/delete.png' class='delete' id='delete-' + thisSong.id)
                                 else
                                     div(class='song-con')
                                         div(class='nosong')
@@ -293,7 +293,7 @@ body
                                                 p(class='empty') There are no bounces for this version.
                                                 if editMode
                                                     div(class="add" id='addbounce-' + thisVersion.id)
-                                                        img(src='add.png')
+                                                        img(src='/images/add.png')
                                                         div(class='addbox bounce hidden')
                                                             h3 Add a Bounce
                                                             form(method='POST' action=band.name class='fileform' encType="multipart/form-data")
@@ -319,7 +319,7 @@ body
                                     p(class='empty') No versions of this title.
                                     if editMode
                                         div(class="add" id=('addversion-' + title.id))
-                                            img(src='add.png')
+                                            img(src='/images/add.png')
                                             div(class='addbox hidden add-version')
                                                 h3 Add a Version
                                                 form(method='POST' action=band.name id='versionform')
@@ -339,7 +339,7 @@ body
             p(class='row tier') There are no tiers.
         if editMode
             div(class="add addtier")
-                img(src='add.png')
+                img(src='/images/add.png')
                 div(class='addbox hidden tier-add')
                     h3 Add a Tier
                     form(method='POST' action=band.name)
@@ -355,10 +355,10 @@ body
                 div(class="row tier" id=playlist.id)
                     div(class="marqee tier-info")
                         div(class='tier-name')
-                            img(class='arrow' src='right-arrow.svg' id=('arrow-' + playlist.id))
+                            img(class='arrow' src='/images/right-arrow.svg' id=('arrow-' + playlist.id))
                             h2 #{playlist.name}  
                             //- div(class="add" id=('addtitle-' + playlist.id))
-                            //-     img(src='add.png')
+                            //-     img(src='/images/add.png')
                             //-     div(class='addbox hidden')
                             //-         h3 Add a Song
                             //-         form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
@@ -372,7 +372,7 @@ body
                         if editMode
                             div(class='tier-display')
                                 div(class="add" id=('editplaylist-' + playlist.id))
-                                    img(src='edit.png')
+                                    img(src='/images/edit.png')
                                     div(class='addbox hidden')
                                         h3 Edit #{playlist.name}
                                         form(method='POST' class='add-form' action=band.name + '/change-playlist-position')
@@ -390,7 +390,7 @@ body
                                 
                                 form(class='hidden' action=band.name + '/delete-playlist' method="POST" id='delete-' + playlist.id + '-form')
                                     input(type='hidden' name='playlistId' value=playlist.id)
-                                img(src='delete.png' class='delete' id='delete-' + playlist.id)
+                                img(src='/images/delete.png' class='delete' id='delete-' + playlist.id)
                     hr
                 div(class='titlecontainer hidden' id=('title-' + playlist.id))
                     each song in playlist.songs
@@ -412,14 +412,14 @@ body
                                         div(class='hidden' id='mp3Id-' + song.id)  #{song.bounce.id}
                                         div(class='songtime' id='duration-' + song.id + '-' + playlist.id) #{displayTime}
                                         div(class='playbutton' id=song.bounce.id + '-' + playlist.id)
-                                            img(src='play.svg' class='playicon')
+                                            img(src='/images/play.svg' class='playicon')
                                         div(class='title-display')
                                             p #{song.version.name}
                                             p #{displayDate}
                                     if editMode
                                         div(class='tier-display')
                                             div(class="add")
-                                                img(src='playlist.png') 
+                                                img(src='/images/playlist.png') 
                                                 div(class='addbox hidden')
                                                     h3 Add to Playlist
                                                     form(method='POST' action=band.name + '/create-playlist-song' class='add-form')
@@ -433,7 +433,7 @@ body
                                                         input(type="hidden" name="bounce" value=song.bounce.id)
                                                         button(type='submit') OK
                                             div(class="add")
-                                                img(src='edit.png')
+                                                img(src='/images/edit.png')
                                                 div(class='addbox hidden')
                                                     h3 Edit #{song.title.title}
                                                     form(method='POST' action=band.name + '/change-position' class='add-form')
@@ -456,12 +456,12 @@ body
                                             form(class='hidden' action=band.name + '/delete-playlist-song' method="POST" id='delete-' + song.id + '-form')
                                                 input(type='hidden' name='songId' value=song.id)
                                                 input(type='hidden' name='playlistId' value=playlist.id)
-                                            img(src='delete.png' class='delete' id='delete-' + song.id)
+                                            img(src='/images/delete.png' class='delete' id='delete-' + song.id)
             else
                 p(class='row tier') There are no playlists.
             if editMode
                 div(class="add addtier")
-                    img(src='add.png')
+                    img(src='/images/add.png')
                     div(class='addbox hidden tier-add')
                         h3 Add a New Playlist
                         form(method='POST' action=band.name + "/create-playlist")
@@ -470,4 +470,4 @@ body
                             button(type='submit') OK    
     script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
     script
-        include ../static/index.js
+        include ../../public/index.js
