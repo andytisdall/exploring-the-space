@@ -91,7 +91,7 @@ const showAddbox = (addbox) => {
 // clicking anywhere in the container with an addbox open will close that box
 
 const container = document.querySelector('.container');
-container.addEventListener('click', e => {
+document.body.addEventListener('click', e => {
     if (state.addboxIsVisible) {
         state.addboxIsVisible.classList.toggle('hidden');
         state.addboxIsVisible = false;
