@@ -7,17 +7,6 @@ import { User } from '../models/user.js';
 
 const router = express.Router();
 
-router.get('/signin', currentUser, (req, res) => {
-
-    const errorMessage = req.session.errorMessage;
-    req.session.errorMessage = '';
-
-    if (req.currentUser) {
-        return res.redirect('/user');
-    }
-
-    res.render('signin', { errorMessage });
-});
 
 router.post('/signin',
     // [
@@ -53,7 +42,7 @@ router.post('/signin',
 
         req.session.jwt = userJwt;
         
-        res.redirect('/user');
+        res.send(existingUser)
     }
 );
 
