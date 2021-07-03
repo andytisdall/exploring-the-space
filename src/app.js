@@ -31,8 +31,7 @@ app.use(express.json())
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(fileUpload());
 
-app.set('views', path.join(path.resolve(), './src/views'));
-app.set('view engine', 'pug');
+
 
 app.locals.moment = moment;
 
@@ -78,7 +77,10 @@ app.use(playlistRouter);
 app.use(bandIndexRouter);
 app.use(playlistDetailRouter);
 app.get('/', (req, res) => {
-    res.redirect('/signin');
+    let data = {
+        key: 'this is data';
+    };
+    res.send(data);
 });
 
 app.use(errorHandler);

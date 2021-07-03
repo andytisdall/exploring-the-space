@@ -8,7 +8,7 @@ import mongodb from 'mongodb';
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
-const Song = mongoose.model('Song');
+const Bounce = mongoose.model('Bounce');
 
 const router = express.Router();
 
@@ -75,26 +75,26 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
             res.redirect(`/${bandName}`);
   
             break;
-        case 'song':
+        case 'bounce':
             //Get data
-            const { songDate, songComments, versionID } = req.body;
-            //Exit if this date exists in the version's song list
+            const { bounceDate, bounceComments, versionID } = req.body;
+            //Exit if this date exists in the version's bounce list
             const vers = await Version.findOne({ _id: versionID });
-            let duplicateDate = vers.songs.find(s => s.date === songDate);
+            let duplicateDate = vers.bounces.find(b => b.date === bounceDate);
             if (duplicateDate) {
                 req.session.errorMessage = 'There is already a bounce with that date.'
                 res.redirect(`/${bandName}`);
                 return;
             }
-            //Update song with new data
+            //Update bounce with new data
 
-            await Song.updateOne({ _id: id }, { date: songDate, comments: songComments });
+            await Bounce.updateOne({ _id: id }, { date: bounceDate, comments: bounceComments });
 
             
             // Update mp3 if there's a new one
             if (req.files) {
                 req.socket.setTimeout(10 * 60 * 1000);
-                const stream = addMp3(req.files.songFile);
+                const stream = addMp3(req.files.bounceFile);
                 stream.on('error', (err) => {
                     req.session.errorMessage = 'error uploading mp3';
                     res.redirect(`/${bandName}`);
@@ -104,8 +104,8 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
 
                     //update mp3 id for bounce
                     let mp3 = stream.id;
-                    let oldMp3 = await Song.findOne({ _id: id }).mp3;
-                    await Song.updateOne({ _id: id }, { mp3, size: req.files.songFile.size, duration: req.body.duration });
+                    let oldMp3 = await Bounce.findOne({ _id: id }).mp3;
+                    await Bounce.updateOne({ _id: id }, { mp3, size: req.files.bounceFile.size, duration: req.body.duration });
                     console.log('Uploaded new mp3');
                     // Delete old mp3
                     let mp3Id = new mongodb.ObjectID(oldMp3);
@@ -115,25 +115,25 @@ router.post('/:bandName/edit', currentUser, requireAuth, async (req, res) => {
 
             //update latest tag for parent version
             let latest = false;
-            if (req.body.songLatest) {
+            if (req.body.bounceLatest) {
                 latest = true;
             }
-            const parentVersion = await Version.findOne({ _id: versionID }).populate('songs');
-            let oldLatest = parentVersion.songs.find(s => s.latest);
+            const parentVersion = await Version.findOne({ _id: versionID }).populate('bounces');
+            let oldLatest = parentVersion.bounces.find(s => s.latest);
             if (latest) {
 
                 if (oldLatest) {
-                    await Song.updateOne({_id: oldLatest.id}, {latest: false});
+                    await Bounce.updateOne({_id: oldLatest.id}, {latest: false});
                 }
 
             } else if (!oldLatest) {
                 latest = true;
             }
 
-            // Update the song record with the new info
+            // Update the bounce record with the new info
 
 
-            await Song.updateOne({ _id: id }, { date: songDate, comments: songComments, latest });
+            await Bounce.updateOne({ _id: id }, { date: bounceDate, comments: bounceComments, latest });
             return res.redirect(`/${bandName}`);
         default:
             throw new Error('Incorrect data type for editing');
@@ -147,10 +147,10 @@ router.post('/:bandName/change-song', async (req, res) => {
 
     const bandName = req.params.bandName;
     
-    const { currentSong, changeSong } = req.body;
+    const { currentBounce, changeBounce } = req.body;
 
-    await Song.updateOne({ _id: changeSong }, { latest: true });
-    await Song.updateOne({ _id: currentSong }, { latest: false });
+    await Bounce.updateOne({ _id: changeBounce }, { latest: true });
+    await Bounce.updateOne({ _id: currentBounce }, { latest: false });
     res.redirect(`/${bandName}`);
 
 

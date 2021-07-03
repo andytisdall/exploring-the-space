@@ -5,7 +5,7 @@ import { Band } from '../models/band.js';
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
-const Song = mongoose.model('Song');
+const Bounce = mongoose.model('Bounce');
 
 
 export const deleteItem = async (req, res) => {
@@ -38,9 +38,9 @@ export const deleteItem = async (req, res) => {
 
 
     const deleteVersion = async (id, parentId=null) => {
-        let thisVersion = await Version.findOne({ _id: id }).populate('songs');
-        thisVersion.songs.forEach(async (song) => {          
-            deleteSong(song.id);
+        let thisVersion = await Version.findOne({ _id: id }).populate('bounces');
+        thisVersion.bounces.forEach(async (bounce) => {          
+            deleteBounce(bounce.id);
         });
         if (parentId) {
             await Title.updateOne({ _id: parentId }, { $pull: {versions: id} });
@@ -55,21 +55,21 @@ export const deleteItem = async (req, res) => {
         await Version.deleteOne({ _id: id });   
     };
 
-    const deleteSong = async (id, parentId=null) => {
-        const song = await Song.findOne({ _id: id });
-        const mp3Id = new mongodb.ObjectID(song.mp3);
+    const deleteBounce = async (id, parentId=null) => {
+        const bounce = await Bounce.findOne({ _id: id });
+        const mp3Id = new mongodb.ObjectID(bounce.mp3);
         if (parentId) {
-            await Version.updateOne({ _id: parentId }, { $pull: {songs: id} });
-            if (song.latest) {
-                let parentVersion = await Version.findOne({ _id: parentId }).populate('songs');
-                let songList = parentVersion.songs;
-                if (songList.length >= 1) {
-                    await Song.updateOne({ _id: songList[songList.length-1] }, { latest: true });
+            await Version.updateOne({ _id: parentId }, { $pull: {bounces: id} });
+            if (bounce.latest) {
+                let parentVersion = await Version.findOne({ _id: parentId }).populate('bounces');
+                let bounceList = parentVersion.bounces;
+                if (bounceList.length >= 1) {
+                    await Bounce.updateOne({ _id: bounceList[bounceList.length-1] }, { latest: true });
                 }
             }
         }
         deleteMp3(mp3Id);
-        await Song.deleteOne({ _id: id });
+        await Bounce.deleteOne({ _id: id });
     };
 
     req.session.errorMessage = '';
@@ -95,8 +95,8 @@ export const deleteItem = async (req, res) => {
             await deleteVersion(id, parentId);
             res.redirect(`/${bandName}`);
             break;
-        case 'song':
-            await deleteSong(id, parentId);
+        case 'bounce':
+            await deleteBounce(id, parentId);
             res.redirect(`/${bandName}`);
             break;
         default:

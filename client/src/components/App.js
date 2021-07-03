@@ -3,8 +3,7 @@ import React from 'react';
 import Playbar from './Playbar';
 import Error from './Error';
 import BandHeader from './BandHeader';
-import TierContainer from './TierContainer';
-import PlaylistContainer from './PlaylistContainer';
+import BodyContainer from './BodyContainer';
 
 const App = () => {
 

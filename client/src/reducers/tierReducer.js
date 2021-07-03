@@ -6,9 +6,13 @@ export default (state = {}, action) => {
     switch (action.type) {
 
         case FETCH_TIERS:
-            return { ...state, ..._.mapKeys(action.payload, '_id') }
+            return { ...state, ..._.mapKeys(action.payload, 'id') };
         case CREATE_TIER:
-            return { ...state, [action.payload.position]: action.payload };
+            return { ...state, [action.payload.id]: action.payload };
+        case EDIT_TIER:
+            return { ...state, [action.payload.id]: action.payload };
+        case DELETE_TIER:
+            return _.omit(state, action.payload);
         default:
             return state;
 
