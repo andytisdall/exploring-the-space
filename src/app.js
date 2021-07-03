@@ -3,19 +3,16 @@ import session from 'express-session';
 import express from 'express';
 import 'express-async-errors';
 import fileUpload from 'express-fileupload';
-import path from 'path';
-import moment from 'moment';
-import { bandIndexRouter  } from './routes/bandIndex.js';
-import { playlistDetailRouter } from './routes/playlistDetail.js';
-import { deleteItem } from './routes/deleteItem.js';
-import { addItemRouter } from './routes/addItem.js';
-import { editRouter } from './routes/editItem.js';
+import { Router } from './routes/band.js';
+import { bandRouter } from './routes/band.js';
+import { bandRouter } from './routes/band.js';
+import { bandRouter } from './routes/band.js';
+import { bandRouter } from './routes/band.js';
 import { playlistRouter } from './routes/playlist.js';
 import { signinRouter } from './routes/signin.js';
 import { signupRouter } from './routes/signup.js';
 import { signoutRouter } from './routes/signout.js';
-import { createBandRouter } from './routes/createBand.js';
-import { playMp3, downloadMp3 } from './routes/streamer.js';
+import { bandRouter } from './routes/band.js';
 import { userRouter } from './routes/user.js';
 import { errorHandler } from './middlewares/error-handler.js';
 
@@ -32,8 +29,6 @@ app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(fileUpload());
 
 
-
-app.locals.moment = moment;
 
 // const mongo = mongoKey;
 const mongo = 'mongodb://localhost/greenhouse';
@@ -76,12 +71,7 @@ app.use(playlistRouter);
 
 app.use(bandIndexRouter);
 app.use(playlistDetailRouter);
-app.get('/', (req, res) => {
-    let data = {
-        key: 'this is data';
-    };
-    res.send(data);
-});
+
 
 app.use(errorHandler);
 
