@@ -42,7 +42,7 @@ router.post('/signin',
 
         req.session.jwt = userJwt;
         
-        res.send(existingUser)
+        res.send(existingUser);
     }
 );
 

@@ -1,11 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const AuthControl = props => {
-    if (props.isAuth) {
+const AuthControl = ({ user, currentBand, children }) => {
+    if (user.bands.includes(currentBand)) {
         return <>
-            {props.children}
+            {children}
         </>
     }
 };
 
-export default AuthControl;
+const mapStateToProps = state => {
+    return {
+        user: state.auth.user,
+        currentBand: state.bands.currentBand
+    }
+};
+
+export default connect(mapStateToProps)(AuthControl);

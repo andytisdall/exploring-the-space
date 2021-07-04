@@ -1,8 +1,8 @@
 import React from 'react';
 
-import VersionContainer from ',/VersionContainer';
+import Version from './Version';
 import AuthControl from './AuthControl';
-import PlayContainer from './PlayContainer';
+// import PlayContainer from './PlayContainer';
 
 const Title = () => {
 
@@ -20,7 +20,7 @@ const Title = () => {
                             <h3>{title.title}</h3>
                         </div>
                     </div>
-                    <PlayContainer />
+                    {/* <PlayContainer /> */}
                     <AuthControl>
                         <AddButton title="Add to a Playlist" />
                         <AddButton title={`Edit ${title.title}`} />

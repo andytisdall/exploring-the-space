@@ -1,5 +1,7 @@
 import React from 'react';
 
+import AuthControl from './AuthControl';
+
 const BandHeader = props => {
 
     return (

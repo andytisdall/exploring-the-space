@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { fetchTiers, fetchPlaylists } from '../actions';
+import Tier from './Tier';
+import Playlist from './Playlist';
+import AddButton from './AddButton';
 
-const BodyContainer = props => {
+const BodyContainer = ({ props }) => {
+
+    useEffect(() => {
+        props.fetchTiers();
+        props.fetchPlaylists();
+    })
+
+
     const renderTiers = () => {
-        return state.tiers.map(tier => {
+        return props.tiers.map(tier => {
             return (
-                <Tier />
+                <Tier 
+                    tier={tier}
+                />
             );
         });
     };
 
     const renderPlaylists = () => {
-        return playlists.map(playlist => {
+        return props.playlists.map(playlist => {
             return (
-                <Playlist />
+                // <Playlist />
+                <p>This is a Playlist</p>
             )
         })
     };
@@ -21,6 +36,7 @@ const BodyContainer = props => {
         <>
             <hr />
             {renderTiers()}
+            <AddButton />
             <div className="playlists">
                 <h2>Playlists</h2>
                 <hr />
@@ -33,4 +49,11 @@ const BodyContainer = props => {
 
 };
 
-export default BodyContainer;
+const mapStateToProps = state => {
+    return {
+        tiers: Object.values(state.tiers),
+        playlists: Object.values(state.playlists)
+    };
+};
+
+export default connect(mapStateToProps, { fetchTiers, fetchPlaylists })(BodyContainer);

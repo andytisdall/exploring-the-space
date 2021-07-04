@@ -1,14 +1,27 @@
 import React from 'react';
-import TitleContainer from './TitleContainer';
+import { connect } from 'react-redux';
+import { createTier } from '../actions';
 
-const Tier = () => {
 
-    renderTitles = () => {
-        return props.trackList.map(title => {
+import Title from './Title';
+import AuthControl from './AuthControl';
+import AddButton from './AddButton';
+import { PromiseProvider } from 'mongoose';
+
+
+const Tier = ({ tier, createTier }) => {
+
+    const renderTitles = () => {
+        return tier.trackList.map(title => {
             return (
-                <Title />
+                // <Title />
+                <p>This is a Title!</p>
             );
         });
+    };
+
+    const onSubmit = formValues => {
+        createTier(formValues);
     };
 
     return (
@@ -20,7 +33,15 @@ const Tier = () => {
                 </div>
                 <div className="tier-count">
                     <AuthControl>
-                        <AddButton title = 'Add a Song' />
+                        <AddButton
+                            onSubmit={onSubmit}
+                            title='Add a Tier'
+                            fields={{
+                                label: 'Tier Name',
+                                name: 'tierName',
+                                type: 'input'
+                            }}
+                        />
                     </AuthControl>
                     <div className="song-count">{tier.tracklist.length} songs</div>
                     <div className="song-count">{tier.totalTime}</div>
@@ -28,7 +49,7 @@ const Tier = () => {
                 <div className="tier-display">
                     <AuthControl>
                         <AddButton title={`Edit ${tier.name}`} />
-                        <DeleteButton />
+                        {/* <DeleteButton /> */}
                     </AuthControl>
                 </div>
             </div>
@@ -39,4 +60,5 @@ const Tier = () => {
     );
 };
 
-export default Tier;
+
+export default connect(null, { createTier })(Tier);
