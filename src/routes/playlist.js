@@ -9,6 +9,8 @@ const router = express.Router();
 
 router.post('/:bandName/create-playlist', currentUser, requireAuth, async (req, res) => {
 
+    console.log('playlists');
+
     const bandName = req.params.bandName;
     const { playlistName } = req.body;
     const band = await (await Band.findOne({ name: bandName })).populate('playlists');

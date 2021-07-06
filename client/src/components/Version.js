@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
+import { fetchBounces } from '../actions';
+import AuthControl from './AuthControl';
 import Bounce from './Bounce';
+import AddButton from './AddButton';
 
-const Version = () => {
+const Version = ({ version, bounces, fetchBounces,  }) => {
 
-    const renderBounces = props => {
-        return props.bounces.map(bounce => {
-            return <Bounce />
-        });
-    };
+
+    useEffect(() => {
+        fetchBounces(version.id);
+    }, [])
+
+    const bounceList = bounces.map(b => version.bounces.includes(b.id));
+
+    const renderBounce = bounce => {
+        return (
+            <Bounce bounce={bounce} />
+        )
+    }
     
     return (
         <div className="version-container">
@@ -18,10 +29,10 @@ const Version = () => {
                         <h5>Version:</h5>
                         <div className="dropdown">
                             <button className="dropbtn">
-                                {selectedVersion.name}
+                                {version.name}
                             </button>
                             <div className="dropdown-content">
-                                {renderVersionList()}
+                                {bounceList}
                             </div>
                         </div>
                     </div>
@@ -30,11 +41,11 @@ const Version = () => {
                     <div className="detail-buttons">
                         <AddButton />
                         <AddButton />
-                        <DeleteButton />
+                        {/* <DeleteButton /> */}
                     </div>
                 </AuthControl>
             </div>
-            {renderBounces()}
+            {renderBounce()}
         </div>
     );
 

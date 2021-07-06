@@ -1,18 +1,26 @@
 
 import React from 'react';
+import { connect } from 'react-redux';
+
 
 const Error = props => {
 
-    if (!props.error) {
+    if (!props.errors.error) {
         return null;
     }
 
     return (
         <div className="error">
-            {props.error.message}
+            {props.errors.error}
         </div>
     );
 
 };
 
-export default Error;
+const mapStateToProps = state => {
+    return {
+        errors: state.errors
+    }
+}
+
+export default connect(mapStateToProps)(Error);

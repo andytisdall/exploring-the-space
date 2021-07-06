@@ -12,7 +12,15 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     bands: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Band'}]
-});
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            }
+        }
+    }
+);
 
 userSchema.pre('save', async function(done) {
     if (this.isModified('password')) {

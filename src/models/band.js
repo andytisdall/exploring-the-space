@@ -9,7 +9,15 @@ const bandSchema = new mongoose.Schema({
     },
     tiers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tier'}],
     playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'}]
-});
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            }
+        }
+    }
+);
 
 
 

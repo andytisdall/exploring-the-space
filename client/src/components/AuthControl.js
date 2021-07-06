@@ -2,10 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const AuthControl = ({ user, currentBand, children }) => {
-    if (user.bands.includes(currentBand)) {
+    if (user && user.bands.includes(currentBand)) {
         return <>
             {children}
         </>
+    } else {
+        return null;
     }
 };
 

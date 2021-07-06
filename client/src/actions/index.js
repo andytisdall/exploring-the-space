@@ -1,5 +1,4 @@
 import greenhouse from '../apis/greenhouse';
-
 import {
     SIGN_IN,
     SIGN_OUT,
@@ -41,26 +40,27 @@ import {
 export const signIn = formValues => async (dispatch) => {
     const response = await greenhouse.post('/signin', formValues);
     dispatch({ type: SIGN_IN, payload: response.data});
-    history.push('/');
+    // history.push('/');
 };
 
 export const signOut = () => async (dispatch) => {
     await greenhouse.get('/signout');
     dispatch({ type: SIGN_OUT });
-    history.push('/');
+    // history.push('/');
 };
 
 export const signUp = formValues => async (dispatch) => {
     const response = await greenhouse.post('/signup', formValues);
     dispatch({ type: SIGN_UP, payload: response.data});
-    history.push('/');
+    // history.push('/');
 };
 
 
 
 
-export const fetchBand = bandId => async (dispatch) => {
-    const response = await greenhouse.get(`/bands/${bandId}`);
+export const fetchBand = bandName => async (dispatch) => {
+    const response = await greenhouse.get(`/bands/${bandName}`);
+    
     dispatch({ type: FETCH_BAND, payload: response.data });
 };
 

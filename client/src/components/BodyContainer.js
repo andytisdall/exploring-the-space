@@ -5,32 +5,46 @@ import Tier from './Tier';
 import Playlist from './Playlist';
 import AddButton from './AddButton';
 
-const BodyContainer = ({ props }) => {
+const BodyContainer = ({ fetchPlaylists, fetchTiers, tiers, playlists, band}) => {
+
 
     useEffect(() => {
-        props.fetchTiers();
-        props.fetchPlaylists();
-    })
+        fetchTiers(band.id);
+        // fetchPlaylists(band.id);
+    }, [])
 
 
     const renderTiers = () => {
-        return props.tiers.map(tier => {
-            return (
-                <Tier 
-                    tier={tier}
-                />
-            );
+
+        const tiersToRender = band.tiers.map(id => tiers[id]);
+
+        // console.log(tiers);
+
+        console.log(tiersToRender);
+
+        return tiersToRender.map(tier => {
+            if (tier) {
+                return (
+                    <Tier tier={tier} />
+                );
+            }
         });
     };
 
-    const renderPlaylists = () => {
-        return props.playlists.map(playlist => {
-            return (
-                // <Playlist />
-                <p>This is a Playlist</p>
-            )
-        })
-    };
+    // const renderPlaylists = () => {
+
+    //     const playlistsToRender = band.playlists.map(id => playlists[id]);
+
+    //     console.log(playlistsToRender);
+
+    //     return playlistsToRender.map(playlist => {
+    //         return (
+    //             <Playlist playlist={playlist} />               
+    //         );
+    //     });
+    // };
+
+
 
     return (
         <>
@@ -40,19 +54,20 @@ const BodyContainer = ({ props }) => {
             <div className="playlists">
                 <h2>Playlists</h2>
                 <hr />
-                {renderPlaylists()}
+                {/* {playlists && renderPlaylists()} */}
             </div>
         </>
 
 
     );
 
+
 };
 
 const mapStateToProps = state => {
     return {
-        tiers: Object.values(state.tiers),
-        playlists: Object.values(state.playlists)
+        tiers: state.tiers,
+        playlists: state.playlists,
     };
 };
 

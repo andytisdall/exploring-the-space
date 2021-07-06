@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { fetchPlaylistSongs } from '../actions';
 
 import PlaylistSong from './PlaylistSong';
+import AuthControl from './AuthControl';
+import AddButton from './AddButton';
 
-const Playlist = props => {
+const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
+
+    useEffect(() => {
+        fetchPlaylistSongs(playlist.id);
+    }, []);
 
     const renderPlaylistSongs = () => {
-        return props.playlistsongs.map(song => {
+
+        const songsToRender = playlist.songs.map(id => playlistsongs[id]);
+
+        return songsToRender.map(song => {
             return (
-                <PlaylistSong />
+                <PlaylistSong song={song} />
             );
         });
     }
@@ -18,19 +29,19 @@ const Playlist = props => {
                 <div className="marqee tier-info">
                     <div className="tier-name">
                         <img className="arrow" src="right-arrow.svg" />
-                        <h2>{tier.name}</h2>
+                        <h2>{playlist.name}</h2>
                     </div>
                     <div className="tier-count">
                         <AuthControl>
                             <AddButton title = 'Add a Song' />
                         </AuthControl>
-                        <div className="song-count">{tier.tracklist.length} songs</div>
-                        <div className="song-count">{tier.totalTime}</div>
+                        <div className="song-count">{playlist.songs.length} songs</div>
+                        <div className="song-count">{playlist.totalTime}</div>
                     </div>
                     <div className="tier-display">
                         <AuthControl>
-                            <AddButton title={`Edit ${tier.name}`} />
-                            <DeleteButton />
+                            <AddButton />
+                            {/* <DeleteButton /> */}
                         </AuthControl>
                     </div>
                 </div>
@@ -40,4 +51,10 @@ const Playlist = props => {
     );
 };
 
-export default Playlist;
+const mapStateToProps = state => {
+    return {
+        playlistsongs: state.playlistsongs
+    }
+}
+
+export default connect(mapStateToProps, { fetchPlaylistSongs })(Playlist);

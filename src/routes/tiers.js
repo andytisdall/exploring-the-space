@@ -29,18 +29,17 @@ router.post('/tiers', currentUser, requireAuth, async (req, res) => {
 });
 
 
-router.get('/tiers/:bandName', async (req, res) => {
+router.get('/tiers/:id', async (req, res) => {
 
-    let bandName = req.params.bandName
-    if (bandName === 'apprehenchmen') {
-        bandName = 'Apprehenchmen';
-    }
+    const id = req.params.id;
 
-    const band = await Band.findOne({ name: bandName }).populate('trackList');
+    const band = await Band.findById(id).populate('tiers');
 
     if (!band) {
         throw new Error('Band does not exist');
     }
+
+    console.log('hit');
 
     res.status(200).send(band.tiers);
 

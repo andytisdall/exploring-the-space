@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import Version from './Version';
 import AuthControl from './AuthControl';
+import AddButton from './AddButton';
+import { fetchVersions } from '../actions';
 // import PlayContainer from './PlayContainer';
 
-const Title = () => {
+const Title = ({ title, fetchVersions, versions }) => {
 
-    const renderVersions = () => {
-        return 0;
+    useEffect(() => {
+        fetchVersions(title.id);
+    }, [])
+
+    const versionList = versions.map(v => title.versions.includes(v.id));
+
+    const { selectedVersion } = versions;
+
+    const renderVersion = version => {
+        return (
+            <Version version={version} />
+        )
     }
 
     return (
@@ -24,16 +37,22 @@ const Title = () => {
                     <AuthControl>
                         <AddButton title="Add to a Playlist" />
                         <AddButton title={`Edit ${title.title}`} />
-                        <DeleteButton />
+                        {/* <DeleteButton /> */}
                     </AuthControl>
-                    <Download />
+                    {/* <Download /> */}
                 </div>
             </div>
             <div className="version-container">
-                {renderVersions()}
+                {renderVersion(selectedVersion)}
             </div>
         </div>
     );
 };
 
-export default Title;
+const mapStateToProps = state => {
+    return {
+        versions: state.versions
+    }
+}
+
+export default connect(mapStateToProps, { fetchVersions })(Title);

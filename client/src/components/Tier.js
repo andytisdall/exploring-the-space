@@ -6,7 +6,6 @@ import { createTier } from '../actions';
 import Title from './Title';
 import AuthControl from './AuthControl';
 import AddButton from './AddButton';
-import { PromiseProvider } from 'mongoose';
 
 
 const Tier = ({ tier, createTier }) => {
@@ -36,11 +35,12 @@ const Tier = ({ tier, createTier }) => {
                         <AddButton
                             onSubmit={onSubmit}
                             title='Add a Tier'
-                            fields={{
+                            image= '/images/add.png'
+                            fields={[{
                                 label: 'Tier Name',
                                 name: 'tierName',
-                                type: 'input'
-                            }}
+                                type: 'input',               
+                            }]}
                         />
                     </AuthControl>
                     <div className="song-count">{tier.tracklist.length} songs</div>

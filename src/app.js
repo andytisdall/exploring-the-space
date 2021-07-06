@@ -3,6 +3,7 @@ import express from 'express';
 import session from 'express-session';
 import 'express-async-errors';
 import fileUpload from 'express-fileupload';
+import cors from 'cors';
 
 import './models/models.js';
 import './models/user.js';
@@ -32,6 +33,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(express.json());
 app.use(fileUpload());
+app.use(cors());
 
 // connect mongo database
 
@@ -53,13 +55,14 @@ mongoose.connection.on('error', (err) => {
     console.log(err);
 });
 
+app.use(bandRouter);
 
 app.use(signinRouter);
 app.use(signupRouter);
 app.use(signoutRouter);
 app.use(userRouter);
 
-app.use(bandRouter);
+
 app.use(tierRouter);
 app.use(titleRouter);
 app.use(versionRouter);

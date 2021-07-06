@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
+import { fetchBand } from '../actions';
 import AuthControl from './AuthControl';
+import BodyContainer from './BodyContainer';
 
-const BandHeader = props => {
+const BandHeader = ({ fetchBand, band, match }) => {
 
-    return (
+    useEffect(() => {
+        fetchBand(match.params.bandName);
+    }, []);
+
+    return <>
 
         <div className="marqee header">
             <div className="band-name">
-                <h1>{props.band.name}</h1>
+                <h1>{band && fetchBand.name}</h1>
                 <AuthControl>
                     <div className="menu-button">
                         <img src="dots.png" />
@@ -19,12 +26,19 @@ const BandHeader = props => {
                 </AuthControl>
             </div>
             <div className="slidecontainer">
-                <input type="range" min="0" max="100" value="50" class="master-volume" id="mastervol" />
+                <input type="range" min="0" max="100" className="master-volume" />
             </div>
         </div>
+        {band && <BodyContainer band={band}/>}
 
-    );
+    </>;
 
 };
 
-export default BandHeader;
+const mapStateToProps = state => {
+    return {
+        band: state.bands.currentBand
+    }
+}
+
+export default connect(mapStateToProps, { fetchBand })(BandHeader);

@@ -38,14 +38,20 @@ router.get('/bands', async (req, res) => {
 
 })
 
-router.get('/bands/:bandId', async (req, res) => {
+router.get('/bands/:bandName', async (req, res) => {
 
+    let bandName = req.params.bandName;
 
-    const band = await Band.findById(req.params.bandId);
+    if (bandName === 'apprehenchmen') {
+        bandName = 'Apprehenchmen';
+    }
+
+    const band = await Band.findOne({ name: bandName });
 
     if (!band) {
         throw new Error('Band does not exist');
     }
+
 
     res.status(200).send(band);
 
