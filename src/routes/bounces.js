@@ -7,7 +7,7 @@ import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
 
 
-const Bounce = mongoose.model('Bounce');
+const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
 
 const router = express.Router();
@@ -64,7 +64,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
             let oldLatest = bounceList.find(b => b.latest);
             if (oldLatest) {
-                await Bounce.updateOne({_id: oldLatest._id}, {latest: false});
+                await Song.updateOne({_id: oldLatest._id}, {latest: false});
             }
             newBounce.latest = true;
             
@@ -89,12 +89,9 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
 router.get('/bounces/:versionId', async (req, res) => {
 
-    const { versionId } = req.params;
+    const version = await Version.findById(req.params.versionId).populate('songs');
 
-    const version = await Version.findById(versionId).populate('bounces');
-
-    res.status(200).send(version.bounces);
-
+    res.status(200).send(version.songs);
 
 });
 

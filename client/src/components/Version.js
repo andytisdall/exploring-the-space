@@ -13,7 +13,7 @@ const Version = ({ versions, bounces, fetchBounces }) => {
 
     useEffect(() => {
         fetchBounces(selectedVersion.id);
-    }, [])
+    }, [selectedVersion])
 
     const renderVersionList = () => {
         const versionList = versions.filter(v => v !== selectedVersion);
@@ -63,9 +63,10 @@ const Version = ({ versions, bounces, fetchBounces }) => {
                         {/* <DeleteButton /> */}
                     </div>
                 </AuthControl>
-            </div>
-            {renderBounces()}
+            </div> 
+            {renderBounces()}          
         </div>
+        
     );
 };
 

@@ -4,7 +4,7 @@ import mongodb from 'mongodb';
 
 import bucket from '../services/streamer.js';
 
-const Bounce = mongoose.model('Bounce');
+const Song = mongoose.model('Song');
 const router = express.Router();
 
 router.get('/audio/:id', async (req, res) => {

@@ -19,19 +19,14 @@ const Bounce = ({ bounces }) => {
                     {moment.utc(b.date).format('MM/DD/yy')}
             </div>
         });
-
-    }
+    };
 
 
     return (
-        <div className="detail-box" >
+        <div className="detail-box">
             <div className='detail-content'>
                 <div className='detail-header'>
-                
-                    
-                    
-
-                    <h5>Date:</h5>
+                   <h5>Date:</h5>
                     <div className='dropdown'>
                         <button className='dropbtn'>{displayDate}</button>
                         <div className='dropdown-content'>
@@ -40,7 +35,7 @@ const Bounce = ({ bounces }) => {
                         </div>
                     </div>
 
-                <div className='detail-notes'>{selectedBounce.comments}</div>
+                    <div className='detail-notes'>{selectedBounce.comments}</div>
                 </div>   
             </div>
         </div>

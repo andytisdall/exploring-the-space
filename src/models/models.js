@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const bounceSchema = new Schema({
+const songSchema = new Schema({
     date: { type: Date, default: Date.now() },
     latest: { type: Boolean, default: false },
     comments: String,
@@ -22,11 +22,12 @@ const versionSchema = new Schema({
     name: { type: String },
     current: { type: Boolean, default: false },
     notes: String,
-    bounces: [{ type: Schema.Types.ObjectId, ref: 'Bounce'}]
+    songs: [{ type: Schema.Types.ObjectId, ref: 'Song'}]
 }, {
     toJSON: {
         transform(doc, ret) {
             ret.id = ret._id;
+            ret.bounces = ret.songs;
             delete ret._id;
             }
         }
@@ -94,7 +95,7 @@ const playlistSchema = new Schema({
 mongoose.model('Tier', tierSchema);
 mongoose.model('Title', titleSchema);
 mongoose.model('Version', versionSchema);
-mongoose.model('Bounce', bounceSchema);
+mongoose.model('Song', songSchema);
 const Playlist = mongoose.model('Playlist', playlistSchema);
 const PlaylistSong = mongoose.model('PlaylistSong', playlistSongSchema);
 
