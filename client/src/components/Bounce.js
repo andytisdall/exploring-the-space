@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
 const Bounce = ({ bounces }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(bounces.find(b => b.latest));
+
+    useEffect(() => {
+        setSelectedBounce(bounces.find(b => b.latest));
+    }, [bounces]);
 
     const displayDate = moment.utc(selectedBounce.date).format('MM/DD/yy')
 

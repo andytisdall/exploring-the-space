@@ -10,12 +10,12 @@ const Version = ({ versions, bounces, fetchBounces }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(versions.find(v => v.current));
 
-
     useEffect(() => {
         fetchBounces(selectedVersion.id);
-    }, [selectedVersion])
+    }, [selectedVersion]);
 
     const renderVersionList = () => {
+        
         const versionList = versions.filter(v => v !== selectedVersion);
 
         return versionList.map(v => {
