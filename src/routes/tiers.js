@@ -39,8 +39,6 @@ router.get('/tiers/:id', async (req, res) => {
         throw new Error('Band does not exist');
     }
 
-    console.log('hit');
-
     res.status(200).send(band.tiers);
 
 

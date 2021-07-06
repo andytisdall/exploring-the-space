@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import Version from './Version';
@@ -9,26 +9,28 @@ import { fetchVersions } from '../actions';
 
 const Title = ({ title, fetchVersions, versions }) => {
 
+    const [expand, setExpand] = useState(false);
+
+    const arrow = expand ? 'down' : 'right';
+
     useEffect(() => {
         fetchVersions(title.id);
     }, [])
 
-    const versionList = versions.map(v => title.versions.includes(v.id));
+    const renderVersion = () => {
 
-    const { selectedVersion } = versions;
-
-    const renderVersion = version => {
+        const versionsToRender = title.versions.map(id => versions[id]);
         return (
-            <Version version={version} />
+            <Version versions={versionsToRender} />
         )
     }
 
     return (
         <div className="title-margin">
-            <div className="row title">
-                <div class="marqee">
+            <div className="row title" onClick={() => setExpand(!expand)} >
+                <div className="marqee">
                     <div className="row-name">
-                        <img className="arrow" src="right-arrow.svg" />
+                        <img className="arrow" src={`/images/${arrow}-arrow.svg`} />
                         <div className="name-spot">
                             <h3>{title.title}</h3>
                         </div>
@@ -42,9 +44,7 @@ const Title = ({ title, fetchVersions, versions }) => {
                     {/* <Download /> */}
                 </div>
             </div>
-            <div className="version-container">
-                {renderVersion(selectedVersion)}
-            </div>
+            {expand && renderVersion()}
         </div>
     );
 };

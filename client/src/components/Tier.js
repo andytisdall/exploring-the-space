@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { createTier } from '../actions';
+import { createTier, fetchTitles } from '../actions';
 
 
 import Title from './Title';
@@ -8,14 +8,22 @@ import AuthControl from './AuthControl';
 import AddButton from './AddButton';
 
 
-const Tier = ({ tier, createTier }) => {
+const Tier = ({ tier, createTier, titles, fetchTitles }) => {
+
+    const [expand, setExpand] = useState(false);
+
+    const arrow = expand ? 'down' : 'right';
 
     const renderTitles = () => {
-        return tier.trackList.map(title => {
-            return (
-                // <Title />
-                <p>This is a Title!</p>
-            );
+
+        const titlesToRender = tier.trackList.map(id => titles[id]);
+
+        return titlesToRender.map(title => {
+            if (title) {
+                return (
+                    <Title title={title} key={title.id} />
+                );
+            }
         });
     };
 
@@ -23,42 +31,56 @@ const Tier = ({ tier, createTier }) => {
         createTier(formValues);
     };
 
+    useEffect(() => {
+        fetchTitles(tier.id);
+    }, []);
+
+
     return (
         <>
-            <div className="row tier">
-                <div className="tier-name">
-                    <img className="arrow" src="right-arrow.svg" />
-                    <h2>{tier.name}</h2>
+            <div className="row tier" onClick={() => setExpand(!expand)}>
+                <div className="marqee tier-info">
+                    <div className="tier-name">
+                        <img className="arrow" src={`images/${arrow}-arrow.svg`} />
+                        <h2>{tier.name}</h2>
+                    </div>
+                    <div className="tier-count">
+                        <AuthControl>
+                            <AddButton
+                                onSubmit={onSubmit}
+                                title='Add a Tier'
+                                img="/images/add.png"
+                                fields={[{
+                                    label: 'Tier Name',
+                                    name: 'tierName',
+                                    type: 'input',               
+                                }]}
+                            />
+                        </AuthControl>
+                        <div className="song-count">{tier.trackList.length} songs</div>
+                        <div className="song-count">{tier.totalTime}</div>
+                    </div>
+                    <div className="tier-display">
+                        <AuthControl>
+                            <AddButton title={`Edit ${tier.name}`} />
+                            {/* <DeleteButton /> */}
+                        </AuthControl>
+                    </div>
                 </div>
-                <div className="tier-count">
-                    <AuthControl>
-                        <AddButton
-                            onSubmit={onSubmit}
-                            title='Add a Tier'
-                            image= '/images/add.png'
-                            fields={[{
-                                label: 'Tier Name',
-                                name: 'tierName',
-                                type: 'input',               
-                            }]}
-                        />
-                    </AuthControl>
-                    <div className="song-count">{tier.tracklist.length} songs</div>
-                    <div className="song-count">{tier.totalTime}</div>
-                </div>
-                <div className="tier-display">
-                    <AuthControl>
-                        <AddButton title={`Edit ${tier.name}`} />
-                        {/* <DeleteButton /> */}
-                    </AuthControl>
-                </div>
+                <hr />
             </div>
             <div className="title-container">
-                {renderTitles()}
+                {expand && renderTitles()}
             </div>
         </>
     );
 };
 
+const mapStateToProps = state => {
+    return {
+        titles: state.titles
+    }
+};
 
-export default connect(null, { createTier })(Tier);
+
+export default connect(mapStateToProps, { createTier, fetchTitles })(Tier);

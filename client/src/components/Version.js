@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchBounces } from '../actions';
@@ -6,20 +6,39 @@ import AuthControl from './AuthControl';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
 
-const Version = ({ version, bounces, fetchBounces,  }) => {
+const Version = ({ versions, bounces, fetchBounces }) => {
+
+    const [selectedVersion, setSelectedVersion] = useState(versions.find(v => v.current));
 
 
     useEffect(() => {
-        fetchBounces(version.id);
+        fetchBounces(selectedVersion.id);
     }, [])
 
-    const bounceList = bounces.map(b => version.bounces.includes(b.id));
+    const renderVersionList = () => {
+        const versionList = versions.filter(v => v !== selectedVersion);
 
-    const renderBounce = bounce => {
-        return (
-            <Bounce bounce={bounce} />
-        )
-    }
+        return versionList.map(v => {
+            return <div
+                className="dropdown-link change-version"
+                onClick={() => setSelectedVersion(v)}
+                key={v.id}
+            >
+                    {v.name}
+            </div>
+        });
+    };
+    
+    const renderBounces = () => {
+
+        const bouncesToRender = selectedVersion.bounces.map(id => bounces[id]);
+
+        if (bouncesToRender[0]) {
+            return (
+                <Bounce bounces={bouncesToRender} />
+            );
+        }
+    };
     
     return (
         <div className="version-container">
@@ -29,10 +48,10 @@ const Version = ({ version, bounces, fetchBounces,  }) => {
                         <h5>Version:</h5>
                         <div className="dropdown">
                             <button className="dropbtn">
-                                {version.name}
+                                {selectedVersion.name}
                             </button>
                             <div className="dropdown-content">
-                                {bounceList}
+                                {renderVersionList()}
                             </div>
                         </div>
                     </div>
@@ -45,10 +64,15 @@ const Version = ({ version, bounces, fetchBounces,  }) => {
                     </div>
                 </AuthControl>
             </div>
-            {renderBounce()}
+            {renderBounces()}
         </div>
     );
-
 };
 
-export default Version;
+const mapStateToProps = state => {
+    return {
+        bounces: state.bounces
+    }
+}
+
+export default connect(mapStateToProps, { fetchBounces })(Version);

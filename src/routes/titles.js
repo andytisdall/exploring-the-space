@@ -25,7 +25,7 @@ router.post('/titles', currentUser, requireAuth, async (req, res) => {
 
 router.get('/titles/:tierId', async (req, res) => {
 
-    const tier = await Tier.findById(req.params.tierId).populate('tracklist');
+    const tier = await Tier.findById(req.params.tierId).populate('trackList');
 
     res.status(200).send(tier.trackList);
 

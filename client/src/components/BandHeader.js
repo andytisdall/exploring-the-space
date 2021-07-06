@@ -15,7 +15,7 @@ const BandHeader = ({ fetchBand, band, match }) => {
 
         <div className="marqee header">
             <div className="band-name">
-                <h1>{band && fetchBand.name}</h1>
+                <h1>{band && band.name}</h1>
                 <AuthControl>
                     <div className="menu-button">
                         <img src="dots.png" />

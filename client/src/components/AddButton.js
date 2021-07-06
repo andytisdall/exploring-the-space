@@ -3,7 +3,9 @@ import { Field, reduxForm } from 'redux-form';
 
 const  AddButton = ({ fields, handleSubmit, title, image }) => {
 
-    const {boxVisible, setBoxVisible} = useState(false);
+    const [boxVisible, setBoxVisible] = useState(false);
+
+    
 
     const showFields = () => {
 
@@ -16,11 +18,10 @@ const  AddButton = ({ fields, handleSubmit, title, image }) => {
                 >
                     {field.options.map(option => <option value={option.value}>{option.display}</option>)}
                 </Field>
-
             </>
-        })
+        });
 
-    }
+    };
 
     const showBox = () => {
         if (boxVisible) {
@@ -35,7 +36,7 @@ const  AddButton = ({ fields, handleSubmit, title, image }) => {
             </>
         }
     }
-
+    
     return (
 
         <div className="add" onClick={() => setBoxVisible(!boxVisible)}>

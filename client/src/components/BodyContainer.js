@@ -18,14 +18,11 @@ const BodyContainer = ({ fetchPlaylists, fetchTiers, tiers, playlists, band}) =>
 
         const tiersToRender = band.tiers.map(id => tiers[id]);
 
-        // console.log(tiers);
-
-        console.log(tiersToRender);
 
         return tiersToRender.map(tier => {
             if (tier) {
                 return (
-                    <Tier tier={tier} />
+                    <Tier tier={tier} key={tier.id}/>
                 );
             }
         });

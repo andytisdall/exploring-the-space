@@ -89,6 +89,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
 router.get('/bounces/:versionId', async (req, res) => {
 
+    const { versionId } = req.params;
 
     const version = await Version.findById(versionId).populate('bounces');
 
