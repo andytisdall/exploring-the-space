@@ -2,14 +2,22 @@ import express from 'express';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
 
-import bucket from '../services/streamer.js';
+let bucket;
+
+mongoose.connection.on('connected', () => {
+    bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+        chunkSizeBytes: 1024,
+        bucketName: 'mp3s'
+    });
+    console.log('bucket online')
+});
 
 const Song = mongoose.model('Song');
 const router = express.Router();
 
 router.get('/audio/:id', async (req, res) => {
     const id = req.params.id.split('.')[0];
-    const thisSong = await Song.findOne({ _id: id });
+    const thisSong = await Song.findById(id);
     let mp3Id = new mongodb.ObjectID(thisSong.mp3);
 
     // fix so that safari can request ranges of the file
@@ -36,6 +44,8 @@ router.get('/audio/:id', async (req, res) => {
         stream.on('error', (err) => {
             throw new Error('Could not find mp3');
         });
+
+        console.log
         
         stream.pipe(res);
     
@@ -96,4 +106,4 @@ router.get('audio/download/:id', async (req, res) => {
 
 });
 
-export { router as audioRouter };
+export { router as audioRouter, bucket };

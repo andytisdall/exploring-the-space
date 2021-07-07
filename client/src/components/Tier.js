@@ -21,7 +21,7 @@ const Tier = ({ tier, createTier, titles, fetchTitles }) => {
         return titlesToRender.map(title => {
             if (title) {
                 return (
-                    <Title title={title} key={title.id} />
+                    <Title title={title} tier={tier} key={title.id} />
                 );
             }
         });

@@ -35,3 +35,8 @@ export const DELETE_TITLE = 'DELETE_TITLE';
 export const DELETE_VERSION = 'DELETE_VERSION';
 export const DELETE_BOUNCE = 'DELETE_BOUNCE';
 export const DELETE_BAND = 'DELETE_BAND';
+
+export const PLAY_AUDIO = 'PLAY_AUDIO';
+export const PAUSE_AUDIO = 'PAUSE_AUDIO';
+export const CHANGE_VOLUME = 'CHANGE_VOLUME';
+export const QUEUE_SONGS = 'QUEUE_SONGS';

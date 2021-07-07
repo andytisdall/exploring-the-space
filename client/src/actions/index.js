@@ -32,6 +32,10 @@ import {
     DELETE_BOUNCE,
     DELETE_PLAYLIST,
     DELETE_PLAYLISTSONG,
+    PLAY_AUDIO,
+    PAUSE_AUDIO,
+    CHANGE_VOLUME,
+    QUEUE_SONGS
 } from './types';
 
 
@@ -217,3 +221,28 @@ export const deletePlaylistSong = playlistSongId => async dispatch => {
     dispatch({ type: DELETE_PLAYLISTSONG, payload: response.data });
 };
 
+export const playAudio = () => {
+    return { type: PLAY_AUDIO };
+};
+
+export const pauseAudio = () => {
+    return { type: PAUSE_AUDIO };
+};
+
+export const queueSongs = song => (dispatch, getState) => {
+
+    const allTitles = song.tier.trackList.map(id => getState().titles[id]);
+    const titleList = allTitles.splice(allTitles.indexOf(song.title));
+    const queue = titleList.map(title => {
+        const version = title.versions.map(id => getState().versions[id]).find(v => v.current);
+        const bounce = version.bounces.map(id => getState().bounces[id]).find(b => b.latest);
+        return {
+            title: title.title,
+            version: version.name,
+            date: bounce.date,
+            duration: bounce.duration,
+            audio: bounce.id
+        };
+    });
+    dispatch({ type: QUEUE_SONGS, payload: queue });
+};

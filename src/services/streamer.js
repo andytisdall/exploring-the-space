@@ -1,13 +1,4 @@
-import mongoose from 'mongoose';
 
-let bucket;
-
-mongoose.connection.on('connected', () => {
-    bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-        chunkSizeBytes: 1024,
-        bucketName: 'mp3s'
-    });
-});
 
 
 // export function addMp3(file) {
@@ -127,5 +118,3 @@ export function deleteMp3(mp3Id) {
 
 
 }
-
-export default bucket;

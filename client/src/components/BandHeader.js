@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { fetchBand } from '../actions';
 import AuthControl from './AuthControl';
 import BodyContainer from './BodyContainer';
+import AudioHeader from './AudioHeader';
 
 const BandHeader = ({ fetchBand, band, match }) => {
 
@@ -12,7 +13,7 @@ const BandHeader = ({ fetchBand, band, match }) => {
     }, []);
 
     return <>
-
+        <AudioHeader />
         <div className="marqee header">
             <div className="band-name">
                 <h1>{band && band.name}</h1>

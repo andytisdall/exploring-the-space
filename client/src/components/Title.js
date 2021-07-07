@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, version } from 'react';
 import { connect } from 'react-redux';
 
 import Version from './Version';
 import AuthControl from './AuthControl';
 import AddButton from './AddButton';
-import { fetchVersions } from '../actions';
-// import PlayContainer from './PlayContainer';
+import { fetchVersions, fetchBounces } from '../actions';
+import PlayContainer from './PlayContainer';
 
-const Title = ({ title, fetchVersions, versions }) => {
+const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -15,31 +15,64 @@ const Title = ({ title, fetchVersions, versions }) => {
 
     useEffect(() => {
         fetchVersions(title.id);
-    }, [])
+    }, []);
+
+    const versionList = title.versions.map(id => versions[id]);
+
+    const currentVersion = versionList[0] ? versionList.find(v => v.current) : null;
+
+    useEffect(() => {
+        if (currentVersion) {
+            fetchBounces(currentVersion.id);
+        }
+    }, [currentVersion]);
+
+    const bounceList = currentVersion ? currentVersion.bounces.map(id => bounces[id]) : null;
+
+    let currentBounce;
+
+    if (bounceList && bounceList[0]) {
+
+        currentBounce = bounceList.find(b => b.latest);
+    
+    }
+
+    const renderPlayContainer = () => {
+
+        if (currentVersion && currentBounce) {
+            return <PlayContainer song={{
+                tier,
+                title,
+                version: currentVersion,
+                bounce: currentBounce
+            }} />;
+        }
+    }
 
     const renderVersion = () => {
-
-        const versionsToRender = title.versions.map(id => versions[id]);
+   
         return (
-            <Version versions={versionsToRender} />
+            <Version versions={versionList} />
         )
     }
 
     return (
         <div className="title-margin">
-            <div className="row title" onClick={() => setExpand(!expand)} >
+            <div className="row title">
                 <div className="marqee">
-                    <div className="row-name">
+                    <div className="row-name"  onClick={() => setExpand(!expand)} >
                         <img className="arrow" src={`/images/${arrow}-arrow.svg`} />
                         <div className="name-spot">
                             <h3>{title.title}</h3>
                         </div>
                     </div>
-                    {/* <PlayContainer /> */}
+                    {renderPlayContainer()}
                     <AuthControl>
-                        <AddButton title="Add to a Playlist" />
-                        <AddButton title={`Edit ${title.title}`} />
-                        {/* <DeleteButton /> */}
+                        <div className='tier-display'>
+                            <AddButton title="Add to a Playlist" />
+                            <AddButton title={`Edit ${title.title}`} />
+                            {/* <DeleteButton /> */}
+                        </div>
                     </AuthControl>
                     {/* <Download /> */}
                 </div>
@@ -51,8 +84,9 @@ const Title = ({ title, fetchVersions, versions }) => {
 
 const mapStateToProps = state => {
     return {
-        versions: state.versions
+        versions: state.versions,
+        bounces: state.bounces
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions })(Title);
+export default connect(mapStateToProps, { fetchVersions, fetchBounces })(Title);

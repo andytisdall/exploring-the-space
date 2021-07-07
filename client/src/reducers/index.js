@@ -9,6 +9,7 @@ import playlistReducer from './playlistReducer';
 import playlistSongReducer from './playlistSongReducer';
 import bandReducer from './bandReducer';
 import errorReducer from './errorReducer';
+import audioReducer from './audioReducer';
 
 export default combineReducers({
     form: formReducer,
@@ -20,5 +21,6 @@ export default combineReducers({
     playlists: playlistReducer,
     playlistSongs: playlistSongReducer,
     bands: bandReducer,
-    errors: errorReducer
+    errors: errorReducer,
+    audio: audioReducer
 });
