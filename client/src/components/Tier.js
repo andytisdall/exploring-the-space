@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { createTier, fetchTitles } from '../actions';
-
+import { createTier, editTier, fetchTitles } from '../actions';
 
 import Title from './Title';
-import AuthControl from './AuthControl';
 import AddButton from './AddButton';
+import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, createTier, titles, fetchTitles }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -27,13 +26,44 @@ const Tier = ({ tier, createTier, titles, fetchTitles }) => {
         });
     };
 
-    const onSubmit = formValues => {
-        createTier(formValues);
-    };
 
     useEffect(() => {
         fetchTitles(tier.id);
     }, []);
+
+
+
+
+    const renderEditDelete = () => {
+        if (authorized) {
+
+            const tiersToShow = band.tiers.map(id => tiers[id]);
+
+            const tierList = tiersToShow.map(t => {
+                return { value: t.position, display: t.position }
+            });
+
+            return (
+                <AddButton
+                    title={`Edit ${tier.name}`}
+                    image="images/edit.png"
+                    fields={[
+                        {
+                            label: 'Tier Name',
+                            name: 'tierName',
+                            type: 'input',               
+                        }, {
+                            label: 'Tier Position',
+                            name: 'tierPosition',
+                            type: 'select',
+                            options: tierList
+                        }
+                    ]}
+                    onSubmit={formValues => editTier(formValues)}
+                />
+            )
+        }
+    }
 
 
     return (
@@ -45,26 +75,11 @@ const Tier = ({ tier, createTier, titles, fetchTitles }) => {
                         <h2>{tier.name}</h2>
                     </div>
                     <div className="tier-count">
-                        <AuthControl>
-                            <AddButton
-                                onSubmit={onSubmit}
-                                title='Add a Tier'
-                                img="/images/add.png"
-                                fields={[{
-                                    label: 'Tier Name',
-                                    name: 'tierName',
-                                    type: 'input',               
-                                }]}
-                            />
-                        </AuthControl>
                         <div className="song-count">{tier.trackList.length} songs</div>
                         <div className="song-count">{tier.totalTime}</div>
                     </div>
                     <div className="tier-display">
-                        <AuthControl>
-                            <AddButton title={`Edit ${tier.name}`} />
-                            {/* <DeleteButton /> */}
-                        </AuthControl>
+                        {renderEditDelete()}
                     </div>
                 </div>
                 <hr />
@@ -78,9 +93,11 @@ const Tier = ({ tier, createTier, titles, fetchTitles }) => {
 
 const mapStateToProps = state => {
     return {
-        titles: state.titles
+        titles: state.titles,
+        band: state.bands.currentBand,
+        tiers: state.tiers
     }
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles })(Tier);
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier })(requireAuth(Tier));

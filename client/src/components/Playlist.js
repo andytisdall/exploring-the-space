@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { fetchPlaylistSongs } from '../actions';
 
 import PlaylistSong from './PlaylistSong';
-import AuthControl from './AuthControl';
 import AddButton from './AddButton';
 
 const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
@@ -32,17 +31,14 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
                         <h2>{playlist.name}</h2>
                     </div>
                     <div className="tier-count">
-                        <AuthControl>
-                            <AddButton title = 'Add a Song' />
-                        </AuthControl>
+                            {/* <AddButton title = 'Add a Song' /> */}
                         <div className="song-count">{playlist.songs.length} songs</div>
                         <div className="song-count">{playlist.totalTime}</div>
                     </div>
                     <div className="tier-display">
-                        <AuthControl>
-                            <AddButton />
-                            {/* <DeleteButton /> */}
-                        </AuthControl>
+
+                            {/* <AddButton /> */}
+               
                     </div>
                 </div>
             </div>

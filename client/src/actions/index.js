@@ -3,6 +3,8 @@ import {
     SIGN_IN,
     SIGN_OUT,
     SIGN_UP,
+    ERROR,
+    FETCH_USER,
     FETCH_BAND,
     FETCH_BANDS,
     FETCH_TIERS,
@@ -34,32 +36,42 @@ import {
     DELETE_PLAYLISTSONG,
     PLAY_AUDIO,
     PAUSE_AUDIO,
-    CHANGE_VOLUME,
     QUEUE_SONGS
 } from './types';
+import history from '../history';
 
 
 
 
 export const signIn = formValues => async (dispatch) => {
-    const response = await greenhouse.post('/signin', formValues);
-    dispatch({ type: SIGN_IN, payload: response.data});
-    // history.push('/');
+    try {
+        const response = await greenhouse.post('/signin', formValues);
+        dispatch({ type: SIGN_IN, payload: response.data});
+        localStorage.setItem('user', JSON.stringify(response.data) );
+        history.push('/user');
+    } catch (err) {
+        console.log(err);
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const signOut = () => async (dispatch) => {
     await greenhouse.get('/signout');
     dispatch({ type: SIGN_OUT });
-    // history.push('/');
+    localStorage.removeItem('user');
 };
 
 export const signUp = formValues => async (dispatch) => {
     const response = await greenhouse.post('/signup', formValues);
     dispatch({ type: SIGN_UP, payload: response.data});
-    // history.push('/');
+    localStorage.setItem('user', JSON.stringify(response.data) );
+    history.push('/user');
 };
 
-
+export const fetchUser = (token) => async (dispatch) => {
+    const response = await greenhouse.get('/user');
+    dispatch({ type: SIGN_IN, payload: response.data });
+};
 
 
 export const fetchBand = bandName => async (dispatch) => {
@@ -107,8 +119,9 @@ export const fetchPlaylistSongs = playlistId => async (dispatch) => {
 
 
 
-export const createBand = formValues => async dispatch => {
-    const response = await greenhouse.post('/bands', formValues);
+export const createBand = formValues => async (dispatch, getState) => {
+    const { currentBand } = getState.bands();
+    const response = await greenhouse.post('/bands', { ...formValues, currentBand });
     dispatch({ type: CREATE_BAND, payload: response.data });
 };
 

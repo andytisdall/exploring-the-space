@@ -6,7 +6,7 @@ router.get('/signout', (req, res) => {
     req.session.jwt = null;
     console.log('signing out');
 
-    res.redirect('/signin');
+    res.send({});
 });
 
 export { router as signoutRouter };

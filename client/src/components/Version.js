@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchBounces } from '../actions';
-import AuthControl from './AuthControl';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
 
@@ -56,13 +55,10 @@ const Version = ({ versions, bounces, fetchBounces }) => {
                         </div>
                     </div>
                 </div>
-                <AuthControl>
-                    <div className="detail-buttons">
-                        <AddButton />
-                        <AddButton />
-                        {/* <DeleteButton /> */}
-                    </div>
-                </AuthControl>
+                {/* <div className="detail-buttons">
+                    <AddButton />
+                    <AddButton />
+                </div> */}
             </div> 
             {renderBounces()}          
         </div>

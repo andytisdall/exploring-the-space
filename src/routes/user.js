@@ -1,17 +1,19 @@
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
-import { requireAuth } from '../middlewares/require-auth.js';
 import { User } from '../models/user.js';
 
 const router = express.Router();
 
-router.get('/user', currentUser, requireAuth, async (req, res) => {
+router.get('/user', currentUser, async (req, res) => {
 
-    const errorMessage = req.session.errorMessage;
 
-    const user = await User.findById(req.currentUser.id).populate('bands');
+    if (!req.currentUser) {
+        return res.send(null);
+    }
 
-    res.render('user', { user, errorMessage });
+    const user = await User.findById(req.currentUser.id);
+
+    res.send(user);
 });
 
 export { router as userRouter };

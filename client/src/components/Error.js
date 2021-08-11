@@ -3,15 +3,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 
-const Error = props => {
+const Error = ({ error }) => {
 
-    if (!props.errors.error) {
+    if (!error) {
         return null;
     }
 
     return (
         <div className="error">
-            {props.errors.error}
+            {error.message}
         </div>
     );
 
@@ -19,7 +19,7 @@ const Error = props => {
 
 const mapStateToProps = state => {
     return {
-        errors: state.errors
+        error: state.error.error
     }
 }
 

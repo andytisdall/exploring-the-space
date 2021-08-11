@@ -2,12 +2,12 @@ import React, { useEffect, useState, version } from 'react';
 import { connect } from 'react-redux';
 
 import Version from './Version';
-import AuthControl from './AuthControl';
 import AddButton from './AddButton';
-import { fetchVersions, fetchBounces } from '../actions';
+import { fetchVersions, fetchBounces, fetchPlaylists } from '../actions';
 import PlayContainer from './PlayContainer';
+import requireAuth from './requireAuth';
 
-const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) => {
+const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, fetchPlaylists }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -15,6 +15,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) 
 
     useEffect(() => {
         fetchVersions(title.id);
+        // fetchPlaylists(band.id);
     }, []);
 
     const versionList = title.versions.map(id => versions[id]);
@@ -56,6 +57,42 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) 
         )
     }
 
+    const onAddToPlaylist = () => {
+        return null;
+    }
+
+    const renderButtons = () => {
+        return null;
+        if (authorized) {
+            const bandPlaylists = band.playlists.map(id => playlists[id]);
+            const playlistOptions = bandPlaylists.map(pl => {
+                if (pl) {
+                    return { value: pl.id, display: pl.name};
+                }
+            });
+            return (
+                <div className='tier-display'>
+                    <AddButton
+                        title="Add to a Playlist"
+                        onSubmit={onAddToPlaylist}
+                        image="image/playlist.png"
+                        fields={[
+                            {
+                                type: 'select',
+                                options: playlistOptions,
+                                name: 'playlistId',
+                                label: 'Playlist'
+                            }
+                        ]}
+                    />
+                    {/* <AddButton title={`Edit ${title.title}`}
+                        onSubmit={onEditSubmit}
+                    /> */}
+                </div>
+            )
+        }
+    }
+
     return (
         <div className="title-margin">
             <div className="row title">
@@ -67,14 +104,8 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) 
                         </div>
                     </div>
                     {renderPlayContainer()}
-                    <AuthControl>
-                        <div className='tier-display'>
-                            <AddButton title="Add to a Playlist" />
-                            <AddButton title={`Edit ${title.title}`} />
-                            {/* <DeleteButton /> */}
-                        </div>
-                    </AuthControl>
-                    {/* <Download /> */}
+                    {renderButtons()}
+                    {/* {download} */}
                 </div>
             </div>
             {expand && renderVersion()}
@@ -85,8 +116,10 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces }) 
 const mapStateToProps = state => {
     return {
         versions: state.versions,
-        bounces: state.bounces
+        bounces: state.bounces,
+        band: state.bands.currentBand,
+        playlists: state.playlists
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions, fetchBounces })(Title);
+export default connect(mapStateToProps, { fetchVersions, fetchBounces })(requireAuth(Title));

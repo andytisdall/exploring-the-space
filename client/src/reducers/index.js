@@ -21,6 +21,6 @@ export default combineReducers({
     playlists: playlistReducer,
     playlistSongs: playlistSongReducer,
     bands: bandReducer,
-    errors: errorReducer,
+    error: errorReducer,
     audio: audioReducer
 });

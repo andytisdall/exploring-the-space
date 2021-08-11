@@ -5,12 +5,6 @@ import JWT_KEY from '../jwt-key.js';
 
 const router = express.Router();
 
-router.get('/signup', (req, res) => {
-    const errorMessage = req.session.errorMessage;
-    req.session.errorMessage = '';
-
-    res.render('signup', { errorMessage });
-});
 
 router.post('/signup', async (req, res) => {
 
@@ -34,7 +28,7 @@ router.post('/signup', async (req, res) => {
     req.session.jwt = userJwt;
 
 
-    res.status(201).redirect('/user');
+    res.status(201).send(user);
 
 });
 

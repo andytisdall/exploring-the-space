@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchTiers, fetchPlaylists } from '../actions';
+import { fetchTiers, fetchPlaylists, createTier, fetchUser } from '../actions';
 import Tier from './Tier';
 import Playlist from './Playlist';
 import AddButton from './AddButton';
+import requireAuth from './requireAuth';
 
-const BodyContainer = ({ fetchPlaylists, fetchTiers, tiers, playlists, band}) => {
+const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tiers, playlists, band, authorized }) => {
 
 
     useEffect(() => {
         fetchTiers(band.id);
+
         // fetchPlaylists(band.id);
-    }, [])
+    }, []);
 
 
     const renderTiers = () => {
@@ -26,6 +28,28 @@ const BodyContainer = ({ fetchPlaylists, fetchTiers, tiers, playlists, band}) =>
                 );
             }
         });
+    };
+
+
+    const onCreateSubmit = formValues => {
+        createTier(formValues);
+    };
+
+    const renderAddButton = () => {
+        if (authorized) {
+            return (
+                <AddButton
+                    onSubmit={onCreateSubmit}
+                    title='Add a Tier'
+                    image="/images/add.png"
+                    fields={[{
+                        label: 'Tier Name',
+                        name: 'tierName',
+                        type: 'input',               
+                    }]}
+                />
+            );
+        }
     };
 
     // const renderPlaylists = () => {
@@ -47,7 +71,7 @@ const BodyContainer = ({ fetchPlaylists, fetchTiers, tiers, playlists, band}) =>
         <>
             <hr />
             {renderTiers()}
-            <AddButton />
+            {renderAddButton()}
             <div className="playlists">
                 <h2>Playlists</h2>
                 <hr />
@@ -68,4 +92,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { fetchTiers, fetchPlaylists })(BodyContainer);
+export default connect(mapStateToProps, { fetchTiers, fetchUser, fetchPlaylists, createTier })(requireAuth(BodyContainer));

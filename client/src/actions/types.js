@@ -2,6 +2,9 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SIGN_UP = 'SIGN_UP';
 
+export const ERROR = 'ERROR';
+
+export const FETCH_USER = 'FETCH_USER';
 export const FETCH_TIERS = 'FETCH_TIERS';
 export const FETCH_PLAYLISTSONGS = 'FETCH_PLAYLISTSONGS';
 export const FETCH_PLAYLIST = 'FETCH_PLAYLIST';
@@ -38,5 +41,4 @@ export const DELETE_BAND = 'DELETE_BAND';
 
 export const PLAY_AUDIO = 'PLAY_AUDIO';
 export const PAUSE_AUDIO = 'PAUSE_AUDIO';
-export const CHANGE_VOLUME = 'CHANGE_VOLUME';
 export const QUEUE_SONGS = 'QUEUE_SONGS';

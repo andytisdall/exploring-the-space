@@ -24,6 +24,7 @@ router.post('/signin',
         // }
 
         const { username, password } = req.body;
+
         const existingUser = await User.findOne({ username });
         if (!existingUser) {
             throw new Error('Credentials Invalid');

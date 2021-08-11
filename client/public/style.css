@@ -9,6 +9,12 @@ body {
   margin: 0px;
 }
 
+.container {
+  max-width: 65rem;
+  margin: 0.7rem;
+  margin-top: 0px;
+}
+
 img {
   height: 1rem;
   width: auto;
@@ -39,6 +45,7 @@ img {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   width: 98%;
+  max-width: 65rem;
   position: fixed;
   z-index: 10;
 }
@@ -186,12 +193,6 @@ a {
   border: 2px solid white;
 }
 
-.container {
-  max-width: 65rem;
-  margin: 0.7rem;
-  margin-top: 0px;
-}
-
 hr {
   border-color: rgb(151, 235, 68);
   text-align: left;
@@ -224,7 +225,7 @@ hr {
   padding: 1rem;
   box-sizing: border-box;
   z-index: 1;
-  /* margin-left: -8rem; */
+  margin-left: -8rem;
 }
 
 .tier-add {
@@ -291,9 +292,9 @@ h1 {
   padding-top: 7px;
   min-width: 500px;
   /* background: radial-gradient(
-      rgba(128, 128, 128, 0),
-      rgba(255, 255, 255, 0.281)
-    ); */
+    rgba(128, 128, 128, 0),
+    rgba(255, 255, 255, 0.281)
+  ); */
 }
 
 .tier-name {
@@ -355,7 +356,7 @@ h2 {
 /* title */
 
 /* .title .marqee {
-    /* background-color: rgba(67, 188, 204, 0.623); */
+  /* background-color: rgba(67, 188, 204, 0.623); */
 
 .title-margin {
   margin-left: 3rem;
@@ -420,11 +421,12 @@ h3 {
   padding-top: 10px;
   height: 17px;
   margin-left: 1.5rem;
+  margin-right: 1rem;
 }
 
 /* version */
 
-.versioncontainer {
+.version-container {
   margin-top: 0.5rem;
   margin-left: 5rem;
   display: flex;
