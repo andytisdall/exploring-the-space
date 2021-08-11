@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { createTier, editTier, fetchTitles } from '../actions';
+import _ from 'lodash';
 
+import { createTier, editTier, fetchTitles } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
@@ -50,16 +51,18 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
                     fields={[
                         {
                             label: 'Tier Name',
-                            name: 'tierName',
-                            type: 'input',               
+                            name: 'name',
+                            type: 'input',          
                         }, {
                             label: 'Tier Position',
-                            name: 'tierPosition',
+                            name: 'position',
                             type: 'select',
-                            options: tierList
+                            options: tierList,
                         }
                     ]}
                     onSubmit={formValues => editTier(formValues)}
+                    initialValues={_.pick(tier, 'name', 'position')}
+                    form={tier.id}
                 />
             )
         }

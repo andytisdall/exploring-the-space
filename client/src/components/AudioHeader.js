@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { playAudio, pauseAudio } from '../actions';
+import { playAudio, pauseAudio, nextSong } from '../actions';
 
 
 class AudioHeader extends React.Component {
@@ -19,87 +19,87 @@ class AudioHeader extends React.Component {
         return `http://localhost:3001/audio/${id}.mp3`
     }
 
-    nextSong = () => {
-        this.currentSong = this.props.queue.shift();
-        this.audio.src=this.wrapUrl(this.currentSong.audio);
-        this.audio.play();
+
+
+    updateSlider = () => {
+        const position = (this.audio.currentTime / this.audio.duration) * 1000;
+        this.time = this.formatTime(this.audio.currentTime);
+        if (!isNaN(position)) {
+            this.setState({
+                sliderPosition: position
+            });
+        }
     }
 
+    componentDidMount() {
 
-    componentDidUpdate() {
-        
         // if there's no audio element created, create one with the current song
         // add event listener to link the slider position to the time of the song
 
-        if (this.props.song && !this.audio) {
-            this.currentSong = this.props.song;
-            this.audio = new Audio(this.wrapUrl(this.currentSong.audio));
-            this.audio.addEventListener('timeupdate', () => {
-                const position = (this.audio.currentTime / this.audio.duration) * 1000;
-                this.time = this.formatTime(this.audio.currentTime);
-                if (!isNaN(position)) {
-                    this.setState({
-                        sliderPosition: position
-                    });
-                }
-            });
 
-            // if there's a queue, load next song
+        
+        this.audio = new Audio();
+        this.audio.addEventListener('timeupdate', this.updateSlider);
 
-            this.audio.addEventListener('ended', () => {
-                if (this.props.queue.length) {
-                    this.nextSong();
-                }
-            });
+        // if there's a queue, load next song
+
+        this.audio.addEventListener('ended', this.nextSong);
+        
+    }
+
+    componentDidUpdate() {
+        
+        if (this.props.song) {
+            // if the current song is changed to something other than what is already loaded, change the src url and play the audio
+                        // if redux gets a signal to play, play if not already
+            // reverse for pause
+            if (this.wrapUrl(this.props.song.audio) !== this.audio.src) {
+                this.audio.src=this.wrapUrl(this.props.song.audio);
+                this.audio.play();
+            } else if (this.props.play && !this.state.isPlaying) {
+                this.audio.play();
+                this.setState({ isPlaying: true }); 
+            } else if (this.props.pause && this.state.isPlaying) {
+                this.audio.pause();
+                this.setState({ isPlaying: false });
+            } 
         }
+    }
 
-        // if redux gets a signal to play, play if not already
-
-        if (this.props.play && !this.state.isPlaying) {
-            this.play();
-        }
-        if (this.props.pause && this.state.isPlaying) {
-            this.pause();
-        }
-
-        // if the current song is changed to something other than what is already loaded, change the src url and play the audio
-        if (this.wrapUrl(this.props.song.audio) !== this.audio.src) {
-            this.currentSong = this.props.song
-            this.audio.src=this.wrapUrl(this.currentSong.audio);
-            this.audio.play();
-        }
+    nextSong = () => {
+        setTimeout(() => {
+            if (this.props.queue.length) {
+                this.props.nextSong();
+            }
+        }, 400);
     }
 
     play = () => {
-        this.audio.play();
         this.props.playAudio();
-        this.setState({ isPlaying: true }); 
     }
 
     pause = () => {
-        this.audio.pause();
         this.props.pauseAudio();
-        this.setState({ isPlaying: false });
     }
 
-    componentWillUnmount() {
-        if (this.audio) {
-            this.audio.removeEventListener('timeupdate', () => {
-                const position = (this.audio.currentTime / this.audio.duration) * 1000;
-                    this.time = this.formatTime(this.audio.currentTime);
-                    if (!isNaN(position)) {
-                        this.setState({
-                            sliderPosition: position
-                        });
-                    }
-                });
-            this.audio.addEventListener('ended', () => {
-                if (this.props.queue.length) {
-                    this.nextSong();
-                }
-            });
-        }
-      }
+    // componentWillUnmount() {
+    //     if (this.audio) {
+    //         this.audio.removeEventListener('timeupdate', () => {
+    //             const position = (this.audio.currentTime / this.audio.duration) * 1000;
+    //                 this.time = this.formatTime(this.audio.currentTime);
+    //                 if (!isNaN(position)) {
+    //                     this.setState({
+    //                         sliderPosition: position
+    //                     });
+    //                 }
+    //             });
+    //         this.audio.addEventListener('ended', () => {
+    //             if (this.props.queue.length) {
+    //                 this.nextSong();
+    //             }
+    //         });
+    //     }
+    //   }
 
     onSliderChange = (e) => {
 
@@ -120,7 +120,7 @@ class AudioHeader extends React.Component {
 
     render() {
 
-        if (this.currentSong) {
+        if (this.props.song) {
 
             return (
 
@@ -128,17 +128,17 @@ class AudioHeader extends React.Component {
                 <div className="playbar">
                     <div className="playbar-header">
                         <p className="playbar-title">
-                            {this.currentSong.title}
+                            {this.props.song.title}
                         </p>
                         <div className="pause-container" onClick={this.onPauseButton}>
                             <img src={this.state.isPlaying ? "/images/pause.svg" : "/images/play.svg"} />
                         </div>
                         <div className="playbar-info">
                             <p>
-                                {this.currentSong.version}
+                                {this.props.song.version}
                             </p>
                             <p>
-                                {this.currentSong.date}
+                                {this.props.song.date}
                             </p>
                         </div>
                     </div>
@@ -155,7 +155,7 @@ class AudioHeader extends React.Component {
                             onChange={this.onSliderChange}
                         />
                         <div className="playslidertime">
-                            {this.formatTime(this.currentSong.duration)}
+                            {this.formatTime(this.props.song.duration)}
                         </div>
                     </div>
                 </div>
@@ -176,4 +176,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { playAudio, pauseAudio })(AudioHeader);
+export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong })(AudioHeader);

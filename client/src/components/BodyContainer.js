@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+
 import { fetchTiers, fetchPlaylists, createTier, fetchUser } from '../actions';
 import Tier from './Tier';
 import Playlist from './Playlist';
@@ -24,7 +26,7 @@ const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tier
         return tiersToRender.map(tier => {
             if (tier) {
                 return (
-                    <Tier tier={tier} key={tier.id}/>
+                    <Tier tier={tier} key={tier.id} initialValues={_.pick(tier, 'name', 'position')} />
                 );
             }
         });
@@ -38,16 +40,18 @@ const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tier
     const renderAddButton = () => {
         if (authorized) {
             return (
-                <AddButton
-                    onSubmit={onCreateSubmit}
-                    title='Add a Tier'
-                    image="/images/add.png"
-                    fields={[{
-                        label: 'Tier Name',
-                        name: 'tierName',
-                        type: 'input',               
-                    }]}
-                />
+                <div className="centered-button">
+                    <AddButton
+                        onSubmit={onCreateSubmit}
+                        title='Add a Tier'
+                        image="/images/add.png"
+                        fields={[{
+                            label: 'Tier Name',
+                            name: 'tierName',
+                            type: 'input',               
+                        }]}
+                    />
+                </div>
             );
         }
     };

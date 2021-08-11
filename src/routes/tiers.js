@@ -44,4 +44,40 @@ router.get('/tiers/:id', async (req, res) => {
 
 });
 
+router.patch('/tiers/:id', async (req, res) => {
+
+    const { tierName, tierPosition } = req.body;
+
+    const thisTier = await Tier.findOne({ _id: id });
+    if (thisTier.position > tierPosition) {
+        const changePosition = await Tier.find({
+                position: { $gt: tierPosition-1, $lt: thisTier.position}
+            });
+        changePosition.forEach(async (tier) => {
+            tier.position++;
+            await tier.save();
+            // await Tier.updateOne(
+            //     { _id: tier.id },
+            //     { position: tier.position+1 });
+        });
+        thisTier.position = tierPosition;
+        // await Tier.updateOne({ _id: id }, { position: tierPosition });
+        console.log(`Moving ${thisTier.position} to ${tierPosition}`);
+    } else if (thisTier.position < tierPosition) {
+        const changePosition = await Tier.find({ position: { $gt: thisTier.position, $lt: tierPosition+1 } });
+        changePosition.forEach(async (tier) => {
+            tier.position = tier.position -1;
+            // await Tier.updateOne({ _id: tier.id }, { position: tier.position-1 });
+        });
+        thisTier.position = tierPosition;
+        await Tier.updateOne({ _id: id }, { position: tierPosition });
+        console.log(`Moving ${thisTier.position} to ${tierPosition}`);
+    }
+
+    await Tier.updateOne({ _id: id }, { name: tierName });
+    res.redirect(`/${bandName}`);
+
+
+});
+
 export { router as tierRouter };

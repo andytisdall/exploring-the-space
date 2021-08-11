@@ -36,7 +36,8 @@ import {
     DELETE_PLAYLISTSONG,
     PLAY_AUDIO,
     PAUSE_AUDIO,
-    QUEUE_SONGS
+    QUEUE_SONGS,
+    NEXT_SONG
 } from './types';
 import history from '../history';
 
@@ -259,3 +260,7 @@ export const queueSongs = song => (dispatch, getState) => {
     });
     dispatch({ type: QUEUE_SONGS, payload: queue });
 };
+
+export const nextSong = () => dispatch => {
+    dispatch({ type: NEXT_SONG });
+}

@@ -173,7 +173,12 @@ select {
   padding: 30px;
 }
 
+.centered-button {
+  margin-left: 10rem;
+}
+
 .windmill {
+  padding-top: 3rem;
   margin: auto;
 }
 
@@ -226,10 +231,6 @@ hr {
   box-sizing: border-box;
   z-index: 1;
   margin-left: -8rem;
-}
-
-.tier-add {
-  margin-left: -50px;
 }
 
 .delete {

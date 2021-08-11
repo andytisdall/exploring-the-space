@@ -64,6 +64,12 @@ img {
   height: 35px;
 }
 
+.centered-button {
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+}
+
 .pause-container {
   padding-top: 0.2rem;
   width: 33%;

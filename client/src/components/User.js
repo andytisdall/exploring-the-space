@@ -33,7 +33,7 @@ const User = ({ user, bands, createBand, fetchBands }) => {
             {renderBands()}
         </div>
         <hr />
-        <div className="tier-name">
+        <div className="centered-button">
             <AddButton
                 onSubmit={onCreateBandSubmit}
                 title='Create a Band'

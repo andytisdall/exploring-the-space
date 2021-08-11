@@ -42,3 +42,4 @@ export const DELETE_BAND = 'DELETE_BAND';
 export const PLAY_AUDIO = 'PLAY_AUDIO';
 export const PAUSE_AUDIO = 'PAUSE_AUDIO';
 export const QUEUE_SONGS = 'QUEUE_SONGS';
+export const NEXT_SONG = 'NEXT_SONG';
