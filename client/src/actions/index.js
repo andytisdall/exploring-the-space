@@ -37,7 +37,9 @@ import {
     PLAY_AUDIO,
     PAUSE_AUDIO,
     QUEUE_SONGS,
-    NEXT_SONG
+    NEXT_SONG,
+    SELECT_VERSION,
+    SELECT_BOUNCE
 } from './types';
 import history from '../history';
 
@@ -248,8 +250,8 @@ export const queueSongs = song => (dispatch, getState) => {
     const allTitles = song.tier.trackList.map(id => getState().titles[id]);
     const titleList = allTitles.splice(allTitles.indexOf(song.title));
     const queue = titleList.map(title => {
-        const version = title.versions.map(id => getState().versions[id]).find(v => v.current);
-        const bounce = version.bounces.map(id => getState().bounces[id]).find(b => b.latest);
+        const version = getState().versions[title.selectedVersion.id];
+        const bounce = getState().bounces[title.selectedBounce.id];
         return {
             title: title.title,
             version: version.name,
@@ -263,4 +265,13 @@ export const queueSongs = song => (dispatch, getState) => {
 
 export const nextSong = () => dispatch => {
     dispatch({ type: NEXT_SONG });
+}
+
+
+export const selectVersion = (version, title) => dispatch => {
+    dispatch({ type: SELECT_VERSION, payload: { version, title } });
+}
+
+export const selectBounce = (bounce, title) => dispatch => {
+    dispatch({ type: SELECT_BOUNCE, payload: { bounce, title } });
 }

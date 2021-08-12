@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 
-const Bounce = ({ bounces }) => {
+import { selectBounce } from '../actions';
 
-    const [selectedBounce, setSelectedBounce] = useState(bounces.find(b => b.latest));
+const Bounce = ({ bounces, selectBounce, title }) => {
+
+    const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
     useEffect(() => {
-        setSelectedBounce(bounces.find(b => b.latest));
-    }, [bounces]);
+        selectBounce(selectedBounce, title);
+    }, [selectedBounce]);
 
-    const displayDate = moment.utc(selectedBounce.date).format('MM/DD/yy')
+
+    const displayDate = date => {
+        return moment.utc(date).format('MM/DD/yy');
+    }
 
     const renderBounceList = () => {
         const bounceList = bounces.filter(b => b !== selectedBounce);
@@ -20,7 +26,7 @@ const Bounce = ({ bounces }) => {
                 onClick={() => setSelectedBounce(b)}
                 key={b.id}
             >
-                    {moment.utc(b.date).format('MM/DD/yy')}
+                    {displayDate(b.date)}
             </div>
         });
     };
@@ -32,7 +38,7 @@ const Bounce = ({ bounces }) => {
                 <div className='detail-header'>
                    <h5>Date:</h5>
                     <div className='dropdown'>
-                        <button className='dropbtn'>{displayDate}</button>
+                        <button className='dropbtn'>{displayDate(selectBounce.date)}</button>
                         <div className='dropdown-content'>
                             {renderBounceList()}
                                 
@@ -46,4 +52,4 @@ const Bounce = ({ bounces }) => {
     );
 };
 
-export default Bounce;
+export default connect(null, { selectBounce })(Bounce);

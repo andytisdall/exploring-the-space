@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchBounces } from '../actions';
+import { fetchBounces, selectVersion } from '../actions';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
 
-const Version = ({ versions, bounces, fetchBounces }) => {
+const Version = ({ versions, bounces, fetchBounces, selectVersion, title }) => {
 
-    const [selectedVersion, setSelectedVersion] = useState(versions.find(v => v.current));
+    const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
+
 
     useEffect(() => {
         fetchBounces(selectedVersion.id);
+        selectVersion(selectedVersion, title);
     }, [selectedVersion]);
 
     const renderVersionList = () => {
-        
         const versionList = versions.filter(v => v !== selectedVersion);
 
         return versionList.map(v => {
@@ -34,7 +35,7 @@ const Version = ({ versions, bounces, fetchBounces }) => {
 
         if (bouncesToRender[0]) {
             return (
-                <Bounce bounces={bouncesToRender} />
+                <Bounce bounces={bouncesToRender} title={title} />
             );
         }
     };
@@ -72,4 +73,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchBounces })(Version);
+export default connect(mapStateToProps, { fetchBounces, selectVersion })(Version);

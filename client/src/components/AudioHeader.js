@@ -6,7 +6,7 @@ import { playAudio, pauseAudio, nextSong } from '../actions';
 class AudioHeader extends React.Component {
 
 
-    state = { isPlaying: false, volume: 50, sliderPosition: 0 };
+    state = { volume: 50, sliderPosition: 0 };
 
     formatTime(time) {
 
@@ -47,21 +47,19 @@ class AudioHeader extends React.Component {
         
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         
         if (this.props.song) {
             // if the current song is changed to something other than what is already loaded, change the src url and play the audio
                         // if redux gets a signal to play, play if not already
             // reverse for pause
-            if (this.wrapUrl(this.props.song.audio) !== this.audio.src) {
+            if (this.props.song !== prevProps.song) {
                 this.audio.src=this.wrapUrl(this.props.song.audio);
                 this.audio.play();
-            } else if (this.props.play && !this.state.isPlaying) {
+            } else if (this.props.play && prevProps.pause) {
                 this.audio.play();
-                this.setState({ isPlaying: true }); 
-            } else if (this.props.pause && this.state.isPlaying) {
+            } else if (this.props.pause && prevProps.play) {
                 this.audio.pause();
-                this.setState({ isPlaying: false });
             } 
         }
     }
@@ -110,7 +108,7 @@ class AudioHeader extends React.Component {
 
     onPauseButton = () => {
 
-        if (this.state.isPlaying) {
+        if (this.props.play) {
             this.pause();
         } else {
             this.play();
@@ -124,14 +122,13 @@ class AudioHeader extends React.Component {
 
             return (
 
-
                 <div className="playbar">
                     <div className="playbar-header">
                         <p className="playbar-title">
                             {this.props.song.title}
                         </p>
                         <div className="pause-container" onClick={this.onPauseButton}>
-                            <img src={this.state.isPlaying ? "/images/pause.svg" : "/images/play.svg"} />
+                            <img src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
                         </div>
                         <div className="playbar-info">
                             <p>

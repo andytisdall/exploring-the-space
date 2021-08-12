@@ -1,4 +1,4 @@
-import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE } from '../actions/types';
+import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -13,6 +13,14 @@ export default (state = {}, action) => {
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_TITLE:
             return _.omit(state, action.payload);
+        case SELECT_VERSION:
+            const vTitle = action.payload.title;
+            vTitle.selectedVersion = action.payload.version;
+            return { ...state, [vTitle.id]: vTitle };
+        case SELECT_BOUNCE:
+            const bTitle = action.payload.title;
+            bTitle.selectedBounce = action.payload.bounce;
+            return { ...state, [bTitle.id]: bTitle }
         default:
             return state;
 
