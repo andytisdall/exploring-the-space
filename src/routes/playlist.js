@@ -7,6 +7,21 @@ import { Playlist, PlaylistSong } from '../models/models.js';
 
 const router = express.Router();
 
+router.get('/playlists/:bandId', async (req, res) => {
+
+    const { bandId } = req.params;
+
+    const band = await Band.findById(bandId).populate('playlists');
+
+    if (!band) {
+        throw new Error('Band does not exist');
+    }
+
+    res.status(200).send(band.playlists);
+
+});
+
+
 router.post('/:bandName/create-playlist', currentUser, requireAuth, async (req, res) => {
 
     console.log('playlists');

@@ -18,13 +18,12 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
 
     useEffect(() => {
         fetchVersions(title.id);
-        // fetchPlaylists(band.id);
     }, []);
 
     useEffect(() => {
         if (title.versions[0] && (!versionList || !versionList[0])) {
             setVersionList(title.versions.map(id => versions[id]));
-            console.log('set version list')
+            // console.log('set version list')
         }
     }, [versions]);
 
@@ -32,25 +31,25 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
         if (versionList && versionList[0]) {
             const currentVersion = versionList.find(v => v.current);
             selectVersion(currentVersion, title);
-            console.log('select version')
+            // console.log('select version')
         }
         if (title.selectedVersion && !bounceList) {
             fetchBounces(title.selectedVersion.id);
-            console.log('fetch bounces')
+            // console.log('fetch bounces')
         }
     }, [versionList]);
 
     useEffect(() => {
         if (title.selectedVersion && title.selectedVersion.bounces[0] && (!bounceList || !bounceList[0])) {
             setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
-            console.log('set bounce list')
+            // console.log('set bounce list')
         }
     }, [bounces]);
 
     useEffect(() => {
         if (!title.selectedBounce && bounceList && bounceList[0]) {
             selectBounce(bounceList.find(b => b.latest), title);
-            console.log('select bounce')
+            // console.log('select bounce')
         }
         if (!song && title.selectedVersion && title.selectedBounce) {
             setSong({
@@ -59,7 +58,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                 version: title.selectedVersion,
                 bounce: title.selectedBounce
             });
-            console.log('set song')
+            // console.log('set song')
         }
     }, [bounceList]);
 
@@ -72,7 +71,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                 version: title.selectedVersion,
                 bounce: title.selectedBounce
             });
-            console.log('title update')
+            // console.log('title update')
         }
     }, [title.selectedVersion, title.selectedBounce]);
 
@@ -96,7 +95,6 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
     }
 
     const renderButtons = () => {
-        return null;
         if (authorized) {
             const bandPlaylists = band.playlists.map(id => playlists[id]);
             const playlistOptions = bandPlaylists.map(pl => {
@@ -109,7 +107,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                     <AddButton
                         title="Add to a Playlist"
                         onSubmit={onAddToPlaylist}
-                        image="image/playlist.png"
+                        image="images/playlist.png"
                         fields={[
                             {
                                 type: 'select',

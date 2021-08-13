@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { fetchPlaylistSongs } from '../actions';
 
 import PlaylistSong from './PlaylistSong';
 import AddButton from './AddButton';
 
-const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
+const Playlist = ({ playlist, fetchPlaylistSongs, playlistSongs }) => {
+
+    const [expand, setExpand] = useState(false);
+
+    const arrow = expand ? 'down' : 'right';
 
     useEffect(() => {
         fetchPlaylistSongs(playlist.id);
@@ -13,21 +17,23 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
 
     const renderPlaylistSongs = () => {
 
-        const songsToRender = playlist.songs.map(id => playlistsongs[id]);
+        const songsToRender = playlist.songs.map(id => playlistSongs[id]);
 
         return songsToRender.map(song => {
-            return (
-                <PlaylistSong song={song} />
-            );
+            if (song) {
+                return (
+                    <PlaylistSong song={song} />
+                );
+            }
         });
     }
 
     return (
         <>
-            <div className="row tier">
+            <div className="row tier" onClick={() => setExpand(!expand)} >
                 <div className="marqee tier-info">
-                    <div className="tier-name">
-                        <img className="arrow" src="right-arrow.svg" />
+                    <div className="tier-name"  >
+                        <img className="arrow" src={`/images/${arrow}-arrow.svg`}/>
                         <h2>{playlist.name}</h2>
                     </div>
                     <div className="tier-count">
@@ -41,15 +47,16 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistsongs }) => {
                
                     </div>
                 </div>
+                {expand && renderPlaylistSongs()}
             </div>
-            {renderPlaylistSongs()}
+            
         </>
     );
 };
 
 const mapStateToProps = state => {
     return {
-        playlistsongs: state.playlistsongs
+        playlistSongs: state.playlistSongs
     }
 }
 

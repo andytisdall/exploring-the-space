@@ -15,6 +15,7 @@ import { titleRouter } from './routes/titles.js';
 import { versionRouter } from './routes/versions.js';
 import { bounceRouter } from './routes/bounces.js';
 import { playlistRouter } from './routes/playlist.js';
+import { playlistSongRouter } from './routes/playlistSong.js';
 import { signinRouter } from './routes/signin.js';
 import { signupRouter } from './routes/signup.js';
 import { signoutRouter } from './routes/signout.js';
@@ -74,7 +75,8 @@ app.use(audioRouter);
 // app.post('/:bandName/delete', deleteItem);
 
 
-// app.use(playlistRouter);
+app.use(playlistRouter);
+app.use(playlistSongRouter);
 // app.use(playlistDetailRouter);
 
 

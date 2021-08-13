@@ -13,8 +13,7 @@ const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tier
 
     useEffect(() => {
         fetchTiers(band.id);
-
-        // fetchPlaylists(band.id);
+        fetchPlaylists(band.id);
     }, []);
 
 
@@ -56,18 +55,18 @@ const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tier
         }
     };
 
-    // const renderPlaylists = () => {
+    const renderPlaylists = () => {
 
-    //     const playlistsToRender = band.playlists.map(id => playlists[id]);
+        const playlistsToRender = band.playlists.map(id => playlists[id]);
 
-    //     console.log(playlistsToRender);
-
-    //     return playlistsToRender.map(playlist => {
-    //         return (
-    //             <Playlist playlist={playlist} />               
-    //         );
-    //     });
-    // };
+        return playlistsToRender.map(playlist => {
+            if (playlist) {
+                return (
+                    <Playlist playlist={playlist} key={playlist.id} />               
+                );
+            }
+        });
+    };
 
 
 
@@ -79,7 +78,7 @@ const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tier
             <div className="playlists">
                 <h2>Playlists</h2>
                 <hr />
-                {/* {playlists && renderPlaylists()} */}
+                {playlists && renderPlaylists()}
             </div>
         </>
 

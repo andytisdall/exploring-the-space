@@ -5,13 +5,13 @@ import moment from 'moment';
 import AddButton from './AddButton';
 import { createPlaylistSong, editPlaylistSong } from '../actions';
 
-const PlaylistSong = ({ song, playlistsongs, playlistId, playlists, bands }) => {
+const PlaylistSong = ({ song, playlistSongs, playlistId, playlists, bands }) => {
 
-    const { currentBand } = bands;
+    // const { currentBand } = bands;
 
-    const playlist = playlists[playlistId];
+    // const playlist = playlists[playlistId];
 
-    const otherSongs = playlistsongs.map(s => playlist.songs.includes(s.id));
+    // const otherSongs = playlistSongs.filter(s => playlist.songs.includes(s.id));
 
     const addSubmit = formValues => {
         createPlaylistSong(formValues);
@@ -20,12 +20,18 @@ const PlaylistSong = ({ song, playlistsongs, playlistId, playlists, bands }) => 
     const editSubmit = formValues => {
         editPlaylistSong(formValues);
     }
+    
+    const displayDate = (date) => {
+        return moment.utc(date).format('MM/DD/YY');
+    }
+
+    const displayTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60) < 10 ? '0' + Math.floor(time % 60) : Math.floor(time % 60);
+        return `${minutes}:${seconds}`;
+    }
 
 
-    const displayDate = moment.utc(song.bounce.date).format('MM/DD/YY');
-    const minutes = Math.floor(song.bounce.duration / 60);
-    const seconds = Math.floor(song.bounce.duration % 60) < 10 ? '0' + Math.floor(song.bounce.duration % 60) : Math.floor(song.bounce.duration % 60);
-    const displayTime = `${minutes}:${seconds}`
 
     return (
         <div className='title-margin'>
@@ -39,13 +45,13 @@ const PlaylistSong = ({ song, playlistsongs, playlistId, playlists, bands }) => 
                     </div>      
 
                     <div className='playcontainer'>                                   
-                        <div className='songtime'>{displayTime}</div>
+                        <div className='songtime'>{displayTime(song.bounce.duration)}</div>
                         <div class='playbutton'>
                             <img src='/images/play.svg' class='playicon' />
                         </div>
                         <div class='title-display'>
                             <p>{song.version.name}</p>
-                            <p>{displayDate}</p>
+                            <p>{displayDate(song.bounce.date)}</p>
                         </div>
                     </div>
 
@@ -104,7 +110,7 @@ const PlaylistSong = ({ song, playlistsongs, playlistId, playlists, bands }) => 
 const mapStateToProps = state => {
 
     return {
-        playlistsongs: state.playlistsongs,
+        playlistSongs: state.playlistSongs,
         bands: state.bands,
         playlists: state.playlists
     }
