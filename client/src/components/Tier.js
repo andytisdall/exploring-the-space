@@ -12,12 +12,17 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
 
     const [expand, setExpand] = useState(false);
 
+    const [titlesToRender, setTitlesToRender] = useState(null);
+
     const arrow = expand ? 'down' : 'right';
 
+    useEffect(() => {
+        if (tier.trackList && (!titlesToRender || !titlesToRender[0])) {
+            setTitlesToRender(tier.trackList.map(id => titles[id]));
+        }
+    });
+
     const renderTitles = () => {
-
-        const titlesToRender = tier.trackList.map(id => titles[id]);
-
         return titlesToRender.map(title => {
             if (title) {
                 return (
@@ -88,7 +93,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
                 <hr />
             </div>
             <div className="title-container">
-                {expand && renderTitles()}
+                {expand && titlesToRender && renderTitles()}
             </div>
         </>
     );

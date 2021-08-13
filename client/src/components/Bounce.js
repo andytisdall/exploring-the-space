@@ -31,21 +31,31 @@ const Bounce = ({ bounces, selectBounce, title }) => {
         });
     };
 
+    const renderBounce = () => {
+        if (selectedBounce) {
+            return <>
+                <h5>Date:</h5>
+                <div className='dropdown'>
+                    <button className='dropbtn'>{displayDate(selectedBounce.date)}</button>
+                    <div className='dropdown-content'>
+                        {renderBounceList()}
+                    </div>
+                    <div className='detail-notes'>{selectedBounce.comments}</div>
+                </div>
+            </>
+        } else {
+            return <h5>No Bounces for this Version</h5>
+        }
+    };
+
 
     return (
         <div className="detail-box">
             <div className='detail-content'>
                 <div className='detail-header'>
-                   <h5>Date:</h5>
-                    <div className='dropdown'>
-                        <button className='dropbtn'>{displayDate(selectBounce.date)}</button>
-                        <div className='dropdown-content'>
-                            {renderBounceList()}
-                                
-                        </div>
-                    </div>
-
-                    <div className='detail-notes'>{selectedBounce.comments}</div>
+                    
+                {renderBounce()}
+                    
                 </div>   
             </div>
         </div>

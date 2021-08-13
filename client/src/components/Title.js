@@ -10,8 +10,8 @@ import requireAuth from './requireAuth';
 const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, fetchPlaylists, selectVersion, selectBounce }) => {
 
     const [expand, setExpand] = useState(false);
-    const [versionList, setVersionList] = useState([]);
-    const [bounceList, setBounceList] = useState([]);
+    const [versionList, setVersionList] = useState(null);
+    const [bounceList, setBounceList] = useState(null);
     const [song, setSong] = useState(null);
 
     const arrow = expand ? 'down' : 'right';
@@ -22,26 +22,35 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
     }, []);
 
     useEffect(() => {
-        if (!versionList[0]) {
-            setVersionList(title.versions.map(id => versions[id])); 
-        } else if (!bounceList[0] && title.selectedVersion) {
-            setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
+        if (title.versions[0] && (!versionList || !versionList[0])) {
+            setVersionList(title.versions.map(id => versions[id]));
+            console.log('set version list')
         }
-    });
+    }, [versions]);
 
     useEffect(() => {
-        if (title.selectedVersion) {
-            fetchBounces(title.selectedVersion.id);
-        } else if (versionList[0]) {
+        if (versionList && versionList[0]) {
             const currentVersion = versionList.find(v => v.current);
             selectVersion(currentVersion, title);
-            fetchBounces(currentVersion.id);
+            console.log('select version')
+        }
+        if (title.selectedVersion && !bounceList) {
+            fetchBounces(title.selectedVersion.id);
+            console.log('fetch bounces')
         }
     }, [versionList]);
 
     useEffect(() => {
-        if (!title.selectedBounce && bounceList[0]) {
+        if (title.selectedVersion && title.selectedVersion.bounces[0] && (!bounceList || !bounceList[0])) {
+            setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
+            console.log('set bounce list')
+        }
+    }, [bounces]);
+
+    useEffect(() => {
+        if (!title.selectedBounce && bounceList && bounceList[0]) {
             selectBounce(bounceList.find(b => b.latest), title);
+            console.log('select bounce')
         }
         if (!song && title.selectedVersion && title.selectedBounce) {
             setSong({
@@ -50,8 +59,23 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                 version: title.selectedVersion,
                 bounce: title.selectedBounce
             });
+            console.log('set song')
         }
     }, [bounceList]);
+
+    useEffect(() => {
+
+        if (title.selectedVersion && title.selectedBounce) {
+            setSong({
+                tier,
+                title,
+                version: title.selectedVersion,
+                bounce: title.selectedBounce
+            });
+            console.log('title update')
+        }
+    }, [title.selectedVersion, title.selectedBounce]);
+
 
     const renderPlayContainer = () => {
 

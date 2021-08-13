@@ -9,7 +9,6 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
 
-
     useEffect(() => {
         fetchBounces(selectedVersion.id);
         selectVersion(selectedVersion, title);

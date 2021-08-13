@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { queueSongs, playAudio } from '../actions';
 
-const PlayContainer = ({ song, queueSongs, playAudio }) => {
+const PlayContainer = ({ song, queueSongs }) => {
 
     if (!song) {
         return null;
