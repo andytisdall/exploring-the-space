@@ -10,7 +10,12 @@ const router = express.Router();
 
 router.get('/playlistsongs/:playlistId', async (req, res) => {
 
-    const playlist = await Playlist.findById(req.params.playlistId).populate('songs');
+    const playlist = await Playlist.findById(req.params.playlistId)
+        .populate({
+            path: 'songs',
+            populate: ['title', 'version', 'bounce'],
+            options: { sort: 'position' }
+        });
 
     res.status(200).send(playlist.songs);
 

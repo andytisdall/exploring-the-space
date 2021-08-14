@@ -11,7 +11,10 @@ router.get('/playlists/:bandId', async (req, res) => {
 
     const { bandId } = req.params;
 
-    const band = await Band.findById(bandId).populate('playlists');
+    const band = await Band.findById(bandId).populate({
+        path: 'playlists',
+        options: { sort: 'position' }
+    });
 
     if (!band) {
         throw new Error('Band does not exist');

@@ -4,8 +4,9 @@ import moment from 'moment';
 
 import AddButton from './AddButton';
 import { createPlaylistSong, editPlaylistSong } from '../actions';
+import PlayContainer from './PlayContainer';
 
-const PlaylistSong = ({ song, playlistSongs, playlistId, playlists, bands }) => {
+const PlaylistSong = ({ playlist, song, playlistSongs, playlists, bands }) => {
 
     // const { currentBand } = bands;
 
@@ -21,21 +22,28 @@ const PlaylistSong = ({ song, playlistSongs, playlistId, playlists, bands }) => 
         editPlaylistSong(formValues);
     }
     
-    const displayDate = (date) => {
-        return moment.utc(date).format('MM/DD/YY');
-    }
+    const playSong = s => {
+        return {
+            playlist,
+            title: s.title,
+            version: s.version,
+            bounce: s.bounce,
+            self: s
+        };
+    };
 
-    const displayTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60) < 10 ? '0' + Math.floor(time % 60) : Math.floor(time % 60);
-        return `${minutes}:${seconds}`;
+    const renderPlayContainer = () => {
+
+        if (song) {
+            return <PlayContainer song={playSong(song)} parentType="playlist" />;
+        }
     }
 
 
 
     return (
         <div className='title-margin'>
-            <div class="title">                    
+            <div className="title">                    
                 <div className="marqee">
                     <div className='row-name'>
                         <div className="song-position">{song.position}</div>
@@ -44,16 +52,7 @@ const PlaylistSong = ({ song, playlistSongs, playlistId, playlists, bands }) => 
                         </div>
                     </div>      
 
-                    <div className='playcontainer'>                                   
-                        <div className='songtime'>{displayTime(song.bounce.duration)}</div>
-                        <div class='playbutton'>
-                            <img src='/images/play.svg' class='playicon' />
-                        </div>
-                        <div class='title-display'>
-                            <p>{song.version.name}</p>
-                            <p>{displayDate(song.bounce.date)}</p>
-                        </div>
-                    </div>
+                    {renderPlayContainer()}
 
                 
                     {/* <div className='tier-display'>

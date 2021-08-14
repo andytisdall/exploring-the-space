@@ -2,35 +2,32 @@ import React from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { queueSongs, playAudio } from '../actions';
+import { queueSongs, queuePlaylistSongs, playAudio } from '../actions';
 
-const PlayContainer = ({ song, queueSongs }) => {
+const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => {
 
-    if (!song) {
-        return null;
+    const displayDate = (date) => {
+        return moment.utc(date).format('MM/DD/YY');
     }
 
-    const displayDate = moment.utc(song.bounce.date).format('MM/DD/YY');
-
-    const minutes = Math.floor(song.bounce.duration / 60)
-    const seconds = Math.floor(song.bounce.duration % 60) < 10 ? '0' + Math.floor(song.bounce.duration % 60) : Math.floor(song.bounce.duration % 60)
-    const displayTime = `${minutes}:${seconds}`;
+    const displayTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60) < 10 ? '0' + Math.floor(time % 60) : Math.floor(time % 60);
+        return `${minutes}:${seconds}`;
+    }
 
     const onPlay = () => {
-        queueSongs(song);
-        // const firstSong = {
-        //     title: song.title.title,
-        //     version: song.version.name,
-        //     date: song.bounce.date,
-        //     duration: song.bounce.duration,
-        //     audio: song.bounce.mp3
-        // };
+        if (parentType === "tier") {
+            queueSongs(song);
+        } else if (parentType === "playlist") {
+            queuePlaylistSongs(song);
+        }
     };
 
 
     return (
         <div className='playcontainer'>
-            <div className='songtime'>{displayTime}</div>
+            <div className='songtime'>{displayTime(song.bounce.duration)}</div>
             <div className='playbutton'>
                 <img
                     src='/images/play.svg' className='playicon'
@@ -39,10 +36,10 @@ const PlayContainer = ({ song, queueSongs }) => {
             </div>
             <div className='title-display'>
                 <p>{song.version.name}</p>
-                <p>{displayDate}</p>
+                <p>{displayDate(song.bounce.date)}</p>
             </div>
         </div>
     );
 };
 
-export default connect(null, { queueSongs, playAudio })(PlayContainer);
+export default connect(null, { queueSongs, queuePlaylistSongs, playAudio })(PlayContainer);

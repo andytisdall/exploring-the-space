@@ -79,7 +79,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
     const renderPlayContainer = () => {
 
         if (song) {
-            return <PlayContainer song={song} />;
+            return <PlayContainer song={song} parentType="tier" />;
         }
     }
 

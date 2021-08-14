@@ -22,7 +22,7 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistSongs }) => {
         return songsToRender.map(song => {
             if (song) {
                 return (
-                    <PlaylistSong song={song} />
+                <PlaylistSong song={song} playlist={playlist} key={playlist.id} />
                 );
             }
         });
@@ -47,9 +47,11 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistSongs }) => {
                
                     </div>
                 </div>
+                <hr />
+            </div>
+            <div className="titlecontainer">
                 {expand && renderPlaylistSongs()}
             </div>
-            
         </>
     );
 };

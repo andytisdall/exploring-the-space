@@ -245,7 +245,7 @@ export const pauseAudio = () => {
     return { type: PAUSE_AUDIO };
 };
 
-export const queueSongs = song => (dispatch, getState) => {
+export const queueSongs = (song) => (dispatch, getState) => {
 
     const allTitles = song.tier.trackList.map(id => getState().titles[id]);
     const titleList = allTitles.splice(allTitles.indexOf(song.title));
@@ -262,6 +262,27 @@ export const queueSongs = song => (dispatch, getState) => {
     });
     dispatch({ type: QUEUE_SONGS, payload: queue });
 };
+
+export const queuePlaylistSongs = (song) => (dispatch, getState) => {
+    console.log('ok);')
+
+    const allSongs = song.playlist.songs.map(id => getState().playlistSongs[id]);
+    const songList = allSongs.splice(allSongs.indexOf(song.self));
+    const queue = songList.map(song => {
+        const title = getState().titles[song.title];
+        const version = getState().versions[song.version];
+        const bounce = getState().bounces[song.bounce];
+        return {
+            title: song.title.title,
+            version: song.version.name,
+            date: song.bounce.date,
+            duration: song.bounce.duration,
+            audio: song.bounce.id
+        };
+    });
+    dispatch({ type: QUEUE_SONGS, payload: queue });
+};
+
 
 export const nextSong = () => dispatch => {
     dispatch({ type: NEXT_SONG });

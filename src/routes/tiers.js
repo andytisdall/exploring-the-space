@@ -33,7 +33,10 @@ router.get('/tiers/:id', async (req, res) => {
 
     const id = req.params.id;
 
-    const band = await Band.findById(id).populate('tiers');
+    const band = await Band.findById(id).populate({
+        path: 'tiers',
+        options: { sort: 'postion' }
+    });
 
     if (!band) {
         throw new Error('Band does not exist');
