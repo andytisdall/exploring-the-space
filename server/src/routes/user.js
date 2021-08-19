@@ -6,14 +6,11 @@ const router = express.Router();
 
 router.get('/user', currentUser, async (req, res) => {
 
-
     if (!req.currentUser) {
         return res.send(null);
     }
 
-    const user = await User.findById(req.currentUser.id);
-
-    res.send(user);
+    res.send(req.currentUser);
 });
 
 export { router as userRouter };

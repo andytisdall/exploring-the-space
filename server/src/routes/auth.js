@@ -1,11 +1,35 @@
 import express from 'express';
-import { currentUser } from '../middlewares/current-user.js';
 import { Password } from '../services/password.js';
 import jwt from 'jsonwebtoken';
 import JWT_KEY from '../jwt-key.js';
 import { User } from '../models/user.js';
 
+
 const router = express.Router();
+
+
+router.post('/signup', async (req, res) => {
+
+    
+    const { username, password } = req.body;
+
+    const existingUser = await User.findOne({ username });
+    
+    if (existingUser) {
+        throw new Error('Username already in use.');
+    }
+
+    const user = new User({ username, password });
+    await user.save();
+
+    const token = jwt.sign({
+        id: user.id,
+        bands: user.bands
+    }, JWT_KEY);
+
+    res.status(201).send({ user, token });
+
+});
 
 
 router.post('/signin',
@@ -36,15 +60,14 @@ router.post('/signin',
         if (!passwordsMatch) {
             throw new Error('Credentials Invalid');
         }
-        const userJwt = jwt.sign({
+        const token = jwt.sign({
             id: existingUser.id,
-            username: existingUser.username
+            bands: existingUser.bands
         }, JWT_KEY);
 
-        req.session.jwt = userJwt;
         
-        res.send(existingUser);
+        res.send({ user: existingUser, token });
     }
 );
 
-export { router as signinRouter };
+export { router as authRouter };

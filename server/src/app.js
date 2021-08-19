@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import session from 'express-session';
+// import session from 'express-session';
 import 'express-async-errors';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
+import https from 'https';
+import fs from 'fs';
 
 import './models/models.js';
 import './models/user.js';
@@ -16,9 +18,7 @@ import { versionRouter } from './routes/versions.js';
 import { bounceRouter } from './routes/bounces.js';
 import { playlistRouter } from './routes/playlist.js';
 import { playlistSongRouter } from './routes/playlistSong.js';
-import { signinRouter } from './routes/signin.js';
-import { signupRouter } from './routes/signup.js';
-import { signoutRouter } from './routes/signout.js';
+import { authRouter } from './routes/auth.js';
 import { audioRouter } from './routes/audio.js';
 import { userRouter } from './routes/user.js';
 
@@ -26,15 +26,19 @@ import { errorHandler } from './middlewares/error-handler.js';
 
 
 
-
 const app = express();
 
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
-app.use(session({secret: 'secret', resave: false, saveUninitialized: false}));
 app.use(express.json());
 app.use(fileUpload());
 app.use(cors());
+
+const httpsOptions = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+  }
+
 
 // connect mongo database
 
@@ -56,11 +60,16 @@ mongoose.connection.on('error', (err) => {
     console.log(err);
 });
 
+// app.use(function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', req.headers.origin);
+//     res.header('Access-Control-Allow-Credentials', true);
+//     // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//     next();
+//   });
+
 app.use(bandRouter);
 
-app.use(signinRouter);
-app.use(signupRouter);
-app.use(signoutRouter);
+app.use(authRouter);
 app.use(userRouter);
 
 
@@ -82,6 +91,7 @@ app.use(playlistSongRouter);
 
 app.use(errorHandler);
 
-app.listen(3001, () => {
+
+const server = https.createServer(httpsOptions, app).listen(3001, () => {
     console.log('Express running on port 3001');
 });

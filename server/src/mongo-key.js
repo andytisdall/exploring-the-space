@@ -1,0 +1,1 @@
+export const mongoKey = 'mongodb+srv://apprehenchmen:bethlehem@cluster0.xix0t.mongodb.net/<dbname>?retryWrites=true&w=majority'

@@ -4,7 +4,6 @@ import {
     SIGN_OUT,
     SIGN_UP,
     ERROR,
-    FETCH_USER,
     FETCH_BAND,
     FETCH_BANDS,
     FETCH_TIERS,
@@ -49,8 +48,8 @@ import history from '../history';
 export const signIn = formValues => async (dispatch) => {
     try {
         const response = await greenhouse.post('/signin', formValues);
-        dispatch({ type: SIGN_IN, payload: response.data});
-        localStorage.setItem('user', JSON.stringify(response.data) );
+        localStorage.setItem('token', response.data.token );
+        dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
         console.log(err);
@@ -58,24 +57,27 @@ export const signIn = formValues => async (dispatch) => {
     }
 };
 
-export const signOut = () => async (dispatch) => {
-    await greenhouse.get('/signout');
-    dispatch({ type: SIGN_OUT });
-    localStorage.removeItem('user');
+export const signOut = () => {
+    localStorage.removeItem('token');
+    
+    return { type: SIGN_OUT };
+    // localStorage.removeItem('user');
 };
 
 export const signUp = formValues => async (dispatch) => {
     const response = await greenhouse.post('/signup', formValues);
-    dispatch({ type: SIGN_UP, payload: response.data});
-    localStorage.setItem('user', JSON.stringify(response.data) );
+    localStorage.setItem('token', response.data.token );
+    dispatch({ type: SIGN_IN, payload: response.data.user });
+    // localStorage.setItem('user', JSON.stringify(response.data) );
     history.push('/user');
 };
 
-export const fetchUser = (token) => async (dispatch) => {
+export const fetchUser = () => async dispatch => {
     const response = await greenhouse.get('/user');
-    dispatch({ type: SIGN_IN, payload: response.data });
+    if (response.data) {
+        dispatch({ type: SIGN_IN, payload: response.data });
+    }
 };
-
 
 export const fetchBand = bandName => async (dispatch) => {
     const response = await greenhouse.get(`/bands/${bandName}`);
@@ -117,8 +119,6 @@ export const fetchPlaylistSongs = playlistId => async (dispatch) => {
     const response = await greenhouse.get(`/playlistsongs/${playlistId}`);
     dispatch({ type: FETCH_PLAYLISTSONGS, payload: response.data });
 };
-
-
 
 
 

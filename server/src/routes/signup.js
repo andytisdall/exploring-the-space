@@ -20,15 +20,11 @@ router.post('/signup', async (req, res) => {
     const user = new User({ username, password });
     await user.save();
 
-    const userJwt = jwt.sign({
+    const token = jwt.sign({
         id: user.id,
-        username: user.username
     }, JWT_KEY);
 
-    req.session.jwt = userJwt;
-
-
-    res.status(201).send(user);
+    res.status(201).send({ user, token });
 
 });
 

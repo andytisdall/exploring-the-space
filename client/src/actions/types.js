@@ -4,7 +4,6 @@ export const SIGN_UP = 'SIGN_UP';
 
 export const ERROR = 'ERROR';
 
-export const FETCH_USER = 'FETCH_USER';
 export const FETCH_TIERS = 'FETCH_TIERS';
 export const FETCH_PLAYLISTSONGS = 'FETCH_PLAYLISTSONGS';
 export const FETCH_PLAYLIST = 'FETCH_PLAYLIST';

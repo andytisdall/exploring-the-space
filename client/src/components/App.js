@@ -13,7 +13,11 @@ import { fetchUser, signOut } from '../actions';
 
 import history from '../history';
 
-const App = ({ signedIn }) => {
+const App = ({ signedIn, fetchUser }) => {
+
+    useEffect(() => {
+        fetchUser();
+    }, []);
 
     return (
         <div className="container">
