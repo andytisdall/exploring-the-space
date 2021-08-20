@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { createBand, fetchBands, fetchUser } from '../actions';
+import { createBand, fetchBands } from '../actions';
 import AddButton from './AddButton';
 
 const User = ({ user, bands, createBand, fetchBands }) => {
@@ -26,6 +26,10 @@ const User = ({ user, bands, createBand, fetchBands }) => {
     const onCreateBandSubmit = formValues => {
         createBand(formValues);
     };
+
+    if (!user) {
+        return null;
+    }
 
     return <>
         <h1>{user.username}'s bands</h1>

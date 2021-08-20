@@ -7,7 +7,7 @@ import BodyContainer from './BodyContainer';
 import AudioHeader from './AudioHeader';
 import requireAuth from './requireAuth';
 
-const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate }) => {
+const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn }) => {
 
     useEffect(() => {
         fetchBand(match.params.bandName);
@@ -28,6 +28,16 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate }) => {
         );
     }
 
+    const showBody = () => {
+        if (!band) {
+            return null
+        }
+        if (signedIn && !user) {
+            return null
+        }
+        return <BodyContainer band={band}/>
+    }
+
     return <>
         
         <AudioHeader />
@@ -40,7 +50,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate }) => {
                 <input type="range" min="0" max="100" className="master-volume" />
             </div>
         </div>
-        {band && <BodyContainer band={band}/>}
+        {showBody()}
 
     </>;
 
@@ -48,7 +58,9 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate }) => {
 
 const mapStateToProps = state => {
     return {
-        band: state.bands.currentBand
+        band: state.bands.currentBand,
+        user: state.auth.currentUser,
+        signedIn: state.auth.isSignedIn
     }
 }
 

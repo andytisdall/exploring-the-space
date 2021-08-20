@@ -20,7 +20,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
         if (tier.trackList && (!titlesToRender || !titlesToRender[0])) {
             setTitlesToRender(tier.trackList.map(id => titles[id]));
         }
-    });
+    }, [titles]);
 
     const renderTitles = () => {
         return titlesToRender.map(title => {
@@ -38,7 +38,9 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
     }, []);
 
 
-
+    const onAddSubmit = (formValues) => {
+        editTier(formValues);
+    }
 
     const renderEditDelete = () => {
         if (authorized) {
@@ -65,7 +67,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
                             options: tierList,
                         }
                     ]}
-                    onSubmit={formValues => editTier(formValues)}
+                    onSubmit={onAddSubmit}
                     initialValues={_.pick(tier, 'name', 'position')}
                     form={tier.id}
                 />

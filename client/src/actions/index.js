@@ -123,13 +123,16 @@ export const fetchPlaylistSongs = playlistId => async (dispatch) => {
 
 
 export const createBand = formValues => async (dispatch, getState) => {
-    const { currentBand } = getState.bands();
-    const response = await greenhouse.post('/bands', { ...formValues, currentBand });
+    const response = await greenhouse.post('/bands', formValues);
     dispatch({ type: CREATE_BAND, payload: response.data });
 };
 
-export const createTier = formValues => async dispatch => {
-    const response = await greenhouse.post('/tiers', formValues);
+export const createTier = formValues => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    const response = await greenhouse.post(
+        '/tiers',
+        { ...formValues, currentBand: currentBand.id }
+    );
     dispatch({ type: CREATE_TIER, payload: response.data });
 };
 

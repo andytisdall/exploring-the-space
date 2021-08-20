@@ -1,4 +1,4 @@
-import { FETCH_BAND, FETCH_BANDS, EDIT_BAND, DELETE_BAND, CREATE_BAND } from '../actions/types';
+import { FETCH_BAND, FETCH_BANDS, EDIT_BAND, DELETE_BAND, CREATE_BAND, CREATE_TIER, DELETE_TIER } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -14,6 +14,10 @@ export default (state = {}, action) => {
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_BAND:
             return _.omit(state, action.payload);
+        case CREATE_TIER:
+            const { currentBand } = state;
+            currentBand.tiers.push(action.payload.id);
+            return { ...state, [currentBand.id]: currentBand, currentBand };
         default:
             return state;
 

@@ -13,6 +13,12 @@ import reducers from './reducers';
 
 const initialState = {};
 
+const token = localStorage.getItem('token');
+
+if (token) {
+    initialState.auth = { isSignedIn: true };
+}
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
     reducers,

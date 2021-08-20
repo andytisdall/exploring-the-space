@@ -60,6 +60,7 @@ class AddButton extends React.Component {
 
     submitForm = (formValues) => {
         this.props.onSubmit(formValues);
+        this.setState({ boxVisible: false });
     }
 
     showBox = () => {
