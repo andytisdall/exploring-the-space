@@ -11,8 +11,6 @@ export const currentUser = async (req, res, next) => {
         return next();
     }
 
-    console.log(authorization);
-
     const token = authorization.replace('Bearer ', '');
 
     const payload = jwt.verify(token, JWT_KEY);

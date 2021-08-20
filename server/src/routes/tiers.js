@@ -10,16 +10,16 @@ const router = express.Router();
 
 router.post('/tiers', currentUser, requireAuth, async (req, res) => {
 
-    const { tierName, parentId } = req.body;
+    const { tierName, currentBand } = req.body;
     const newTier = new Tier({name: tierName});
     try {
-        const band = await Band.findById(parentId).populate('trackList');
-        if (band.trackList.length) {
-            newTier.position = band.trackList.length;
+        const band = await Band.findById(currentBand).populate('tiers');
+        if (band.tiers.length) {
+            newTier.position = band.tiers.length;
         } else {
             newTier.position = 0;
         }
-        band.trackList.push(newTier);
+        band.tiers.push(newTier);
         await band.save();
         await newTier.save();
     } catch (err) {
