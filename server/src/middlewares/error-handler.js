@@ -3,6 +3,9 @@
 export const errorHandler = (err, req, res, next) => {
 
     console.error(err);
-    res.status(400).send({ error: err.message });
+    // if (res.statusCode === 200) {
+    //     res.status(400);
+    // }
+    res.send({ error: err.message });
 
 };

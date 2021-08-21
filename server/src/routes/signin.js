@@ -27,6 +27,7 @@ router.post('/signin',
 
         const existingUser = await User.findOne({ username });
         if (!existingUser) {
+            res.status(401);
             throw new Error('Credentials Invalid');
         }
 
@@ -36,6 +37,7 @@ router.post('/signin',
         );
 
         if (!passwordsMatch) {
+            res.status(401);
             throw new Error('Credentials Invalid');
         }
 

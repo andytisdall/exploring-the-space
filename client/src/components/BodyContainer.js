@@ -1,31 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { fetchTiers, fetchPlaylists, createTier, fetchUser } from '../actions';
+import { fetchTiers, fetchPlaylists, createTier } from '../actions';
 import Tier from './Tier';
 import Playlist from './Playlist';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 
-const BodyContainer = ({ fetchPlaylists, fetchUser, createTier, fetchTiers, tiers, playlists, band, authorized }) => {
+const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlists, band, authorized }) => {
 
+    const [tierList, setTierList] = useState([]);
 
     useEffect(() => {
         fetchTiers(band.id);
         fetchPlaylists(band.id);
     }, []);
 
+    useEffect(() => {
+        setTierList(band.tiers.map(id => tiers[id]).sort((a, b) => {
+            if (a.position < b.position) {
+                return -1;
+            }
+            if (b.position < a.position) {
+                return 1;
+            }
+        }));
+    }, [tiers]);
 
     const renderTiers = () => {
 
-        const tiersToRender = band.tiers.map(id => tiers[id]);
-
-
-        return tiersToRender.map(tier => {
+        return tierList.map(tier => {
             if (tier) {
                 return (
-                    <Tier tier={tier} key={tier.id} initialValues={_.pick(tier, 'name', 'position')} />
+                    <Tier tier={tier} key={tier.id} />
                 );
             }
         });
@@ -95,4 +103,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { fetchTiers, fetchUser, fetchPlaylists, createTier })(requireAuth(BodyContainer));
+export default connect(mapStateToProps, { fetchTiers, fetchPlaylists, createTier })(requireAuth(BodyContainer));

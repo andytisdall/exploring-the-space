@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
+import { deleteTier } from './deleteItem.js';
 
 const Band = mongoose.model('Band');
 const Tier = mongoose.model('Tier');
@@ -47,39 +48,54 @@ router.get('/tiers/:id', async (req, res) => {
 
 });
 
-router.patch('/tiers/:id', async (req, res) => {
+router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
 
-    const { tierName, tierPosition } = req.body;
+    const { id } = req.params;
+    const { name, position } = req.body;
 
     const thisTier = await Tier.findOne({ _id: id });
-    if (thisTier.position > tierPosition) {
+    if (thisTier.position > position) {
         const changePosition = await Tier.find({
-                position: { $gt: tierPosition-1, $lt: thisTier.position}
+                position: { $gte: position, $lt: thisTier.position }
             });
         changePosition.forEach(async (tier) => {
-            tier.position++;
+            tier.position = tier.position + 1;
             await tier.save();
             // await Tier.updateOne(
             //     { _id: tier.id },
             //     { position: tier.position+1 });
         });
-        thisTier.position = tierPosition;
-        // await Tier.updateOne({ _id: id }, { position: tierPosition });
-        console.log(`Moving ${thisTier.position} to ${tierPosition}`);
-    } else if (thisTier.position < tierPosition) {
-        const changePosition = await Tier.find({ position: { $gt: thisTier.position, $lt: tierPosition+1 } });
+        console.log(`Moving ${thisTier.position} to ${position}`);
+        thisTier.position = position;
+        // await Tier.updateOne({ _id: id }, { position: position });
+
+    } else if (thisTier.position < position) {
+        const changePosition = await Tier.find({ position: { $gt: thisTier.position, $lte: position } });
         changePosition.forEach(async (tier) => {
-            tier.position = tier.position -1;
+            tier.position = tier.position - 1;
             // await Tier.updateOne({ _id: tier.id }, { position: tier.position-1 });
+            await tier.save();
         });
-        thisTier.position = tierPosition;
-        await Tier.updateOne({ _id: id }, { position: tierPosition });
-        console.log(`Moving ${thisTier.position} to ${tierPosition}`);
+        console.log(`Moving ${thisTier.position} to ${position}`);
+        thisTier.position = position;
+        await Tier.updateOne({ _id: id }, { position: position });
+
     }
+    if (name) {
+        thisTier.name = name;
+    }
+    await thisTier.save();
 
-    await Tier.updateOne({ _id: id }, { name: tierName });
-    res.redirect(`/${bandName}`);
+    res.send(thisTier);
 
+});
+
+router.delete('/tiers', currentUser, requireAuth, async (req, res) => {
+    const { tierId, currentBand } = req.body;
+
+    const deletedTier = deleteTier(tierId, currentBand);
+
+    res.send(deletedTier);
 
 });
 

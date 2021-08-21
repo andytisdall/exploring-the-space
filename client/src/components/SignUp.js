@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
 
 import history from '../history';
-import { signIn } from '../actions';
+import { signUp } from '../actions';
 import UserForm from './UserForm';
 
 
-const SignIn = ({ signIn, isSignedIn }) => {
+const SignUp = ({ signUp, isSignedIn }) => {
 
     useEffect(() => {
         if (isSignedIn) {
@@ -15,8 +15,8 @@ const SignIn = ({ signIn, isSignedIn }) => {
     }, []);
 
     return <>
-        <h1>Sign In</h1>
-        <UserForm onSubmit={formValues => signIn(formValues)}/>
+        <h1>Sign Up</h1>
+        <UserForm onSubmit={formValues => signUp(formValues)}/>
     </>;
 };
 
@@ -24,4 +24,4 @@ const mapStateToProps = state => {
     return { isSignedIn: state.auth.isSignedIn };
 }
 
-export default connect(mapStateToProps, { signIn })(SignIn);
+export default connect(mapStateToProps, { signUp })(SignUp);

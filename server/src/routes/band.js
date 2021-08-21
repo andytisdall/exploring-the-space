@@ -6,7 +6,7 @@ import { currentUser } from '../middlewares/current-user.js';
 
 const router = express.Router();
 
-router.post('/bands', currentUser, requireAuth, async (req, res) => {
+router.post('/bands', currentUser, async (req, res) => {
 
 
     const { bandName } = req.body;

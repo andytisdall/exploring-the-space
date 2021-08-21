@@ -52,24 +52,24 @@ export const signIn = formValues => async (dispatch) => {
         dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
-        console.log(err);
         dispatch({ type: ERROR, payload: err });
     }
 };
 
 export const signOut = () => {
-    localStorage.removeItem('token');
-    
+    localStorage.removeItem('token'); 
     return { type: SIGN_OUT };
-    // localStorage.removeItem('user');
 };
 
 export const signUp = formValues => async (dispatch) => {
-    const response = await greenhouse.post('/signup', formValues);
-    localStorage.setItem('token', response.data.token );
-    dispatch({ type: SIGN_IN, payload: response.data.user });
-    // localStorage.setItem('user', JSON.stringify(response.data) );
-    history.push('/user');
+    try {
+        const response = await greenhouse.post('/signup', formValues);
+        localStorage.setItem('token', response.data.token );
+        dispatch({ type: SIGN_IN, payload: response.data.user });
+        history.push('/user');
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const fetchUser = () => async dispatch => {
@@ -91,8 +91,12 @@ export const fetchBands = () => async (dispatch) => {
 };
 
 export const fetchTiers = bandId => async (dispatch) => {
-    const response = await greenhouse.get(`/tiers/${bandId}`);
-    dispatch({ type: FETCH_TIERS, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/tiers/${bandId}`);
+        dispatch({ type: FETCH_TIERS, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const fetchTitles = tierId => async (dispatch) => {
@@ -128,12 +132,16 @@ export const createBand = formValues => async (dispatch, getState) => {
 };
 
 export const createTier = formValues => async (dispatch, getState) => {
-    const { currentBand } = getState().bands;
-    const response = await greenhouse.post(
-        '/tiers',
-        { ...formValues, currentBand: currentBand.id }
-    );
-    dispatch({ type: CREATE_TIER, payload: response.data });
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.post(
+            '/tiers',
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: CREATE_TIER, payload: response.data });
+        } catch (err) {
+            dispatch({ type: ERROR, payload: err });
+        }
 };
 
 export const createTitle = formValues => async dispatch => {
@@ -161,19 +169,22 @@ export const createPlaylistSong = formValues => async dispatch => {
     dispatch({ type: CREATE_PLAYLISTSONG, payload: response.data });
 };
 
-
-
-
-
-
 export const editBand = formValues => async dispatch => {
     const response = await greenhouse.patch('/bands', formValues);
     dispatch({ type: EDIT_BAND, payload: response.data });
 };
 
-export const editTier = formValues => async dispatch => {
-    const response = await greenhouse.patch('/tiers', formValues);
-    dispatch({ type: EDIT_TIER, payload: response.data });
+export const editTier = (formValues, tierId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/tiers/${tierId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_TIER, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const editTitle = formValues => async dispatch => {

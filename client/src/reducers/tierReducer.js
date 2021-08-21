@@ -10,7 +10,26 @@ export default (state = {}, action) => {
         case CREATE_TIER:
             return { ...state, [action.payload.id]: action.payload };
         case EDIT_TIER:
-            return { ...state, [action.payload.id]: action.payload };
+            const oldPosition = state[action.payload.id]['position'];
+            const newPosition = action.payload.position;
+            let changedPositions = {};
+            if (oldPosition > newPosition) {
+                for (let item of Object.values(state)) {
+                    if (item.position >= newPosition && item.position < oldPosition) {
+                        const pos = item.position;
+                        changedPositions[item.id] = { ...item, position: pos + 1};
+                    }
+                }
+            }
+            if (oldPosition < newPosition) {
+                for (let item of Object.values(state)) {
+                    if (item.position > oldPosition && item.position <= newPosition) {
+                        const pos = item.position;
+                        changedPositions[item.id] = { ...item, position: pos - 1};
+                    }
+                }
+            }
+            return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_TIER:
             return _.omit(state, action.payload);
         default:

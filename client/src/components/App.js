@@ -8,6 +8,7 @@ import BandHeader from './BandHeader';
 import User from './User';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
+import SignUp from './SignUp';
 import { fetchUser, signOut } from '../actions';
 
 
@@ -31,13 +32,8 @@ const App = ({ signedIn, fetchUser }) => {
                         }
                         return <SignIn {...routeProps} />;
                     }} /> */}
-                    <Route path="/signin" exact render={routeProps => {
-                        // if (signedIn) {
-                        //     history.push('/user');
-                        //     return null;
-                        // }
-                        return <SignIn {...routeProps} />;
-                    }} />
+                    <Route path="/signin" exact component={SignIn} />;
+                    <Route path="/signup" exact component={SignUp} />;
                     <Route path="/signout" exact component={SignOut} />    
                     <Route path="/user" exact render={routeProps => {
                         if (!signedIn) {
@@ -47,7 +43,6 @@ const App = ({ signedIn, fetchUser }) => {
                         return <User {...routeProps} />;
                     }} />
                     <Route path="/:bandName" component={BandHeader} />
-
                 </Switch>
             </Router>
         </div>

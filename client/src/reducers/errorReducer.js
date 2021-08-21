@@ -6,6 +6,6 @@ export default (state = {}, action) => {
         case ERROR:
             return { error: action.payload }
         default:
-            return {};
+            return state;
     }
 };

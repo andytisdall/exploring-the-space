@@ -8,19 +8,40 @@ import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier }) => {
 
     const [expand, setExpand] = useState(false);
 
     const [titlesToRender, setTitlesToRender] = useState(null);
 
+    const [tierList, setTierList] = useState([]);
+
     const arrow = expand ? 'down' : 'right';
 
     useEffect(() => {
-        if (tier.trackList && (!titlesToRender || !titlesToRender[0])) {
+        fetchTitles(tier.id);
+    }, []);
+
+
+    useEffect(() => {
+        if (tier.trackList[0] && (!titlesToRender || !titlesToRender[0])) {
             setTitlesToRender(tier.trackList.map(id => titles[id]));
         }
     }, [titles]);
+
+    useEffect(() => {
+        const tiersToShow = band.tiers.map(id => tiers[id]).sort((a, b) => {
+            if (a.position < b.position) {
+                return -1;
+            }
+            if (b.position < a.position) {
+                return 1;
+            }
+        });
+        setTierList(tiersToShow.map(t => {
+            return { value: t.position, display: t.position };
+        }));
+    }, [tiers]);
 
     const renderTitles = () => {
         return titlesToRender.map(title => {
@@ -33,23 +54,12 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
     };
 
 
-    useEffect(() => {
-        fetchTitles(tier.id);
-    }, []);
+    const onEditSubmit = (formValues) => {
+        editTier(formValues, tier.id);
+    };
 
-
-    const onAddSubmit = (formValues) => {
-        editTier(formValues);
-    }
-
-    const renderEditDelete = () => {
+    const renderEditButton = () => {
         if (authorized) {
-
-            const tiersToShow = band.tiers.map(id => tiers[id]);
-
-            const tierList = tiersToShow.map(t => {
-                return { value: t.position, display: t.position }
-            });
 
             return (
                 <AddButton
@@ -67,13 +77,14 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
                             options: tierList,
                         }
                     ]}
-                    onSubmit={onAddSubmit}
+                    onSubmit={onEditSubmit}
                     initialValues={_.pick(tier, 'name', 'position')}
                     form={tier.id}
+                    enableReinitialize={true}
                 />
-            )
+            );
         }
-    }
+    };
 
 
     return (
@@ -89,7 +100,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers }) => {
                         <div className="song-count">{tier.totalTime}</div>
                     </div>
                     <div className="tier-display">
-                        {renderEditDelete()}
+                        {renderEditButton()}
                     </div>
                 </div>
                 <hr />

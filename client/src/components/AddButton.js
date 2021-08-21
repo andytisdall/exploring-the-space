@@ -10,7 +10,7 @@ class AddButton extends React.Component {
         this.ref = React.createRef();
     }
 
-    state = { boxVisible: false };
+    state = { boxVisible: false, selectedOption: null };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.boxVisible === false && this.state.boxVisible === true) {
@@ -44,12 +44,14 @@ class AddButton extends React.Component {
 
     showFields = () => {
 
-        return this.props.fields.map(field => {
+        return this.props.fields.map((field, i) => {
+            const autoFocus = i === 0 ? true : false;
             return <div key={field.label}>
                 <label>{field.label}: </label>
                 <Field
                     name={field.name}
                     component={field.type}
+                    autoFocus={autoFocus}
                 >
                     {field.options ? this.showOptions(field) : null}
                 </Field>

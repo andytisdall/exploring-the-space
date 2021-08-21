@@ -11,9 +11,7 @@ export const currentUser = async (req, res, next) => {
         return next();
     }
 
-    const token = authorization.replace('Bearer ', '');
-
-    const payload = jwt.verify(token, JWT_KEY);
+    const payload = jwt.verify(authorization, JWT_KEY);
     req.currentUser = await User.findById(payload.id);
     next();
 
