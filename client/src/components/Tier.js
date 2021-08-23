@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { createTier, editTier, fetchTitles } from '../actions';
+import { createTier, editTier, fetchTitles, createTitle } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -54,9 +54,25 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier }) 
     };
 
 
-    const onEditSubmit = (formValues) => {
-        editTier(formValues, tier.id);
-    };
+    const renderAddButton = () => {
+        if (authorized) {
+            return (
+                <AddButton
+                    title={`Add a Title to ${tier.name}`}
+                    image="images/add.png"
+                    fields={[
+                        {
+                            label: 'Title',
+                            name: 'title',
+                            type: 'input',          
+                        }
+                    ]}
+                    onSubmit={(formValues) => createTitle(formValues, tier.id)}
+                    form={`add-title-${tier.id}`}
+                />
+            )
+        }
+    }
 
     const renderEditButton = () => {
         if (authorized) {
@@ -77,9 +93,9 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier }) 
                             options: tierList,
                         }
                     ]}
-                    onSubmit={onEditSubmit}
+                    onSubmit={(formValues) => editTier(formValues, tier.id)}
                     initialValues={_.pick(tier, 'name', 'position')}
-                    form={tier.id}
+                    form={`edit-${tier.id}`}
                     enableReinitialize={true}
                 />
             );
@@ -96,6 +112,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier }) 
                         <h2>{tier.name}</h2>
                     </div>
                     <div className="tier-count">
+                        {renderAddButton()}
                         <div className="song-count">{tier.trackList.length} songs</div>
                         <div className="song-count">{tier.totalTime}</div>
                     </div>
@@ -121,4 +138,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles, editTier })(requireAuth(Tier));
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle })(requireAuth(Tier));

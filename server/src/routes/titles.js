@@ -11,10 +11,10 @@ const router = express.Router();
 
 router.post('/titles', currentUser, requireAuth, async (req, res) => {
 
-    const { titleName, parentId } = req.body;
-    const newTitle = new Title({title: titleName});
+    const { title, tier } = req.body;
+    const newTitle = new Title({title});
     try {
-        await Tier.updateOne({ _id: parentId }, {$push: { trackList: newTitle }});
+        await Tier.updateOne({ _id: tier }, {$push: { trackList: newTitle }});
         await newTitle.save();
     } catch (err) {
         throw new Error('There was an error creating the title or updating the tier tracklist.');

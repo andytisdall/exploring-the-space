@@ -144,9 +144,17 @@ export const createTier = formValues => async (dispatch, getState) => {
         }
 };
 
-export const createTitle = formValues => async dispatch => {
-    const response = await greenhouse.post('/titles', formValues);
-    dispatch({ type: CREATE_TITLE, payload: response.data });
+export const createTitle = (formValues, tierId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/titles',
+            { ...formValues, currentBand: currentBand.id, tier: tierId }
+        );
+        dispatch({ type: CREATE_TITLE, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const createVersion = formValues => async dispatch => {
