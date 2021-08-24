@@ -8,7 +8,10 @@ const bandSchema = new mongoose.Schema({
         unique: true
     },
     tiers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tier'}],
-    playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'}]
+    playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist'}],
+    url: {
+        type: String, required: true, unique:true
+    }
 }, {
     toJSON: {
         transform(doc, ret) {

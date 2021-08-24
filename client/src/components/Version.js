@@ -11,8 +11,10 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
 
     useEffect(() => {
-        fetchBounces(selectedVersion.id);
-        selectVersion(selectedVersion, title);
+        if (selectedVersion) {
+            fetchBounces(selectedVersion.id);
+            selectVersion(selectedVersion, title);
+        }
     }, [selectedVersion]);
 
     const renderVersionList = () => {
@@ -31,12 +33,15 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     
     const renderBounces = () => {
 
-        const bouncesToRender = selectedVersion.bounces.map(id => bounces[id]);
+        if (selectedVersion) {
 
-        if (bouncesToRender[0]) {
-            return (
-                <Bounce bounces={bouncesToRender} title={title} />
-            );
+            const bouncesToRender = selectedVersion.bounces.map(id => bounces[id]);
+
+            if (bouncesToRender[0]) {
+                return (
+                    <Bounce bounces={bouncesToRender} title={title} />
+                );
+            }
         }
     };
 
@@ -70,10 +75,10 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
             );
         }
     };
-    
-    return (
-        <div className="version-container">
-            <div className="detail-box">
+
+    const renderVersionDetail = () => {
+        if (selectedVersion) {
+            return (
                 <div className="detail-content">
                     <div className="detail-header">
                         <h5>Version:</h5>
@@ -87,6 +92,24 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         </div>
                     </div>
                 </div>
+            );
+        } else {
+            return (
+                <div className="detail-content">
+                    <div className="detail-header">
+                        <h5>No Versions for this Song Yet</h5>
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    
+    return (
+        <div className="version-container">
+            <div className="detail-box">
+                {renderVersionDetail()}
+                
                 <div className="detail-buttons">
                     {renderAddButton()}
                 </div>

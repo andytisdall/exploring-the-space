@@ -43,8 +43,6 @@ import {
 import history from '../history';
 
 
-
-
 export const signIn = formValues => async (dispatch) => {
     try {
         const response = await greenhouse.post('/signin', formValues);
@@ -151,7 +149,7 @@ export const createTitle = (formValues, tierId) => async (dispatch, getState) =>
             '/titles',
             { ...formValues, currentBand: currentBand.id, tier: tierId }
         );
-        dispatch({ type: CREATE_TITLE, payload: response.data });
+        dispatch({ type: CREATE_TITLE, payload: { ...response.data, tier: tierId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }
@@ -165,6 +163,8 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
             { ...formValues, currentBand: currentBand.id, title: titleId }
         );
         dispatch({ type: CREATE_VERSION, payload: response.data });
+        const title = getState.titles[titleId];
+        dispatch({ type: SELECT_VERSION, payload: { title, version: response.data } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }

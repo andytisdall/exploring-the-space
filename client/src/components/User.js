@@ -17,7 +17,7 @@ const User = ({ user, bands, createBand, fetchBands }) => {
             return <h3>No bands belong to this user</h3>
         }
         return bandList.map(band => {
-            return <Link key={band.id} to={`/${band.name}`}>
+            return <Link key={band.id} to={`/${band.url}`}>
                 <h2>{band.name}</h2>
             </Link>
         });

@@ -24,10 +24,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
 
     useEffect(() => {
-        if (tier.trackList[0] && (!titlesToRender || !titlesToRender[0])) {
-            setTitlesToRender(tier.trackList.map(id => titles[id]));
-        }
-    }, [titles]);
+
+        setTitlesToRender(tier.trackList.map(id => titles[id]));
+        
+    }, [titles, tier]);
 
     useEffect(() => {
         const tiersToShow = band.tiers.map(id => tiers[id]).sort((a, b) => {

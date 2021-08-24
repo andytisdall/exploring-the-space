@@ -11,13 +11,13 @@ const router = express.Router();
 
 router.post('/versions', currentUser, requireAuth, async (req, res) => {
 
-    const { versionName, versionNotes, parentId } = req.body;
-    const newVersion = new Version({name: versionName, notes: versionNotes});
+    const { name, notes, title } = req.body;
+    const newVersion = new Version({name, notes});
 
-    const parentTitle = await Title.findOne({ _id: parentId }).populate('versions');
+    const parentTitle = await Title.findOne({ _id: title }).populate('versions');
     let versionList = parentTitle.versions;
 
-    if (req.body.versionCurrent) {
+    if (req.body.current) {
 
 
         let oldCurrent = versionList.find(v => v.current);

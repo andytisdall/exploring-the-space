@@ -20,13 +20,31 @@ router.post('/bands', currentUser, async (req, res) => {
     }
 
     const band = new Band({
-        name: bandName
+        name: bandName,
+        url: bandName.replace(/ /g, '').toLowerCase()
     });
 
     await User.findOneAndUpdate({ _id: userId }, { $push: { bands: band }});
     await band.save();
 
     res.status(201).send(band);
+
+});
+
+router.patch('/bands/', currentUser, requireAuth, async (req, res) => {
+
+    const { bandName, currentBand } = req.body;
+
+    console.log(bandName);
+
+    const band = await Band.findById(currentBand);
+
+    band.name = bandName;
+    band.url = bandName.replace(/ /g, '').toLowerCase();
+
+    await band.save();
+
+    res.send(band);
 
 });
 
@@ -42,11 +60,7 @@ router.get('/bands/:bandName', async (req, res) => {
 
     let bandName = req.params.bandName;
 
-    if (bandName === 'apprehenchmen') {
-        bandName = 'Apprehenchmen';
-    }
-
-    const band = await Band.findOne({ name: bandName });
+    const band = await Band.findOne({ url: bandName });
 
     if (!band) {
         throw new Error('Band does not exist');
