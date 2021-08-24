@@ -42,16 +42,29 @@ class AddButton extends React.Component {
         });
     };
 
+    input = (field) => {
+
+        return (
+            <input {...field.input} autoFocus={field.autoFocus} type={field.type} />
+        );
+
+    }
+
     showFields = () => {
 
         return this.props.fields.map((field, i) => {
             const autoFocus = i === 0 ? true : false;
+            let comp = this.input;
+            if (field.type === 'select') {
+                comp = 'select'
+            }
             return <div key={field.label}>
                 <label>{field.label}: </label>
                 <Field
                     name={field.name}
-                    component={field.type}
+                    component={comp}
                     autoFocus={autoFocus}
+                    type={field.type}
                 >
                     {field.options ? this.showOptions(field) : null}
                 </Field>
@@ -86,10 +99,10 @@ class AddButton extends React.Component {
     
     render() {
         return (
-        <div className="add" onClick={this.click} >
-            <img src={this.props.image} />
-            {this.showBox()}
-        </div>
+            <div className="add" onClick={this.click} >
+                <img src={this.props.image} />
+                {this.showBox()}
+            </div>
         );
     }
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchBounces, selectVersion } from '../actions';
+import { fetchBounces, selectVersion, createVersion } from '../actions';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
+import requireAuth from './requireAuth';
 
-const Version = ({ versions, bounces, fetchBounces, selectVersion, title }) => {
+const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
 
@@ -38,6 +39,37 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title }) => {
             );
         }
     };
+
+    const renderAddButton = () => {
+        if (authorized) {
+            return (
+                <AddButton
+                    title={`Add a Version of ${title.name}`}
+                    image="images/add.png"
+                    fields={[
+                        {
+                            label: 'Name',
+                            name: 'name',
+                            type: 'input',          
+                        },
+                        {
+                            label: 'Notes',
+                            name: 'notes',
+                            type: 'textarea',          
+                        },
+                        {
+                            label: 'Current Version?',
+                            name: 'current',
+                            type: 'checkbox',        
+                        },
+                    ]}
+                    onSubmit={(formValues) => createVersion(formValues, title.id)}
+                    form={`add-version-${title.id}`}
+                    initialValues={{ current: true }}
+                />
+            );
+        }
+    };
     
     return (
         <div className="version-container">
@@ -55,10 +87,9 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title }) => {
                         </div>
                     </div>
                 </div>
-                {/* <div className="detail-buttons">
-                    <AddButton />
-                    <AddButton />
-                </div> */}
+                <div className="detail-buttons">
+                    {renderAddButton()}
+                </div>
             </div> 
             {renderBounces()}          
         </div>
@@ -72,4 +103,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchBounces, selectVersion })(Version);
+export default connect(mapStateToProps, { fetchBounces, selectVersion, createVersion })(requireAuth(Version));

@@ -126,7 +126,7 @@ export const fetchPlaylistSongs = playlistId => async (dispatch) => {
 
 
 
-export const createBand = formValues => async (dispatch, getState) => {
+export const createBand = formValues => async (dispatch) => {
     const response = await greenhouse.post('/bands', formValues);
     dispatch({ type: CREATE_BAND, payload: response.data });
 };
@@ -157,9 +157,17 @@ export const createTitle = (formValues, tierId) => async (dispatch, getState) =>
     }
 };
 
-export const createVersion = formValues => async dispatch => {
-    const response = await greenhouse.post('/versions', formValues);
-    dispatch({ type: CREATE_VERSION, payload: response.data });
+export const createVersion = (formValues, titleId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/versions',
+            { ...formValues, currentBand: currentBand.id, title: titleId }
+        );
+        dispatch({ type: CREATE_VERSION, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const createBounce = formValues => async dispatch => {
