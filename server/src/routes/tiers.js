@@ -90,7 +90,7 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
 
 });
 
-router.delete('/tiers', currentUser, requireAuth, async (req, res) => {
+router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
     const { tierId, currentBand } = req.body;
 
     const deletedTier = await deleteTier(tierId, currentBand);

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { createTier, editTier, fetchTitles, createTitle } from '../actions';
+import { createTier, editTier, fetchTitles, createTitle, deleteTier } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
+import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -102,6 +103,17 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     };
 
+    const renderDeleteButton = () => {
+        if (authorized) {
+            return (
+                <DeleteButton
+                    onSubmit={() => deleteTier(tier.id)}
+                    displayName={tier.name}
+                />
+            );
+        }
+    };
+
 
     return (
         <>
@@ -118,6 +130,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     </div>
                     <div className="tier-display">
                         {renderEditButton()}
+                        {renderDeleteButton()}
                     </div>
                 </div>
                 <hr />
@@ -138,4 +151,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle })(requireAuth(Tier));
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier })(requireAuth(Tier));

@@ -18,6 +18,11 @@ export default (state = {}, action) => {
             const { currentBand } = state;
             currentBand.tiers.push(action.payload.id);
             return { ...state, [currentBand.id]: currentBand, currentBand };
+        case DELETE_TIER:
+            const { band } = state;
+            const newTiers = band.tiers.filter(id => id !== action.payload.id);
+            band.tiers = newTiers;
+            return { ...state, [band.id]: band, currentBand: band };
         default:
             return state;
 

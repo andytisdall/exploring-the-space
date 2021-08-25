@@ -48,7 +48,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, playlists, bands }) => {
                     <div className='row-name'>
                         <div className="song-position">{song.position}</div>
                         <div className='name-spot'>
-                            <h3>{song.title.title}</h3>
+                            <h3>{song && song.title.title}</h3>
                         </div>
                     </div>      
 

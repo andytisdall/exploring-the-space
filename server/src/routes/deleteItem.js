@@ -8,10 +8,10 @@ const Version = mongoose.model('Version');
 const Bounce = mongoose.model('Song');
 
 export const deleteTier = async (id, band) => {
-    let thisTier = await Tier.findById(id).populate('trackList');
+    let thisTier = await Tier.findById(id);
     await Band.updateOne({ _id: band }, { $pull: {tiers: id} });
     thisTier.trackList.forEach((title) => {                
-        deleteTitle(title.id);
+        deleteTitle(title);
     });
     const changePosition = await Tier.find({ position: { $gt: thisTier.position }});
     changePosition.forEach(async (tier) => {
@@ -23,9 +23,9 @@ export const deleteTier = async (id, band) => {
 };
 
 const deleteTitle = async (id, parentId=null) => {
-    let thisTitle = await Title.findOne({_id: id}).populate('versions');
+    let thisTitle = await Title.findOne({_id: id});
     thisTitle.versions.forEach(async (version) => {                
-        deleteVersion(version.id);
+        deleteVersion(version);
     });
     if (parentId) {
         await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
@@ -35,9 +35,9 @@ const deleteTitle = async (id, parentId=null) => {
 
 
 const deleteVersion = async (id, parentId=null) => {
-    let thisVersion = await Version.findOne({ _id: id }).populate('bounces');
+    let thisVersion = await Version.findOne({ _id: id });
     thisVersion.bounces.forEach(async (bounce) => {          
-        deleteBounce(bounce.id);
+        deleteBounce(bounce);
     });
     if (parentId) {
         await Title.updateOne({ _id: parentId }, { $pull: {versions: id} });

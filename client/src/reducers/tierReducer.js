@@ -31,7 +31,7 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_TIER:
-            return _.omit(state, action.payload);
+            return _.omit(state, action.payload.id);
         case CREATE_TITLE:
             const tier = state[action.payload.tier];
             tier.trackList.push(action.payload.id);

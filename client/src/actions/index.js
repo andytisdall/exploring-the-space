@@ -237,9 +237,20 @@ export const deleteBand = bandId => async dispatch => {
     dispatch({ type: DELETE_BAND, payload: response.data });
 };
 
-export const deleteTier = tierId => async dispatch => {
-    const response = await greenhouse.delete(`/tiers/${tierId}`);
-    dispatch({ type: DELETE_TIER, payload: response.data });
+export const deleteTier = tierId => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/tiers/delete',
+            {
+                tierId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_TIER, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const deleteTitle = titleId => async dispatch => {
