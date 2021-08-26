@@ -21,7 +21,7 @@ class AddButton extends React.Component {
     }
 
     bodyClick = (e) => {
-        if (this.ref.current.contains(e.target)) {
+        if (this.ref.current && this.ref.current.contains(e.target)) {
             return;
         }
         if (this.state.boxVisible) {
@@ -42,11 +42,40 @@ class AddButton extends React.Component {
         });
     };
 
-    input = (field) => {
+    onFileInput = (e, input) => {
+        e.preventDefault();
+        const { onChange } = input;
+        onChange(e.target.files[0]);
+    }
 
-        return (
-            <input {...field.input} autoFocus={field.autoFocus} type={field.type} />
-        );
+    input = (field) => {
+        let addClass = '';
+        if (field.type === 'date') {
+            addClass = 'calendar';
+        }
+
+        if (field.type !== 'file') {
+
+            return (
+                <input
+                    {...field.input}
+                    autoFocus={field.autoFocus}
+                    type={field.type}
+                    className={addClass}
+                />
+            );
+        } else {
+            delete field.input.value;
+            return (
+                <input
+                    {...field.input}
+                    type='file'
+                    className='inputfile'
+                    onChange={(e) => this.onFileInput(e, field.input)}    
+                />
+            );
+        }
+
 
     }
 
@@ -80,8 +109,9 @@ class AddButton extends React.Component {
 
     showBox = () => {
         if (this.state.boxVisible) {
+            const addClass = this.props.addClass ? this.props.addClass : '';
             return <>    
-                <div className="addbox" ref={this.ref} >
+                <div className={`addbox ${addClass}`} ref={this.ref} >
                     <h3>{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}

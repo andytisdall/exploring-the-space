@@ -162,17 +162,28 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
             '/versions',
             { ...formValues, currentBand: currentBand.id, title: titleId }
         );
-        dispatch({ type: CREATE_VERSION, payload: response.data });
-        const title = getState.titles[titleId];
-        dispatch({ type: SELECT_VERSION, payload: { title, version: response.data } });
+        dispatch({ type: CREATE_VERSION, payload: { ...response.data, title: titleId } });
+        if (response.data.current) {
+            dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
+        }
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }
 };
 
 export const createBounce = formValues => async dispatch => {
-    const response = await greenhouse.post('/bounces', formValues);
-    dispatch({ type: CREATE_BOUNCE, payload: response.data });
+    try {
+        const response = await greenhouse.post(
+            '/bounces', 
+            formValues,
+            { headers:
+                { 'Content-Type': 'multipart/form-data'}
+            }
+        );
+        dispatch({ type: CREATE_BOUNCE, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const createPlaylist = formValues => async dispatch => {
@@ -330,10 +341,10 @@ export const nextSong = () => dispatch => {
 }
 
 
-export const selectVersion = (version, title) => dispatch => {
-    dispatch({ type: SELECT_VERSION, payload: { version, title } });
+export const selectVersion = (version, titleId) => {
+    return { type: SELECT_VERSION, payload: { version, titleId } };
 }
 
-export const selectBounce = (bounce, title) => dispatch => {
-    dispatch({ type: SELECT_BOUNCE, payload: { bounce, title } });
+export const selectBounce = (bounce, titleId) => {
+    return { type: SELECT_BOUNCE, payload: { bounce, titleId } };
 }

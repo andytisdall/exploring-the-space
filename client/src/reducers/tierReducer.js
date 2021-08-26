@@ -1,4 +1,4 @@
-import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE } from '../actions/types';
+import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, DELETE_TITLE } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -33,9 +33,14 @@ export default (state = {}, action) => {
         case DELETE_TIER:
             return _.omit(state, action.payload.id);
         case CREATE_TITLE:
-            const tier = state[action.payload.tier];
-            tier.trackList.push(action.payload.id);
-            return { ...state, [tier.id]: tier };
+            const addToTier = state[action.payload.tier];
+            addToTier.trackList.push(action.payload.id);
+            return { ...state, [addToTier.id]: addToTier };
+        case DELETE_TITLE:
+            const deleteFromTier = state[action.payload.tier];
+            const newTrackList = deleteFromTier.trackList.filter(id => id !== action.payload.id);
+            deleteFromTier.trackList = newTrackList;
+            return { ...state, [deleteFromTier.id]: deleteFromTier };
         default:
             return state;
 

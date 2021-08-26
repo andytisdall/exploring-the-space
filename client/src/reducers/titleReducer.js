@@ -1,4 +1,4 @@
-import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE } from '../actions/types';
+import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE, CREATE_VERSION, DELETE_VERSION } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -14,13 +14,22 @@ export default (state = {}, action) => {
         case DELETE_TITLE:
             return _.omit(state, action.payload);
         case SELECT_VERSION:
-            const vTitle = action.payload.title;
-            vTitle.selectedVersion = action.payload.version;
-            return { ...state, [vTitle.id]: vTitle };
+            const versionTitle = state[action.payload.titleId];
+            versionTitle.selectedVersion = action.payload.version;
+            return { ...state, [versionTitle.id]: versionTitle };
         case SELECT_BOUNCE:
-            const bTitle = action.payload.title;
-            bTitle.selectedBounce = action.payload.bounce;
-            return { ...state, [bTitle.id]: bTitle }
+            const bounceTitle = state[action.payload.titleId];
+            bounceTitle.selectedBounce = action.payload.bounce;
+            return { ...state, [bounceTitle.id]: bounceTitle }
+        case CREATE_VERSION:
+            const addToTitle = state[action.payload.title];
+            addToTitle.versions.push(action.payload.id);
+            return { ...state, [addToTitle.id]: addToTitle};
+        case DELETE_VERSION:
+            const deleteFromTitle = state[action.payload.title];
+            const newVersionList = deleteFromTitle.versions.filter(id => id !== action.payload.id);
+            deleteFromTitle.versions = newVersionList;
+            return { ...state, [deleteFromTitle.id]: deleteFromTitle };
         default:
             return state;
 

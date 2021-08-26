@@ -13,9 +13,13 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     useEffect(() => {
         if (selectedVersion) {
             fetchBounces(selectedVersion.id);
-            selectVersion(selectedVersion, title);
+            selectVersion(selectedVersion, title.id);
         }
     }, [selectedVersion]);
+
+    useEffect(() => {
+        setSelectedVersion(title.selectedVersion);
+    }, [versions]);
 
     const renderVersionList = () => {
         const versionList = versions.filter(v => v !== selectedVersion);
@@ -37,11 +41,11 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
 
             const bouncesToRender = selectedVersion.bounces.map(id => bounces[id]);
 
-            if (bouncesToRender[0]) {
-                return (
-                    <Bounce bounces={bouncesToRender} title={title} />
-                );
-            }
+
+            return (
+                <Bounce bounces={bouncesToRender} title={title} version={selectedVersion} />
+            );
+            
         }
     };
 
@@ -49,7 +53,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         if (authorized) {
             return (
                 <AddButton
-                    title={`Add a Version of ${title.name}`}
+                    title={`Add a Version of ${title.title}`}
                     image="images/add.png"
                     fields={[
                         {
@@ -91,6 +95,9 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                             </div>
                         </div>
                     </div>
+                    <div className="detail-notes">
+                        {selectedVersion.notes}
+                    </div>
                 </div>
             );
         } else {
@@ -108,22 +115,20 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     return (
         <div className="version-container">
             <div className="detail-box">
-                {renderVersionDetail()}
-                
+                {renderVersionDetail()}      
                 <div className="detail-buttons">
                     {renderAddButton()}
                 </div>
-            </div> 
+            </div>
             {renderBounces()}          
         </div>
-        
     );
 };
 
 const mapStateToProps = state => {
     return {
         bounces: state.bounces
-    }
+    };
 }
 
 export default connect(mapStateToProps, { fetchBounces, selectVersion, createVersion })(requireAuth(Version));

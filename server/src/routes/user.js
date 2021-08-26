@@ -13,4 +13,5 @@ router.get('/user', currentUser, async (req, res) => {
     res.send(req.currentUser);
 });
 
+
 export { router as userRouter };

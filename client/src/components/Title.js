@@ -21,16 +21,19 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
     }, []);
 
     useEffect(() => {
-        if (title.versions[0] && (!versionList || !versionList[0])) {
+        if (title.versions.length) {
             setVersionList(title.versions.map(id => versions[id]));
             // console.log('set version list')
         }
-    }, [versions]);
+    }, [versions, title]);
 
     useEffect(() => {
         if (versionList && versionList[0]) {
-            const currentVersion = versionList.find(v => v.current);
-            selectVersion(currentVersion, title);
+            let versionToSelect = title.selectedVersion;
+            if (!title.selectedVersion) {
+                versionToSelect = versionList.find(v => v.current);
+            }
+            selectVersion(versionToSelect, title.id);
             // console.log('select version')
         }
         if (title.selectedVersion && !bounceList) {

@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { selectBounce } from '../actions';
+import AddButton from './AddButton';
+import requireAuth from './requireAuth';
+import { selectBounce, createBounce } from '../actions';
 
-const Bounce = ({ bounces, selectBounce, title }) => {
+const Bounce = ({ bounces, selectBounce, title, authorized, version }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
     useEffect(() => {
-        selectBounce(selectedBounce, title);
+        selectBounce(selectedBounce, title.id);
     }, [selectedBounce]);
 
 
@@ -31,35 +33,84 @@ const Bounce = ({ bounces, selectBounce, title }) => {
         });
     };
 
-    const renderBounce = () => {
+    const renderAddButton = () => {
+        if (authorized) {
+            return (
+                <AddButton
+                    title={`Add a Bounce of ${version.name}`}
+                    image="images/add.png"
+                    fields={[
+                        {
+                            label: 'File',
+                            name: 'file',
+                            type: 'file'
+                        },
+                        {
+                            label: 'Date',
+                            name: 'date',
+                            type: 'date',          
+                        },
+                        {
+                            label: 'Comments',
+                            name: 'comments',
+                            type: 'textarea',          
+                        },
+                        {
+                            label: 'Latest Bounce?',
+                            name: 'latest',
+                            type: 'checkbox',        
+                        },
+                    ]}
+                    onSubmit={(formValues) => createBounce(formValues, version.id)}
+                    form={`add-bounce-${title.id}`}
+                    initialValues={{ latest: true, file: '' }}
+                    addClass="bounce"
+                />
+            );
+        }
+    };
+    
+
+    const renderBounceDetail = () => {
         if (selectedBounce) {
-            return <>
-                <h5>Date:</h5>
-                <div className='dropdown'>
-                    <button className='dropbtn'>{displayDate(selectedBounce.date)}</button>
-                    <div className='dropdown-content'>
-                        {renderBounceList()}
+            return (
+                <div className='detail-content'>
+                    <div className='detail-header'>
+                        <h5>Date:</h5>
+                        <div className='dropdown'>
+                            <button className='dropbtn'>
+                                {displayDate(selectedBounce.date)}
+                            </button>
+                            <div className='dropdown-content'>
+                                {renderBounceList()}
+                            </div>
+                        </div>
                     </div>
-                    <div className='detail-notes'>{selectedBounce.comments}</div>
+                    <div className='detail-notes'>
+                        {selectedBounce.comments}
+                    </div>                         
                 </div>
-            </>
+            );
         } else {
-            return <h5>No Bounces for this Version</h5>
+            return (
+                <div className="detail-content">
+                    <div className="detail-header">
+                        <h5>No Bounces for this Version</h5>
+                    </div>
+                </div>
+            );
         }
     };
 
 
     return (
-        <div className="detail-box">
-            <div className='detail-content'>
-                <div className='detail-header'>
-                    
-                {renderBounce()}
-                    
-                </div>   
+        <div className="detail-box">   
+            {renderBounceDetail()}                                            
+            <div className="detail-buttons">
+                {renderAddButton()}
             </div>
         </div>
     );
 };
 
-export default connect(null, { selectBounce })(Bounce);
+export default connect(null, { selectBounce, createBounce })(requireAuth(Bounce));

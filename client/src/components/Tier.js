@@ -31,17 +31,21 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     }, [titles, tier]);
 
     useEffect(() => {
-        const tiersToShow = band.tiers.map(id => tiers[id]).sort((a, b) => {
-            if (a.position < b.position) {
-                return -1;
-            }
-            if (b.position < a.position) {
-                return 1;
-            }
-        });
-        setTierList(tiersToShow.map(t => {
-            return { value: t.position, display: t.position };
-        }));
+        if (band.tiers.length) {
+            const tiersToShow = band.tiers.map(id => tiers[id]).sort((a, b) => {
+                if (a.position < b.position) {
+                    return -1;
+                }
+                if (b.position < a.position) {
+                    return 1;
+                }
+            });
+            setTierList(tiersToShow.map(t => {
+                if (t) {
+                    return { value: t.position, display: t.position };
+                }
+            }));
+        }
     }, [tiers]);
 
     const renderTitles = () => {
