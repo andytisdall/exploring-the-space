@@ -237,14 +237,23 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
             { ...formValues, currentBand: currentBand.id }
         );
         dispatch({ type: CREATE_PLAYLIST, payload: response.data });
-        } catch (err) {
-            dispatch({ type: ERROR, payload: err });
-        }
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
-export const createPlaylistSong = formValues => async dispatch => {
-    const response = await greenhouse.post('/playlistsong', formValues);
-    dispatch({ type: CREATE_PLAYLISTSONG, payload: response.data });
+export const createPlaylistSong = formValues => async (dispatch, getState) => {
+
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.post(
+            '/playlistsongs',
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: CREATE_PLAYLISTSONG, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const editBand = formValues => async dispatch => {

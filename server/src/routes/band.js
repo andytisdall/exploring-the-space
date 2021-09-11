@@ -51,6 +51,7 @@ router.patch('/bands/', currentUser, requireAuth, async (req, res) => {
 router.get('/bands', async (req, res) => {
 
     const bands = await Band.find({});
+    console.log('bands')
 
     res.status(200).send(bands);
 

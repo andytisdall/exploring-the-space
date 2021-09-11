@@ -5,22 +5,31 @@ import moment from 'moment';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 import { selectBounce, createBounce } from '../actions';
+import Modal from './Modal';
 
 const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
+    const [modalActive, setModalActive] = useState(false);
+
     useEffect(() => {
-        selectBounce(selectedBounce, title.id);
+        if (selectedBounce) {
+            selectBounce(selectedBounce, title.id);
+        }
     }, [selectedBounce]);
 
+    useEffect(() => {
+        setSelectedBounce(title.selectedBounce);
+        setModalActive(false);
+    }, [bounces]);
 
     const displayDate = date => {
         return moment.utc(date).format('MM/DD/yy');
     }
 
     const renderBounceList = () => {
-        const bounceList = bounces.filter(b => b !== selectedBounce);
+        const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
 
         return bounceList.map(b => {
             return <div
@@ -31,6 +40,22 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     {displayDate(b.date)}
             </div>
         });
+    };
+
+    const onAddSubmit = (formValues) => {
+
+        createBounce(formValues, version.id);
+        setModalActive(true);
+
+    }
+
+    const modalContent = () => {
+        return (
+            <div className='upload-image'>
+                <p>Uploading...</p>
+                <img className='windmill' src='/images/windmill.gif' />
+            </div>
+        );
     };
 
     const renderAddButton = () => {
@@ -61,7 +86,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                             type: 'checkbox',        
                         },
                     ]}
-                    onSubmit={(formValues) => createBounce(formValues, version.id)}
+                    onSubmit={formValues => onAddSubmit(formValues)}
                     form={`add-bounce-${version.id}`}
                     initialValues={{ latest: true }}
                     addClass="bounce"
@@ -102,15 +127,23 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         }
     };
 
-
-    return (
-        <div className="detail-box">   
-            {renderBounceDetail()}                                            
-            <div className="detail-buttons">
-                {renderAddButton()}
+    if (modalActive) {
+        return <Modal
+            content={modalContent()}
+            actions={null}
+            onDismiss={() => null}
+        />
+    } else {
+    
+        return (
+            <div className="detail-box">   
+                {renderBounceDetail()}                                            
+                <div className="detail-buttons">
+                    {renderAddButton()}
+                </div>
             </div>
-        </div>
-    );
+        );
+        }
 };
 
 export default connect(null, { selectBounce, createBounce })(requireAuth(Bounce));

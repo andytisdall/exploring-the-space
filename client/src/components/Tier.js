@@ -72,7 +72,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                             type: 'input',          
                         }
                     ]}
-                    onSubmit={(formValues) => createTitle(formValues, tier.id)}
+                    onSubmit={(formValues) => {
+                        createTitle(formValues, tier.id);
+                        setExpand(true);
+                    }}
                     form={`add-title-${tier.id}`}
                 />
             )

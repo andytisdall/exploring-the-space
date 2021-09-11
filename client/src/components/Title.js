@@ -1,13 +1,13 @@
-import React, { useEffect, useState, version } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import Version from './Version';
 import AddButton from './AddButton';
-import { fetchVersions, fetchBounces, fetchPlaylists, selectBounce, selectVersion } from '../actions';
+import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong } from '../actions';
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, fetchPlaylists, selectVersion, selectBounce }) => {
+const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -51,7 +51,13 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
 
     useEffect(() => {
         if (!title.selectedBounce && bounceList && bounceList[0]) {
-            selectBounce(bounceList.find(b => b.latest), title);
+            let bounceToSelect = title.selectedBounce;
+            if (!title.selectedBounce) {
+                bounceToSelect = bounceList.find(b => b.latest);
+            }
+            if (bounceToSelect) {
+                selectBounce(bounceToSelect, title.id);
+            }
             // console.log('select bounce')
         }
         if (!song && title.selectedVersion && title.selectedBounce) {
@@ -93,8 +99,13 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
         )
     }
 
-    const onAddToPlaylist = () => {
-        return null;
+    const onAddToPlaylist = formValues => {
+        createPlaylistSong({
+            ...formValues,
+            bounce: title.selectedBounce.id,
+            version: title.selectedVersion.id,
+            title: title.id
+        });
     }
 
     const renderButtons = () => {
@@ -109,7 +120,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                 <div className='tier-display'>
                     {song && <AddButton
                         title="Add to a Playlist"
-                        onSubmit={onAddToPlaylist}
+                        onSubmit={formValues => onAddToPlaylist(formValues)}
                         image="images/playlist.png"
                         fields={[
                             {
@@ -157,4 +168,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce })(requireAuth(Title));
+export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong })(requireAuth(Title));

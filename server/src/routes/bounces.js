@@ -14,9 +14,6 @@ const router = express.Router();
 
 router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
-    console.log(req.file);
-    console.log(req.body);
-
     // Increase timeout length for long uploads
 
     req.socket.setTimeout(10 * 60 * 1000);
@@ -24,15 +21,17 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
     // Get parameters from post request and exit if there's an existing bounce with that date.
 
     const { date, comments, duration, version } = req.body;
-    const parentVersion = await Version.findOne({ _id: version }).populate('bounces');
-    if (parentVersion.bounces)  {
-        let duplicateDate = parentVersion.bounces.find(b => b.date === bounceDate);
+    const parentVersion = await Version.findById(version).populate('songs');
+    if (parentVersion.songs)  {
+        let duplicateDate = parentVersion.songs.find(b => b.date === date);
         if (duplicateDate) {
             throw new Error('Duplicate date found in the version list');
         }
     }
 
-    const file = req.files[0];
+    console.log(parentVersion);
+
+    const file = req.files.file;
 
     // Create a new bounce object form values
 
@@ -64,7 +63,8 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
         // Update the latest tag in the parent's bounce list
 
-        let bounceList = parentVersion.bounces;
+        let bounceList = parentVersion.songs;
+
         if (req.body.bounceLatest) {
 
             let oldLatest = bounceList.find(b => b.latest);
@@ -78,7 +78,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
         }
 
         // Add bounce to parent version's bounce list
-        parentVersion.bounces.push(newBounce);
+        parentVersion.songs.push(newBounce);
 
         // Finally save new bounce object
         await newBounce.save();

@@ -53,7 +53,7 @@ const deleteTitle = async (id, parentId=null) => {
 
 const deleteVersion = async (id, parentId=null) => {
     let thisVersion = await Version.findOne({ _id: id });
-    thisVersion.bounces.forEach(async (bounce) => {          
+    thisVersion.songs.forEach(async (bounce) => {          
         deleteBounce(bounce);
     });
     if (parentId) {
