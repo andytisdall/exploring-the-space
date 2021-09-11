@@ -6,6 +6,8 @@ const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const Bounce = mongoose.model('Song');
+const Playlist = mongoose.model('Playlist');
+const PlaylistSong = mongoose.model('PlaylistSong');
 
 export const deleteTier = async (id, band) => {
     let thisTier = await Tier.findById(id);
@@ -20,6 +22,21 @@ export const deleteTier = async (id, band) => {
     });
     await Tier.deleteOne({ _id: id });
     return thisTier;
+};
+
+export const deletePlaylist = async (id, band) => {
+    let thisPlaylist = await Playlist.findById(id);
+    await Band.updateOne({ _id: band }, { $pull: {playlists: id} });
+    thisPlaylist.songs.forEach((song) => {                
+        deletePlaylistSong(song);
+    });
+    const changePosition = await Playlist.find({ position: { $gt: thisPlaylist.position }});
+    changePosition.forEach(async (pl) => {
+        pl.position = pl.position - 1;
+        await pl.save();
+    });
+    await Playlist.deleteOne({ _id: id });
+    return thisPlaylist;
 };
 
 const deleteTitle = async (id, parentId=null) => {
@@ -53,7 +70,7 @@ const deleteVersion = async (id, parentId=null) => {
 };
 
 const deleteBounce = async (id, parentId=null) => {
-    const bounce = await Bounce.findOne({ _id: id });
+    const bounce = await Bounce.findById(id);
     const mp3Id = new mongodb.ObjectID(bounce.mp3);
     if (parentId) {
         await Version.updateOne({ _id: parentId }, { $pull: {bounces: id} });
@@ -69,6 +86,12 @@ const deleteBounce = async (id, parentId=null) => {
     await Bounce.deleteOne({ _id: id });
 };
 
+const deletePlaylistSong = async (id, parentId=null) => {
+    if (parentId) {
+        await Playlist.updateOne({ _id: parentId }, { $pull: {songs: id} });
+    }
+    await PlaylistSong.deleteOne({ _id: id });
+};
 
 const deleteMp3 = (mp3Id) => {
     

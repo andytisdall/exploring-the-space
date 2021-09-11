@@ -6,7 +6,7 @@ import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 import { selectBounce, createBounce } from '../actions';
 
-const Bounce = ({ bounces, selectBounce, title, authorized, version }) => {
+const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 

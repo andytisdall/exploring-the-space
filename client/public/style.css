@@ -234,6 +234,10 @@ hr {
   margin-left: -8rem;
 }
 
+.addbox-title {
+  margin-bottom: 1rem;
+}
+
 .tier-add {
   margin-left: -50px;
 }
@@ -649,7 +653,7 @@ h5 {
 }
 
 .modal-box {
-  position: absolute;
+  position: fixed;
   top: 30%;
   left: 40%;
   display: flex;
@@ -658,7 +662,7 @@ h5 {
   align-items: center;
   background-color: black;
   border: #34af49 2px solid;
-  width: 200px;
+  width: 20rem;
   padding: 10px;
   height: 100px;
 }
@@ -668,8 +672,8 @@ h5 {
   font-size: medium;
   background-color: grey;
   border: cornflowerblue 1px solid;
-  margin: 10px;
-  padding: 10px;
+  margin: 1rem;
+  padding: 0.5rem;
 }
 
 @media (max-width: 700px) {

@@ -171,7 +171,7 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
     }
 };
 
-export const createBounce = formValues => async dispatch => {
+export const createBounce = formValues => async (dispatch, getState) => {
     try {
         const response = await greenhouse.post(
             '/bounces', 
@@ -186,9 +186,17 @@ export const createBounce = formValues => async dispatch => {
     }
 };
 
-export const createPlaylist = formValues => async dispatch => {
-    const response = await greenhouse.post('/playlists', formValues);
-    dispatch({ type: CREATE_PLAYLIST, payload: response.data });
+export const createPlaylist = formValues => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.post(
+            '/playlists',
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: CREATE_PLAYLIST, payload: response.data });
+        } catch (err) {
+            dispatch({ type: ERROR, payload: err });
+        }
 };
 
 export const createPlaylistSong = formValues => async dispatch => {
@@ -229,9 +237,17 @@ export const editBounce = formValues => async dispatch => {
     dispatch({ type: EDIT_BOUNCE, payload: response.data });
 };
 
-export const editPlaylist = formValues => async dispatch => {
-    const response = await greenhouse.patch('/playlists', formValues);
-    dispatch({ type: EDIT_PLAYLIST, payload: response.data });
+export const editPlaylist = (formValues, playlistId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/playlists/${playlistId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_PLAYLIST, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const editPlaylistSong = formValues => async dispatch => {
@@ -279,9 +295,21 @@ export const deleteBounce = bounceId => async dispatch => {
     dispatch({ type: DELETE_BOUNCE, payload: response.data });
 };
 
-export const deletePlaylist = playlistId => async dispatch => {
-    const response = await greenhouse.delete(`playlists/${playlistId}`);
-    dispatch({ type: DELETE_PLAYLIST, payload: response.data });
+export const deletePlaylist = playlistId => async (dispatch, getState) => {
+
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/playlists/delete',
+            {
+                playlistId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_PLAYLIST, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const deletePlaylistSong = playlistSongId => async dispatch => {

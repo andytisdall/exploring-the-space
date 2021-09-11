@@ -29,6 +29,7 @@ const versionSchema = new Schema({
             ret.id = ret._id;
             ret.bounces = ret.songs;
             delete ret._id;
+            delete ret.songs;
             }
         }
     }
