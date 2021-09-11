@@ -6,7 +6,7 @@ import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 import { selectBounce, createBounce } from '../actions';
 
-const Bounce = ({ bounces, selectBounce, title, authorized, version }) => {
+const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
@@ -62,8 +62,8 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version }) => {
                         },
                     ]}
                     onSubmit={(formValues) => createBounce(formValues, version.id)}
-                    form={`add-bounce-${title.id}`}
-                    initialValues={{ latest: true, file: '' }}
+                    form={`add-bounce-${version.id}`}
+                    initialValues={{ latest: true }}
                     addClass="bounce"
                 />
             );

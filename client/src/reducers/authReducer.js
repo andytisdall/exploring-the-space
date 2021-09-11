@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, SIGN_UP, CREATE_BAND } from '../actions/types';
+import { SIGN_IN, SIGN_OUT, CREATE_BAND } from '../actions/types';
 
 const INITIAL_STATE = {
     isSignedIn: false,
@@ -7,8 +7,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case SIGN_UP:
-            return { ...state, isSignedIn: true, user: action.payload };
         case SIGN_IN:
             return { ...state, isSignedIn: true, user: action.payload };
         case SIGN_OUT:

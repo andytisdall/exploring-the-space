@@ -7,8 +7,8 @@ import Error from './Error';
 import BandHeader from './BandHeader';
 import User from './User';
 import SignIn from './SignIn';
-import SignOut from './SignOut';
 import SignUp from './SignUp';
+import Home from './Home';
 import { fetchUser, signOut } from '../actions';
 
 
@@ -24,17 +24,10 @@ const App = ({ signedIn, fetchUser }) => {
         <div className="container">
             <Router history={history}>
                 <Error />
-                <Switch>        
-                    {/* <Route path="/" render={routeProps => {
-                        if (signedIn) {
-                            history.push('/user');
-                            return null;
-                        }
-                        return <SignIn {...routeProps} />;
-                    }} /> */}
+                <Switch>    
+                    <Route path="/" exact component={Home} />
                     <Route path="/signin" exact component={SignIn} />;
-                    <Route path="/signup" exact component={SignUp} />;
-                    <Route path="/signout" exact component={SignOut} />    
+                    <Route path="/signup" exact component={SignUp} />;  
                     <Route path="/user" exact render={routeProps => {
                         if (!signedIn) {
                             history.push('/signin');

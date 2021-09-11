@@ -2,7 +2,6 @@ import greenhouse from '../apis/greenhouse';
 import {
     SIGN_IN,
     SIGN_OUT,
-    SIGN_UP,
     ERROR,
     FETCH_BAND,
     FETCH_BANDS,
@@ -55,7 +54,8 @@ export const signIn = formValues => async (dispatch) => {
 };
 
 export const signOut = () => {
-    localStorage.removeItem('token'); 
+    localStorage.removeItem('token');
+    history.push('/');
     return { type: SIGN_OUT };
 };
 
@@ -171,16 +171,59 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
     }
 };
 
-export const createBounce = formValues => async dispatch => {
+export const createBounce = (formValues, versionId) => async (dispatch, getState) => {
+    formValues.file = formValues.file[0];
+    const { currentBand } = getState().bands;
     try {
-        const response = await greenhouse.post(
-            '/bounces', 
-            formValues,
-            { headers:
-                { 'Content-Type': 'multipart/form-data'}
-            }
-        );
-        dispatch({ type: CREATE_BOUNCE, payload: response.data });
+        // Create instance of FileReader
+        const reader = new FileReader();
+
+        // When the file has been succesfully read
+        reader.onload = event => {
+
+            // Create an instance of AudioContext
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Asynchronously decode audio file data contained in an ArrayBuffer.
+            audioContext.decodeAudioData(event.target.result, async (buffer) => {
+
+                // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+                const duration = parseInt(buffer.duration);
+
+                const formObject = {
+                    ...formValues,
+                    currentBand: currentBand.id,
+                    version: versionId,
+                    duration
+                }
+
+                const formData = new FormData();
+
+                for ( let key in formObject ) {
+                    formData.append(key, formObject[key]);
+                }
+
+                const response = await greenhouse.post(
+                    '/bounces', 
+                    formData,
+                    {
+                        headers: { 'Content-Type': 'multipart/form-data'}
+                    }
+                );
+
+                dispatch({ type: CREATE_BOUNCE, payload: response.data });
+
+            });
+        };
+
+        // In case the file couldn't be read
+        reader.onerror =  event => {
+            console.error("An error ocurred reading the file: ", event);
+        };
+
+        // Read file as an ArrayBuffer, important !
+        reader.readAsArrayBuffer(formValues.file);
+
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }

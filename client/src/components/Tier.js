@@ -118,6 +118,12 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     };
 
+    // const totalTime = () => {
+    //     const totalTime = tier.trackList.reduce((prev, cur) => {
+    //         return prev.duration + cur.duration;
+    //     });
+    // }
+
 
     return (
         <>
@@ -130,7 +136,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     <div className="tier-count">
                         {renderAddButton()}
                         <div className="song-count">{tier.trackList.length} songs</div>
-                        <div className="song-count">{tier.totalTime}</div>
+                        {/* <div className="song-count">{totalTime()}</div> */}
                     </div>
                     <div className="tier-display">
                         {renderEditButton()}

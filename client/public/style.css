@@ -9,6 +9,20 @@ body {
   margin: 0px;
 }
 
+.home-header {
+  text-align: center;
+  font-size: 4rem;
+  color: #65d478;
+  margin-top: 3rem;
+}
+
+.home-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin: 3rem auto;
+  width: 80%;
+}
+
 .container {
   max-width: 65rem;
   margin: 0.7rem;
@@ -605,7 +619,8 @@ h5 {
 }
 
 .band-list {
-  margin: 3rem;
+  margin: 2rem;
+  line-height: 3rem;
 }
 
 .add-band {

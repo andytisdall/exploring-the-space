@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
-import { fetchBand } from '../actions';
+import { fetchBand, signOut } from '../actions';
 import BodyContainer from './BodyContainer';
 import AudioHeader from './AudioHeader';
 import requireAuth from './requireAuth';
 
-const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn }) => {
+const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut }) => {
 
     useEffect(() => {
         fetchBand(match.params.bandName);
@@ -22,7 +21,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
             <div className="menu-button">
                 <img src="images/dots.png" />
                 <div className="menu">
-                    <Link to="/signout">Sign Out</Link>
+                    <div onClick={signOut}>Sign Out</div>
                 </div>
             </div>
         );
@@ -64,4 +63,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchBand })(requireAuth(BandHeader));
+export default connect(mapStateToProps, { fetchBand, signOut })(requireAuth(BandHeader));

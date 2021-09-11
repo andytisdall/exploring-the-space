@@ -14,24 +14,29 @@ const router = express.Router();
 
 router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
+    console.log(req.file);
+    console.log(req.body);
+
     // Increase timeout length for long uploads
 
     req.socket.setTimeout(10 * 60 * 1000);
 
     // Get parameters from post request and exit if there's an existing bounce with that date.
 
-    const { bounceDate, bounceComments, duration, parentId } = req.body;
-    const parentVersion = await Version.findOne({ _id: parentId }).populate('bounces');
-    let duplicateDate = parentVersion.bounces.find(b => b.date === bounceDate);
-    if (duplicateDate) {
-        throw new Error('Duplicate date found in the version list');
+    const { date, comments, duration, version } = req.body;
+    const parentVersion = await Version.findOne({ _id: version }).populate('bounces');
+    if (parentVersion.bounces)  {
+        let duplicateDate = parentVersion.bounces.find(b => b.date === bounceDate);
+        if (duplicateDate) {
+            throw new Error('Duplicate date found in the version list');
+        }
     }
 
-    const file = req.files.bounceFile;
+    const file = req.files[0];
 
     // Create a new bounce object form values
 
-    const newBounce = new Bounce({date: bounceDate, comments: bounceComments, size: file.size, duration});
+    const newBounce = new Song({date, comments, size: file.size, duration});
 
 
 

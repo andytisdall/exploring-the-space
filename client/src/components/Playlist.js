@@ -37,9 +37,8 @@ const Playlist = ({ playlist, fetchPlaylistSongs, playlistSongs }) => {
                         <h2>{playlist.name}</h2>
                     </div>
                     <div className="tier-count">
-                            {/* <AddButton title = 'Add a Song' /> */}
                         <div className="song-count">{playlist.songs.length} songs</div>
-                        <div className="song-count">{playlist.totalTime}</div>
+                        {/* <div className="song-count">{playlist.totalTime}</div> */}
                     </div>
                     <div className="tier-display">
 

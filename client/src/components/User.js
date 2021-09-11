@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { createBand, fetchBands } from '../actions';
+import { createBand, fetchBands, signIn } from '../actions';
 import AddButton from './AddButton';
 
 const User = ({ user, bands, createBand, fetchBands }) => {
@@ -28,7 +28,7 @@ const User = ({ user, bands, createBand, fetchBands }) => {
     };
 
     if (!user) {
-        return null;
+        signIn();
     }
 
     return <>
@@ -60,4 +60,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { createBand, fetchBands })(User);
+export default connect(mapStateToProps, { createBand, fetchBands, signIn })(User);
