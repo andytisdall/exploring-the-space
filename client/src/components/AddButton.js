@@ -112,10 +112,10 @@ class AddButton extends React.Component {
             const addClass = this.props.addClass ? this.props.addClass : '';
             return <>    
                 <div className={`addbox ${addClass}`} ref={this.ref} >
-                    <h3>{this.props.title}</h3>
+                    <h3 className="addbox-title">{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}
-                        <button type='submit'>OK</button>
+                        <button className="submit-button" type='submit'>OK</button>
                     </form>
                 </div>
             </>

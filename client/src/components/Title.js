@@ -107,7 +107,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
             });
             return (
                 <div className='tier-display'>
-                    <AddButton
+                    {song && <AddButton
                         title="Add to a Playlist"
                         onSubmit={onAddToPlaylist}
                         image="images/playlist.png"
@@ -119,7 +119,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                                 label: 'Playlist'
                             }
                         ]}
-                    />
+                    />}
                     {/* <AddButton title={`Edit ${title.title}`}
                         onSubmit={onEditSubmit}
                     /> */}

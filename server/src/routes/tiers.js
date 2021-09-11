@@ -66,7 +66,7 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
             //     { position: tier.position+1 });
         });
         console.log(`Moving ${thisTier.position} to ${position}`);
-        thisTier.position = position;
+
         // await Tier.updateOne({ _id: id }, { position: position });
 
     } else if (thisTier.position < position) {
@@ -77,10 +77,9 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
             await tier.save();
         });
         console.log(`Moving ${thisTier.position} to ${position}`);
-        thisTier.position = position;
         await Tier.updateOne({ _id: id }, { position: position });
-
     }
+    thisTier.position = position;
     if (name) {
         thisTier.name = name;
     }
