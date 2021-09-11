@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import _ from 'lodash';
 
 import AddButton from './AddButton';
+import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
-import { selectBounce, createBounce } from '../actions';
+import { selectBounce, createBounce, editBounce, deleteBounce } from '../actions';
 import Modal from './Modal';
 
-const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce }) => {
+const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce, editBounce, deleteBounce }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
@@ -29,25 +31,29 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     }
 
     const renderBounceList = () => {
-        const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
 
-        return bounceList.map(b => {
-            return <div
-                className="dropdown-link change-song"
-                onClick={() => setSelectedBounce(b)}
-                key={b.id}
-            >
-                    {displayDate(b.date)}
-            </div>
-        });
+        if (bounces[0]) {
+
+            const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
+
+            return bounceList.map(b => {
+                return <div
+                    className="dropdown-link change-song"
+                    onClick={() => setSelectedBounce(b)}
+                    key={b.id}
+                >
+                        {displayDate(b.date)}
+                </div>
+            });
+        }
     };
 
     const onAddSubmit = (formValues) => {
 
-        createBounce(formValues, version.id);
+        createBounce(formValues, version.id, title.id);
         setModalActive(true);
 
-    }
+    };
 
     const modalContent = () => {
         return (
@@ -87,12 +93,54 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                         },
                     ]}
                     onSubmit={formValues => onAddSubmit(formValues)}
-                    form={`add-bounce-${version.id}`}
+                    form={`add-bounce-${title.id}`}
                     initialValues={{ latest: true }}
                     addClass="bounce"
                 />
             );
         }
+    };
+
+    const renderEditButton = () => {
+        if (authorized) {
+            return <AddButton
+                title={'Edit this Bounce'}
+                image="images/edit.png"
+                fields={[
+                    {
+                        label: 'File',
+                        name: 'file',
+                        type: 'file', 
+                    },
+                    {
+                        label: 'Date',
+                        name: 'date',
+                        type: 'date',          
+                    },
+                    {
+                        label: 'Comments',
+                        name: 'comments',
+                        type: 'textarea',          
+                    },
+                    {
+                        label: 'Latest Bounce?',
+                        name: 'latest',
+                        type: 'checkbox',        
+                    },
+                ]}
+                onSubmit={formValues => editBounce(formValues, selectedBounce.id)}
+                initialValues={_.pick(selectedBounce, 'date', 'comments', 'latest')}
+                form={`edit-bounce-${title.id}`}
+                enableReinitialize={true}
+            />;
+        }
+    };
+
+    const renderDeleteButton = () => {
+        return <DeleteButton
+            onSubmit={() => deleteBounce(selectedBounce.id, version.id)}
+            displayName={displayDate(selectedBounce.date)}
+        />;
     };
     
 
@@ -140,10 +188,12 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                 {renderBounceDetail()}                                            
                 <div className="detail-buttons">
                     {renderAddButton()}
+                    {selectedBounce && renderEditButton()}
+                    {selectedBounce && renderDeleteButton()}
                 </div>
             </div>
         );
         }
 };
 
-export default connect(null, { selectBounce, createBounce })(requireAuth(Bounce));
+export default connect(null, { selectBounce, createBounce, editBounce, deleteBounce })(requireAuth(Bounce));

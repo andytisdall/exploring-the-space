@@ -171,7 +171,7 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
     }
 };
 
-export const createBounce = (formValues, versionId) => async (dispatch, getState) => {
+export const createBounce = (formValues, versionId, titleId) => async (dispatch, getState) => {
     formValues.file = formValues.file[0];
     const { currentBand } = getState().bands;
     try {
@@ -211,7 +211,10 @@ export const createBounce = (formValues, versionId) => async (dispatch, getState
                     }
                 );
 
-                dispatch({ type: CREATE_BOUNCE, payload: response.data });
+                dispatch({ type: CREATE_BOUNCE, payload: { ...response.data, version: versionId } });
+                if (response.data.latest) {
+                    dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
+                }
 
             });
         };
@@ -242,15 +245,19 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
     }
 };
 
-export const createPlaylistSong = formValues => async (dispatch, getState) => {
+export const createPlaylistSong = (formValues, playlistId) => async (dispatch, getState) => {
 
     try {
         const { currentBand } = getState().bands;
         const response = await greenhouse.post(
             '/playlistsongs',
-            { ...formValues, currentBand: currentBand.id }
+            { 
+                ...formValues,
+                playlist: playlistId,
+                currentBand: currentBand.id
+            }
         );
-        dispatch({ type: CREATE_PLAYLISTSONG, payload: response.data });
+        dispatch({ type: CREATE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
     } catch (err) {
         dispatch({ type: ERROR, payload: err });
     }
@@ -274,19 +281,43 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
     }
 };
 
-export const editTitle = formValues => async dispatch => {
-    const response = await greenhouse.patch('/titles', formValues);
-    dispatch({ type: EDIT_TITLE, payload: response.data });
+export const editTitle = (formValues, titleId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/titles/${titleId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_TITLE, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
-export const editVersion = formValues => async dispatch => {
-    const response = await greenhouse.patch('/versions', formValues);
-    dispatch({ type: EDIT_VERSION, payload: response.data });
+export const editVersion = (formValues, versionId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/versions/${versionId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_VERSION, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
-export const editBounce = formValues => async dispatch => {
-    const response = await greenhouse.patch('/bounces', formValues);
-    dispatch({ type: EDIT_BOUNCE, payload: response.data });
+export const editBounce = (formValues, bounceId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/bounces/${bounceId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_BOUNCE, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 export const editPlaylist = (formValues, playlistId) => async (dispatch, getState) => {
@@ -302,9 +333,17 @@ export const editPlaylist = (formValues, playlistId) => async (dispatch, getStat
     }
 };
 
-export const editPlaylistSong = formValues => async dispatch => {
-    const response = await greenhouse.patch('/playlistsong', formValues);
-    dispatch({ type: EDIT_PLAYLISTSONG, payload: response.data });
+export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch, getState) => {
+    try {
+        const { currentBand } = getState().bands;
+        const response = await greenhouse.patch(
+            `/playlistsongs/${playlistSongId}`,
+            { ...formValues, currentBand: currentBand.id }
+        );
+        dispatch({ type: EDIT_PLAYLISTSONG, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err });
+    }
 };
 
 
@@ -312,8 +351,15 @@ export const editPlaylistSong = formValues => async dispatch => {
 
 
 export const deleteBand = bandId => async dispatch => {
-    const response = await greenhouse.delete(`/bands/${bandId}`);
-    dispatch({ type: DELETE_BAND, payload: response.data });
+    try {
+        const response = await greenhouse.post(
+            '/bands/delete',
+            { currentBand: bandId }
+        );
+        dispatch({ type: DELETE_BAND, payload: response.data });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const deleteTier = tierId => async (dispatch, getState) => {
@@ -332,19 +378,55 @@ export const deleteTier = tierId => async (dispatch, getState) => {
     }
 };
 
-export const deleteTitle = titleId => async dispatch => {
-    const response = await greenhouse.delete(`titles/${titleId}`);
-    dispatch({ type: DELETE_TITLE, payload: response.data });
+export const deleteTitle = (titleId, tierId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/titles/delete',
+            {
+                titleId,
+                tierId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_TITLE, payload: { title: response.data, tier: tierId } });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
-export const deleteVersion = versionId => async dispatch => {
-    const response = await greenhouse.delete(`versions/${versionId}`);
-    dispatch({ type: DELETE_VERSION, payload: response.data });
+export const deleteVersion = (versionId, titleId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/versions/delete',
+            {
+                versionId,
+                titleId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_VERSION, payload: { version: response.data, title: titleId } });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
-export const deleteBounce = bounceId => async dispatch => {
-    const response = await greenhouse.delete(`bounces/${bounceId}`);
-    dispatch({ type: DELETE_BOUNCE, payload: response.data });
+export const deleteBounce = (bounceId, versionId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/bounces/delete',
+            {
+                bounceId,
+                versionId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_BOUNCE, payload: { bounce: response.data, version: versionId } });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const deletePlaylist = playlistId => async (dispatch, getState) => {
@@ -364,9 +446,21 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
     }
 };
 
-export const deletePlaylistSong = playlistSongId => async dispatch => {
-    const response = await greenhouse.delete(`playlistsong/${playlistSongId}`);
-    dispatch({ type: DELETE_PLAYLISTSONG, payload: response.data });
+export const deletePlaylistSong = (playlistSongId, playlistId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    try {
+        const response = await greenhouse.post(
+            '/playlistsongs/delete',
+            {
+                playlistSongId,
+                playlistId,
+                currentBand: currentBand.id
+            }
+        );
+        dispatch({ type: DELETE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
+    } catch (err) {
+        dispatch( {type: ERROR, payload: err});
+    }
 };
 
 export const playAudio = () => {
@@ -396,14 +490,10 @@ export const queueSongs = (song) => (dispatch, getState) => {
 };
 
 export const queuePlaylistSongs = (song) => (dispatch, getState) => {
-    console.log('ok);')
 
     const allSongs = song.playlist.songs.map(id => getState().playlistSongs[id]);
     const songList = allSongs.splice(allSongs.indexOf(song.self));
     const queue = songList.map(song => {
-        const title = getState().titles[song.title];
-        const version = getState().versions[song.version];
-        const bounce = getState().bounces[song.bounce];
         return {
             title: song.title.title,
             version: song.version.name,

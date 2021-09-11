@@ -103,7 +103,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     ]}
                     onSubmit={(formValues) => editTier(formValues, tier.id)}
                     initialValues={_.pick(tier, 'name', 'position')}
-                    form={`edit-${tier.id}`}
+                    form={`edit-tier-${tier.id}`}
                     enableReinitialize={true}
                 />
             );

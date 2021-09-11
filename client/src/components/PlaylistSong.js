@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 
 import AddButton from './AddButton';
 import { createPlaylistSong, editPlaylistSong } from '../actions';

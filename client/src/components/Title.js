@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import Version from './Version';
 import AddButton from './AddButton';
-import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong } from '../actions';
+import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong, editTitle, deleteTitle } from '../actions';
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
+import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -29,51 +31,82 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
 
     useEffect(() => {
         if (versionList && versionList[0]) {
-            let versionToSelect = title.selectedVersion;
-            if (!title.selectedVersion) {
+            
+            let versionToSelect;
+
+            const versionIds = versionList.map(v => v.id);
+
+            if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
                 versionToSelect = versionList.find(v => v.current);
+            } else if (title.selectedVersion) {
+                if (!versionList.includes(title.selectedVersion)) {
+                    versionToSelect = versionList.find(v => v.id === title.selectedVersion.id);
+                } else {
+                    versionToSelect = title.selectedVersion;
+                }
             }
             selectVersion(versionToSelect, title.id);
-            // console.log('select version')
+            console.log('select version')
         }
-        if (title.selectedVersion && !bounceList) {
+        if (title.selectedVersion) {
             fetchBounces(title.selectedVersion.id);
             // console.log('fetch bounces')
         }
     }, [versionList]);
 
     useEffect(() => {
-        if (title.selectedVersion && title.selectedVersion.bounces[0] && (!bounceList || !bounceList[0])) {
-            setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
-            // console.log('set bounce list')
+        if (title.selectedVersion) {
+            if (title.selectedVersion.bounces[0]) {
+                setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
+                // console.log('set bounce list')
+            } else {
+                // console.log('set bounce list null')
+                setBounceList(null);
+                selectBounce(null, title.id);
+            }
         }
     }, [bounces]);
 
     useEffect(() => {
-        if (!title.selectedBounce && bounceList && bounceList[0]) {
-            let bounceToSelect = title.selectedBounce;
-            if (!title.selectedBounce) {
+        if (bounceList && bounceList[0]) {
+
+            let bounceToSelect;
+
+            if (title.selectedBounce && bounceList.includes(title.selectedBounce)) {
+                bounceToSelect = title.selectedBounce;
+            } else {
                 bounceToSelect = bounceList.find(b => b.latest);
             }
+
             if (bounceToSelect) {
+                
                 selectBounce(bounceToSelect, title.id);
+                // console.log('select bounce');
+                
             }
+        } else if (song) {
+            setSong(null);
+        }
             // console.log('select bounce')
-        }
-        if (!song && title.selectedVersion && title.selectedBounce) {
-            setSong({
-                tier,
-                title,
-                version: title.selectedVersion,
-                bounce: title.selectedBounce
-            });
-            // console.log('set song')
-        }
+        
+        // if (!song && title.selectedVersion && title.selectedBounce) {
+        //     setSong({
+        //         tier,
+        //         title,
+        //         version: title.selectedVersion,
+        //         bounce: title.selectedBounce
+        //     });
+        //     console.log('set song')
+        // }
     }, [bounceList]);
+
 
     useEffect(() => {
 
-        if (title.selectedVersion && title.selectedBounce) {
+        // if (!title.selectedVersion.bounces.includes(title.selectedBounce)) {
+        //     setVersionList(title.versions.map(id => versions[id]));
+        if (title.selectedBounce && title.selectedVersion) {
+
             setSong({
                 tier,
                 title,
@@ -81,8 +114,11 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                 bounce: title.selectedBounce
             });
             // console.log('title update')
+        } else if (song && !title.selectedBounce) {
+            setSong(null);
         }
-    }, [title.selectedVersion, title.selectedBounce]);
+        
+    }, [titles]);
 
 
     const renderPlayContainer = () => {
@@ -93,6 +129,7 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
     }
 
     const renderVersion = () => {
+
    
         return (
             <Version versions={versionList} title={title} />
@@ -130,10 +167,27 @@ const Title = ({ tier, title, fetchVersions, versions, bounces, fetchBounces, au
                                 label: 'Playlist'
                             }
                         ]}
+                        enableReinitialize={true}
                     />}
-                    {/* <AddButton title={`Edit ${title.title}`}
-                        onSubmit={onEditSubmit}
-                    /> */}
+                    <AddButton
+                        title={`Edit ${title.title}`}
+                        image="images/edit.png"
+                        fields={[
+                            {
+                                label: 'Title',
+                                name: 'title',
+                                type: 'input', 
+                            }
+                        ]}
+                        onSubmit={formValues => editTitle(formValues, title.id)}
+                        initialValues={_.pick(title, 'title')}
+                        form={`edit-title-${title.id}`}
+                        enableReinitialize={true}
+                    />
+                    <DeleteButton
+                        onSubmit={() => deleteTitle(title.id, tier.id)}
+                        displayName={title.title}
+                    />
                 </div>
             )
         }
@@ -164,8 +218,9 @@ const mapStateToProps = state => {
         versions: state.versions,
         bounces: state.bounces,
         band: state.bands.currentBand,
-        playlists: state.playlists
+        playlists: state.playlists,
+        titles: state.titles
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong })(requireAuth(Title));
+export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle })(requireAuth(Title));

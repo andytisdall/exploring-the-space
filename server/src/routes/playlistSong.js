@@ -17,6 +17,8 @@ router.get('/playlistsongs/:playlistId', async (req, res) => {
             options: { sort: 'position' }
         });
 
+    console.log(playlist);
+
     res.status(200).send(playlist.songs);
 
 
@@ -25,7 +27,9 @@ router.get('/playlistsongs/:playlistId', async (req, res) => {
 
 router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 
-    const { currentBand, playlistId, bounce, version, title } = req.body;
+    // console.log(req.body);
+
+    const { playlistId, bounce, version, title } = req.body;
     const playlist = await Playlist.findById(playlistId);
     const newPlaylistSong = new PlaylistSong({
         title,
@@ -36,6 +40,7 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
     await newPlaylistSong.save();
     playlist.songs.push(newPlaylistSong);
     await playlist.save();
+    console.log(newPlaylistSong)
     res.status(201).send(newPlaylistSong);
 });
 

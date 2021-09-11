@@ -18,6 +18,11 @@ class AddButton extends React.Component {
         } else if (prevState.boxVisible === true && this.state.boxVisible === false) {
             document.removeEventListener('click', this.bodyClick, {capture: true});
         }
+        
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.bodyClick, {capture: true});
     }
 
     bodyClick = (e) => {
@@ -105,6 +110,7 @@ class AddButton extends React.Component {
     submitForm = (formValues) => {
         this.props.onSubmit(formValues);
         this.setState({ boxVisible: false });
+        this.props.reset();
     }
 
     showBox = () => {

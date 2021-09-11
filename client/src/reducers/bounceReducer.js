@@ -8,11 +8,11 @@ export default (state = {}, action) => {
         case FETCH_BOUNCES:
             return { ...state, ..._.mapKeys(action.payload, 'id')};
         case CREATE_BOUNCE:
-            return { ...state, [action.payload.id]: action.payload };
+            return { ...state, [action.payload.bounce.id]: action.payload.bounce };
         case EDIT_BOUNCE:
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_BOUNCE:
-            return _.omit(state, action.payload);
+            return _.omit(state, action.payload.bounce);
         default:
             return state;
 

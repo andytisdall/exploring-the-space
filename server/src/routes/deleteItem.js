@@ -39,8 +39,8 @@ export const deletePlaylist = async (id, band) => {
     return thisPlaylist;
 };
 
-const deleteTitle = async (id, parentId=null) => {
-    let thisTitle = await Title.findOne({_id: id});
+export const deleteTitle = async (id, parentId=null) => {
+    let thisTitle = await Title.findById(id);
     thisTitle.versions.forEach(async (version) => {                
         deleteVersion(version);
     });
@@ -48,11 +48,12 @@ const deleteTitle = async (id, parentId=null) => {
         await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
     }
     await Title.deleteOne({ _id: id });
+    return thisTitle
 };
 
 
-const deleteVersion = async (id, parentId=null) => {
-    let thisVersion = await Version.findOne({ _id: id });
+export const deleteVersion = async (id, parentId=null) => {
+    let thisVersion = await Version.findById(id);
     thisVersion.songs.forEach(async (bounce) => {          
         deleteBounce(bounce);
     });
@@ -69,7 +70,7 @@ const deleteVersion = async (id, parentId=null) => {
     await Version.deleteOne({ _id: id });   
 };
 
-const deleteBounce = async (id, parentId=null) => {
+export const deleteBounce = async (id, parentId=null) => {
     const bounce = await Bounce.findById(id);
     const mp3Id = new mongodb.ObjectID(bounce.mp3);
     if (parentId) {

@@ -1,4 +1,4 @@
-import { FETCH_BAND, FETCH_BANDS, EDIT_BAND, DELETE_BAND, CREATE_BAND, CREATE_TIER, DELETE_TIER, CREATE_PLAYLIST, DELETE_PLAYLIST } from '../actions/types';
+import { FETCH_BAND, FETCH_BANDS, EDIT_BAND, DELETE_BAND, CREATE_BAND, CREATE_TIER, DELETE_TIER, CREATE_PLAYLIST, DELETE_PLAYLIST, SIGN_OUT } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -32,6 +32,8 @@ export default (state = {}, action) => {
             const newPlaylists = bandP.playlists.filter(id => id !== action.payload.id);
             bandP.playlists = newPlaylists;
             return { ...state, [bandP.id]: bandP, currentBand: bandP };
+        case SIGN_OUT:
+            return _.omit(state, state.currentBand);
         default:
             return state;
 

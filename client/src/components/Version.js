@@ -1,28 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
-import { fetchBounces, selectVersion, createVersion } from '../actions';
+import { fetchBounces, selectVersion, createVersion, editVersion, deleteVersion } from '../actions';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
+import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
-const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized }) => {
+const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized, editVersion, deleteVersion }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
+    const [bounceList, setBounceList] = useState(null);
 
     useEffect(() => {
         if (selectedVersion) {
             fetchBounces(selectedVersion.id);
             selectVersion(selectedVersion, title.id);
+            setBounceList(selectedVersion.bounces.map(id => bounces[id]));
         }
     }, [selectedVersion]);
 
     useEffect(() => {
+        if (selectedVersion) {
+            setBounceList(selectedVersion.bounces.map(id => bounces[id]));
+        }
+    }, [bounces]);
+
+    useEffect(() => {
         setSelectedVersion(title.selectedVersion);
-    }, [versions]);
+    }, [versions, title.selectedVersion]);
 
     const renderVersionList = () => {
-        const versionList = versions.filter(v => v !== selectedVersion);
+        const versionList = versions.filter(v => v.id !== selectedVersion.id);
 
         return versionList.map(v => {
             return <div
@@ -37,14 +47,12 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     
     const renderBounces = () => {
 
-        if (selectedVersion) {
-
-            const bouncesToRender = selectedVersion.bounces.map(id => bounces[id]);
-
+        if (bounceList) {
 
             return (
-                <Bounce bounces={bouncesToRender} title={title} version={selectedVersion} />
+                <Bounce bounces={bounceList} title={title} version={selectedVersion} />
             );
+        
             
         }
     };
@@ -75,9 +83,47 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                     onSubmit={(formValues) => createVersion(formValues, title.id)}
                     form={`add-version-${title.id}`}
                     initialValues={{ current: true }}
+                    enableReinitialize={true}
                 />
             );
         }
+    };
+
+    const renderEditButton = () => {
+        if (authorized) {
+            return <AddButton
+                title={`Edit ${selectedVersion.name}`}
+                image="images/edit.png"
+                fields={[
+                    {
+                        label: 'Name',
+                        name: 'name',
+                        type: 'input', 
+                    },
+                    {
+                        label: 'Notes',
+                        name: 'notes',
+                        type: 'textarea',          
+                    },
+                    {
+                        label: 'Current Version?',
+                        name: 'current',
+                        type: 'checkbox',        
+                    },
+                ]}
+                onSubmit={formValues => editVersion(formValues, selectedVersion.id)}
+                initialValues={_.pick(selectedVersion, 'name', 'notes', 'current')}
+                form={`edit-version-${title.id}`}
+                enableReinitialize={true}
+            />;
+        }
+    };
+
+    const renderDeleteButton = () => {
+        return <DeleteButton
+            onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
+            displayName={selectedVersion.name}
+        />;
     };
 
     const renderVersionDetail = () => {
@@ -118,6 +164,8 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                 {renderVersionDetail()}      
                 <div className="detail-buttons">
                     {renderAddButton()}
+                    {selectedVersion && renderEditButton()}
+                    {selectedVersion && renderDeleteButton()}
                 </div>
             </div>
             {renderBounces()}          
@@ -131,4 +179,4 @@ const mapStateToProps = state => {
     };
 }
 
-export default connect(mapStateToProps, { fetchBounces, selectVersion, createVersion })(requireAuth(Version));
+export default connect(mapStateToProps, { fetchBounces, selectVersion, createVersion, editVersion, deleteVersion })(requireAuth(Version));

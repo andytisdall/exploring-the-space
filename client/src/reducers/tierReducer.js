@@ -31,14 +31,14 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_TIER:
-            return _.omit(state, action.payload.id);
+            return _.omit(state, action.payload.tier.id);
         case CREATE_TITLE:
             const addToTier = state[action.payload.tier];
-            addToTier.trackList.push(action.payload.id);
+            addToTier.trackList.push(action.payload.title.id);
             return { ...state, [addToTier.id]: addToTier };
         case DELETE_TITLE:
             const deleteFromTier = state[action.payload.tier];
-            const newTrackList = deleteFromTier.trackList.filter(id => id !== action.payload.id);
+            const newTrackList = deleteFromTier.trackList.filter(id => id !== action.payload.title.id);
             deleteFromTier.trackList = newTrackList;
             return { ...state, [deleteFromTier.id]: deleteFromTier };
         default:
