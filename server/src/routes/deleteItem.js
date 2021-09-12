@@ -47,6 +47,12 @@ export const deleteTitle = async (id, parentId=null) => {
     if (parentId) {
         await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
     }
+    const playlistSongs = await PlaylistSong.find({ title: id });
+
+    playlistSongs.forEach(pls => {
+        deletePlaylistSong(pls.id);
+    });
+
     await Title.deleteOne({ _id: id });
     return thisTitle
 };
@@ -67,17 +73,18 @@ export const deleteVersion = async (id, parentId=null) => {
             }
         }
     }
-    await Version.deleteOne({ _id: id });   
+    await Version.deleteOne({ _id: id });
+    return thisVersion; 
 };
 
 export const deleteBounce = async (id, parentId=null) => {
     const bounce = await Bounce.findById(id);
     const mp3Id = new mongodb.ObjectID(bounce.mp3);
     if (parentId) {
-        await Version.updateOne({ _id: parentId }, { $pull: {bounces: id} });
+        await Version.updateOne({ _id: parentId }, { $pull: {songs: id} });
         if (bounce.latest) {
             let parentVersion = await Version.findOne({ _id: parentId }).populate('bounces');
-            let bounceList = parentVersion.bounces;
+            let bounceList = parentVersion.songs;
             if (bounceList.length >= 1) {
                 await Bounce.updateOne({ _id: bounceList[bounceList.length-1] }, { latest: true });
             }
@@ -85,6 +92,7 @@ export const deleteBounce = async (id, parentId=null) => {
     }
     deleteMp3(mp3Id);
     await Bounce.deleteOne({ _id: id });
+    return thisBounce;
 };
 
 const deletePlaylistSong = async (id, parentId=null) => {

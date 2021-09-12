@@ -33,10 +33,16 @@ const PlaylistSong = ({ playlist, song, playlistSongs, playlists, bands }) => {
 
     const renderPlayContainer = () => {
 
-        if (song) {
+        if (song && song.version && song.bounce) {
             return <PlayContainer song={playSong(song)} parentType="playlist" />;
+        } else {
+            return (
+                <div>
+                    {song.version ? `${song.version.name} - No Bounce Selected` : 'No Version Selected'}
+                </div>
+            );
         }
-    }
+    };
 
 
 

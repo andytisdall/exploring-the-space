@@ -5,6 +5,7 @@ import { Readable } from 'stream';
 import { bucket } from './audio.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
+import { deleteBounce } from './deleteItem.js';
 
 
 const Song = mongoose.model('Song');
@@ -20,7 +21,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
     // Get parameters from post request and exit if there's an existing bounce with that date.
 
-    const { date, comments, duration, version } = req.body;
+    const { date, comments, duration, version, latest } = req.body;
     const parentVersion = await Version.findById(version).populate('songs');
     if (parentVersion.songs)  {
         let duplicateDate = parentVersion.songs.find(b => b.date === date);
@@ -65,7 +66,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
         let bounceList = parentVersion.songs;
 
-        if (req.body.bounceLatest) {
+        if (latest) {
 
             let oldLatest = bounceList.find(b => b.latest);
             if (oldLatest) {
@@ -97,6 +98,67 @@ router.get('/bounces/:versionId', async (req, res) => {
     const version = await Version.findById(req.params.versionId).populate('songs');
     
     res.status(200).send(version.songs);
+
+});
+
+
+router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
+
+    const { id } = req.params;
+    const { date, comments, duration, latest } = req.body;
+
+    const thisBounce = await Bounce.findById(id);
+
+    thisBounce.comments = comments;
+    thisBounce.date = date;
+
+    if (latest) {
+        thisBounce.latest = latest;
+        Bounce.updateOne({ latest: true }, { latest: false });
+    }
+
+    if (req.files) {
+        const file = req.files.file;
+
+        // Edit bounce object form values
+
+        thisBounce.size = file.size;
+        thisBounce.duration = duration;
+
+        // Create upload stream object
+        let stream = bucket.openUploadStream(file.name);
+
+        const readableStream = new Readable();
+        readableStream.push(file.data);
+        readableStream.push(null);
+        readableStream.pipe(stream);
+
+
+        stream.on('error', (err) => {
+            throw new Error('Error uploading mp3!')
+        });
+
+        // Finish up on completed upload
+        stream.on('finish', async () => {
+
+            // Get id of mp3 from stream object
+            thisBounce.mp3 = stream.id;
+            await thisBounce.save();
+            res.send(thisBounce);
+        });
+
+    } else {
+        await thisBounce.save();
+        res.send(thisBounce);
+    }
+});
+
+router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
+    const { bounceId, versionId } = req.body;
+
+    const deletedBounce = await deleteBounce(bounceId, versionId);
+
+    res.send(deletedBounce);
 
 });
 

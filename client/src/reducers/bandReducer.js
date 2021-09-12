@@ -13,7 +13,8 @@ export default (state = {}, action) => {
         case EDIT_BAND:
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_BAND:
-            return _.omit(state, action.payload);
+            delete state[action.payload.id];
+            return { ...state };
         case CREATE_TIER:
             const { currentBand } = state;
             currentBand.tiers.push(action.payload.id);

@@ -12,7 +12,8 @@ export default (state = {}, action) => {
         case EDIT_BOUNCE:
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_BOUNCE:
-            return _.omit(state, action.payload.bounce);
+            delete state[action.payload.bounce.id];
+            return { ...state };
         default:
             return state;
 

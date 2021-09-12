@@ -149,7 +149,7 @@ export const createTitle = (formValues, tierId) => async (dispatch, getState) =>
             '/titles',
             { ...formValues, currentBand: currentBand.id, tier: tierId }
         );
-        dispatch({ type: CREATE_TITLE, payload: { ...response.data, tier: tierId } });
+        dispatch({ type: CREATE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }
@@ -162,7 +162,7 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
             '/versions',
             { ...formValues, currentBand: currentBand.id, title: titleId }
         );
-        dispatch({ type: CREATE_VERSION, payload: { ...response.data, title: titleId } });
+        dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
         if (response.data.current) {
             dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
         }
@@ -211,7 +211,7 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
                     }
                 );
 
-                dispatch({ type: CREATE_BOUNCE, payload: { ...response.data, version: versionId } });
+                dispatch({ type: CREATE_BOUNCE, payload: { bounce: response.data, version: versionId } });
                 if (response.data.latest) {
                     dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
                 }
@@ -310,11 +310,63 @@ export const editVersion = (formValues, versionId) => async (dispatch, getState)
 export const editBounce = (formValues, bounceId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
-        const response = await greenhouse.patch(
-            `/bounces/${bounceId}`,
-            { ...formValues, currentBand: currentBand.id }
-        );
-        dispatch({ type: EDIT_BOUNCE, payload: response.data });
+        if (formValues.file[0]) {
+            formValues.file = formValues.file[0];
+ 
+            // Create instance of FileReader
+            const reader = new FileReader();
+    
+            // When the file has been succesfully read
+            reader.onload = event => {
+    
+                // Create an instance of AudioContext
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+                // Asynchronously decode audio file data contained in an ArrayBuffer.
+                audioContext.decodeAudioData(event.target.result, async (buffer) => {
+    
+                    // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+                    const duration = parseInt(buffer.duration);
+    
+                    const formObject = {
+                        ...formValues,
+                        currentBand: currentBand.id,
+                        duration
+                    }
+    
+                    const formData = new FormData();
+    
+                    for ( let key in formObject ) {
+                        formData.append(key, formObject[key]);
+                    }
+    
+                    const response = await greenhouse.post(
+                        `/bounces${bounceId}`, 
+                        formData,
+                        {
+                            headers: { 'Content-Type': 'multipart/form-data'}
+                        }
+                    );
+    
+                    dispatch({ type: EDIT_BOUNCE, payload: response.data });
+    
+                });
+            };
+    
+            // In case the file couldn't be read
+            reader.onerror =  event => {
+                console.error("An error ocurred reading the file: ", event);
+            };
+    
+            // Read file as an ArrayBuffer, important !
+            reader.readAsArrayBuffer(formValues.file);
+        } else {
+            const response = await greenhouse.patch(
+                `/bounces/${bounceId}`,
+                { ...formValues, currentBand: currentBand.id }
+            );
+            dispatch({ type: EDIT_BOUNCE, payload: response.data });
+        }
     } catch (err) {
         dispatch({ type: ERROR, payload: err });
     }

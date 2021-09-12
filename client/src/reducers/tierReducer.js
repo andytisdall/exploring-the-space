@@ -1,4 +1,5 @@
 import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, DELETE_TITLE } from '../actions/types';
+import { deleteTitle } from '../actions';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -31,7 +32,15 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_TIER:
-            return _.omit(state, action.payload.tier.id);
+            action.payload.trackList.forEach(titleId => {
+                deleteTitle(titleId, action.payload.id);
+            });
+            const changePosition = Object.values(_.omit(state, state.currentBand)).filter(t => t.position > action.payload.position);
+            changePosition.forEach((tier) => {
+                tier.position = tier.position - 1;
+            });
+            delete state[action.payload.id];
+            return { ...state, ..._.mapKeys(changePosition, 'id') };
         case CREATE_TITLE:
             const addToTier = state[action.payload.tier];
             addToTier.trackList.push(action.payload.title.id);

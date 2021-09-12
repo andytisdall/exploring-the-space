@@ -1,4 +1,5 @@
 import { FETCH_PLAYLISTS, FETCH_PLAYLIST, CREATE_PLAYLIST, EDIT_PLAYLIST, DELETE_PLAYLIST, CREATE_PLAYLISTSONG, DELETE_PLAYLISTSONG } from '../actions/types';
+import { deletePlaylistSong } from '../actions';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -33,7 +34,16 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_PLAYLIST:
-            return _.omit(state, action.payload.playlist);
+            action.payload.playlistsongs.forEach(playlistSongId => {
+                deletePlaylistSong(playlistSongId, action.payload.id);
+            });
+            delete state.currentBand;
+            const changePosition = Object.values(state).filter(p => p.position > action.payload.position);
+            changePosition.forEach((playlist) => {
+                playlist.position = playlist.position - 1;
+            });
+            delete state[action.payload.id]
+            return { ...state, ..._.mapKeys(changePosition, 'id')};
         case CREATE_PLAYLISTSONG:
             const addToPlaylist = state[action.payload.playlist];
             addToPlaylist.playlistsongs.push(action.payload.playlistsong.id);
