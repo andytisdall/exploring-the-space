@@ -182,18 +182,21 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             onDismiss={() => null}
         />
     } else {
-    
-        return (
-            <div className="detail-box">   
-                {renderBounceDetail()}                                            
-                <div className="detail-buttons">
-                    {renderAddButton()}
-                    {selectedBounce && renderEditButton()}
-                    {selectedBounce && renderDeleteButton()}
+        if (version) {
+            return (
+                <div className="detail-box">   
+                    {renderBounceDetail()}                                            
+                    <div className="detail-buttons">
+                        {renderAddButton()}
+                        {selectedBounce && renderEditButton()}
+                        {selectedBounce && renderDeleteButton()}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        } else {
+            return null;
         }
+    }
 };
 
 export default connect(null, { selectBounce, createBounce, editBounce, deleteBounce })(requireAuth(Bounce));

@@ -49,7 +49,7 @@ router.get('/versions/:titleId', async (req, res) => {
 });
 
 router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
-
+    console.log(req.body);
     const { id } = req.params;
     const { name, notes, current } = req.body;
 

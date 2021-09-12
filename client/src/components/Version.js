@@ -14,6 +14,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     const [bounceList, setBounceList] = useState(null);
 
     useEffect(() => {
+        // console.log(selectedVersion);
         if (selectedVersion) {
             fetchBounces(selectedVersion.id);
             selectVersion(selectedVersion, title.id);

@@ -1,5 +1,4 @@
 import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE, CREATE_VERSION, DELETE_VERSION } from '../actions/types';
-import { deleteVersion } from '../actions';
 import _ from 'lodash';
 
 
@@ -14,9 +13,6 @@ export default (state = {}, action) => {
         case EDIT_TITLE:
             return { ...state, [action.payload.id]: action.payload };
         case DELETE_TITLE:
-            action.payload.title.versions.forEach(versionId => {
-                deleteVersion(versionId, action.payload.title.id);
-            });
             delete state[action.payload.title.id];
             return { ...state };
         case SELECT_VERSION:
@@ -33,9 +29,11 @@ export default (state = {}, action) => {
             return { ...state, [addToTitle.id]: addToTitle};
         case DELETE_VERSION:
             const deleteFromTitle = state[action.payload.title];
-            const newVersionList = deleteFromTitle.versions.filter(id => id !== action.payload.version.id);
-            deleteFromTitle.versions = newVersionList;
-            return { ...state, [deleteFromTitle.id]: deleteFromTitle };
+            if (deleteFromTitle) {
+                const newVersionList = deleteFromTitle.versions.filter(id => id !== action.payload.version.id);
+                deleteFromTitle.versions = newVersionList;
+                return { ...state, [deleteFromTitle.id]: deleteFromTitle };
+            }   
         default:
             return state;
 

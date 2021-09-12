@@ -12,24 +12,25 @@ const PlaylistSong = mongoose.model('PlaylistSong');
 export const deleteTier = async (id, band) => {
     let thisTier = await Tier.findById(id);
     await Band.updateOne({ _id: band }, { $pull: {tiers: id} });
-    thisTier.trackList.forEach((title) => {                
-        deleteTitle(title);
-    });
+    // thisTier.trackList.forEach((title) => {                
+    //     deleteTitle(title);
+    // });
     const changePosition = await Tier.find({ position: { $gt: thisTier.position }});
     changePosition.forEach(async (tier) => {
         tier.position = tier.position - 1;
         await tier.save();
     });
     await Tier.deleteOne({ _id: id });
+    // console.log(thisTier.id);
     return thisTier;
 };
 
 export const deletePlaylist = async (id, band) => {
     let thisPlaylist = await Playlist.findById(id);
     await Band.updateOne({ _id: band }, { $pull: {playlists: id} });
-    thisPlaylist.songs.forEach((song) => {                
-        deletePlaylistSong(song);
-    });
+    // thisPlaylist.songs.forEach((song) => {                
+    //     deletePlaylistSong(song);
+    // });
     const changePosition = await Playlist.find({ position: { $gt: thisPlaylist.position }});
     changePosition.forEach(async (pl) => {
         pl.position = pl.position - 1;
@@ -41,9 +42,9 @@ export const deletePlaylist = async (id, band) => {
 
 export const deleteTitle = async (id, parentId=null) => {
     let thisTitle = await Title.findById(id);
-    thisTitle.versions.forEach(async (version) => {                
-        deleteVersion(version);
-    });
+    // thisTitle.versions.forEach((version) => {                
+    //     deleteVersion(version);
+    // });
     if (parentId) {
         await Tier.updateOne({ _id: parentId }, { $pull: {trackList: id} });
     }
@@ -52,7 +53,7 @@ export const deleteTitle = async (id, parentId=null) => {
     playlistSongs.forEach(pls => {
         deletePlaylistSong(pls.id);
     });
-
+    // console.log(thisTitle.id);
     await Title.deleteOne({ _id: id });
     return thisTitle
 };
@@ -60,20 +61,21 @@ export const deleteTitle = async (id, parentId=null) => {
 
 export const deleteVersion = async (id, parentId=null) => {
     let thisVersion = await Version.findById(id);
-    thisVersion.songs.forEach(async (bounce) => {          
-        deleteBounce(bounce);
-    });
+    // thisVersion.songs.forEach(async (bounce) => {          
+    //     deleteBounce(bounce);
+    // });
     if (parentId) {
         await Title.updateOne({ _id: parentId }, { $pull: {versions: id} });
-        if (thisVersion.current) {
-            let parentTitle = await Title.findOne({ _id: parentId }).populate('versions');
-            let versionList = parentTitle.versions;
-            if (versionList.length > 1) {
-                await Version.updateOne({ _id: versionList[versionList.length-1] }, { current: true });
-            }
-        }
+        // if (thisVersion.current) {
+        //     let parentTitle = await Title.findOne({ _id: parentId }).populate('versions');
+        //     let versionList = parentTitle.versions;
+        //     if (versionList.length > 1) {
+        //         await Version.updateOne({ _id: versionList[versionList.length-1] }, { current: true });
+        //     }
+        // }
     }
     await Version.deleteOne({ _id: id });
+    // console.log(thisVersion.id);
     return thisVersion; 
 };
 

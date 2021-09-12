@@ -40,6 +40,7 @@ import {
     SELECT_BOUNCE
 } from './types';
 import history from '../history';
+import _ from 'lodash';
 
 
 export const signIn = formValues => async (dispatch) => {
@@ -424,6 +425,9 @@ export const deleteTier = tierId => async (dispatch, getState) => {
                 currentBand: currentBand.id
             }
         );
+        response.data.trackList.forEach(titleId => {
+            dispatch(deleteTitle(titleId, response.data.id));
+        });
         dispatch({ type: DELETE_TIER, payload: response.data });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
@@ -441,6 +445,9 @@ export const deleteTitle = (titleId, tierId) => async (dispatch, getState) => {
                 currentBand: currentBand.id
             }
         );
+        response.data.versions.forEach(versionId => {
+            dispatch(deleteVersion(versionId, response.data.id));
+        });
         dispatch({ type: DELETE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
@@ -458,6 +465,30 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
                 currentBand: currentBand.id
             }
         );
+        if (response.data.current) {
+            const parentTitle = getState().titles[titleId];
+            if (parentTitle) {
+                const versionList = parentTitle.versions.map(id => {
+                    if (id !== versionId) {
+                        return getState().versions[id];
+                    }
+                });
+                const newCurrent = versionList[versionList.length -1];
+                if (newCurrent) {
+                    newCurrent.current = true;
+                    dispatch(selectVersion(newCurrent.id, titleId));
+                    dispatch(editVersion(
+                        _.pick(newCurrent, 'name', 'notes', 'current'), newCurrent.id
+                    ));
+                } else {
+                    dispatch(selectVersion(null, titleId));
+                    
+                }   
+            }
+        }
+        response.data.bounces.forEach(bounceId => {
+            dispatch(deleteBounce(bounceId, response.data.id));
+        });
         dispatch({ type: DELETE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
@@ -492,6 +523,9 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
                 currentBand: currentBand.id
             }
         );
+        response.data.playlistsongs.forEach(playlistSongId => {
+            dispatch(deletePlaylistSong(playlistSongId, response.data.id));
+        });
         dispatch({ type: DELETE_PLAYLIST, payload: response.data });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});

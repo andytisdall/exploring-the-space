@@ -23,10 +23,10 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     }, []);
 
     useEffect(() => {
-        if (title.versions.length) {
-            setVersionList(title.versions.map(id => versions[id]));
-            // console.log('set version list')
-        }
+
+        setVersionList(title.versions.map(id => versions[id]));
+        // console.log('set version list')
+        
     }, [versions, title]);
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 }
             }
             selectVersion(versionToSelect, title.id);
-            console.log('select version')
+            // console.log('select version')
         }
         if (title.selectedVersion) {
             fetchBounces(title.selectedVersion.id);
