@@ -138,7 +138,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     const renderDeleteButton = () => {
         return <DeleteButton
-            onSubmit={() => deleteBounce(selectedBounce.id, version.id)}
+            onSubmit={() => deleteBounce(selectedBounce.id, version.id, title.id)}
             displayName={displayDate(selectedBounce.date)}
         />;
     };
