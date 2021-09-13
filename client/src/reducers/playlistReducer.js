@@ -1,5 +1,6 @@
 import { FETCH_PLAYLISTS, FETCH_PLAYLIST, CREATE_PLAYLIST, EDIT_PLAYLIST, DELETE_PLAYLIST, CREATE_PLAYLISTSONG, DELETE_PLAYLISTSONG } from '../actions/types';
 import _ from 'lodash';
+import { deletePlaylistSong } from '../actions';
 
 export default (state = {}, action) => {
 
@@ -42,13 +43,15 @@ export default (state = {}, action) => {
             return { ...state, ..._.mapKeys(changePosition, 'id')};
         case CREATE_PLAYLISTSONG:
             const addToPlaylist = state[action.payload.playlist];
-            addToPlaylist.playlistsongs.push(action.payload.playlistsong.id);
+            addToPlaylist.songs.push(action.payload.playlistsong.id);
             return { ...state, [addToPlaylist.id]: addToPlaylist};
         case DELETE_PLAYLISTSONG:
             const deleteFromPlaylist = state[action.payload.playlist];
-            const newSongList = deleteFromPlaylist.playlistsongs.filter(id => id !== action.payload.playlistsong.id);
-            deleteFromPlaylist.songs = newSongList;
-            return { ...state, [deleteFromPlaylist.id]: deleteFromPlaylist };
+            if (deleteFromPlaylist) {
+                const newSongList = deleteFromPlaylist.songs.filter(id => id !== action.payload.playlistsong.id);
+                deleteFromPlaylist.songs = newSongList;
+                return { ...state, [deleteFromPlaylist.id]: deleteFromPlaylist };
+            }
         default:
             return state;
 

@@ -21,9 +21,11 @@ export default (state = {}, action) => {
             return { ...state, [addToVersion.id]: addToVersion};
         case DELETE_BOUNCE:
             const deleteFromVersion = state[action.payload.version];
-            const newBounceList = deleteFromVersion.bounces.filter(id => id !== action.payload.bounce.id);
-            deleteFromVersion.bounces = newBounceList;
-            return { ...state, [deleteFromVersion.id]: deleteFromVersion };
+            if (deleteFromVersion) {
+                const newBounceList = deleteFromVersion.bounces.filter(id => id !== action.payload.bounce.id);
+                deleteFromVersion.bounces = newBounceList;
+                return { ...state, [deleteFromVersion.id]: deleteFromVersion };
+            }
         default:
             return state;
 

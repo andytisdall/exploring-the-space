@@ -112,7 +112,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         type: 'checkbox',        
                     },
                 ]}
-                onSubmit={formValues => editVersion(formValues, selectedVersion.id)}
+                onSubmit={formValues => editVersion(formValues, selectedVersion.id, title.id)}
                 initialValues={_.pick(selectedVersion, 'name', 'notes', 'current')}
                 form={`edit-version-${title.id}`}
                 enableReinitialize={true}
@@ -125,6 +125,16 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
             onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
             displayName={selectedVersion.name}
         />;
+    };
+
+    const latestTag = () => {
+        if (selectedVersion.current) {
+            return (
+                <div className="current">
+                    Current Version
+                </div>
+            );
+        }
     };
 
     const renderVersionDetail = () => {
@@ -141,6 +151,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                                 {renderVersionList()}
                             </div>
                         </div>
+                        {latestTag()}
                     </div>
                     <div className="detail-notes">
                         {selectedVersion.notes}
@@ -156,7 +167,9 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                 </div>
             );
         }
-    }
+    };
+
+
 
     
     return (

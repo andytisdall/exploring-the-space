@@ -32,7 +32,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         return songsToRender.map(song => {
             if (song) {
                 return (
-                <PlaylistSong song={song} playlist={playlist} key={playlist.id} />
+                <PlaylistSong song={song} playlist={playlist} key={song.id} />
                 );
             }
         });

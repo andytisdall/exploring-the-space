@@ -10,6 +10,7 @@ import { deleteBounce } from './deleteItem.js';
 
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
+const Title = mongoose.model('Title');
 
 const router = express.Router();
 
@@ -29,8 +30,6 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
             throw new Error('Duplicate date found in the version list');
         }
     }
-
-    console.log(parentVersion);
 
     const file = req.files.file;
 
@@ -86,7 +85,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
         await parentVersion.save();
 
         console.log('Uploaded & created bounce record:', newBounce);
-        // axios request prevents redirect by express
+
         return res.status(201).send(newBounce);
     });
 
@@ -107,14 +106,14 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
     const { id } = req.params;
     const { date, comments, duration, latest } = req.body;
 
-    const thisBounce = await Bounce.findById(id);
+    const thisBounce = await Song.findById(id);
 
     thisBounce.comments = comments;
     thisBounce.date = date;
 
     if (latest) {
         thisBounce.latest = latest;
-        Bounce.updateOne({ latest: true }, { latest: false });
+        Song.updateOne({ latest: true }, { latest: false });
     }
 
     if (req.files) {

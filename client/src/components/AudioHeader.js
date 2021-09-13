@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
+
 import { playAudio, pauseAudio, nextSong } from '../actions';
 
 
@@ -15,11 +17,13 @@ class AudioHeader extends React.Component {
         return `${minutes}:${seconds}`;
     }
 
+    displayDate = date => {
+        return moment.utc(date).format('MM/DD/yy');
+    }
+
     wrapUrl(id) {
         return `https://localhost:3001/audio/${id}.mp3`
     }
-
-
 
     updateSlider = () => {
         const position = (this.audio.currentTime / this.audio.duration) * 1000;
@@ -44,6 +48,19 @@ class AudioHeader extends React.Component {
         // if there's a queue, load next song
 
         this.audio.addEventListener('ended', this.nextSong);
+
+        // space bar stop/start
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (this.props.pause) {
+                    this.play();
+                } else {
+                    this.pause();
+                }
+            }
+        });
         
     }
 
@@ -62,6 +79,19 @@ class AudioHeader extends React.Component {
                 this.audio.pause();
             } 
         }
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (this.props.pause) {
+                    this.play();
+                } else {
+                    this.pause();
+                }
+            }
+        });
     }
 
     nextSong = () => {
@@ -135,7 +165,7 @@ class AudioHeader extends React.Component {
                                 {this.props.song.version}
                             </p>
                             <p>
-                                {this.props.song.date}
+                                {this.displayDate(this.props.song.date)}
                             </p>
                         </div>
                     </div>

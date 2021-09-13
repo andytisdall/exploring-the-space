@@ -1,49 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import _ from 'lodash';
 
 import AddButton from './AddButton';
-import { createPlaylistSong, editPlaylistSong } from '../actions';
+import { editPlaylistSong, fetchVersions, fetchBounces } from '../actions';
 import PlayContainer from './PlayContainer';
+import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, song, playlistSongs, playlists, bands }) => {
+const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions }) => {
 
-    // const { currentBand } = bands;
+    const [playSong, setPlaySong] = useState(null);
 
-    // const playlist = playlists[playlistId];
-
-    // const otherSongs = playlistSongs.filter(s => playlist.songs.includes(s.id));
-
-    const addSubmit = formValues => {
-        createPlaylistSong(formValues);
-    }
-
-    const editSubmit = formValues => {
-        editPlaylistSong(formValues);
-    }
+    useEffect(() => {
+        fetchVersions(song.title);
+        titles[song.title].versions.forEach(id => {
+            fetchBounces(id);
+        });
+    }, []);
     
-    const playSong = s => {
-        return {
-            playlist,
-            title: s.title,
-            version: s.version,
-            bounce: s.bounce,
-            self: s
-        };
-    };
+    useEffect(() => {
+        if (bounces[song.bounce] && versions[song.version] && titles[song.title]) {
+            setPlaySong({
+                    playlist,
+                    title: titles[song.title],
+                    version: versions[song.version],
+                    bounce: bounces[song.bounce],
+                    self: song
+                });
+        }
+        console.log(bounces);
+    }, [versions, bounces]);
 
     const renderPlayContainer = () => {
 
-        if (song && song.version && song.bounce) {
-            return <PlayContainer song={playSong(song)} parentType="playlist" />;
+        if (playSong) {
+            return <PlayContainer song={playSong} parentType="playlist" />;
         } else {
             return (
-                <div>
-                    {song.version ? `${song.version.name} - No Bounce Selected` : 'No Version Selected'}
+                <div className="playlistsong-no-bounce">
+                    <div>
+                        {versions[song.version] ? `${versions[song.version].name}` : 'No Version Selected'}
+                    </div>
+                    <div>
+                        No Bounce Selected
+                    </div>
                 </div>
             );
         }
     };
 
+    const onEditSubmit = formValues => {
+        const thisVersion = Object.values(versions.filter(v => v.bounces.includes(formValues.bounce)));
+        editPlaylistSong({
+            ...formValues,
+            version: thisVersion.id,
+        }, song.id);
+    };
+
+    const renderEditButton = () => {
+        if (authorized) {
+
+            const otherSongs = Object.values(playlistSongs)
+                .filter(s => playlist.songs.includes(s.id))
+                .map(s => {
+                    return { value: s.position, display: s.position };
+            });
+
+            const thisTitle = titles[song.title];
+
+            const otherVersions = thisTitle.versions.map(id => versions[id]);
+
+            const otherBounces = otherVersions.map(v => {
+                if (v) {
+                    return v.bounces.map(id => bounces[id]);
+                }
+            });
+
+
+            const editOptions = [];
+            
+            otherVersions.forEach((v, i) => {
+                if (otherBounces[i]) {
+                    otherBounces[i].forEach(b => {
+                        if (b) {
+                            console.log()
+                            editOptions.push({
+                                value: b.id,
+                                display: `${v.name} -- ${moment.utc(b.date).format('MM/DD/YY')}`
+                            });
+                        }
+                    });
+                }
+            });
+
+            return (
+                <AddButton
+                    image='/images/edit.png'
+                    title={`Edit ${titles[song.title].title}`}
+                    onSubmit={formValues => onEditSubmit(formValues)}
+                    fields={[
+                        {
+                            name: 'position',
+                            label: 'Position',
+                            type: 'select',
+                            options: otherSongs
+                        },
+                        {
+                            name: 'bounce',
+                            label: 'Bounce',
+                            type: 'select',
+                            options: editOptions
+                        }
+                    ]}
+                    initialValues={_.pick(song, 'position', 'bounce')}
+                    form={`edit-playlistsong-${song.id}`}
+                    enableReinitialize={true}
+                />
+            );
+        }
+    };
 
 
     return (
@@ -53,55 +129,13 @@ const PlaylistSong = ({ playlist, song, playlistSongs, playlists, bands }) => {
                     <div className='row-name'>
                         <div className="song-position">{song.position}</div>
                         <div className='name-spot'>
-                            <h3>{song && song.title.title}</h3>
+                            <h3>{song && titles[song.title].title}</h3>
                         </div>
                     </div>      
 
                     {renderPlayContainer()}
-
-                
-                    {/* <div className='tier-display'>
-                        <AddButton 
-                            onSubmit={addSubmit}
-                            title='Add to Playlist'
-                            image='/images/playlist.png'
-                            fields={[
-                                {
-                                    label: 'Playlist',
-                                    name: 'playlistId',
-                                    type: 'select',
-                                    options: currentBand.playlists.map(pl => {
-                                            return { value: pl.id, display :pl.name };
-                                    })
-                                }
-                            ]}
-                        />
-            
-                        <AddButton
-                            image='/images/edit.png'
-                            title={`Edit ${song.title.title}`}
-                            onSubmit={editSubmit}
-                            fields={[
-                                {
-                                    name: 'newPosition',
-                                    label: 'Position',
-                                    type: 'select',
-                                    options: otherSongs.map(s => {
-                                        return { value: s.position, display: s.position };
-                                    })
-                                },
-                                {
-                                    name: 'newBounce',
-                                    label: 'Bounce',
-                                    type: 'select',
-                                    options: song.title.versions.map(v => {
-                                        return { value: v.id, display: moment.utc(v.date).format('MM/DD/YY') }
-                                    })
-                                }
-                            ]}
-                        />
-                    </div> */}
-     
+                    {renderEditButton()}
+                        
                 </div>
             </div>
         </div>
@@ -116,9 +150,12 @@ const mapStateToProps = state => {
     return {
         playlistSongs: state.playlistSongs,
         bands: state.bands,
-        playlists: state.playlists
+        playlists: state.playlists,
+        versions: state.versions,
+        bounces: state.bounces,
+        titles: state.titles
     }
 
 }
 
-export default connect(mapStateToProps)(PlaylistSong);
+export default connect(mapStateToProps, { fetchBounces, fetchVersions })(requireAuth(PlaylistSong));

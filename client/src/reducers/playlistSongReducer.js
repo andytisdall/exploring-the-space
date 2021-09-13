@@ -8,11 +8,35 @@ export default (state = {}, action) => {
         case FETCH_PLAYLISTSONGS:
             return { ...state, ..._.mapKeys(action.payload, 'id') };
         case CREATE_PLAYLISTSONG:
-            return { ...state, [action.payload.id]: action.payload };
+            return { ...state, [action.payload.playlistsong.id]: action.payload.playlistsong };
         case EDIT_PLAYLISTSONG:
-            return { ...state, [action.payload.id]: action.payload };
+            const oldPosition = state[action.payload.id]['position'];
+            const newPosition = action.payload.position;
+            let changedPositions = {};
+            if (oldPosition > newPosition) {
+                for (let item of Object.values(state)) {
+                    if (item.position >= newPosition && item.position < oldPosition) {
+                        const pos = item.position;
+                        changedPositions[item.id] = { ...item, position: pos + 1};
+                    }
+                }
+            }
+            if (oldPosition < newPosition) {
+                for (let item of Object.values(state)) {
+                    if (item.position > oldPosition && item.position <= newPosition) {
+                        const pos = item.position;
+                        changedPositions[item.id] = { ...item, position: pos - 1};
+                    }
+                }
+            }
+            return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_PLAYLISTSONG:
-            return _.omit(state, action.payload);
+            const changePosition = Object.values(state).filter(p => p.position > action.payload.position);
+            changePosition.forEach((song) => {
+                song.position = song.position - 1;
+            });
+            delete state[action.payload.playlistsong.id];
+            return { ...state };
         case DELETE_TITLE:
             const toDelete = Object.values(state).filter(pls => pls.title.id === action.payload.title.id);
             toDelete.forEach(pls => {
@@ -21,7 +45,7 @@ export default (state = {}, action) => {
             return { ...state };
         case DELETE_VERSION:
             for (const song in state) {
-                if (song.version.id === action.payload.version.id) {
+                if (song.version === action.payload.version.id) {
                     song.version = null;
                     song.bounce = null;
                 }
@@ -29,7 +53,7 @@ export default (state = {}, action) => {
             return { ...state };
         case DELETE_BOUNCE:
             for (const song in state) {
-                if (song.bounce.id === action.payload.bounce.id) {
+                if (song.bounce === action.payload.bounce.id) {
                     song.bounce = null;
                 }
             }

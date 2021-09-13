@@ -163,10 +163,19 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
             '/versions',
             { ...formValues, currentBand: currentBand.id, title: titleId }
         );
-        dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
         if (response.data.current) {
-            dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
+            const parentTitle = getState().titles[titleId];
+            if (parentTitle.versions.length) {
+                const versionList = parentTitle.versions.map(id => getState().versions[id]);
+                const oldCurrent = versionList.find(v => v.current);
+                oldCurrent.current = false;
+                dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
+                dispatch(editVersion(
+                    _.pick(oldCurrent, 'name', 'notes', 'current'), oldCurrent.id, titleId
+                ));
+            }
         }
+        dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
     }
@@ -212,11 +221,20 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
                     }
                 );
 
-                dispatch({ type: CREATE_BOUNCE, payload: { bounce: response.data, version: versionId } });
                 if (response.data.latest) {
-                    dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
+                    const parentVersion = getState().versions[versionId];
+                    if (parentVersion.bounces.length) {
+                        const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
+                        const oldLatest = bounceList.find(b => b.latest);
+                        oldLatest.latest = false;
+                        dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
+                        dispatch(editBounce(
+                            _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
+                        ));
+                    }
                 }
 
+                dispatch({ type: CREATE_BOUNCE, payload: { bounce: response.data, version: versionId } });
             });
         };
 
@@ -247,7 +265,6 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
 };
 
 export const createPlaylistSong = (formValues, playlistId) => async (dispatch, getState) => {
-
     try {
         const { currentBand } = getState().bands;
         const response = await greenhouse.post(
@@ -295,21 +312,29 @@ export const editTitle = (formValues, titleId) => async (dispatch, getState) => 
     }
 };
 
-export const editVersion = (formValues, versionId) => async (dispatch, getState) => {
+export const editVersion = (formValues, versionId, titleId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
         const response = await greenhouse.patch(
             `/versions/${versionId}`,
             { ...formValues, currentBand: currentBand.id }
         );
+        if (response.data.current && !getState().versions[versionId].current) {
+            const parentTitle = getState().titles[titleId];
+            const versionList = parentTitle.versions.map(id => getState().versions[id]);
+            const oldCurrent = versionList.find(v => v.current);
+            oldCurrent.current = false;
+            dispatch(editVersion(
+                _.pick(oldCurrent, 'name', 'notes', 'current'), oldCurrent.id, titleId
+            ));   
+        }
         dispatch({ type: EDIT_VERSION, payload: response.data });
     } catch (err) {
         dispatch({ type: ERROR, payload: err });
     }
 };
 
-export const editBounce = (formValues, bounceId) => async (dispatch, getState) => {
-    console.log(formValues);
+export const editBounce = (formValues, bounceId, versionId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
         if (formValues.file) {
@@ -349,6 +374,16 @@ export const editBounce = (formValues, bounceId) => async (dispatch, getState) =
                             headers: { 'Content-Type': 'multipart/form-data'}
                         }
                     );
+
+                    if (response.data.latest && !getState().bounces[bounceId].latest) {
+                        const parentVersion = getState().versions[versionId];
+                        const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
+                        const oldLatest = bounceList.find(b => b.latest);
+                        oldLatest.latest = false;
+                        dispatch(editBounce(
+                            _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
+                        ));
+                    }
     
                     dispatch({ type: EDIT_BOUNCE, payload: response.data });
     
@@ -475,7 +510,7 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
                     newCurrent.current = true;
                     dispatch(selectVersion(newCurrent.id, titleId));
                     dispatch(editVersion(
-                        _.pick(newCurrent, 'name', 'notes', 'current'), newCurrent.id
+                        _.pick(newCurrent, 'name', 'notes', 'current'), newCurrent.id, titleId
                     ));
                 } else {
                     dispatch(selectVersion(null, titleId));     
@@ -511,7 +546,7 @@ export const deleteBounce = (bounceId, versionId, titleId) => async (dispatch, g
                     newLatest.latest = true;
                     dispatch(selectBounce(newLatest.id, titleId));
                     dispatch(editBounce(
-                        _.pick(newLatest, 'date', 'comments', 'latest'), newLatest.id
+                        _.pick(newLatest, 'date', 'comments', 'latest'), newLatest.id, versionId
                     ));
                 } else {
                     dispatch(selectBounce(null, titleId));
@@ -535,7 +570,7 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
                 currentBand: currentBand.id
             }
         );
-        response.data.playlistsongs.forEach(playlistSongId => {
+        response.data.songs.forEach(playlistSongId => {
             dispatch(deletePlaylistSong(playlistSongId, response.data.id));
         });
         dispatch({ type: DELETE_PLAYLIST, payload: response.data });
@@ -545,6 +580,7 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
 };
 
 export const deletePlaylistSong = (playlistSongId, playlistId) => async (dispatch, getState) => {
+
     const { currentBand } = getState().bands;
     try {
         const response = await greenhouse.post(

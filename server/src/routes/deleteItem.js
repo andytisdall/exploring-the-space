@@ -96,13 +96,6 @@ export const deleteBounce = async (id, parentId) => {
     return thisBounce;
 };
 
-const deletePlaylistSong = async (id, parentId) => {
-    const parentPlaylist = await Playlist.findById(parentId);
-    if (parentPlaylist) {
-        await Playlist.updateOne({ _id: parentId }, { $pull: { songs: id } });
-    }
-    await PlaylistSong.deleteOne({ _id: id });
-};
 
 const deleteMp3 = (mp3Id) => {
     

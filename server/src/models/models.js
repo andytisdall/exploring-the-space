@@ -93,11 +93,11 @@ const playlistSchema = new Schema({
 );
 
 
-mongoose.model('Tier', tierSchema);
-mongoose.model('Title', titleSchema);
-mongoose.model('Version', versionSchema);
-mongoose.model('Song', songSchema);
+const Tier = mongoose.model('Tier', tierSchema);
+const Title = mongoose.model('Title', titleSchema);
+const Version = mongoose.model('Version', versionSchema);
+const Song = mongoose.model('Song', songSchema);
 const Playlist = mongoose.model('Playlist', playlistSchema);
 const PlaylistSong = mongoose.model('PlaylistSong', playlistSongSchema);
 
-export { Playlist, PlaylistSong };
+export { Playlist, PlaylistSong, Title, Version, Tier, Song };

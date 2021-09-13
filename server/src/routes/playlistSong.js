@@ -3,21 +3,19 @@ import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { Band } from '../models/band.js';
-import { Playlist, PlaylistSong } from '../models/models.js';
+import { Playlist, PlaylistSong, Title, Version, Song } from '../models/models.js';
 
 
 const router = express.Router();
 
 router.get('/playlistsongs/:playlistId', async (req, res) => {
 
-    const playlist = await Playlist.findById(req.params.playlistId)
-        .populate({
-            path: 'songs',
-            populate: ['title', 'version', 'bounce'],
-            options: { sort: 'position' }
-        });
-
-    console.log(playlist);
+    const playlist = await Playlist.findById(req.params.playlistId).populate('songs');
+        // .populate({
+        //     path: 'songs',
+        //     populate: ['title', 'version', 'bounce'],
+        //     options: { sort: 'position' }
+        // });
 
     res.status(200).send(playlist.songs);
 
@@ -27,10 +25,10 @@ router.get('/playlistsongs/:playlistId', async (req, res) => {
 
 router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 
-    // console.log(req.body);
-
     const { playlistId, bounce, version, title } = req.body;
+
     const playlist = await Playlist.findById(playlistId);
+
     const newPlaylistSong = new PlaylistSong({
         title,
         version,
@@ -38,9 +36,14 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
         position: playlist.songs.length + 1
     });
     await newPlaylistSong.save();
+
     playlist.songs.push(newPlaylistSong);
     await playlist.save();
-    console.log(newPlaylistSong)
+
+    // newPlaylistSong.title = await Title.findById(title);
+    // newPlaylistSong.version = await Version.findById(version);
+    // newPlaylistSong.bounce = await Song.findById(bounce)
+
     res.status(201).send(newPlaylistSong);
 });
 
@@ -87,29 +90,23 @@ router.post('/:bandName/change-position', currentUser, requireAuth, async (req, 
 
 });
 
-router.post('/:bandName/delete-playlist-song', currentUser, requireAuth, async (req, res) => {
-  
-    const bandName = req.params.bandName;
-    const { songId, playlistId } = req.body;
+router.post('/playlistsongs/delete', currentUser, requireAuth, async (req, res) => {
+
+    const { playlistSongId, playlistId } = req.body;
+
  
-    const song = await PlaylistSong.findById(songId);
+    const song = await PlaylistSong.findById(playlistSongId);
     
-    const playlist = await Playlist.findById(playlistId).populate('songs');
+    const playlist = await Playlist.findById(playlistId);
 
-    const greaterPlaylistSongs = playlist.songs.filter(s => s.position > song.position);
-    greaterPlaylistSongs.forEach(async (gps) => {
-        gps.position -= 1;
-        await gps.save();
-    });
+    if (playlist) {
+        playlist.songs = playlist.songs.filter(s => s.id !== song.id);
+        await playlist.save();
+    }
     
-    // await Playlist.updateOne({ _id: playlistId }, { $pull: {songs: songId} });
+    await PlaylistSong.deleteOne({ _id: playlistSongId });
 
-    playlist.songs = playlist.songs.filter(s => s.id !== song.id);
-    await playlist.save();
-    
-    await PlaylistSong.deleteOne({ _id: songId });
-
-    res.redirect(`/${bandName}`);
+    res.send(song);
 
 });
 

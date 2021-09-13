@@ -15,14 +15,21 @@ class AddButton extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.boxVisible === false && this.state.boxVisible === true) {
             document.addEventListener('click', this.bodyClick, {capture: true});
+            document.addEventListener('keydown', this.blockSpaceBarPress, {capture: true});
         } else if (prevState.boxVisible === true && this.state.boxVisible === false) {
             document.removeEventListener('click', this.bodyClick, {capture: true});
+            document.removeEventListener('keydown', this.blockSpaceBarPress, {capture: true});
         }
         
     }
 
     componentWillUnmount() {
         document.removeEventListener('click', this.bodyClick, {capture: true});
+        document.removeEventListener('keydown', this.blockSpaceBarPress, {capture: true});
+    }
+
+    blockSpaceBarPress = (e) => {
+        e.stopPropagation();
     }
 
     bodyClick = (e) => {

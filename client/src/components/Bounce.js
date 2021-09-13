@@ -35,6 +35,14 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         if (bounces[0]) {
 
             const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
+            bounceList.sort((a, b) => {
+                if (a.date < b.date) {
+                    return -1;
+                }
+                if (b.date < a.date) {
+                    return 1;
+                }
+            });
 
             return bounceList.map(b => {
                 return <div
@@ -123,12 +131,12 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                         type: 'textarea',          
                     },
                     {
-                        label: 'Latest Bounce?',
+                        label: 'Current Bounce?',
                         name: 'latest',
                         type: 'checkbox',        
                     },
                 ]}
-                onSubmit={formValues => editBounce(formValues, selectedBounce.id)}
+                onSubmit={formValues => editBounce(formValues, selectedBounce.id, version.id)}
                 initialValues={_.pick(selectedBounce, 'date', 'comments', 'latest')}
                 form={`edit-bounce-${title.id}`}
                 enableReinitialize={true}
@@ -141,6 +149,16 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             onSubmit={() => deleteBounce(selectedBounce.id, version.id, title.id)}
             displayName={displayDate(selectedBounce.date)}
         />;
+    };
+
+    const latestTag = () => {
+        if (selectedBounce.latest) {
+            return (
+                <div className="latest">
+                    Current Bounce
+                </div>
+            );
+        }
     };
     
 
@@ -157,6 +175,9 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                             <div className='dropdown-content'>
                                 {renderBounceList()}
                             </div>
+                        </div>
+                        <div>
+                            {latestTag()}
                         </div>
                     </div>
                     <div className='detail-notes'>

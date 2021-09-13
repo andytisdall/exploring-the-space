@@ -142,7 +142,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             bounce: title.selectedBounce.id,
             version: title.selectedVersion.id,
             title: title.id
-        });
+        }, formValues.playlistId);
     }
 
     const renderButtons = () => {
@@ -167,6 +167,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                                 label: 'Playlist'
                             }
                         ]}
+                        form={`add-to-playlist-${title.id}`}
                         enableReinitialize={true}
                     />}
                     <AddButton

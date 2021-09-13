@@ -86,7 +86,7 @@ img {
 
 .pause-container {
   padding-top: 0.2rem;
-  width: 33%;
+  width: 100%;
   display: flex;
   justify-content: space-around;
 }
@@ -329,7 +329,7 @@ h1 {
 
 .marqee {
   display: flex;
-  padding-bottom: 0.2rem;
+  padding-bottom: 5px;
 }
 
 .header {
@@ -564,6 +564,26 @@ h5 {
   width: 300px;
 }
 
+.latest {
+  font-size: 0.8rem;
+  background-color: orange;
+  display: inline-block;
+  color: black;
+  padding: 5px;
+
+  margin-top: 5px;
+}
+
+.current {
+  font-size: 0.8rem;
+  background-color: rgb(228, 125, 219);
+  display: inline-block;
+  color: black;
+  padding: 5px;
+
+  margin-top: 5px;
+}
+
 /*  hidden */
 
 .hidden {
@@ -641,6 +661,14 @@ h5 {
 .playlists h2 {
   font-size: 1.3rem;
   color: rgb(82, 236, 236);
+}
+
+.playlistsong-no-bounce {
+  display: flex;
+  justify-content: space-around;
+  width: 30%;
+  font-size: 0.8rem;
+  padding-top: 5px;
 }
 
 .song-position {

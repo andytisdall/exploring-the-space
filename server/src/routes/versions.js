@@ -12,26 +12,12 @@ const router = express.Router();
 
 router.post('/versions', currentUser, requireAuth, async (req, res) => {
 
-    const { name, notes, title } = req.body;
-    const newVersion = new Version({name, notes});
-
-    const parentTitle = await Title.findOne({ _id: title }).populate('versions');
-    let versionList = parentTitle.versions;
-
-    if (req.body.current) {
-
-
-        let oldCurrent = versionList.find(v => v.current);
-        if (oldCurrent) {
-            await Version.updateOne({_id: oldCurrent._id}, {current: false});
-        }
-        newVersion.current = true;
-
-    } else if (!versionList.find(v => v.current)) {
-        newVersion.current = true;
-    }
-    parentTitle.versions.push(newVersion);
+    const { name, notes, title, current } = req.body;
+    const newVersion = new Version({ name, notes, current });
     await newVersion.save();
+
+    const parentTitle = await Title.findById(title);
+    parentTitle.versions.push(newVersion);
     await parentTitle.save();
 
     return res.status(201).send(newVersion);
@@ -49,7 +35,7 @@ router.get('/versions/:titleId', async (req, res) => {
 });
 
 router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
-    console.log(req.body);
+
     const { id } = req.params;
     const { name, notes, current } = req.body;
 
@@ -59,10 +45,8 @@ router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
         thisVersion.name = name;
     }
     thisVersion.notes = notes;
-    if (current) {
-        thisVersion.current = current;
-        Version.updateOne({ current: true }, { current: false });
-    }
+    thisVersion.current = current;
+
     await thisVersion.save();
 
     res.send(thisVersion);
