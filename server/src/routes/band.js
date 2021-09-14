@@ -33,14 +33,12 @@ router.post('/bands', currentUser, async (req, res) => {
 
 router.patch('/bands/', currentUser, requireAuth, async (req, res) => {
 
-    const { bandName, currentBand } = req.body;
-
-    console.log(bandName);
+    const { name, currentBand } = req.body;
 
     const band = await Band.findById(currentBand);
 
-    band.name = bandName;
-    band.url = bandName.replace(/ /g, '').toLowerCase();
+    band.name = name;
+    band.url = name.replace(/ /g, '').toLowerCase();
 
     await band.save();
 
@@ -68,6 +66,25 @@ router.get('/bands/:bandName', async (req, res) => {
 
 
     res.status(200).send(band);
+
+});
+
+router.post('/bands/delete', currentUser, requireAuth, async (req, res) => {
+
+    const { currentBand } = req.body;
+    const user = req.currentUser;
+
+    const band = await Band.findById(currentBand);
+
+    const bands = user.bands.filter(id => id !== currentBand);
+
+    user.bands = bands;
+
+    await user.save();
+
+    await Band.deleteOne({ _id: band });
+
+    res.send(band);
 
 });
 

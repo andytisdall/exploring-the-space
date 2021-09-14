@@ -10,12 +10,11 @@ const router = express.Router();
 
 router.get('/playlists/:bandId', async (req, res) => {
 
+    console.log(req)
+
     const { bandId } = req.params;
 
-    const band = await Band.findById(bandId).populate({
-        path: 'playlists',
-        options: { sort: 'position' }
-    });
+    const band = await Band.findById(bandId).populate('playlists')
 
     if (!band) {
         throw new Error('Band does not exist');

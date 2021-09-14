@@ -10,7 +10,6 @@ import { deleteBounce } from './deleteItem.js';
 
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
-const Title = mongoose.model('Title');
 
 const router = express.Router();
 
