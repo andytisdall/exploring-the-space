@@ -198,6 +198,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             );
         }
     };
+    
 
     if (modalActive) {
         return <Modal
@@ -208,7 +209,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     } else {
         if (version) {
             return (
-                <div className="detail-box">   
+                <div className="detail-box bounce">   
                     {renderBounceDetail()}                                            
                     <div className="detail-buttons">
                         {renderAddButton()}

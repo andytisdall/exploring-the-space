@@ -32,14 +32,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     useEffect(() => {
         if (band.tiers.length) {
-            const tiersToShow = band.tiers.map(id => tiers[id]).sort((a, b) => {
-                if (a.position < b.position) {
-                    return -1;
-                }
-                if (b.position < a.position) {
-                    return 1;
-                }
-            });
+            const tiersToShow = band.tiers
+                .map(id => tiers[id])
+                .sort((a, b) => a.position < b.position ? -1 : 1);
+
             setTierList(tiersToShow.map(t => {
                 if (t) {
                     return { value: t.position, display: t.position };

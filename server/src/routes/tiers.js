@@ -16,7 +16,7 @@ router.post('/tiers', currentUser, requireAuth, async (req, res) => {
     try {
         const band = await Band.findById(currentBand).populate('tiers');
         if (band.tiers.length) {
-            newTier.position = band.tiers.length;
+            newTier.position = band.tiers.length + 1;
         } else {
             newTier.position = 1;
         }

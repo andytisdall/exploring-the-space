@@ -186,8 +186,8 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     return (
         <div className="title-margin">
             <div className="row title">
-                <div className="marqee">
-                    <div className="row-name"  onClick={() => setExpand(!expand)} >
+                <div className="marqee" onClick={() => setExpand(!expand)}>
+                    <div className="row-name"   >
                         <img className="arrow" src={`/images/${arrow}-arrow.svg`} />
                         <div className="name-spot">
                             <h3>{title.title}</h3>

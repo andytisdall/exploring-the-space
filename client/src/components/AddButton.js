@@ -102,7 +102,7 @@ class AddButton extends React.Component {
                     {...field.input}
                     autoFocus={field.autoFocus}
                     type={field.type}
-                    className={addClass}
+                    className={`text-input ${addClass}`}
                 />
             </>;
         }
@@ -150,7 +150,9 @@ class AddButton extends React.Component {
                     <h3 className="addbox-title">{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}
-                        <button className="submit-button" type='submit'>OK</button>
+                        <div className="submit-button-centered">
+                            <button className="submit-button" type='submit'>OK</button>
+                        </div>
                     </form>
                 </div>
             </>
