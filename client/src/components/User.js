@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { createBand, fetchBands, signIn } from '../actions';
+import { createBand, fetchBands, signIn, editBand, deleteBand } from '../actions';
 import AddButton from './AddButton';
+import DeleteButton from './DeleteButton';
 
-const User = ({ user, bands, createBand, fetchBands }) => {
+const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand }) => {
 
     useEffect(() => {
         fetchBands();
@@ -17,18 +18,35 @@ const User = ({ user, bands, createBand, fetchBands }) => {
             return <h3>No bands belong to this user</h3>
         }
         return bandList.map(band => {
-            return <Link key={band.id} to={`/${band.url}`}>
-                <h2>{band.name}</h2>
-            </Link>
+            return (
+                <div className="band-item">
+                    <Link key={band.id} to={`/${band.url}`}>
+                        <h2>{band.name}</h2>
+                    </Link>
+                    <div className="band-buttons">
+                        <AddButton
+                            onSubmit={formValues => editBand(formValues)}
+                            title={`Edit ${band.name}`}
+                            image="images/edit.png"
+                            fields={[{
+                                label: 'Band Name',
+                                name: 'bandName',
+                                type: 'input'
+                            }]}
+                        />
+                        <DeleteButton
+                            onSubmit={() => deleteBand(band.id)}
+                            displayName={band.name}
+                        />
+                    </div>
+                </div>
+            );
         });
-    };
-
-    const onCreateBandSubmit = formValues => {
-        createBand(formValues);
     };
 
     if (!user) {
         signIn();
+        return null;
     }
 
     return <>
@@ -39,7 +57,7 @@ const User = ({ user, bands, createBand, fetchBands }) => {
         <hr />
         <div className="centered-button">
             <AddButton
-                onSubmit={onCreateBandSubmit}
+                onSubmit={formValues => createBand(formValues)}
                 title='Create a Band'
                 image="images/add.png"
                 fields={[{
@@ -60,4 +78,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { createBand, fetchBands, signIn })(User);
+export default connect(mapStateToProps, { createBand, fetchBands, signIn, editBand, deleteBand })(User);

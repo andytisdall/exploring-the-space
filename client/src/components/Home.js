@@ -14,7 +14,9 @@ class Home extends React.Component {
 
     renderBands() {
 
-        const bands = Object.values(_.omit(this.props.bands, this.props.bands.currentBand));
+        delete this.props.bands.currentBand;
+
+        const bands = Object.values(this.props.bands);
 
         return bands.map(band => {
             return (

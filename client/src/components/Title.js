@@ -87,24 +87,12 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
         } else if (song) {
             setSong(null);
         }
-            // console.log('select bounce')
-        
-        // if (!song && title.selectedVersion && title.selectedBounce) {
-        //     setSong({
-        //         tier,
-        //         title,
-        //         version: title.selectedVersion,
-        //         bounce: title.selectedBounce
-        //     });
-        //     console.log('set song')
-        // }
+
     }, [bounceList]);
 
 
     useEffect(() => {
 
-        // if (!title.selectedVersion.bounces.includes(title.selectedBounce)) {
-        //     setVersionList(title.versions.map(id => versions[id]));
         if (title.selectedBounce && title.selectedVersion) {
 
             setSong({
@@ -177,7 +165,8 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                             {
                                 label: 'Title',
                                 name: 'title',
-                                type: 'input', 
+                                type: 'input',
+                                required: true
                             }
                         ]}
                         onSubmit={formValues => editTitle(formValues, title.id)}

@@ -14,7 +14,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
 
     useEffect(() => {
         handleUpdate();
-    }, [band]);
+    }, [band, user]);
 
     const renderAdmin = () => {
         return (

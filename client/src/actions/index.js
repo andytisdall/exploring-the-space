@@ -50,7 +50,7 @@ export const signIn = formValues => async (dispatch) => {
         dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -67,26 +67,35 @@ export const signUp = formValues => async (dispatch) => {
         dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
 export const fetchUser = () => async dispatch => {
-    const response = await greenhouse.get('/user');
-    if (response.data) {
+    try {
+        const response = await greenhouse.get('/user');
         dispatch({ type: SIGN_IN, payload: response.data });
-    }
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+}
 };
 
 export const fetchBand = bandName => async (dispatch) => {
-    const response = await greenhouse.get(`/bands/${bandName}`);
-    
-    dispatch({ type: FETCH_BAND, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/bands/${bandName}`);    
+        dispatch({ type: FETCH_BAND, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchBands = () => async (dispatch) => {
-    const response = await greenhouse.get(`/bands`);
-    dispatch({ type: FETCH_BANDS, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/bands`);
+        dispatch({ type: FETCH_BANDS, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchTiers = bandId => async (dispatch) => {
@@ -94,40 +103,64 @@ export const fetchTiers = bandId => async (dispatch) => {
         const response = await greenhouse.get(`/tiers/${bandId}`);
         dispatch({ type: FETCH_TIERS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
 export const fetchTitles = tierId => async (dispatch) => {
-    const response = await greenhouse.get(`/titles/${tierId}`);
-    dispatch({ type: FETCH_TITLES, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/titles/${tierId}`);
+        dispatch({ type: FETCH_TITLES, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchVersions = titleId => async (dispatch) => {
-    const response = await greenhouse.get(`/versions/${titleId}`);
-    dispatch({ type: FETCH_VERSIONS, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/versions/${titleId}`);
+        dispatch({ type: FETCH_VERSIONS, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchBounces = versionId => async (dispatch) => {
-    const response = await greenhouse.get(`/bounces/${versionId}`);
-    dispatch({ type: FETCH_BOUNCES, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/bounces/${versionId}`);
+        dispatch({ type: FETCH_BOUNCES, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchPlaylists = bandId => async (dispatch) => {
-    const response = await greenhouse.get(`/playlists/${bandId}`);
-    dispatch({ type: FETCH_PLAYLISTS, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/playlists/${bandId}`);
+        dispatch({ type: FETCH_PLAYLISTS, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const fetchPlaylistSongs = playlistId => async (dispatch) => {
-    const response = await greenhouse.get(`/playlistsongs/${playlistId}`);
-    dispatch({ type: FETCH_PLAYLISTSONGS, payload: response.data });
+    try {
+        const response = await greenhouse.get(`/playlistsongs/${playlistId}`);
+        dispatch({ type: FETCH_PLAYLISTSONGS, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 
 
 export const createBand = formValues => async (dispatch) => {
-    const response = await greenhouse.post('/bands', formValues);
-    dispatch({ type: CREATE_BAND, payload: response.data });
+    try {
+        const response = await greenhouse.post('/bands', formValues);
+        dispatch({ type: CREATE_BAND, payload: response.data });
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const createTier = formValues => async (dispatch, getState) => {
@@ -138,9 +171,9 @@ export const createTier = formValues => async (dispatch, getState) => {
             { ...formValues, currentBand: currentBand.id }
         );
         dispatch({ type: CREATE_TIER, payload: response.data });
-        } catch (err) {
-            dispatch({ type: ERROR, payload: err });
-        }
+    } catch (err) {
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+    }
 };
 
 export const createTitle = (formValues, tierId) => async (dispatch, getState) => {
@@ -152,7 +185,7 @@ export const createTitle = (formValues, tierId) => async (dispatch, getState) =>
         );
         dispatch({ type: CREATE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -177,7 +210,7 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
         }
         dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -247,7 +280,7 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
         reader.readAsArrayBuffer(formValues.file);
 
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -260,7 +293,7 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
         );
         dispatch({ type: CREATE_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -277,7 +310,7 @@ export const createPlaylistSong = (formValues, playlistId) => async (dispatch, g
         );
         dispatch({ type: CREATE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -295,7 +328,7 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
         );
         dispatch({ type: EDIT_TIER, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -308,7 +341,7 @@ export const editTitle = (formValues, titleId) => async (dispatch, getState) => 
         );
         dispatch({ type: EDIT_TITLE, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -330,7 +363,7 @@ export const editVersion = (formValues, versionId, titleId) => async (dispatch, 
         }
         dispatch({ type: EDIT_VERSION, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -405,7 +438,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
             dispatch({ type: EDIT_BOUNCE, payload: response.data });
         }
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -418,7 +451,7 @@ export const editPlaylist = (formValues, playlistId) => async (dispatch, getStat
         );
         dispatch({ type: EDIT_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -431,7 +464,7 @@ export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch,
         );
         dispatch({ type: EDIT_PLAYLISTSONG, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err });
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
     }
 };
 
@@ -447,7 +480,7 @@ export const deleteBand = bandId => async dispatch => {
         );
         dispatch({ type: DELETE_BAND, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -466,7 +499,7 @@ export const deleteTier = tierId => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_TIER, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -492,7 +525,7 @@ export const deleteTitle = (titleId, tierId) => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -528,7 +561,7 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
         });
         dispatch({ type: DELETE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -561,7 +594,7 @@ export const deleteBounce = (bounceId, versionId, titleId) => async (dispatch, g
         }
         dispatch({ type: DELETE_BOUNCE, payload: { bounce: response.data, version: versionId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -581,7 +614,7 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 
@@ -599,7 +632,7 @@ export const deletePlaylistSong = (playlistSongId, playlistId) => async (dispatc
         );
         dispatch({ type: DELETE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err});
+        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
     }
 };
 

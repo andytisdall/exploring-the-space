@@ -68,42 +68,42 @@ class AddButton extends React.Component {
 
         if (field.type === 'file') {
             delete field.input.value;
+
             return <>
+                <div className="form-errors">
+                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
+                </div>
                 <input
                     {...field.input}
                     type='file'
                     className='inputfile'
                     onChange={(e) => this.onFileInput(e, field.input)}    
                 />
-                <div>
-                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
-                </div>
             </>;
         } else if (field.type === 'select') {
             return <>
+                <div className="form-errors">
+                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
+                </div>
                 <select
                     {...field.input}
                     autoFocus={field.autoFocus}
                     type={field.type}
-                    className={addClass}
                 >
                     {field.options ? this.showOptions(field) : null}
                 </select>
-                <div>
-                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
-                </div>
             </>;
         } else {
             return <>
+                <div className="form-errors">
+                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
+                </div>
                 <input
                     {...field.input}
                     autoFocus={field.autoFocus}
                     type={field.type}
                     className={addClass}
                 />
-                <div>
-                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
-                </div>
             </>;
         }
     }
@@ -145,9 +145,8 @@ class AddButton extends React.Component {
 
     showBox = () => {
         if (this.state.boxVisible) {
-            const addClass = this.props.addClass ? this.props.addClass : '';
             return <>    
-                <div className={`addbox ${addClass}`} ref={this.ref} >
+                <div className='addbox' onClick={e => e.stopPropagation()}>
                     <h3 className="addbox-title">{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}
@@ -160,16 +159,25 @@ class AddButton extends React.Component {
 
     click = (e) => {
         e.stopPropagation();
-        this.setState({ boxVisible: !this.boxVisible });
+        if (this.ref.current && this.ref.current === e.target) {
+            return;
+        }
+        if (this.state.boxVisible) {
+            this.setState({ boxVisible: false });
+        } else {
+            this.setState({ boxVisible: true });
+        }
+
     }
     
     render() {
-        return (
-            <div className="add" onClick={this.click} >
+
+        return <>
+            <div className="add" onClick={this.click} ref={this.ref}>
                 <img src={this.props.image} />
                 {this.showBox()}
             </div>
-        );
+        </>;
     }
 
 }

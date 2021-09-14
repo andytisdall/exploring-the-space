@@ -182,7 +182,18 @@ select {
   margin: 0.2rem;
 }
 
+.form-errors p {
+  background-color: rgb(226, 38, 116);
+  color: black;
+  text-transform: uppercase;
+  padding: 3px;
+  display: inline-block;
+  text-align: center;
+}
+
 .upload-container {
+  height: auto;
+  width: auto;
   margin-top: 5rem;
   display: flex;
 }
@@ -247,8 +258,8 @@ hr {
 }
 
 .addbox {
-  height: 100;
-  width: 150px;
+  height: auto;
+  width: auto;
   position: absolute;
   border: 1px solid rgb(94, 235, 245);
   background-color: black;
@@ -556,7 +567,7 @@ h3 {
 /* song */
 
 .calendar {
-  width: 130px;
+  width: auto;
 }
 
 h5 {
@@ -656,6 +667,15 @@ h5 {
 .band-list {
   margin: 2rem;
   line-height: 3rem;
+}
+
+.band-item {
+  display: flex;
+}
+
+.band-buttons {
+  display: flex;
+  margin-left: 3rem;
 }
 
 .add-band {

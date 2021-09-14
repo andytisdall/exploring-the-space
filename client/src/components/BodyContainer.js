@@ -63,7 +63,8 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
                         fields={[{
                             label: 'Tier Name',
                             name: 'tierName',
-                            type: 'input',               
+                            type: 'input',
+                            required: true          
                         }]}
                     />
                 </div>
@@ -82,7 +83,8 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
                         fields={[{
                             label: 'Playlist Name',
                             name: 'playlistName',
-                            type: 'input',               
+                            type: 'input',
+                            required: true             
                         }]}
                     />
                 </div>

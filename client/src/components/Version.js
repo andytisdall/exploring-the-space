@@ -68,7 +68,8 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         {
                             label: 'Name',
                             name: 'name',
-                            type: 'input',          
+                            type: 'input',
+                            required: true         
                         },
                         {
                             label: 'Notes',
@@ -78,7 +79,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         {
                             label: 'Current Version?',
                             name: 'current',
-                            type: 'checkbox',        
+                            type: 'checkbox',      
                         },
                     ]}
                     onSubmit={(formValues) => createVersion(formValues, title.id)}

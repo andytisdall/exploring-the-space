@@ -82,12 +82,14 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                         {
                             label: 'File',
                             name: 'file',
-                            type: 'file'
+                            type: 'file',
+                            required: true
                         },
                         {
                             label: 'Date',
                             name: 'date',
-                            type: 'date',          
+                            type: 'date',
+                            required: true         
                         },
                         {
                             label: 'Comments',
@@ -103,7 +105,6 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     onSubmit={formValues => onAddSubmit(formValues)}
                     form={`add-bounce-${title.id}`}
                     initialValues={{ latest: true }}
-                    addClass="bounce"
                 />
             );
         }
@@ -137,7 +138,9 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     },
                 ]}
                 onSubmit={formValues => editBounce(formValues, selectedBounce.id, version.id)}
-                initialValues={_.pick(selectedBounce, 'date', 'comments', 'latest')}
+                initialValues={
+                    { ..._.pick(selectedBounce, 'comments', 'latest'), date: moment.utc(selectedBounce.date).format('YYYY-MM-DD') }
+                }
                 form={`edit-bounce-${title.id}`}
                 enableReinitialize={true}
             />;

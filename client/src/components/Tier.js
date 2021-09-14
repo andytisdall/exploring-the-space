@@ -94,7 +94,8 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         {
                             label: 'Tier Name',
                             name: 'name',
-                            type: 'input',          
+                            type: 'input',
+                            required: true        
                         }, {
                             label: 'Tier Position',
                             name: 'position',
