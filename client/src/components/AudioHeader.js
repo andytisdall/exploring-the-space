@@ -151,38 +151,41 @@ class AudioHeader extends React.Component {
         if (this.props.song) {
 
             return (
-
-                <div className="playbar">
-                    <div className="playbar-header">
-                        <p className="playbar-title">
-                            {this.props.song.title}
-                        </p>
-                        <div className="pause-container" onClick={this.onPauseButton}>
-                            <img src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
+                <div className="playbar-background">
+                    <div className="playbar">
+                        <div className="playbar-header">
+                            <div className="playbar-title">
+                                <p>{this.props.song.title}</p>
+                            </div>
+                            <div className="pause-container" onClick={this.onPauseButton}>
+                                <img className="big-play-btn" src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
+                            </div>
+                            <div className="playbar-info">
+                                <div className="playbar-detail">
+                                    <p>Version:</p>
+                                    <p>{this.props.song.version}</p>
+                                </div>
+                                <div className="playbar-detail">
+                                    <p>Date:</p>
+                                    <p>{this.displayDate(this.props.song.date)}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="playbar-info">
-                            <p>
-                                {this.props.song.version}
-                            </p>
-                            <p>
-                                {this.displayDate(this.props.song.date)}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="playslidercontainer">
-                        <div className="playslidertime">
-                            {this.time}
-                        </div>
-                        <input
-                            type="range"
-                            min="0"
-                            max="1000"
-                            value={this.state.sliderPosition}
-                            className='playslider'
-                            onChange={this.onSliderChange}
-                        />
-                        <div className="playslidertime">
-                            {this.formatTime(this.props.song.duration)}
+                        <div className="playslidercontainer">
+                            <div className="playslidertime">
+                                {this.time}
+                            </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1000"
+                                value={this.state.sliderPosition}
+                                className='playslider'
+                                onChange={this.onSliderChange}
+                            />
+                            <div className="playslidertime">
+                                {this.formatTime(this.props.song.duration)}
+                            </div>
                         </div>
                     </div>
                 </div>

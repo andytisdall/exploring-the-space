@@ -4,11 +4,12 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import AddButton from './AddButton';
-import { editPlaylistSong, fetchVersions, fetchBounces } from '../actions';
+import DeleteButton from './DeleteButton';
+import { editPlaylistSong, fetchVersions, fetchBounces, deletePlaylistSong } from '../actions';
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions }) => {
+const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong }) => {
 
     const [playSong, setPlaySong] = useState(null);
 
@@ -20,7 +21,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
     }, []);
     
     useEffect(() => {
-        if (bounces[song.bounce] && versions[song.version] && titles[song.title]) {
+        if (titles[song.title]) {
             setPlaySong({
                     playlist,
                     title: titles[song.title],
@@ -29,12 +30,11 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     self: song
                 });
         }
-        console.log(bounces);
-    }, [versions, bounces]);
+    }, [playlistSongs[song.id]]);
 
     const renderPlayContainer = () => {
 
-        if (playSong) {
+        if (playSong && playSong.bounce && playSong.version) {
             return <PlayContainer song={playSong} parentType="playlist" />;
         } else {
             return (
@@ -51,15 +51,18 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
     };
 
     const onEditSubmit = formValues => {
-        const thisVersion = Object.values(versions.filter(v => v.bounces.includes(formValues.bounce)));
+        console.log(versions);
+        console.log(formValues)
+        const thisVersion = Object.values(versions).find(v => v.bounces.includes(formValues.bounce));
         editPlaylistSong({
             ...formValues,
             version: thisVersion.id,
+            playlistId: playlist.id
         }, song.id);
     };
 
     const renderEditButton = () => {
-        if (authorized) {
+        if (authorized && titles[song.title]) {
 
             const otherSongs = Object.values(playlistSongs)
                 .filter(s => playlist.songs.includes(s.id))
@@ -84,7 +87,6 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                 if (otherBounces[i]) {
                     otherBounces[i].forEach(b => {
                         if (b) {
-                            console.log()
                             editOptions.push({
                                 value: b.id,
                                 display: `${v.name} -- ${moment.utc(b.date).format('MM/DD/YY')}`
@@ -110,12 +112,24 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                             name: 'bounce',
                             label: 'Bounce',
                             type: 'select',
-                            options: editOptions
+                            options: editOptions,
+                            required: true
                         }
                     ]}
-                    initialValues={_.pick(song, 'position', 'bounce')}
+                    initialValues={song.bounce ? _.pick(song, 'position', 'bounce') : _.pick(song, 'position')}
                     form={`edit-playlistsong-${song.id}`}
                     enableReinitialize={true}
+                />
+            );
+        }
+    };
+
+    const renderDeleteButton = () => {
+        if (authorized) {
+            return (
+                <DeleteButton
+                    onSubmit={() => deletePlaylistSong(song.id, playlist.id)}
+                    displayName={song.title.title}
                 />
             );
         }
@@ -124,18 +138,18 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
 
     return (
         <div className='title-margin'>
-            <div className="title">                    
+            <div className="row title">                    
                 <div className="marqee">
                     <div className='row-name'>
                         <div className="song-position">{song.position}</div>
                         <div className='name-spot'>
-                            <h3>{song && titles[song.title].title}</h3>
+                            <h3>{song && titles[song.title] && titles[song.title].title}</h3>
                         </div>
                     </div>      
 
                     {renderPlayContainer()}
                     {renderEditButton()}
-                        
+                    {renderDeleteButton()}
                 </div>
             </div>
         </div>
@@ -158,4 +172,4 @@ const mapStateToProps = state => {
 
 }
 
-export default connect(mapStateToProps, { fetchBounces, fetchVersions })(requireAuth(PlaylistSong));
+export default connect(mapStateToProps, { fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong })(requireAuth(PlaylistSong));

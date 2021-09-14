@@ -69,7 +69,8 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         {
                             label: 'Title',
                             name: 'title',
-                            type: 'input',          
+                            type: 'input',
+                            required: true
                         }
                     ]}
                     onSubmit={(formValues) => {

@@ -1,9 +1,7 @@
-import mongoose from 'mongoose';
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
 import { requireAuth } from '../middlewares/require-auth.js';
-import { Band } from '../models/band.js';
-import { Playlist, PlaylistSong, Title, Version, Song } from '../models/models.js';
+import { Playlist, PlaylistSong } from '../models/models.js';
 
 
 const router = express.Router();
@@ -48,45 +46,43 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 });
 
 
-router.post('/:bandName/change-position', currentUser, requireAuth, async (req, res) => {
-  
-    const bandName = req.params.bandName;
-    const { songId, newPosition, playlistId, newBounce } = req.body;
-    const song = await PlaylistSong.findById(songId);
+router.patch('/playlistsongs/:id', currentUser, requireAuth, async (req, res) => {
+
+    const { id } = req.params;
+    const { bounce, position, version, playlistId } = req.body;
+    const song = await PlaylistSong.findById(id);
     if (!song) {
         throw new Error('Playlist song not found');
     }
-    if (newPosition && newPosition !== song.position) {
+
+    const playlist = await Playlist.findById(playlistId).populate('songs');
+
+    const otherSongs = playlist.songs;
+
+    if (position !== song.position) {
         const oldPosition = song.position;
         let greaterPlaylistSongs;
-        if (oldPosition > newPosition) {
-            greaterPlaylistSongs = await PlaylistSong.find({
-                playlist: playlistId,
-                position: { $gte: newPosition, $lt: oldPosition }
-            });
+        if (oldPosition > position) {
+            greaterPlaylistSongs = otherSongs.filter(pls => pls.position >= position && pls.position < oldPosition);
             greaterPlaylistSongs.forEach(async (gps) => {
                 gps.position += 1;
                 await gps.save();
             });
-        } else if (oldPosition < newPosition) {
-            greaterPlaylistSongs = await PlaylistSong.find({
-                playlist: playlistId,
-                position: { $gt: oldPosition, $lte: newPosition }
-            });
+        } else if (oldPosition < position) {
+            greaterPlaylistSongs = otherSongs.filter(pls => pls.position > oldPosition && pls.position <= position);
             greaterPlaylistSongs.forEach(async (gps) => {
                 gps.position -= 1;
                 await gps.save();
             });
         }
-        song.position = newPosition;
+        song.position = position;
     }
-    if (newBounce && newBounce !== songId) {
-        const [versionId, bounceId] = newBounce.split('-');
-        song.version = versionId;
-        song.bounce = bounceId;
-    }
+    
+    song.version = version;
+    song.bounce = bounce;
+
     await song.save();
-    res.redirect(`/${bandName}`);
+    res.send(song);
 
 });
 
@@ -94,7 +90,6 @@ router.post('/playlistsongs/delete', currentUser, requireAuth, async (req, res) 
 
     const { playlistSongId, playlistId } = req.body;
 
- 
     const song = await PlaylistSong.findById(playlistSongId);
     
     const playlist = await Playlist.findById(playlistId);
@@ -105,7 +100,7 @@ router.post('/playlistsongs/delete', currentUser, requireAuth, async (req, res) 
     }
     
     await PlaylistSong.deleteOne({ _id: playlistSongId });
-
+    
     res.send(song);
 
 });

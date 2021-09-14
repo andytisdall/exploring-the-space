@@ -66,29 +66,50 @@ class AddButton extends React.Component {
             addClass = 'calendar';
         }
 
-        if (field.type !== 'file') {
-
-            return (
-                <input
-                    {...field.input}
-                    autoFocus={field.autoFocus}
-                    type={field.type}
-                    className={addClass}
-                />
-            );
-        } else {
+        if (field.type === 'file') {
             delete field.input.value;
-            return (
+            return <>
                 <input
                     {...field.input}
                     type='file'
                     className='inputfile'
                     onChange={(e) => this.onFileInput(e, field.input)}    
                 />
-            );
+                <div>
+                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
+                </div>
+            </>;
+        } else if (field.type === 'select') {
+            return <>
+                <select
+                    {...field.input}
+                    autoFocus={field.autoFocus}
+                    type={field.type}
+                    className={addClass}
+                >
+                    {field.options ? this.showOptions(field) : null}
+                </select>
+                <div>
+                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
+                </div>
+            </>;
+        } else {
+            return <>
+                <input
+                    {...field.input}
+                    autoFocus={field.autoFocus}
+                    type={field.type}
+                    className={addClass}
+                />
+                <div>
+                    {field.meta.touched && (field.meta.error && <span>{field.meta.error}</span>)}
+                </div>
+            </>;
         }
+    }
 
-
+    required = value => {
+        return value ? undefined : 'Required';
     }
 
     showFields = () => {
@@ -96,9 +117,9 @@ class AddButton extends React.Component {
         return this.props.fields.map((field, i) => {
             const autoFocus = i === 0 ? true : false;
             let comp = this.input;
-            if (field.type === 'select') {
-                comp = 'select'
-            }
+            // if (field.type === 'select') {
+            //     comp = 'select'
+            // }
             return <div key={field.label}>
                 <label>{field.label}: </label>
                 <Field
@@ -106,6 +127,8 @@ class AddButton extends React.Component {
                     component={comp}
                     autoFocus={autoFocus}
                     type={field.type}
+                    validate={field.required ? this.required : null}
+                    options={field.options}
                 >
                     {field.options ? this.showOptions(field) : null}
                 </Field>

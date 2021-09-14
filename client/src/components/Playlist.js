@@ -22,12 +22,19 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
     }, []);
 
     useEffect(() => {
-
         setSongsToRender(playlist.songs.map(id => playlistSongs[id]));
-        
-    }, [playlistSongs, playlist]);
+    }, [playlistSongs, playlist.songs]);
 
     const renderPlaylistSongs = () => {
+
+        songsToRender.sort((a, b) => {
+            if (a.position < b.position) {
+                return -1;
+            }
+            if (b.position < a.position) {
+                return 1;
+            }
+        })
 
         return songsToRender.map(song => {
             if (song) {

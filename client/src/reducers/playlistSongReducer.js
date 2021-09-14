@@ -1,4 +1,4 @@
-import { FETCH_PLAYLISTSONGS, CREATE_PLAYLISTSONG, EDIT_PLAYLISTSONG, DELETE_PLAYLISTSONG, DELETE_TITLE, DELETE_VERSION, DELETE_BOUNCE } from '../actions/types';
+import { FETCH_PLAYLISTSONGS, CREATE_PLAYLISTSONG, EDIT_PLAYLISTSONG, DELETE_PLAYLISTSONG, DELETE_VERSION, DELETE_BOUNCE } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -37,24 +37,18 @@ export default (state = {}, action) => {
             });
             delete state[action.payload.playlistsong.id];
             return { ...state };
-        case DELETE_TITLE:
-            const toDelete = Object.values(state).filter(pls => pls.title.id === action.payload.title.id);
-            toDelete.forEach(pls => {
-                delete state[pls.id];
-            });
-            return { ...state };
         case DELETE_VERSION:
-            for (const song in state) {
-                if (song.version === action.payload.version.id) {
-                    song.version = null;
-                    song.bounce = null;
+            for (const id in state) {
+                if (state[id].version === action.payload.version.id) {
+                    state[id].version = null;
+                    state[id].bounce = null;
                 }
             }
             return { ...state };
         case DELETE_BOUNCE:
-            for (const song in state) {
-                if (song.bounce === action.payload.bounce.id) {
-                    song.bounce = null;
+            for (const id in state) {
+                if (state[id].bounce === action.payload.bounce.id) {
+                    state[id].bounce = null;
                 }
             }
             return { ...state };

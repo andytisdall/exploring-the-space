@@ -67,9 +67,9 @@ router.post('/playlists', currentUser, requireAuth, async (req, res) => {
 router.patch('/playlists/:id', currentUser, requireAuth, async (req, res) => {
   
     const { id } = req.params;
-    const { name, position } = req.body;
+    const { name, position, currentBand } = req.body;
 
-    const band = await Band.findOne({ name: bandName }).populate('playlists');
+    const band = await Band.findById(currentBand).populate('playlists');
     if (!band) {
         throw new Error('Band not found');
     }
@@ -98,6 +98,7 @@ router.patch('/playlists/:id', currentUser, requireAuth, async (req, res) => {
         });
     }
     playlist.position = position;
+
     if (name) {
         playlist.name = name;
     }

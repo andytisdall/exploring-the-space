@@ -41,11 +41,6 @@ export const deleteTitle = async (id, parentId) => {
     if (parentTier) {
         await Tier.updateOne({ _id: parentId }, { $pull: { trackList: id } });
     }
-    const playlistSongs = await PlaylistSong.find({ title: id });
-
-    playlistSongs.forEach(pls => {
-        deletePlaylistSong(pls.id);
-    });
 
     await Title.deleteOne({ _id: id });
     return thisTitle
@@ -76,13 +71,6 @@ export const deleteBounce = async (id, parentId) => {
     const parentVersion = await Version.findById(parentId);
     if (parentVersion) {
         await Version.updateOne({ _id: parentId }, { $pull: { songs: id } });
-        // if (bounce.latest) {
-        //     let parentVersion = await Version.findOne({ _id: parentId }).populate('bounces');
-        //     let bounceList = parentVersion.songs;
-        //     if (bounceList.length >= 1) {
-        //         await Bounce.updateOne({ _id: bounceList[bounceList.length-1] }, { latest: true });
-        //     }
-        // }
     }
     const playlistSongs = await PlaylistSong.find({ bounce: id });
 

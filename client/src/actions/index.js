@@ -484,6 +484,12 @@ export const deleteTitle = (titleId, tierId) => async (dispatch, getState) => {
         response.data.versions.forEach(versionId => {
             dispatch(deleteVersion(versionId, response.data.id));
         });
+        const playlists = Object.values(getState().playlists);
+        const playlistSongs = Object.values(getState().playlistSongs).filter(pls => pls.title === titleId);
+        playlistSongs.forEach(pls => {
+            const playlist = playlists.find(pl => pl.songs.includes(pls.id));
+            dispatch(deletePlaylistSong(pls.id, playlist.id));
+        });
         dispatch({ type: DELETE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
         dispatch( {type: ERROR, payload: err});
@@ -628,12 +634,15 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
     const allSongs = song.playlist.songs.map(id => getState().playlistSongs[id]);
     const songList = allSongs.splice(allSongs.indexOf(song.self));
     const queue = songList.map(song => {
+        const version = getState().versions[song.version];
+        const bounce = getState().bounces[song.bounce];
+        const title = getState().titles[song.title];
         return {
-            title: song.title.title,
-            version: song.version.name,
-            date: song.bounce.date,
-            duration: song.bounce.duration,
-            audio: song.bounce.id
+            title: title.title,
+            version: version.name,
+            date: bounce.date,
+            duration: bounce.duration,
+            audio: bounce.id
         };
     });
     dispatch({ type: QUEUE_SONGS, payload: queue });

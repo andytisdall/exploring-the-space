@@ -18,7 +18,7 @@ router.post('/tiers', currentUser, requireAuth, async (req, res) => {
         if (band.tiers.length) {
             newTier.position = band.tiers.length;
         } else {
-            newTier.position = 0;
+            newTier.position = 1;
         }
         band.tiers.push(newTier);
         await band.save();
@@ -51,38 +51,33 @@ router.get('/tiers/:id', async (req, res) => {
 router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
 
     const { id } = req.params;
-    const { name, position } = req.body;
+    const { name, position, currentBand } = req.body;
 
-    const thisTier = await Tier.findOne({ _id: id });
+    const thisTier = await Tier.findById(id);
+
+    const band = await Band.findById(currentBand).populate('tiers')
+
+    const otherTiers = band.tiers;
+
     if (thisTier.position > position) {
-        const changePosition = await Tier.find({
-                position: { $gte: position, $lt: thisTier.position }
-            });
+        const changePosition = otherTiers.filter(tier => tier.position >= position && tier.position < thisTier.position);
         changePosition.forEach(async (tier) => {
             tier.position = tier.position + 1;
             await tier.save();
-            // await Tier.updateOne(
-            //     { _id: tier.id },
-            //     { position: tier.position+1 });
         });
-        console.log(`Moving ${thisTier.position} to ${position}`);
-
-        // await Tier.updateOne({ _id: id }, { position: position });
-
     } else if (thisTier.position < position) {
-        const changePosition = await Tier.find({ position: { $gt: thisTier.position, $lte: position } });
+        const changePosition = otherTiers.filter(tier => tier.position > thisTier.position && tier.position <= position);
         changePosition.forEach(async (tier) => {
             tier.position = tier.position - 1;
-            // await Tier.updateOne({ _id: tier.id }, { position: tier.position-1 });
             await tier.save();
         });
-        console.log(`Moving ${thisTier.position} to ${position}`);
-        await Tier.updateOne({ _id: id }, { position: position });
     }
     thisTier.position = position;
+
     if (name) {
         thisTier.name = name;
     }
+
     await thisTier.save();
 
     res.send(thisTier);
