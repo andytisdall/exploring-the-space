@@ -42,6 +42,16 @@ import {
 import history from '../history';
 import _ from 'lodash';
 
+const errorHandler = err => {
+    let message;
+    if (err.response) {
+        message = err.response.data.error
+    } else {
+        message = err.message;
+    }
+    return { type: ERROR, payload: message };
+};
+
 
 export const signIn = formValues => async (dispatch) => {
     try {
@@ -50,7 +60,7 @@ export const signIn = formValues => async (dispatch) => {
         dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -67,17 +77,25 @@ export const signUp = formValues => async (dispatch) => {
         dispatch({ type: SIGN_IN, payload: response.data.user });
         history.push('/user');
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
+};
+
+export const throwError = message => {
+    return { type: ERROR, payload: message };
 };
 
 export const fetchUser = () => async dispatch => {
     try {
         const response = await greenhouse.get('/user');
-        dispatch({ type: SIGN_IN, payload: response.data });
+        if (response.data) {
+            dispatch({ type: SIGN_IN, payload: response.data });
+        } else {
+            dispatch(signOut());
+        }
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
-}
+        dispatch(errorHandler(err));
+    }
 };
 
 export const fetchBand = bandName => async (dispatch) => {
@@ -85,7 +103,7 @@ export const fetchBand = bandName => async (dispatch) => {
         const response = await greenhouse.get(`/bands/${bandName}`);    
         dispatch({ type: FETCH_BAND, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -94,7 +112,7 @@ export const fetchBands = () => async (dispatch) => {
         const response = await greenhouse.get(`/bands`);
         dispatch({ type: FETCH_BANDS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -103,7 +121,7 @@ export const fetchTiers = bandId => async (dispatch) => {
         const response = await greenhouse.get(`/tiers/${bandId}`);
         dispatch({ type: FETCH_TIERS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -112,7 +130,7 @@ export const fetchTitles = tierId => async (dispatch) => {
         const response = await greenhouse.get(`/titles/${tierId}`);
         dispatch({ type: FETCH_TITLES, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -121,7 +139,7 @@ export const fetchVersions = titleId => async (dispatch) => {
         const response = await greenhouse.get(`/versions/${titleId}`);
         dispatch({ type: FETCH_VERSIONS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -130,7 +148,7 @@ export const fetchBounces = versionId => async (dispatch) => {
         const response = await greenhouse.get(`/bounces/${versionId}`);
         dispatch({ type: FETCH_BOUNCES, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -139,7 +157,7 @@ export const fetchPlaylists = bandId => async (dispatch) => {
         const response = await greenhouse.get(`/playlists/${bandId}`);
         dispatch({ type: FETCH_PLAYLISTS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -148,7 +166,7 @@ export const fetchPlaylistSongs = playlistId => async (dispatch) => {
         const response = await greenhouse.get(`/playlistsongs/${playlistId}`);
         dispatch({ type: FETCH_PLAYLISTSONGS, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -159,7 +177,7 @@ export const createBand = formValues => async (dispatch) => {
         const response = await greenhouse.post('/bands', formValues);
         dispatch({ type: CREATE_BAND, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -172,7 +190,7 @@ export const createTier = formValues => async (dispatch, getState) => {
         );
         dispatch({ type: CREATE_TIER, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -185,39 +203,55 @@ export const createTitle = (formValues, tierId) => async (dispatch, getState) =>
         );
         dispatch({ type: CREATE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
 export const createVersion = (formValues, titleId) => async (dispatch, getState) => {
-    const { currentBand } = getState().bands;
     try {
+
+        const { currentBand } = getState().bands;
+        const parentTitle = getState().titles[titleId];
+
+        if (!parentTitle.versions.length) {
+            formValues.current = true;
+        }
+        
         const response = await greenhouse.post(
             '/versions',
             { ...formValues, currentBand: currentBand.id, title: titleId }
-        );
+        );    
+
         if (response.data.current) {
-            const parentTitle = getState().titles[titleId];
             if (parentTitle.versions.length) {
                 const versionList = parentTitle.versions.map(id => getState().versions[id]);
                 const oldCurrent = versionList.find(v => v.current);
                 oldCurrent.current = false;
-                dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
                 dispatch(editVersion(
                     _.pick(oldCurrent, 'name', 'notes', 'current'), oldCurrent.id, titleId
                 ));
             }
+            dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
         }
+
         dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
 export const createBounce = (formValues, versionId, titleId) => async (dispatch, getState) => {
-    formValues.file = formValues.file[0];
-    const { currentBand } = getState().bands;
+    console.log(formValues)
     try {
+        const { currentBand } = getState().bands;
+        const parentVersion = getState().versions[versionId];
+
+        if (!parentVersion.bounces.length) {
+            formValues.latest = true;
+        }
+        console.log(formValues)
+        formValues.file = formValues.file[0];
+        
         // Create instance of FileReader
         const reader = new FileReader();
 
@@ -255,16 +289,16 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
                 );
 
                 if (response.data.latest) {
-                    const parentVersion = getState().versions[versionId];
+                    
                     if (parentVersion.bounces.length) {
                         const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
                         const oldLatest = bounceList.find(b => b.latest);
                         oldLatest.latest = false;
-                        dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
                         dispatch(editBounce(
                             _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
                         ));
                     }
+                    dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
                 }
 
                 dispatch({ type: CREATE_BOUNCE, payload: { bounce: response.data, version: versionId } });
@@ -280,7 +314,7 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
         reader.readAsArrayBuffer(formValues.file);
 
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -293,7 +327,7 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
         );
         dispatch({ type: CREATE_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -310,13 +344,17 @@ export const createPlaylistSong = (formValues, playlistId) => async (dispatch, g
         );
         dispatch({ type: CREATE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
 export const editBand = formValues => async dispatch => {
-    const response = await greenhouse.patch('/bands', formValues);
-    dispatch({ type: EDIT_BAND, payload: response.data });
+    try {
+        const response = await greenhouse.patch('/bands', formValues);
+        dispatch({ type: EDIT_BAND, payload: response.data });
+    } catch (err) {
+        dispatch(errorHandler(err));
+    }
 };
 
 export const editTier = (formValues, tierId) => async (dispatch, getState) => {
@@ -328,7 +366,7 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
         );
         dispatch({ type: EDIT_TIER, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -341,18 +379,22 @@ export const editTitle = (formValues, titleId) => async (dispatch, getState) => 
         );
         dispatch({ type: EDIT_TITLE, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
 export const editVersion = (formValues, versionId, titleId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
+        const thisVersion = getState().versions[versionId];
+        if (thisVersion.current) {
+            formValues.current = true;
+        }
         const response = await greenhouse.patch(
             `/versions/${versionId}`,
             { ...formValues, currentBand: currentBand.id }
         );
-        if (response.data.current && !getState().versions[versionId].current) {
+        if (response.data.current && !thisVersion.current) {
             const parentTitle = getState().titles[titleId];
             const versionList = parentTitle.versions.map(id => getState().versions[id]);
             const oldCurrent = versionList.find(v => v.current);
@@ -363,13 +405,17 @@ export const editVersion = (formValues, versionId, titleId) => async (dispatch, 
         }
         dispatch({ type: EDIT_VERSION, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
 export const editBounce = (formValues, bounceId, versionId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
+        const thisBounce = getState().bounces[bounceId];
+        if (thisBounce.latest) {
+            formValues.latest = true;
+        }
         if (formValues.file) {
             formValues.file = formValues.file[0];
  
@@ -408,7 +454,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                         }
                     );
 
-                    if (response.data.latest && !getState().bounces[bounceId].latest) {
+                    if (response.data.latest && !thisBounce.latest) {
                         const parentVersion = getState().versions[versionId];
                         const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
                         const oldLatest = bounceList.find(b => b.latest);
@@ -438,7 +484,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
             dispatch({ type: EDIT_BOUNCE, payload: response.data });
         }
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -451,7 +497,7 @@ export const editPlaylist = (formValues, playlistId) => async (dispatch, getStat
         );
         dispatch({ type: EDIT_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -464,7 +510,7 @@ export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch,
         );
         dispatch({ type: EDIT_PLAYLISTSONG, payload: response.data });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message  });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -478,9 +524,12 @@ export const deleteBand = bandId => async dispatch => {
             '/bands/delete',
             { currentBand: bandId }
         );
+        response.data.tiers.forEach(tierId => {
+            dispatch(deleteTier(tierId, response.data.id));
+        });
         dispatch({ type: DELETE_BAND, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -499,7 +548,7 @@ export const deleteTier = tierId => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_TIER, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -525,7 +574,7 @@ export const deleteTitle = (titleId, tierId) => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_TITLE, payload: { title: response.data, tier: tierId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -561,7 +610,7 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
         });
         dispatch({ type: DELETE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -594,7 +643,7 @@ export const deleteBounce = (bounceId, versionId, titleId) => async (dispatch, g
         }
         dispatch({ type: DELETE_BOUNCE, payload: { bounce: response.data, version: versionId } });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -614,7 +663,7 @@ export const deletePlaylist = playlistId => async (dispatch, getState) => {
         });
         dispatch({ type: DELETE_PLAYLIST, payload: response.data });
     } catch (err) {
-        dispatch( {type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 
@@ -632,7 +681,7 @@ export const deletePlaylistSong = (playlistSongId, playlistId) => async (dispatc
         );
         dispatch({ type: DELETE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
     } catch (err) {
-        dispatch({ type: ERROR, payload: err.response.data.error || err.message });
+        dispatch(errorHandler(err));
     }
 };
 

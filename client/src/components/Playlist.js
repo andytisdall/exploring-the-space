@@ -27,14 +27,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
 
     const renderPlaylistSongs = () => {
 
-        songsToRender.sort((a, b) => {
-            if (a.position < b.position) {
-                return -1;
-            }
-            if (b.position < a.position) {
-                return 1;
-            }
-        })
+        songsToRender.sort((a, b) => a.position < b.position ? -1 : 1);
 
         return songsToRender.map(song => {
             if (song) {

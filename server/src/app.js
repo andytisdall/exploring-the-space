@@ -67,29 +67,25 @@ mongoose.connection.on('error', (err) => {
 //     next();
 //   });
 
-app.use(bandRouter);
 
-app.use(authRouter);
-app.use(userRouter);
+// add /api to all routers so we don't get our urls mixed up with frontend
 
+const apiRouter = express.Router({ mergeParams: true });
 
-app.use(tierRouter);
-app.use(titleRouter);
-app.use(versionRouter);
-app.use(bounceRouter);
-app.use(audioRouter);
+apiRouter.use(bandRouter);
+apiRouter.use(authRouter);
+apiRouter.use(userRouter);
+apiRouter.use(tierRouter);
+apiRouter.use(titleRouter);
+apiRouter.use(versionRouter);
+apiRouter.use(bounceRouter);
+apiRouter.use(audioRouter);
+apiRouter.use(playlistRouter);
+apiRouter.use(playlistSongRouter);
 
+apiRouter.use(errorHandler);
 
-// app.use(editRouter);
-// app.post('/:bandName/delete', deleteItem);
-
-
-app.use(playlistRouter);
-app.use(playlistSongRouter);
-// app.use(playlistDetailRouter);
-
-
-app.use(errorHandler);
+app.use('/api', apiRouter);
 
 
 const server = https.createServer(httpsOptions, app).listen(3001, () => {

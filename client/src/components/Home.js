@@ -20,7 +20,7 @@ class Home extends React.Component {
 
         return bands.map(band => {
             return (
-                <div key={band.id}>
+                <div className="band-item" key={band.id}>
                     <Link to={`/${band.url}`}>
                         <h2>{band.name}</h2>
                     </Link>

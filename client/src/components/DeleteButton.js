@@ -13,7 +13,7 @@ const DeleteButton = ({ onSubmit, displayName }) => {
         return (
             <>
                 <button
-                    className="submit-button"
+                    className="modal-button"
                     onClick={() => {
                         onSubmit();
                         setVisible(false);
@@ -22,7 +22,7 @@ const DeleteButton = ({ onSubmit, displayName }) => {
                     Delete
                 </button>
                 <button
-                    className="submit-button"
+                    className="modal-button"
                     onClick={() => setVisible(false)}
                 >
                     No Wait

@@ -9,7 +9,7 @@ import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -102,8 +102,10 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 bounce: title.selectedBounce
             });
             // console.log('title update')
+            getTime({ id: title.id, duration: title.selectedBounce.duration });
         } else if (song && !title.selectedBounce) {
             setSong(null);
+            getTime({ id: title.id, duration: 0 })
         }
         
     }, [titles]);

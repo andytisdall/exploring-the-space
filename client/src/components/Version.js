@@ -29,19 +29,23 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     }, [bounces]);
 
     useEffect(() => {
-        setSelectedVersion(title.selectedVersion);
+        if (selectedVersion !== title.selectedVersion) {
+            setSelectedVersion(title.selectedVersion);
+        }
     }, [versions, title.selectedVersion]);
 
     const renderVersionList = () => {
         const versionList = versions.filter(v => v.id !== selectedVersion.id);
 
         return versionList.map(v => {
+            const current = v.current ? <span className="list-current"> * current</span> : null;
             return <div
                 className="dropdown-link change-version"
                 onClick={() => setSelectedVersion(v)}
                 key={v.id}
             >
                     {v.name}
+                    {current}
             </div>
         });
     };

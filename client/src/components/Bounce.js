@@ -16,10 +16,10 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     const [modalActive, setModalActive] = useState(false);
 
     useEffect(() => {
-        if (selectedBounce) {
+        if (selectedBounce && selectedBounce !== title.selectedBounce) {
             selectBounce(selectedBounce, title.id);
         }
-    }, [selectedBounce]);
+    }, [selectedBounce, title.selectedBounce]);
 
     useEffect(() => {
         setSelectedBounce(title.selectedBounce);
@@ -35,22 +35,17 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         if (bounces[0]) {
 
             const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
-            bounceList.sort((a, b) => {
-                if (a.date < b.date) {
-                    return -1;
-                }
-                if (b.date < a.date) {
-                    return 1;
-                }
-            });
+            bounceList.sort((a, b) => a.date < b.date ? 1 : -1);
 
             return bounceList.map(b => {
+                const current = b.latest ? <span className="list-current"> * current</span> : null;
                 return <div
                     className="dropdown-link change-song"
                     onClick={() => setSelectedBounce(b)}
                     key={b.id}
                 >
                         {displayDate(b.date)}
+                        {current}
                 </div>
             });
         }
@@ -65,10 +60,12 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     const modalContent = () => {
         return (
-            <div className='upload-image'>
-                <p>Uploading...</p>
-                <img className='windmill' src='/images/windmill.gif' />
-            </div>
+
+                <div className='upload-image'>
+                    <p>Uploading...</p>
+                    <img className='windmill' src='/images/windmill.gif' />
+                </div>
+
         );
     };
 

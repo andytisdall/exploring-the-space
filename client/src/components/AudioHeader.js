@@ -22,7 +22,7 @@ class AudioHeader extends React.Component {
     }
 
     wrapUrl(id) {
-        return `https://localhost:3001/audio/${id}.mp3`
+        return `https://localhost:3001/api/audio/${id}.mp3`
     }
 
     updateSlider = () => {
@@ -110,30 +110,9 @@ class AudioHeader extends React.Component {
         this.props.pauseAudio();
     }
 
-    // componentWillUnmount() {
-    //     if (this.audio) {
-    //         this.audio.removeEventListener('timeupdate', () => {
-    //             const position = (this.audio.currentTime / this.audio.duration) * 1000;
-    //                 this.time = this.formatTime(this.audio.currentTime);
-    //                 if (!isNaN(position)) {
-    //                     this.setState({
-    //                         sliderPosition: position
-    //                     });
-    //                 }
-    //             });
-    //         this.audio.addEventListener('ended', () => {
-    //             if (this.props.queue.length) {
-    //                 this.nextSong();
-    //             }
-    //         });
-    //     }
-    //   }
-
     onSliderChange = (e) => {
-
         const position = (e.target.value / 1000) * this.audio.duration;
         this.audio.currentTime = position;
-
     }
 
     onPauseButton = () => {
@@ -181,7 +160,7 @@ class AudioHeader extends React.Component {
                                 max="1000"
                                 value={this.state.sliderPosition}
                                 className='playslider'
-                                onChange={this.onSliderChange}
+                                onInput={this.onSliderChange}
                             />
                             <div className="playslidertime">
                                 {this.formatTime(this.props.song.duration)}

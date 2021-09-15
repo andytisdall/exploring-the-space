@@ -9,7 +9,7 @@ import User from './User';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
-import { fetchUser, signOut } from '../actions';
+import { fetchUser } from '../actions';
 
 
 import history from '../history';
@@ -17,7 +17,9 @@ import history from '../history';
 const App = ({ signedIn, fetchUser }) => {
 
     useEffect(() => {
-        fetchUser();
+        if (signedIn) {
+            fetchUser();
+        }
     }, []);
 
     return (
@@ -46,8 +48,7 @@ const App = ({ signedIn, fetchUser }) => {
 const mapStateToProps = state => {
     return {
         signedIn: state.auth.isSignedIn,
-        user: state.auth.user
     };
 };
 
-export default connect(mapStateToProps, { fetchUser, signOut })(App);
+export default connect(mapStateToProps, { fetchUser })(App);

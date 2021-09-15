@@ -34,7 +34,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
     // Create a new bounce object form values
 
-    const newBounce = new Song({date, comments, size: file.size, duration});
+    const newBounce = new Song({date, comments, size: file.size, duration, latest});
 
 
 
@@ -57,24 +57,6 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
         // Get id of mp3 from stream object
         newBounce.mp3 = stream.id;
 
-        
-        
-
-        // Update the latest tag in the parent's bounce list
-
-        let bounceList = parentVersion.songs;
-
-        if (latest) {
-
-            let oldLatest = bounceList.find(b => b.latest);
-            if (oldLatest) {
-                await Song.updateOne({_id: oldLatest._id}, {latest: false});
-            }
-            newBounce.latest = true;
-            
-        } else if (!bounceList.find(b => b.latest)) {
-            newBounce.latest = true;
-        }
 
         // Add bounce to parent version's bounce list
         parentVersion.songs.push(newBounce);
@@ -109,11 +91,8 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 
     thisBounce.comments = comments;
     thisBounce.date = date;
+    thisBounce.latest = latest;
 
-    if (latest) {
-        thisBounce.latest = latest;
-        Song.updateOne({ latest: true }, { latest: false });
-    }
 
     if (req.files) {
         const file = req.files.file;

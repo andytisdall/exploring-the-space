@@ -154,14 +154,14 @@ img {
   appearance: none;
   width: 5px;
   height: 15px;
-  background: #000000;
+  background: yellow;
   cursor: pointer;
 }
 
 .playslider::-moz-range-thumb {
   width: 5px;
   height: 15px;
-  background: #000000;
+  background: yellow;
   cursor: pointer;
 }
 
@@ -183,7 +183,7 @@ img {
 
 select {
   margin: 0.2rem;
-  width: 2rem;
+  width: auto;
   border: 1px solid #ccc;
   height: 1.5rem;
   box-sizing: border-box;
@@ -196,19 +196,6 @@ select {
   padding: 3px;
   display: inline-block;
   text-align: center;
-}
-
-.upload-container {
-  height: auto;
-  width: auto;
-  margin-top: 5rem;
-  display: flex;
-}
-
-.upload-progress {
-  margin: auto;
-  border: 3px solid orange;
-  display: flex;
 }
 
 .upload-image {
@@ -329,7 +316,7 @@ h1 {
   display: none;
 }
 
-.menu a {
+.menu-item {
   color: rgb(255, 106, 230);
   font-size: 0.75rem;
   padding-left: 1rem;
@@ -616,6 +603,12 @@ h5 {
   margin-top: 1rem;
 }
 
+.list-current {
+  font-size: 0.6rem;
+  margin-bottom: 0.8rem;
+  color: #2925ff;
+}
+
 /*  hidden */
 
 .hidden {
@@ -742,13 +735,22 @@ h5 {
   left: 40%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
   background-color: black;
   border: #34af49 2px solid;
-  width: 20rem;
-  padding: 10px;
-  height: 100px;
+  width: auto;
+  padding: 4rem;
+  height: auto;
+}
+
+.modal-button {
+  margin: 1rem;
+  color: rgb(0, 0, 0);
+  font-size: medium;
+  background-color: rgb(0, 255, 255);
+  border: rgb(237, 223, 100) 1px solid;
+  margin: 1rem;
+  padding: 0.3rem;
 }
 
 .submit-button {
@@ -757,7 +759,7 @@ h5 {
   background-color: rgb(0, 255, 255);
   border: rgb(237, 223, 100) 1px solid;
   margin: 1rem auto;
-  padding: 0.5rem;
+  padding: 0.4rem;
 }
 
 .submit-button-centered {

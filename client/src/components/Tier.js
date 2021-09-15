@@ -17,6 +17,8 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const [tierList, setTierList] = useState([]);
 
+    const [times, setTimes] = useState({});
+
     const arrow = expand ? 'down' : 'right';
 
     useEffect(() => {
@@ -48,7 +50,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         return titlesToRender.map(title => {
             if (title) {
                 return (
-                    <Title title={title} tier={tier} key={title.id} />
+                    <Title title={title} tier={tier} key={title.id} getTime={getTime} />
                 );
             }
         });
@@ -119,12 +121,29 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     };
 
-    // const totalTime = () => {
-    //     const totalTime = tier.trackList.reduce((prev, cur) => {
-    //         return prev.duration + cur.duration;
-    //     });
-    // }
+    const renderTotalTime = () => {
 
+        const total = Object.values(times).reduce((prev, cur) => {
+            return prev + cur;
+        }, 0);
+
+        if (!total) {
+            return null;
+        }
+
+        const minutes = Math.floor(total / 60);
+        const seconds = Math.floor(total % 60) < 10 ? '0' + Math.floor(total % 60) : Math.floor(total % 60);
+        return (
+            <div>
+                {`${minutes}:${seconds}`}
+            </div>
+        );
+        
+    };
+
+    const getTime = (track) => {
+        setTimes({ ...times, [track.id]: track.duration });
+    };
 
     return (
         <>
@@ -137,7 +156,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     <div className="tier-count">
                         {renderAddButton()}
                         <div className="song-count">{tier.trackList.length} songs</div>
-                        {/* <div className="song-count">{totalTime()}</div> */}
+                        <div className="song-count">{renderTotalTime()}</div>
                     </div>
                     <div className="tier-display">
                         {renderEditButton()}
