@@ -1,19 +1,17 @@
-server/node_modules
-client/node_modules
-server/src/mongo-key.js
+node_modules
+src/mongo-key.js
 .gitignore
 webpack.configs.js
-server/src/jwt-key.js
+babel.config.json
+src/jwt-key.js
 .DS_Store
 /.pnp
 .pnp.js
 .pem
 
-# testing
-client/coverage
-
-# production
-client/build
+# client
+client
+server
 
 # misc
 .DS_Store

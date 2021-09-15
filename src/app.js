@@ -4,8 +4,8 @@ import express from 'express';
 import 'express-async-errors';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
-import https from 'https';
-import fs from 'fs';
+// import https from 'https';
+import path from 'path';
 
 import './models/models.js';
 import './models/user.js';
@@ -28,16 +28,17 @@ import { errorHandler } from './middlewares/error-handler.js';
 
 const app = express();
 
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(fileUpload());
 app.use(cors());
 
-const httpsOptions = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem')
-  }
+// const httpsOptions = {
+//     key: fs.readFileSync('./key.pem'),
+//     cert: fs.readFileSync('./cert.pem')
+//   }
 
 
 // connect mongo database
@@ -86,6 +87,10 @@ apiRouter.use(playlistSongRouter);
 apiRouter.use(errorHandler);
 
 app.use('/api', apiRouter);
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.joing(__dirname, 'build', 'index.html'));
+});
 
 
 const server = https.createServer(httpsOptions, app).listen(3001, () => {
