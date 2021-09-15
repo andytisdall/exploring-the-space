@@ -44,8 +44,8 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     onClick={() => setSelectedBounce(b)}
                     key={b.id}
                 >
-                        {displayDate(b.date)}
-                        {current}
+                    {displayDate(b.date)}
+                    {current}
                 </div>
             });
         }

@@ -30,7 +30,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     self: song
                 });
         }
-    }, [playlistSongs[song.id], titles[song.title].selectedBounce, titles[song.title].selectedVersion]);
+    }, [playlistSongs[song.id], bounces[song.bounce], titles[song.title], versions[song.version]]);
 
     const renderPlayContainer = () => {
 
@@ -51,8 +51,6 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
     };
 
     const onEditSubmit = formValues => {
-        console.log(versions);
-        console.log(formValues)
         const thisVersion = Object.values(versions).find(v => v.bounces.includes(formValues.bounce));
         editPlaylistSong({
             ...formValues,
@@ -87,9 +85,13 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                 if (otherBounces[i]) {
                     otherBounces[i].forEach(b => {
                         if (b) {
+                            let current = '';
+                            if (v.current && b.latest) {
+                                current =' * current';
+                            }
                             editOptions.push({
                                 value: b.id,
-                                display: `${v.name} -- ${moment.utc(b.date).format('MM/DD/YY')}`
+                                display: `${v.name} -- ${moment.utc(b.date).format('MM/DD/YY')}${current}`
                             });
                         }
                     });

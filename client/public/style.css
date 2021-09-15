@@ -4,7 +4,7 @@ html {
 
 body {
   background-color: rgb(56, 56, 56);
-  color: rgb(113, 203, 255);
+  color: rgb(212, 234, 255);
   font-family: 'Fira Sans', sans-serif;
   margin: 0px;
 }
@@ -48,18 +48,25 @@ img {
   flex-direction: column;
   align-items: center;
   max-width: 65rem;
-  width: 100%;
+  width: 97%;
+  padding-top: 1rem;
 }
 
 .band-header {
   margin-top: 0.5rem;
   display: flex;
-  border-bottom: solid 1px pink;
+  border-bottom: solid 1px rgb(62, 255, 239);
   justify-content: space-around;
   position: relative;
   height: 3.5rem;
   width: 95%;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.342), rgba(0, 0, 0, 0));
+  background-color: rgb(56, 56, 56);
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.466),
+    rgba(0, 0, 0, 0.295),
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0)
+  );
 }
 
 .band-name {
@@ -70,8 +77,7 @@ img {
 
 .playbar {
   background-color: rgb(24, 24, 24);
-  border: 1px pink solid;
-  color: pink;
+  border: 1px rgb(62, 255, 239) solid;
   box-sizing: border-box;
   width: 98%;
   max-width: 65rem;
@@ -87,8 +93,7 @@ img {
 
 .playbar-title p {
   font-size: 1.5rem;
-  color: #b2ff22;
-  padding: 10px 25px 10px 25px;
+  color: #f7ccff;
   display: inline-block;
 }
 
@@ -143,7 +148,7 @@ img {
 .playslidertime {
   width: 60px;
   padding: 5px 10px;
-  color: rgb(151, 235, 68);
+  color: rgb(218, 243, 255);
 }
 
 .playslider {
@@ -151,7 +156,7 @@ img {
   width: 100%;
   height: 10px;
   border-radius: 5px;
-  background: rgb(151, 235, 68);
+  background: rgb(68, 235, 193);
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
@@ -167,14 +172,14 @@ img {
   appearance: none;
   width: 5px;
   height: 15px;
-  background: yellow;
+  background: rgb(220, 100, 160);
   cursor: pointer;
 }
 
 .playslider::-moz-range-thumb {
   width: 5px;
   height: 15px;
-  background: yellow;
+  background: rgb(220, 100, 160);
   cursor: pointer;
 }
 
@@ -284,7 +289,7 @@ hr {
 .delete {
   color: rgb(94, 235, 245);
   font-size: 0.8rem;
-  padding-left: 1rem;
+  padding-left: 0.8rem;
 }
 
 input {
@@ -330,17 +335,27 @@ h1 {
 }
 
 .body-container {
-  padding-top: 5rem;
+  padding-top: 6rem;
 }
 .playbar-active {
-  padding-top: 11rem;
+  padding-top: 12rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+}
+
+.playlists h2 {
+  color: rgb(82, 236, 236);
 }
 
 /* tier */
 
 .row {
   padding-right: 10px;
-  min-width: 500px;
+  padding-top: 0;
+  padding-bottom: 0;
+  min-width: 90%;
 }
 
 .tier-name {
@@ -389,7 +404,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-right: 0.5rem;
+  margin: 0 0.5rem;
 }
 
 .song-count {
@@ -420,10 +435,10 @@ h2 {
   border-top: rgb(20, 29, 11) solid 1px;
   background-image: linear-gradient(
     to right,
-    rgba(155, 229, 252, 0.699),
-    rgba(74, 253, 223, 0.904),
-    rgb(132, 235, 253),
-    rgba(155, 252, 223, 0.829),
+    rgba(233, 255, 255, 0.479),
+    rgba(213, 247, 255, 0.616),
+    rgb(181, 188, 255),
+    rgba(168, 209, 255, 0.781),
     rgba(210, 255, 210, 0)
   );
   color: rgb(0, 0, 0);
@@ -439,7 +454,7 @@ h3 {
 .row-name {
   align-items: center;
   display: flex;
-  width: 45%;
+  width: 40%;
 }
 
 .playcontainer {
@@ -532,7 +547,7 @@ h3 {
 }
 
 .detail-notes {
-  margin: 0.7rem 2rem;
+  margin: 0.7rem 1rem;
   font-size: 0.8rem;
 }
 
@@ -619,6 +634,7 @@ h5 {
   padding: 5px;
   border-radius: 40px;
   margin-top: 1rem;
+  text-align: center;
 }
 
 .current {
@@ -629,6 +645,7 @@ h5 {
   padding: 5px;
   border-radius: 40px;
   margin-top: 1rem;
+  text-align: center;
 }
 
 .list-current {
@@ -722,11 +739,6 @@ h5 {
   margin-bottom: 10rem;
 }
 
-.playlists h2 {
-  font-size: 1.3rem;
-  color: rgb(82, 236, 236);
-}
-
 .playlistsong-no-bounce {
   display: flex;
   justify-content: space-around;
@@ -798,6 +810,16 @@ h5 {
   justify-content: center;
 }
 
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+.user-title {
+  text-transform: uppercase;
+}
+
 @media (max-width: 700px) {
   body {
     font-size: 0.7rem;
@@ -860,17 +882,6 @@ h5 {
     max-width: 100%;
   }
 
-  .header {
-    height: 2.3rem;
-  }
-
-  .row {
-    padding-top: 0;
-    padding-bottom: 0;
-    min-width: 90%;
-    max-width: 100%;
-  }
-
   .title {
     height: 1.6rem;
   }
@@ -892,6 +903,10 @@ h5 {
     width: 15px;
   }
 
+  .section-title {
+    font-size: 1.2rem;
+  }
+
   h2 {
     padding-top: 0.5rem;
     font-size: 1rem;
@@ -902,6 +917,7 @@ h5 {
   }
 
   .tier {
+    padding-top: 0;
     margin-left: 0.3rem;
   }
 
@@ -909,14 +925,9 @@ h5 {
     font-size: 0.6rem;
   }
 
-  .tier-display {
-    height: 1.6rem;
-    margin-left: 0.5rem;
-  }
-
   h3 {
     padding-left: 5px;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 
   .title-margin {
@@ -932,13 +943,21 @@ h5 {
     height: 1.6rem;
   }
 
+  .songtime {
+    margin-right: 0.5rem;
+  }
+  .playicon {
+    margin-right: 0.5rem;
+  }
+
   .title-display {
     margin-right: 5px;
+    align-items: center;
   }
 
   .title-display p {
     margin: 5px;
-    font-size: 0.65rem;
+    font-size: 0.45rem;
   }
 
   .playicon {
@@ -963,12 +982,9 @@ h5 {
     padding-bottom: 0.3rem;
   }
 
-  .dropdown {
-    margin-left: 1rem;
-  }
-
   .dropbtn {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
+    padding: 0.2rem;
   }
 
   .detail-notes {
@@ -977,25 +993,15 @@ h5 {
     margin-left: 0.5rem;
   }
 
-  .current {
-    padding: 3px;
-    font-size: 0.4rem;
-    margin-top: 0.4rem;
-  }
-
+  .current,
   .latest {
     padding: 3px;
-    font-size: 0.4rem;
-    margin-top: 0.4rem;
+    font-size: 0.2rem;
+    margin-top: 0.3rem;
   }
 
   .left-box {
     margin-left: -3rem;
-  }
-
-  .playlists h2 {
-    font-size: 1rem;
-    color: rgb(82, 236, 236);
   }
 
   .pausebutton {
@@ -1014,15 +1020,57 @@ h5 {
 }
 
 @media (max-width: 500px) {
+  .band-header {
+    justify-content: space-between;
+  }
+
+  .title-margin {
+    margin-left: 0.2rem;
+  }
+
   h2 {
     padding-top: 0.5rem;
+    font-size: 0.8rem;
   }
 
-  .title-display {
-    margin-right: 5px;
+  .section-title {
+    font-size: 1rem;
   }
 
+  .marqee {
+    padding-bottom: 1px;
+  }
+
+  .tier-display {
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 0.5rem;
+  }
+
+  .songtime {
+    font-size: 0.4rem;
+  }
+
+  .slidecontainer {
+    width: 40%;
+    padding-top: 1.2rem;
+  }
+
+  .row-name {
+    width: 40%;
+  }
+
+  .add,
+  .delete {
+    padding-left: 0.3rem;
+  }
   .playcontainer {
-    margin-left: 10px;
+    width: 60%;
+  }
+
+  .title-display p {
+    font-size: 0.4rem;
   }
 }

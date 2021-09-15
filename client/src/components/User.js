@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { createBand, fetchBands, editBand, deleteBand } from '../actions';
+import { createBand, fetchBands, editBand, deleteBand, signOut } from '../actions';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 
-const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand }) => {
+const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand, signOut }) => {
 
     useEffect(() => {
         fetchBands();
@@ -51,11 +51,15 @@ const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand }) => 
 
     if (user) {
         return <>
-            <h1>{user.username}'s bands</h1>
+            <div className="user-header">
+                <h1 className="user-title">{user.username}'s bands</h1>
+                <div onClick={signOut}>Sign Out</div>
+            </div>
+            <hr />
             <div className="row band-list">
                 {renderBands()}
             </div>
-            <hr />
+            
             <div className="centered-button">
                 <AddButton
                     onSubmit={formValues => createBand(formValues)}
@@ -82,4 +86,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { createBand, fetchBands, editBand, deleteBand })(User);
+export default connect(mapStateToProps, { createBand, fetchBands, editBand, deleteBand, signOut })(User);
