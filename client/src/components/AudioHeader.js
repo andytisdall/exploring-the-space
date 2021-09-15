@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { playAudio, pauseAudio, nextSong } from '../actions';
+import { playAudio, pauseAudio, nextSong, throwError } from '../actions';
+import { isNumber } from 'lodash';
 
 
 class AudioHeader extends React.Component {
@@ -39,11 +40,15 @@ class AudioHeader extends React.Component {
 
         // if there's no audio element created, create one with the current song
         // add event listener to link the slider position to the time of the song
-
-
         
         this.audio = new Audio();
+
         this.audio.addEventListener('timeupdate', this.updateSlider);
+
+        this.audio.addEventListener('error', () => {
+            const message = "The audio player had an error, probably can't connect to server."
+            this.props.throwError(message);
+        });
 
         // if there's a queue, load next song
 
@@ -78,6 +83,8 @@ class AudioHeader extends React.Component {
             } else if (this.props.pause && prevProps.play) {
                 this.audio.pause();
             } 
+        } else {
+            this.audio.pause();
         }
     }
 
@@ -185,4 +192,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong })(AudioHeader);
+export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError })(AudioHeader);

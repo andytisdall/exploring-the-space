@@ -16,7 +16,8 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => 
         return `${minutes}:${seconds}`;
     }
 
-    const onPlay = () => {
+    const onPlay = (e) => {
+        e.stopPropagation();
         if (parentType === "tier") {
             queueSongs(song);
         } else if (parentType === "playlist") {

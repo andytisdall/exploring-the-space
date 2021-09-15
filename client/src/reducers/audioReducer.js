@@ -1,4 +1,4 @@
-import { PLAY_AUDIO, PAUSE_AUDIO, QUEUE_SONGS, NEXT_SONG } from "../actions/types";
+import { PLAY_AUDIO, PAUSE_AUDIO, QUEUE_SONGS, NEXT_SONG, DELETE_BOUNCE } from "../actions/types";
 
 const initialState = {
     play: false,
@@ -20,6 +20,15 @@ export default (state = initialState, action) => {
             const queue = state.queue;
             const nextSong = queue.shift();
             return { ...state, queue, currentSong: nextSong };
+        case DELETE_BOUNCE:
+            if (action.payload.bounce.id === state.currentSong.audio) {
+                console.log('ok')
+                return { ...state, play: false, pause: true, queue: [], currentSong: null };
+            }
+            if (state.queue.length) {
+                state.queue = state.queue.filter(song => song.audio !== action.payload.bounce.id);
+                return { ...state };
+            }
         default:
             return state;
     }

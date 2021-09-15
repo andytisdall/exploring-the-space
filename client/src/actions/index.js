@@ -241,7 +241,7 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
 };
 
 export const createBounce = (formValues, versionId, titleId) => async (dispatch, getState) => {
-    console.log(formValues)
+
     try {
         const { currentBand } = getState().bands;
         const parentVersion = getState().versions[versionId];
@@ -249,7 +249,7 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
         if (!parentVersion.bounces.length) {
             formValues.latest = true;
         }
-        console.log(formValues)
+
         formValues.file = formValues.file[0];
         
         // Create instance of FileReader
@@ -697,16 +697,19 @@ export const queueSongs = (song) => (dispatch, getState) => {
 
     const allTitles = song.tier.trackList.map(id => getState().titles[id]);
     const titleList = allTitles.splice(allTitles.indexOf(song.title));
-    const queue = titleList.map(title => {
-        const version = getState().versions[title.selectedVersion.id];
-        const bounce = getState().bounces[title.selectedBounce.id];
-        return {
-            title: title.title,
-            version: version.name,
-            date: bounce.date,
-            duration: bounce.duration,
-            audio: bounce.id
-        };
+    const queue = [];
+    titleList.forEach(title => {
+        if (title.selectedVersion && title.selectedBounce) {
+            const version = getState().versions[title.selectedVersion.id];
+            const bounce = getState().bounces[title.selectedBounce.id];
+            queue.push({
+                title: title.title,
+                version: version.name,
+                date: bounce.date,
+                duration: bounce.duration,
+                audio: bounce.id
+            });
+        }
     });
     dispatch({ type: QUEUE_SONGS, payload: queue });
 };

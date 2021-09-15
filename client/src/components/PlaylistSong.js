@@ -30,7 +30,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     self: song
                 });
         }
-    }, [playlistSongs[song.id]]);
+    }, [playlistSongs[song.id], titles[song.title].selectedBounce, titles[song.title].selectedVersion]);
 
     const renderPlayContainer = () => {
 
