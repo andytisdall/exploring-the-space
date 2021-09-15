@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { fetchBand, signOut } from '../actions';
+import { fetchBand, signOut, changeVolume } from '../actions';
 import BodyContainer from './BodyContainer';
 import AudioHeader from './AudioHeader';
 import requireAuth from './requireAuth';
 
-const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut }) => {
+const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
 
     useEffect(() => {
         fetchBand(match.params.bandName);
@@ -53,16 +53,26 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
 
     return <>
         
-        <AudioHeader />
-        <div className="marqee header">
-            <div className="band-name">
-                <h1>{band && band.name}</h1>
-                {authorized ? renderAdmin() : renderHomeLink()}
-            </div>
-            <div className="slidecontainer">
-                <input type="range" min="0" max="100" className="master-volume" />
+        <div className="header">
+            <AudioHeader />
+            <div className="band-header">
+                <div className="band-name">
+                    <h1>{band && band.name}</h1>
+                    {authorized ? renderAdmin() : renderHomeLink()}
+                </div>
+                <div className="slidecontainer">
+                    <input
+                        type="range"
+                        min="0" max="100"
+                        className="master-volume"
+                        value={volume}
+                        onInput={e => changeVolume(e.target.value)}
+                    />
+                    <img src="/images/volume.svg" />
+                </div>
             </div>
         </div>
+
         {showBody()}
 
     </>;
@@ -73,8 +83,9 @@ const mapStateToProps = state => {
     return {
         band: state.bands.currentBand,
         user: state.auth.currentUser,
-        signedIn: state.auth.isSignedIn
+        signedIn: state.auth.isSignedIn,
+        volume: state.audio.volume
     }
 }
 
-export default connect(mapStateToProps, { fetchBand, signOut })(requireAuth(BandHeader));
+export default connect(mapStateToProps, { fetchBand, signOut, changeVolume })(requireAuth(BandHeader));

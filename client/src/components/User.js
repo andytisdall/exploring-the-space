@@ -26,7 +26,7 @@ const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand }) => 
                         </Link>
                         <div className="band-buttons">
                             <AddButton
-                                onSubmit={formValues => editBand(formValues)}
+                                onSubmit={formValues => editBand(formValues, band.id)}
                                 title={`Edit ${band.name}`}
                                 image="images/edit.png"
                                 fields={[{

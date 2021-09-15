@@ -8,7 +8,7 @@ import Playlist from './Playlist';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 
-const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlists, band, authorized, createPlaylist }) => {
+const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlists, band, authorized, createPlaylist, currentSong }) => {
 
     const [tierList, setTierList] = useState([]);
     const [playlistList, setPlaylistList] = useState([]);
@@ -103,10 +103,11 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
         });
     };
 
-
+    const playbarActive = currentSong ? 'playbar-active' : ''
 
     return (
-        <>
+        <div className={`body-container ${playbarActive}`}>
+            <h2>Tiers</h2>
             <hr />
             {tiers && renderTiers()}
             {renderTierAddButton()}
@@ -116,7 +117,7 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
                 {playlists && renderPlaylists()}
                 {renderPlaylistAddButton()}
             </div>
-        </>
+        </div>
 
 
     );
@@ -128,6 +129,7 @@ const mapStateToProps = state => {
     return {
         tiers: state.tiers,
         playlists: state.playlists,
+        currentSong: state.audio.currentSong
     };
 };
 

@@ -37,7 +37,8 @@ import {
     QUEUE_SONGS,
     NEXT_SONG,
     SELECT_VERSION,
-    SELECT_BOUNCE
+    SELECT_BOUNCE,
+    CHANGE_VOLUME
 } from './types';
 import history from '../history';
 import _ from 'lodash';
@@ -348,9 +349,9 @@ export const createPlaylistSong = (formValues, playlistId) => async (dispatch, g
     }
 };
 
-export const editBand = formValues => async dispatch => {
+export const editBand = (formValues, bandId) => async dispatch => {
     try {
-        const response = await greenhouse.patch('/bands', formValues);
+        const response = await greenhouse.patch('/bands', { ...formValues, currentBand: bandId});
         dispatch({ type: EDIT_BAND, payload: response.data });
     } catch (err) {
         dispatch(errorHandler(err));
@@ -736,6 +737,10 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
 
 export const nextSong = () => dispatch => {
     dispatch({ type: NEXT_SONG });
+}
+
+export const changeVolume = value => {
+    return { type: CHANGE_VOLUME, payload: value };
 }
 
 

@@ -39,12 +39,12 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
         } else {
             return (
                 <div className="playlistsong-no-bounce">
-                    <div>
+                    <p>
                         {versions[song.version] ? `${versions[song.version].name}` : 'No Version Selected'}
-                    </div>
-                    <div>
+                    </p>
+                    <p>
                         No Bounce Selected
-                    </div>
+                    </p>
                 </div>
             );
         }
@@ -148,8 +148,10 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     </div>      
 
                     {renderPlayContainer()}
-                    {renderEditButton()}
-                    {renderDeleteButton()}
+                    <div className="tier-display">
+                        {renderEditButton()}
+                        {renderDeleteButton()}
+                    </div>
                 </div>
             </div>
         </div>

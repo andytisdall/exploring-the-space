@@ -4,7 +4,7 @@ html {
 
 body {
   background-color: rgb(56, 56, 56);
-  color: rgb(151, 235, 68);
+  color: rgb(113, 203, 255);
   font-family: 'Fira Sans', sans-serif;
   margin: 0px;
 }
@@ -40,41 +40,54 @@ img {
   width: 100px;
 }
 
-.playbar-background {
+.header {
   z-index: 9;
   background-color: rgb(56, 56, 56);
   position: fixed;
-  height: 7.5rem;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  max-width: 65rem;
+  width: 100%;
+}
+
+.band-header {
+  margin-top: 0.5rem;
+  display: flex;
+  border-bottom: solid 1px pink;
+  justify-content: space-around;
+  position: relative;
+  height: 3.5rem;
+  width: 95%;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.342), rgba(0, 0, 0, 0));
+}
+
+.band-name {
+  display: flex;
+  align-items: center;
+  width: 30%;
 }
 
 .playbar {
-  height: 6.5rem;
   background-color: rgb(24, 24, 24);
   border: 1px pink solid;
   color: pink;
-  padding: 1rem auto;
   box-sizing: border-box;
   width: 98%;
   max-width: 65rem;
-  position: fixed;
+  position: relative;
   z-index: 10;
 }
 
 .playbar-title {
-  height: 2rem;
+  height: 1.7rem;
   width: 45%;
-  text-align: center;
+  margin-left: 1rem;
 }
 
 .playbar-title p {
-  font-size: 1.2rem;
-  background-color: rgb(173, 255, 22);
-  color: #000000;
-  border-radius: 25px;
+  font-size: 1.5rem;
+  color: #b2ff22;
   padding: 10px 25px 10px 25px;
   display: inline-block;
 }
@@ -177,10 +190,6 @@ img {
   padding: 0.3rem;
 }
 
-/* select {
-  margin: 0.2rem;
-} */
-
 select {
   margin: 0.2rem;
   width: auto;
@@ -230,7 +239,7 @@ a {
 }
 
 hr {
-  border-color: rgb(151, 235, 68);
+  border-color: rgb(72, 145, 255);
   text-align: left;
   margin: 0;
 }
@@ -258,7 +267,7 @@ hr {
   border: 1px solid rgb(94, 235, 245);
   background-color: black;
   margin-top: 1.3rem;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
   z-index: 1;
   margin-left: -8rem;
@@ -301,12 +310,6 @@ h1 {
   padding-bottom: 0px;
 }
 
-.band-name {
-  display: flex;
-  align-items: center;
-  width: 30%;
-}
-
 .menu-button {
   display: flex;
   width: 200px;
@@ -326,16 +329,18 @@ h1 {
   display: flex;
 }
 
+.body-container {
+  padding-top: 5rem;
+}
+.playbar-active {
+  padding-top: 11rem;
+}
+
 /* tier */
 
 .row {
   padding-right: 10px;
-  padding-top: 7px;
   min-width: 500px;
-  /* background: radial-gradient(
-    rgba(128, 128, 128, 0),
-    rgba(255, 255, 255, 0.281)
-  ); */
 }
 
 .tier-name {
@@ -346,12 +351,6 @@ h1 {
 
 .marqee {
   display: flex;
-  padding-bottom: 5px;
-}
-
-.header {
-  padding-top: 7.5rem;
-  padding-bottom: 0px;
   justify-content: space-between;
 }
 
@@ -364,11 +363,19 @@ h2 {
   font-size: 1.4rem;
   padding-left: 1rem;
   margin: 0px;
-  color: rgb(235, 155, 118);
+  margin-bottom: 0.2rem;
+  color: rgb(227, 210, 255);
 }
 
 .arrow {
   height: 35px;
+  margin-bottom: 3px;
+  transition: all 0.2s;
+}
+
+.down-arrow {
+  transform: rotate(90deg);
+  transition: all 0.1s;
 }
 
 .tier-count {
@@ -386,28 +393,41 @@ h2 {
 }
 
 .song-count {
-  margin-left: 1.5rem;
-  margin-top: 0.5rem;
+  margin-left: 1rem;
 }
-
-.tier .marqee {
-  /* background-color: rgba(137, 43, 226, 0.582); */
-}
-
-/* title */
-
-/* .title .marqee {
-  /* background-color: rgba(67, 188, 204, 0.623); */
 
 .title-margin {
   margin-left: 3rem;
   padding-left: 1rem;
-  border-bottom: rgb(151, 235, 68) solid 1px;
-  border-left: rgb(151, 235, 68) solid 1px;
 }
 
-.name-spot {
-  color: rgb(224, 222, 52);
+@keyframes expandDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-2rem) scaleY(0.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+.open {
+  animation: expandDown 0.2s;
+}
+
+.title {
+  border-top: rgb(20, 29, 11) solid 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(155, 229, 252, 0.699),
+    rgba(74, 253, 223, 0.904),
+    rgb(132, 235, 253),
+    rgba(155, 252, 223, 0.829),
+    rgba(210, 255, 210, 0)
+  );
+  color: rgb(0, 0, 0);
+  width: 98%;
 }
 
 h3 {
@@ -418,14 +438,15 @@ h3 {
 
 .row-name {
   align-items: center;
-  width: 40%;
   display: flex;
+  width: 45%;
 }
 
 .playcontainer {
+  width: 45%;
   display: flex;
-  min-width: 60%;
   align-items: center;
+  margin-left: 0.5rem;
 }
 
 .songtime {
@@ -453,7 +474,7 @@ h3 {
 }
 
 .playicon {
-  height: 1.3rem;
+  height: 1.6rem;
   margin-right: 1rem;
   margin-top: 0.2rem;
 }
@@ -492,6 +513,13 @@ h3 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-image: linear-gradient(
+    to right,
+    rgb(40, 40, 143),
+    rgb(40, 40, 143),
+    rgb(40, 40, 143),
+    rgba(66, 62, 255, 0.74)
+  );
 }
 
 .detail-content {
@@ -616,9 +644,10 @@ h5 {
 }
 
 .slidecontainer {
-  padding-top: 1rem;
+  padding-top: 1.2rem;
   width: 30%;
   padding-right: 0.4rem;
+  display: flex;
 }
 
 .master-volume {
@@ -626,11 +655,12 @@ h5 {
   width: 100%;
   height: 5px;
   border-radius: 5px;
-  background: #cecece;
+  background: #9cc3f7;
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
   transition: opacity 0.2s;
+  margin-right: 1rem;
 }
 
 .master-volume:hover {
@@ -643,7 +673,7 @@ h5 {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #83cac4;
+  background: #ffffff;
   cursor: pointer;
 }
 
@@ -651,7 +681,7 @@ h5 {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #83cac4;
+  background: #ffffff;
   cursor: pointer;
 }
 
@@ -688,7 +718,7 @@ h5 {
 }
 
 .playlists {
-  margin-top: 3rem;
+  margin-top: 2rem;
   margin-bottom: 10rem;
 }
 
@@ -708,6 +738,7 @@ h5 {
 .song-position {
   font-size: 1rem;
   width: 1rem;
+  margin-left: 1rem;
 }
 
 .dimmer {
@@ -739,7 +770,7 @@ h5 {
   background-color: black;
   border: #34af49 2px solid;
   width: auto;
-  padding: 4rem;
+  padding: 2rem;
   height: auto;
 }
 
@@ -758,7 +789,7 @@ h5 {
   font-size: medium;
   background-color: rgb(0, 255, 255);
   border: rgb(237, 223, 100) 1px solid;
-  margin: 1rem auto;
+  margin: 0.5rem auto;
   padding: 0.4rem;
 }
 
@@ -774,9 +805,8 @@ h5 {
   }
 
   .playbar {
-    padding-top: 0.2rem;
+    padding: 0;
     margin-bottom: 0.2rem;
-    height: 4rem;
     width: 96%;
   }
 
@@ -785,16 +815,21 @@ h5 {
     margin-left: 1rem;
   }
 
-  .playbar-title {
-    font-size: 1rem;
+  .playbar-background {
+    height: 6rem;
+  }
+
+  .playbar-title p {
+    font-size: 0.8rem;
+    padding: 3px;
+  }
+
+  .big-play-btn {
+    height: 2rem;
   }
 
   .playbar-header {
     padding-bottom: 0.2rem;
-  }
-
-  .playbar-info {
-    display: inline;
   }
 
   .playbar-info p {
@@ -804,8 +839,20 @@ h5 {
   }
 
   .slidecontainer {
-    padding-top: 0.3rem;
+    padding-top: 0.5rem;
     width: 150px;
+  }
+
+  .add {
+    font-size: 0.65rem;
+  }
+
+  .text-input {
+    padding: 2px;
+  }
+
+  select {
+    padding: 0;
   }
 
   .container {
@@ -818,10 +865,14 @@ h5 {
   }
 
   .row {
-    padding-top: 5px;
-    padding-bottom: 0px;
+    padding-top: 0;
+    padding-bottom: 0;
     min-width: 90%;
     max-width: 100%;
+  }
+
+  .title {
+    height: 1.6rem;
   }
 
   .notitle {
@@ -833,7 +884,7 @@ h5 {
   }
 
   h1 {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .arrow {
@@ -854,7 +905,12 @@ h5 {
     margin-left: 0.3rem;
   }
 
+  .song-count {
+    font-size: 0.6rem;
+  }
+
   .tier-display {
+    height: 1.6rem;
     margin-left: 0.5rem;
   }
 
@@ -873,7 +929,7 @@ h5 {
   }
 
   .playcontainer {
-    min-width: 50%;
+    height: 1.6rem;
   }
 
   .title-display {
@@ -882,26 +938,21 @@ h5 {
 
   .title-display p {
     margin: 5px;
-    font-size: 0.5rem;
+    font-size: 0.65rem;
   }
 
   .playicon {
     width: 20px;
   }
 
-  .versioncontainer {
-    display: block;
+  .version-container {
     margin-left: 1.5rem;
     margin-top: 0.3rem;
   }
 
   .detail-box {
-    width: auto;
     padding: 0.5rem;
-  }
-
-  .detail-header {
-    display: flex;
+    /* flex-direction: row; */
   }
 
   h5 {
@@ -909,7 +960,6 @@ h5 {
   }
 
   .detail-content {
-    display: block;
     padding-bottom: 0.3rem;
   }
 
@@ -918,7 +968,7 @@ h5 {
   }
 
   .dropbtn {
-    font-size: 0.5rem;
+    font-size: 0.65rem;
   }
 
   .detail-notes {
@@ -927,12 +977,20 @@ h5 {
     margin-left: 0.5rem;
   }
 
-  .left-box {
-    margin-left: -3rem;
+  .current {
+    padding: 3px;
+    font-size: 0.4rem;
+    margin-top: 0.4rem;
   }
 
-  .song-count {
-    margin-left: 1rem;
+  .latest {
+    padding: 3px;
+    font-size: 0.4rem;
+    margin-top: 0.4rem;
+  }
+
+  .left-box {
+    margin-left: -3rem;
   }
 
   .playlists h2 {
@@ -955,27 +1013,9 @@ h5 {
   }
 }
 
-@media (max-width: 400px) {
-  .playbar {
-    width: auto;
-  }
-
-  h1 {
-    font-size: 0.7rem;
-  }
-
+@media (max-width: 500px) {
   h2 {
     padding-top: 0.5rem;
-    font-size: 0.7rem;
-  }
-
-  h3 {
-    padding-left: 5px;
-    font-size: 0.7rem;
-  }
-
-  img {
-    height: 0.5rem;
   }
 
   .title-display {
@@ -984,22 +1024,5 @@ h5 {
 
   .playcontainer {
     margin-left: 10px;
-  }
-
-  .songtime {
-    font-size: 0.2rem;
-  }
-
-  .title-display p {
-    font-size: 0.2rem;
-  }
-
-  .tier-name {
-    width: 100%;
-  }
-
-  .playlists h2 {
-    font-size: 0.7rem;
-    color: rgb(82, 236, 236);
   }
 }

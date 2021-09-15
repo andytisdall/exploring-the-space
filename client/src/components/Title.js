@@ -16,8 +16,6 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     const [bounceList, setBounceList] = useState(null);
     const [song, setSong] = useState(null);
 
-    const arrow = expand ? 'down' : 'right';
-
     useEffect(() => {
         fetchVersions(title.id);
     }, []);
@@ -185,12 +183,14 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
         }
     }
 
+    const arrow = expand ? 'down-arrow' : '';
+
     return (
         <div className="title-margin">
             <div className="row title">
                 <div className="marqee" onClick={() => setExpand(!expand)}>
                     <div className="row-name"   >
-                        <img className="arrow" src={`/images/${arrow}-arrow.svg`} />
+                        <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
                         <div className="name-spot">
                             <h3>{title.title}</h3>
                         </div>

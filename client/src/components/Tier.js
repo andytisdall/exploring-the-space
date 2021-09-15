@@ -19,7 +19,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const [times, setTimes] = useState({});
 
-    const arrow = expand ? 'down' : 'right';
+    
 
     useEffect(() => {
         fetchTitles(tier.id);
@@ -145,12 +145,15 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         setTimes({ ...times, [track.id]: track.duration });
     };
 
+    const arrow = expand ? 'down-arrow' : '';
+    const open = expand ? 'open' : ''
+
     return (
         <>
             <div className="row tier" onClick={() => setExpand(!expand)}>
-                <div className="marqee tier-info">
+                <div className="marqee">
                     <div className="tier-name">
-                        <img className="arrow" src={`images/${arrow}-arrow.svg`} />
+                        <img className={`arrow ${arrow}`} src={`images/right-arrow.svg`} />
                         <h2>{tier.name}</h2>
                     </div>
                     <div className="tier-count">
@@ -165,7 +168,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                 </div>
                 <hr />
             </div>
-            <div className="title-container">
+            <div className={open}>
                 {expand && titlesToRender && renderTitles()}
             </div>
         </>

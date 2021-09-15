@@ -15,7 +15,6 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
 
     const [songsToRender, setSongsToRender] = useState(null);
 
-    const arrow = expand ? 'down' : 'right';
 
     useEffect(() => {
         fetchPlaylistSongs(playlist.id);
@@ -95,12 +94,16 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         }
     };
 
+
+    const arrow = expand ? 'down-arrow' : '';
+    const open = expand ? 'open' : '';
+
     return (
         <>
             <div className="row tier" onClick={() => setExpand(!expand)} >
                 <div className="marqee tier-info">
                     <div className="tier-name"  >
-                        <img className="arrow" src={`/images/${arrow}-arrow.svg`}/>
+                        <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`}/>
                         <h2>{playlist.name}</h2>
                     </div>
                     <div className="tier-count">
@@ -114,7 +117,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                 </div>
                 <hr />
             </div>
-            <div className="titlecontainer">
+            <div className={open}>
                 {expand && renderPlaylistSongs()}
             </div>
         </>
