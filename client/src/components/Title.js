@@ -32,7 +32,9 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             
             let versionToSelect;
 
-            const versionIds = versionList.map(v => v.id);
+            const allVersions = versionList.filter(v => v);
+
+            const versionIds = allVersions.map(v => v.id);
 
             if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
                 versionToSelect = versionList.find(v => v.current);
