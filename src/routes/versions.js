@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
-import { deleteVersion } from './deleteItem.js';
 
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
@@ -56,9 +55,22 @@ router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/versions/delete', currentUser, requireAuth, async (req, res) => {
     const { versionId, titleId } = req.body;
 
-    const deletedVersion = await deleteVersion(versionId, titleId);
+    let thisVersion = await Version.findById(versionId);
+    const parentTitle = await Title.findById(titleId);
+    if (parentTitle) {
+        await Title.updateOne({ _id: titleId }, { $pull: { versions: versionId } });
+    }
 
-    res.send(deletedVersion);
+    const playlistSongs = await PlaylistSong.find({ version: versionId });
+
+    playlistSongs.forEach(async pls => {
+        pls.version = null;
+        await pls.save();
+    });
+
+    await Version.deleteOne({ _id: versionId });
+
+    res.send(thisVersion);
 
 });
 

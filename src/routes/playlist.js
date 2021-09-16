@@ -1,10 +1,9 @@
-import mongoose from 'mongoose';
+
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { Band } from '../models/band.js';
-import { Playlist, PlaylistSong } from '../models/models.js';
-import { deletePlaylist } from './deleteItem.js';
+import { Playlist } from '../models/models.js';
 
 const router = express.Router();
 
@@ -111,9 +110,21 @@ router.post('/playlists/delete', currentUser, requireAuth, async (req, res) => {
   
     const { playlistId, currentBand } = req.body;
  
-    const deletedPlaylist = await deletePlaylist(playlistId, currentBand);
+    let thisPlaylist = await Playlist.findById(playlistId);
 
-    res.send(deletedPlaylist);
+    const band = await Band.findById(currentBand);
+    if (band) {
+        await Band.updateOne({ _id: currentBand }, { $pull: { playlists: playlistId } });
+    }
+
+    const changePosition = await Playlist.find({ position: { $gt: thisPlaylist.position }});
+    changePosition.forEach(async (pl) => {
+        pl.position = pl.position - 1;
+        await pl.save();
+    });
+    await Playlist.deleteOne({ _id: playlistId });
+
+    res.send(thisPlaylist);
 });
 
 

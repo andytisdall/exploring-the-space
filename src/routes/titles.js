@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
-import { deleteTitle } from './deleteItem.js'
 
 const Tier = mongoose.model('Tier');
 const Title = mongoose.model('Title');
@@ -52,9 +51,16 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/titles/delete', currentUser, requireAuth, async (req, res) => {
     const { titleId, tierId } = req.body;
 
-    const deletedTitle = await deleteTitle(titleId, tierId);
+    const thisTitle = await Title.findById(titleId);
 
-    res.send(deletedTitle);
+    const parentTier = await Tier.findById(tierId);
+    if (parentTier) {
+        await Tier.updateOne({ _id: tierId }, { $pull: { trackList: titleId } });
+    }
+
+    await Title.deleteOne({ _id: titleId });
+
+    res.send(thisTitle);
 
 });
 

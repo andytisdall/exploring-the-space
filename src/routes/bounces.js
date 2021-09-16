@@ -5,7 +5,7 @@ import { Readable } from 'stream';
 import { bucket } from './audio.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
-import { deleteBounce } from './deleteItem.js';
+import { bucket } from './audio.js';
 
 
 const Song = mongoose.model('Song');
@@ -133,9 +133,32 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
     const { bounceId, versionId } = req.body;
 
-    const deletedBounce = await deleteBounce(bounceId, versionId);
+    const thisBounce = await Bounce.findById(bounceId);
+    const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
+    const parentVersion = await Version.findById(versionId);
+    if (parentVersion) {
+        await Version.updateOne({ _id: versionId }, { $pull: { songs: bounceId } });
+    }
+    const playlistSongs = await PlaylistSong.find({ bounce: bounceId });
 
-    res.send(deletedBounce);
+    playlistSongs.forEach(async pls => {
+        pls.bounce = null;
+        await pls.save();
+    });
+
+    
+    bucket.delete(mp3Id, (err) => {
+        if (err) {
+            throw new Error('Error attempting to delete mp3');
+        } else {
+            console.log('mp3 deleted');
+        }
+    });
+
+
+    await Song.deleteOne({ _id: bounceId });
+
+    res.send(thisBounce);
 
 });
 

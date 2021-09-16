@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
-import { deleteTier } from './deleteItem.js';
+
 
 const Band = mongoose.model('Band');
 const Tier = mongoose.model('Tier');
@@ -87,9 +87,22 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
     const { tierId, currentBand } = req.body;
 
-    const deletedTier = await deleteTier(tierId, currentBand);
+    let thisTier = await Tier.findById(tierId);
 
-    res.send(deletedTier);
+    const band = Band.findById(currentBand);
+
+    if (band) {
+        await Band.updateOne({ _id: currentBand }, { $pull: {tiers: tierId} });
+    }
+
+    const changePosition = await Tier.find({ position: { $gt: thisTier.position }});
+    changePosition.forEach(async (tier) => {
+        tier.position = tier.position - 1;
+        await tier.save();
+    });
+    await Tier.deleteOne({ _id: tierId });
+
+    res.send(thisTier);
 
 });
 

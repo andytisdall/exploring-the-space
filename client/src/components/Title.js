@@ -32,12 +32,6 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             
             let versionToSelect;
 
-            title.versions.forEach(id => {
-                if (!versions[id]) {
-                    deleteVersion(id, title.id);
-                }
-            });
-
             const versionIds = versionList.map(v => v.id);
 
             if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
