@@ -8,7 +8,7 @@ import path from 'path';
 // import https from 'https';
 // import fs from 'fs';
 
-const __dirname = path.resolve('src');
+
 
 import './models/models.js';
 import './models/user.js';
@@ -27,7 +27,7 @@ import { userRouter } from './routes/user.js';
 
 import { errorHandler } from './middlewares/error-handler.js';
 
-
+const __dirname = path.resolve();
 
 const app = express();
 
