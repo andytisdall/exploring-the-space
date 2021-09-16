@@ -7,7 +7,7 @@
     "start": "nodemon src/app.js",
     "site": "node src/app.js",
     "build": "webpack",
-    "server": "babel-node src/app.js"
+    "server": "NODE_ENV=production babel-node src/app.js"
   },
   "author": "",
   "license": "ISC",
