@@ -23,7 +23,7 @@ class AudioHeader extends React.Component {
     }
 
     wrapUrl(id) {
-        return `https://localhost:3001/api/audio/${id}.mp3`
+        return `http://localhost:3000/api/audio/${id}.mp3`
     }
 
     updateSlider = () => {
