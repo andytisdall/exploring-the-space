@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
             const nextSong = queue.shift();
             return { ...state, queue, currentSong: nextSong };
         case DELETE_BOUNCE:
-            if (action.payload.bounce.id === state.currentSong.audio) {
+            if (state.currentSong && action.payload.bounce.id === state.currentSong.audio) {
                 return { ...initialState };
             }
             if (state.queue.length) {
