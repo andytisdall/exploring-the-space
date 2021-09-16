@@ -1035,6 +1035,10 @@ h5 {
 }
 
 @media (max-width: 500px) {
+  h1 {
+    font-size: 1.2rem;
+  }
+
   .band-header {
     justify-content: space-between;
   }
