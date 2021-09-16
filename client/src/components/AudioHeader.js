@@ -7,6 +7,15 @@ import { playAudio, pauseAudio, nextSong, throwError } from '../actions';
 
 class AudioHeader extends React.Component {
 
+    constructor(props) {
+        super(props);
+        if (process.env.NODE_ENV !== 'production') {
+            this.url = 'https://exploring-the-space.com'
+        } else {
+            this.url = 'localhost:3001';
+        }
+    }
+
 
     state = { volume: 50, sliderPosition: 0 };
 
@@ -22,7 +31,7 @@ class AudioHeader extends React.Component {
     }
 
     wrapUrl(id) {
-        return `https://exploring-the-space.com/api/audio/${id}.mp3`
+        return `${this.url}/api/audio/${id}.mp3`
     }
 
     updateSlider = () => {

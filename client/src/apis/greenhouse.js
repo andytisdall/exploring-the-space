@@ -1,9 +1,14 @@
 import axios from 'axios';
 
+const url = {};
 
-const instance = axios.create({
-    baseURL: 'https://exploring-the-space.com/api',
-});
+if (process.env.NODE_ENV !== 'production') {
+    url.baseURL = 'https://exploring-the-space.com/api';
+} else {
+    url.baseURL = 'http://localhost:3001/api'
+}
+
+const instance = axios.create(url);
 
 instance.interceptors.request.use(
     (config) => {

@@ -31,7 +31,18 @@ const __dirname = path.resolve();
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'build')));
+let PORT;
+let STATIC_FILES;
+
+if (process.env.NODE_ENV !== 'production') {
+    PORT = '3000';
+    STATIC_FILES = 'build';
+} else {
+    PORT = '3001';
+    STATIC_FILES = 'client/public';
+}
+
+app.use(express.static(path.join(__dirname, STATIC_FILES)));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(fileUpload());
@@ -83,6 +94,6 @@ app.get('/*', (req, res) => {
     res.sendFile('build/index.html', { root: __dirname });
 });
 
-app.listen(3000, () => {
-    console.log('Express running on port 3001');
+app.listen(PORT, () => {
+    console.log(`Express running on port ${PORT}`);
 });

@@ -58,7 +58,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
                 // console.log('set bounce list')
             } else {
-                // console.log('set bounce list null')
+                console.log('set bounce list null')
                 setBounceList(null);
                 selectBounce(null, title.id);
             }

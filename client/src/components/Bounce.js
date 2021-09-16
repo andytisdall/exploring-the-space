@@ -19,7 +19,13 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         if (selectedBounce && selectedBounce !== title.selectedBounce) {
             selectBounce(selectedBounce, title.id);
         }
-    }, [selectedBounce, title.selectedBounce]);
+    }, [selectedBounce]);
+
+    useEffect(() => {
+        if (selectedBounce && selectedBounce !== title.selectedBounce) {
+            selectBounce(title.selectedBounce, title.id);
+        }
+    }, [title.selectedBounce]);
 
     useEffect(() => {
         setSelectedBounce(title.selectedBounce);
