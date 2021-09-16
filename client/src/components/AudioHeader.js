@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { playAudio, pauseAudio, nextSong, throwError } from '../actions';
+import { playAudio, pauseAudio, nextSong, throwError, initializeAudio } from '../actions';
 
 
 class AudioHeader extends React.Component {
@@ -12,8 +12,9 @@ class AudioHeader extends React.Component {
         if (process.env.NODE_ENV === 'production') {
             this.url = 'https://exploring-the-space.com'
         } else {
-            this.url = 'localhost:3001';
+            this.url = 'http://localhost:3001';
         }
+        this.audio = React.createRef();
     }
 
 
@@ -35,8 +36,8 @@ class AudioHeader extends React.Component {
     }
 
     updateSlider = () => {
-        const position = (this.audio.currentTime / this.audio.duration) * 1000;
-        this.time = this.formatTime(this.audio.currentTime);
+        const position = (this.audio.current.currentTime / this.audio.current.duration) * 1000;
+        this.time = this.formatTime(this.audio.current.currentTime);
         if (!isNaN(position)) {
             this.setState({
                 sliderPosition: position
@@ -44,36 +45,41 @@ class AudioHeader extends React.Component {
         }
     }
 
+    setSpaceBarToPlay = (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            if (this.props.pause) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        }
+    }
+
+    audioError = () => {
+        const message = "The audio player had an error, probably can't connect to server."
+        this.props.throwError(message);
+    }
+
     componentDidMount() {
 
         // if there's no audio element created, create one with the current song
         // add event listener to link the slider position to the time of the song
+
         
-        this.audio = new Audio();
+        this.audio.current = new Audio();
 
-        this.audio.addEventListener('timeupdate', this.updateSlider);
+        this.audio.current.addEventListener('timeupdate', this.updateSlider);
 
-        this.audio.addEventListener('error', () => {
-            const message = "The audio player had an error, probably can't connect to server."
-            this.props.throwError(message);
-        });
+        this.audio.current.addEventListener('error', this.audioError);
 
         // if there's a queue, load next song
 
-        this.audio.addEventListener('ended', this.nextSong);
+        this.audio.current.addEventListener('ended', this.nextSong);
 
         // space bar stop/start
 
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (this.props.pause) {
-                    this.play();
-                } else {
-                    this.pause();
-                }
-            }
-        });
+        document.addEventListener('keydown', this.setSpaceBarToPlay);
         
     }
 
@@ -84,34 +90,32 @@ class AudioHeader extends React.Component {
                         // if redux gets a signal to play, play if not already
             // reverse for pause
             if (this.props.song !== prevProps.song) {
-                this.audio.src=this.wrapUrl(this.props.song.audio);
-                this.audio.volume = this.props.volume / 120;
-                this.audio.play();
+                this.audio.current.src=this.wrapUrl(this.props.song.audio);
+                this.audio.current.volume = this.props.volume / 120;
+                this.audio.current.play();
             } else if (this.props.play && prevProps.pause) {
-                this.audio.play();
+                this.audio.current.play();
             } else if (this.props.pause && prevProps.play) {
-                this.audio.pause();
+                this.audio.current.pause();
             }
             if (this.props.volume !== prevProps.volume) {
-                this.audio.volume = this.props.volume / 120;
+                this.audio.current.volume = this.props.volume / 120;
 
             }
         } else {
-            this.audio.pause();
+            this.audio.current.pause();
         }
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (this.props.pause) {
-                    this.play();
-                } else {
-                    this.pause();
-                }
-            }
-        });
+        document.removeEventListener('keydown', this.setSpaceBarToPlay);
+
+        this.audio.current.src='';
+        this.audio.current.removeEventListener('timeupdate', this.updateSlider);
+        this.audio.current.removeEventListener('error', this.audioError);
+        this.audio.current.removeEventListener('ended', this.nextSong);
+
+        this.props.initializeAudio();
     }
 
     nextSong = () => {
@@ -131,8 +135,8 @@ class AudioHeader extends React.Component {
     }
 
     onSliderChange = (e) => {
-        const position = (e.target.value / 1000) * this.audio.duration;
-        this.audio.currentTime = position;
+        const position = (e.target.value / 1000) * this.audio.current.duration;
+        this.audio.current.currentTime = position;
     }
 
     onPauseButton = () => {
@@ -203,4 +207,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError })(AudioHeader);
+export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError, initializeAudio })(AudioHeader);

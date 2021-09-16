@@ -146,7 +146,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const arrow = expand ? 'down-arrow' : '';
-    const open = expand ? 'open' : ''
+    const open = expand ? 'open' : '';
 
     return (
         <>

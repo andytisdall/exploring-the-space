@@ -36,9 +36,10 @@ import {
     PAUSE_AUDIO,
     QUEUE_SONGS,
     NEXT_SONG,
+    CHANGE_VOLUME,
+    INITIALIZE_AUDIO,
     SELECT_VERSION,
     SELECT_BOUNCE,
-    CHANGE_VOLUME
 } from './types';
 import history from '../history';
 import _ from 'lodash';
@@ -735,12 +736,16 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
 };
 
 
-export const nextSong = () => dispatch => {
-    dispatch({ type: NEXT_SONG });
+export const nextSong = () => {
+    return { type: NEXT_SONG };
 }
 
 export const changeVolume = value => {
     return { type: CHANGE_VOLUME, payload: value };
+}
+
+export const initializeAudio = () => {
+    return { type: INITIALIZE_AUDIO };
 }
 
 

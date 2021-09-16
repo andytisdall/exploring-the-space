@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import mongodb from 'mongodb';
 
 import { Readable } from 'stream';
 import { bucket } from './audio.js';
@@ -9,6 +10,7 @@ import { currentUser } from '../middlewares/current-user.js';
 
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
+const PlaylistSong = mongoose.model('PlaylistSong');
 
 const router = express.Router();
 
@@ -132,7 +134,7 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
     const { bounceId, versionId } = req.body;
 
-    const thisBounce = await Bounce.findById(bounceId);
+    const thisBounce = await Song.findById(bounceId);
     const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
     const parentVersion = await Version.findById(versionId);
     if (parentVersion) {

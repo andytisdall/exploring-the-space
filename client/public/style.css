@@ -321,17 +321,13 @@ h1 {
 }
 
 .menu {
-  display: none;
+  display: flex;
 }
 
 .menu-item {
   color: rgb(255, 106, 230);
   font-size: 0.75rem;
   padding-left: 1rem;
-}
-
-.menu-button:hover .menu {
-  display: flex;
 }
 
 .body-container {
@@ -429,6 +425,10 @@ h2 {
 }
 .open {
   animation: expandDown 0.2s;
+}
+
+.title-container {
+  transition: expandDown 0.2s backwards;
 }
 
 .title {

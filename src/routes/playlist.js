@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
 import { requireAuth } from '../middlewares/require-auth.js';

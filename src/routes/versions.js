@@ -6,6 +6,7 @@ import { currentUser } from '../middlewares/current-user.js';
 
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
+const PlaylistSong = mongoose.model('PlaylistSong');
 
 const router = express.Router();
 

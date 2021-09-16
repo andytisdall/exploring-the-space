@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,8 @@ import AudioHeader from './AudioHeader';
 import requireAuth from './requireAuth';
 
 const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
+
+    const [expand, setExpand] = useState(false);
 
     useEffect(() => {
         fetchBand(match.params.bandName);
@@ -19,24 +21,18 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
 
     const renderAdmin = () => {
         return (
-            <div className="menu-button">
-                <img src="images/dots.png" />
-                <div className="menu">
-                    <Link className="menu-item" to="/user">User Home</Link>
-                    <div className="menu-item" onClick={signOut}>Sign Out</div>
-                </div>
+            <div className="menu">
+                <Link className="menu-item" to="/user">User Home</Link>
+                <div className="menu-item" onClick={signOut}>Sign Out</div>
             </div>
         );
     };
 
     const renderHomeLink = () => {
         return (
-            <div className="menu-button">
-                <img src="images/dots.png" />
-                <div className="menu">
-                    <Link className="menu-item" to="/">Home</Link>
-                    <Link className="menu-item" to="/signin">Sign In</Link>
-                </div>
+            <div className="menu">
+                <Link className="menu-item" to="/">Home</Link>
+                <Link className="menu-item" to="/signin">Sign In</Link>
             </div>
         );
     };
@@ -58,7 +54,10 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
             <div className="band-header">
                 <div className="band-name">
                     <h1>{band && band.name}</h1>
-                    {authorized ? renderAdmin() : renderHomeLink()}
+                    <div className="menu-button" onClick={() => setExpand(!expand)}>
+                        <img src="images/dots.png" />
+                        {expand && (authorized ? renderAdmin() : renderHomeLink())}
+                    </div>
                 </div>
                 <div className="slidecontainer">
                     <input
