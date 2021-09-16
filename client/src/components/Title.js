@@ -4,12 +4,12 @@ import _ from 'lodash';
 
 import Version from './Version';
 import AddButton from './AddButton';
-import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong, editTitle, deleteTitle, deleteVersion } from '../actions';
+import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong, editTitle, deleteTitle } from '../actions';
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, deleteVersion }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -215,4 +215,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, deleteVersion })(requireAuth(Title));
+export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle })(requireAuth(Title));

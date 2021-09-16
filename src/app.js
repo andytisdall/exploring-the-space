@@ -36,7 +36,7 @@ let STATIC_FILES;
 
 if (process.env.NODE_ENV === 'production') {
     PORT = '3000';
-    STATIC_FILES = 'build';
+    STATIC_FILES = 'client/build';
 } else {
     PORT = '3001';
     STATIC_FILES = 'client/public';
@@ -91,7 +91,7 @@ apiRouter.use(errorHandler);
 app.use('/api', apiRouter);
 
 app.get('/*', (req, res) => {
-    res.sendFile('build/index.html', { root: __dirname });
+    res.sendFile('client/build/index.html', { root: __dirname });
 });
 
 app.listen(PORT, () => {

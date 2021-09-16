@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { createTier, editTier, fetchTitles, createTitle, deleteTier } from '../actions';
+import { createTier, editTier, fetchTitles, createTitle, deleteTier, deleteTitle } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
@@ -28,6 +28,12 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     useEffect(() => {
 
+        tier.trackList.forEach(id => {
+            if (!titles[id]) {
+                deleteTitle(id, tier.id);
+            }
+        });
+        
         setTitlesToRender(tier.trackList.map(id => titles[id]));
         
     }, [titles, tier]);

@@ -12,9 +12,6 @@ src/jwt-key.js
 # testing
 client/coverage
 
-# production
-client/build
-
 # misc
 .DS_Store
 .env.local
