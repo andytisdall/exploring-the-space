@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import { playAudio, pauseAudio, nextSong, throwError } from '../actions';
-import { isNumber } from 'lodash';
 
 
 class AudioHeader extends React.Component {
@@ -23,7 +22,7 @@ class AudioHeader extends React.Component {
     }
 
     wrapUrl(id) {
-        return `localhost:3000/api/audio/${id}.mp3`
+        return `http://exploring-the-space.com/api/audio/${id}.mp3`
     }
 
     updateSlider = () => {
