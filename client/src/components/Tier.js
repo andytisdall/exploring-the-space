@@ -9,7 +9,7 @@ import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier, deleteTitle }) => {
 
     const [expand, setExpand] = useState(false);
 
@@ -190,4 +190,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier })(requireAuth(Tier));
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier, deleteTitle })(requireAuth(Tier));
