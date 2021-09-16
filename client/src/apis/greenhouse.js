@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const instance = axios.create({
-    baseURL: 'http://exploring-the-space.com/api',
+    baseURL: 'https://exploring-the-space.com/api',
 });
 
 instance.interceptors.request.use(
