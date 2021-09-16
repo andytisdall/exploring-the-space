@@ -317,17 +317,26 @@ h1 {
 
 .menu-button {
   display: flex;
-  width: 200px;
+  position: relative;
+}
+
+.menu-button img {
+  padding-right: 1.5rem;
 }
 
 .menu {
   display: flex;
+  position: absolute;
+  left: 2rem;
+  z-index: 10;
+  background-color: rgb(59, 59, 59);
+  border: solid 1px rgb(255, 106, 230);
 }
 
 .menu-item {
   color: rgb(255, 106, 230);
   font-size: 0.75rem;
-  padding-left: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .body-container {
@@ -865,6 +874,12 @@ h5 {
     width: 150px;
   }
 
+  .menu {
+    flex-direction: column;
+    left: -2rem;
+    top: 1.5rem;
+  }
+
   .add {
     font-size: 0.65rem;
   }
@@ -895,7 +910,7 @@ h5 {
   }
 
   h1 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   .arrow {
