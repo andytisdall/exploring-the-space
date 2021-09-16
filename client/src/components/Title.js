@@ -4,12 +4,12 @@ import _ from 'lodash';
 
 import Version from './Version';
 import AddButton from './AddButton';
-import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong, editTitle, deleteTitle } from '../actions';
+import { fetchVersions, fetchBounces, selectBounce, selectVersion, createPlaylistSong, editTitle, deleteTitle, deleteVersion } from '../actions';
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, deleteVersion }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -32,9 +32,13 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             
             let versionToSelect;
 
-            const allVersions = versionList.filter(v => v);
+            title.versions.forEach(id => {
+                if (!versions[id]) {
+                    deleteVersion(id, title.id);
+                }
+            });
 
-            const versionIds = allVersions.map(v => v.id);
+            const versionIds = versionList.map(v => v.id);
 
             if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
                 versionToSelect = versionList.find(v => v.current);
@@ -217,4 +221,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle })(requireAuth(Title));
+export default connect(mapStateToProps, { fetchVersions, fetchBounces, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, deleteVersion })(requireAuth(Title));
