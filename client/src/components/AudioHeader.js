@@ -9,7 +9,7 @@ class AudioHeader extends React.Component {
 
     constructor(props) {
         super(props);
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.NODE_ENV === 'production') {
             this.url = 'https://exploring-the-space.com'
         } else {
             this.url = 'localhost:3001';

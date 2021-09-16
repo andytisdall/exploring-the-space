@@ -34,7 +34,7 @@ const app = express();
 let PORT;
 let STATIC_FILES;
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     PORT = '3000';
     STATIC_FILES = 'build';
 } else {

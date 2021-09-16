@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const url = {};
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
     url.baseURL = 'https://exploring-the-space.com/api';
 } else {
     url.baseURL = 'http://localhost:3001/api'
