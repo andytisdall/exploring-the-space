@@ -51,12 +51,14 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
 router.post('/titles/delete', currentUser, requireAuth, async (req, res) => {
     const { titleId, tierId } = req.body;
 
-    const thisTitle = await Title.findById(titleId);
+
 
     const parentTier = await Tier.findById(tierId);
     if (parentTier) {
         await Tier.updateOne({ _id: tierId }, { $pull: { trackList: titleId } });
     }
+
+    const thisTitle = await Title.findById(titleId);
 
     await Title.deleteOne({ _id: titleId });
 
