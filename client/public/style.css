@@ -72,7 +72,6 @@ img {
 .band-name {
   display: flex;
   align-items: center;
-  width: 30%;
 }
 
 .playbar {
@@ -213,14 +212,9 @@ select {
 }
 
 .upload-image {
-  font-size: 3.5rem;
-  margin: auto;
+  font-size: 2rem;
   display: flex;
   flex-direction: column;
-}
-
-.upload-image p {
-  padding: 30px;
 }
 
 .windmill {
@@ -255,6 +249,7 @@ hr {
   font-size: small;
   color: rgb(94, 235, 245);
   padding-left: 1rem;
+  position: relative;
 }
 
 .add-form {
@@ -278,6 +273,12 @@ hr {
   margin-left: -8rem;
 }
 
+.add-bounce {
+  top: -24rem;
+  left: -7rem;
+  margin: 0;
+}
+
 .addbox-title {
   margin-bottom: 1rem;
 }
@@ -299,7 +300,7 @@ input {
 }
 
 .inputfile {
-  width: 12rem;
+  width: 15rem;
 }
 
 h1 {

@@ -108,6 +108,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     onSubmit={formValues => onAddSubmit(formValues)}
                     form={`add-bounce-${title.id}`}
                     initialValues={{ latest: true }}
+                    addClass={true}
                 />
             );
         }
@@ -146,6 +147,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                 }
                 form={`edit-bounce-${title.id}`}
                 enableReinitialize={true}
+                addClass={true}
             />;
         }
     };
