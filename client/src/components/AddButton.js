@@ -60,6 +60,14 @@ class AddButton extends React.Component {
         onChange(e.target.files[0]);
     }
 
+    onDrop = (e, input) => {
+        e.preventDefault();
+        let files = [...e.dataTransfer.files];
+        const file = files[0];
+        const { onChange } = input;
+        onChange(file);
+    }
+
     input = (field) => {
         let addClass = '';
         if (field.type === 'date') {
