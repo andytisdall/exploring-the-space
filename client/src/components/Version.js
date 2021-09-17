@@ -59,7 +59,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
 
         return (
-            <div>
+            <div className="detail-notes">
                 {count}
             </div>
         );

@@ -55,19 +55,17 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
     const renderTierAddButton = () => {
         if (authorized) {
             return (
-                <div className="centered-button">
-                    <AddButton
-                        onSubmit={formValues => createTier(formValues)}
-                        title='Add a Tier'
-                        image="/images/add.png"
-                        fields={[{
-                            label: 'Tier Name',
-                            name: 'tierName',
-                            type: 'input',
-                            required: true          
-                        }]}
-                    />
-                </div>
+                <AddButton
+                    onSubmit={formValues => createTier(formValues)}
+                    title='Add a Tier'
+                    image="/images/add.png"
+                    fields={[{
+                        label: 'Tier Name',
+                        name: 'tierName',
+                        type: 'input',
+                        required: true          
+                    }]}
+                />
             );
         }
     };
@@ -75,19 +73,17 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
     const renderPlaylistAddButton = () => {
         if (authorized) {
             return (
-                <div className="centered-button">
-                    <AddButton
-                        onSubmit={formValues => createPlaylist(formValues)}
-                        title='Add a Playlist'
-                        image="/images/add.png"
-                        fields={[{
-                            label: 'Playlist Name',
-                            name: 'playlistName',
-                            type: 'input',
-                            required: true             
-                        }]}
-                    />
-                </div>
+                <AddButton
+                    onSubmit={formValues => createPlaylist(formValues)}
+                    title='Add a Playlist'
+                    image="/images/add.png"
+                    fields={[{
+                        label: 'Playlist Name',
+                        name: 'playlistName',
+                        type: 'input',
+                        required: true             
+                    }]}
+                />
             );
         }
     };

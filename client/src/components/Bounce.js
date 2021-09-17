@@ -178,7 +178,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         }
 
         return (
-            <div>
+            <div className="detail-notes">
                 {count}
             </div>
         );

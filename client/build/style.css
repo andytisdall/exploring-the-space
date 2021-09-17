@@ -235,7 +235,7 @@ a {
   background-color: rgb(230, 142, 142);
   padding: 1rem;
   border: 2px solid white;
-  position: fixed;
+  position: absolute;
 }
 
 hr {
@@ -352,6 +352,11 @@ h1 {
   font-size: 1.8rem;
 }
 
+.section-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .playlists h2 {
   color: rgb(82, 236, 236);
 }
@@ -459,11 +464,11 @@ h2 {
 .current-song {
   background-image: linear-gradient(
     to right,
-    rgba(236, 233, 255, 0.479),
-    rgba(185, 115, 252, 0.616),
-    rgb(253, 120, 153),
-    rgba(248, 141, 164, 0.781),
-    rgba(210, 241, 255, 0)
+    rgba(255, 233, 233, 0.479),
+    rgba(255, 218, 183, 0.616),
+    rgb(244, 255, 83),
+    rgba(255, 240, 108, 0.781),
+    rgba(255, 243, 210, 0)
   );
 }
 
@@ -562,10 +567,7 @@ h3 {
 .detail-content {
   display: flex;
   padding-bottom: 1.2rem;
-}
-
-.detail-header {
-  width: 100%;
+  justify-content: space-between;
 }
 
 .detail-notes {
@@ -929,11 +931,6 @@ h5 {
   .arrow {
     height: 20px;
     width: 15px;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: flex-start;
   }
 
   .section-title {
