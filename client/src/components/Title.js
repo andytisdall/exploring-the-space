@@ -187,7 +187,11 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
     const current = audio.currentSong ? audio.currentSong.audio : null;
 
-    const currentClass = current === title.selectedBounce ? 'current-song' : ''
+    let currentClass = '';
+
+    if (current && title.selectedBounce) {
+        currentClass = current === title.selectedBounce.id ? 'current-song' : '';
+    }
 
     return (
         <div className="title-margin">

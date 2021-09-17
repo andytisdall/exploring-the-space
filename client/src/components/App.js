@@ -14,7 +14,7 @@ import { fetchUser } from '../actions';
 
 import history from '../history';
 
-const App = ({ signedIn, fetchUser }) => {
+const App = ({ signedIn, fetchUser, error }) => {
 
     useEffect(() => {
         if (signedIn) {
@@ -22,10 +22,12 @@ const App = ({ signedIn, fetchUser }) => {
         }
     }, []);
 
-    return (
-        <div className="container">
+    const errClass = error ? 'error-margin' : '';
+
+    return <>
+        <Error />
+        <div className={`container ${errClass}`}>
             <Router history={history}>
-                <Error />
                 <Switch>    
                     <Route path="/" exact component={Home} />
                     <Route path="/signin" exact component={SignIn} />;
@@ -42,12 +44,13 @@ const App = ({ signedIn, fetchUser }) => {
             </Router>
         </div>
 
-    );
+    </>;
 };
 
 const mapStateToProps = state => {
     return {
         signedIn: state.auth.isSignedIn,
+        error: state.error.error
     };
 };
 

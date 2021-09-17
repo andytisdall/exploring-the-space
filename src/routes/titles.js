@@ -14,8 +14,8 @@ router.post('/titles', currentUser, requireAuth, async (req, res) => {
     const { title, tier } = req.body;
     const newTitle = new Title({title});
     try {
-        await Tier.updateOne({ _id: tier }, {$push: { trackList: newTitle }});
         await newTitle.save();
+        await Tier.updateOne({ _id: tier }, {$push: { trackList: newTitle }});
     } catch (err) {
         throw new Error('There was an error creating the title or updating the tier tracklist.');
     }

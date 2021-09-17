@@ -231,11 +231,21 @@ a {
 }
 
 .error {
-  color: rgb(20, 1, 100);
-  background-color: rgb(230, 142, 142);
+  color: rgb(255, 255, 255);
+  background-color: rgb(238, 31, 31);
   padding: 1rem;
   border: 2px solid white;
-  position: absolute;
+  position: fixed;
+  z-index: 30;
+  width: 90%;
+  height: 2rem;
+  margin-left: 2rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.error-margin {
+  padding-top: 5rem;
 }
 
 hr {
@@ -355,6 +365,10 @@ h1 {
 .section-header {
   display: flex;
   justify-content: flex-start;
+}
+
+.section-add {
+  margin-left: 1rem;
 }
 
 .playlists h2 {

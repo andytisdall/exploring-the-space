@@ -701,7 +701,7 @@ export const queueSongs = (song) => (dispatch, getState) => {
     const titleList = allTitles.splice(allTitles.indexOf(song.title));
     const queue = [];
     titleList.forEach(title => {
-        if (title.selectedVersion && title.selectedBounce) {
+        if (title && title.selectedVersion && title.selectedBounce) {
             const version = getState().versions[title.selectedVersion.id];
             const bounce = getState().bounces[title.selectedBounce.id];
             queue.push({

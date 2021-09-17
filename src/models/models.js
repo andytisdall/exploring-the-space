@@ -36,7 +36,7 @@ const versionSchema = new Schema({
 );
 
 const titleSchema = new Schema({
-    title: { type: String, unique: true },
+    title: { type: String },
     versions: [{ type: Schema.Types.ObjectId, ref: 'Version'}],
 }, {
     toJSON: {
@@ -78,7 +78,7 @@ const playlistSongSchema = new Schema({
 );
 
 const playlistSchema = new Schema({
-    name: { type: String, unique: true },
+    name: { type: String },
     position: Number,
     songs: [{ type: Schema.Types.ObjectId, ref: 'PlaylistSong'}],
     notes: String
