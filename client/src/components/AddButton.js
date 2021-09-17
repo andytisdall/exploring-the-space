@@ -61,7 +61,7 @@ class AddButton extends React.Component {
     }
 
     onDrop = (e, input) => {
-        e.preventDefault();
+        e.prgit merheventDefault();
         let files = [...e.dataTransfer.files];
         const file = files[0];
         const { onChange } = input;
@@ -85,7 +85,9 @@ class AddButton extends React.Component {
                     {...field.input}
                     type='file'
                     className='inputfile'
-                    onChange={(e) => this.onFileInput(e, field.input)}    
+                    onChange={(e) => this.onFileInput(e, field.input)}
+                    onDrop={(e) => this.onDrop(e, field.input)}
+                        
                 />
             </>;
         } else if (field.type === 'select') {

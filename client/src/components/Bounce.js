@@ -204,11 +204,9 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     
 
     if (modalActive) {
-        return <Modal
-            content={modalContent()}
-            actions={null}
-            onDismiss={() => null}
-        />
+        return <div className="detail-box bounce">
+            {modalContent()}
+        </div>
     } else {
         if (version) {
             return (
