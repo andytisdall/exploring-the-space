@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+// import Scroll from './Scroll';
 
 import { playAudio, pauseAudio, nextSong, throwError, initializeAudio } from '../actions';
 
@@ -80,10 +81,22 @@ class AudioHeader extends React.Component {
         // space bar stop/start
 
         document.addEventListener('keydown', this.setSpaceBarToPlay);
+
+
+
+        
+
         
     }
 
     componentDidUpdate(prevProps) {
+
+        // scroll down to compensate for the playbar pushing content down
+
+        if (!this.scrolled) {
+            window.scroll(window.scrollX, window.scrollY + 96);
+            this.scrolled = true;
+        }
         
         if (this.props.song) {
             // if the current song is changed to something other than what is already loaded, change the src url and play the audio
@@ -156,9 +169,11 @@ class AudioHeader extends React.Component {
             return (
                 <div className="playbar">
                     <div className="playbar-header">
-                        <div className="playbar-title">
-                            <p>{this.props.song.title}</p>
-                        </div>
+                        {/* <Scroll> */}
+                            <div className="playbar-title">
+                                <p>{this.props.song.title}</p>
+                            </div>
+                        {/* </Scroll> */}
                         <div className="pause-container" onClick={this.onPauseButton}>
                             <img className="big-play-btn" src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
                         </div>

@@ -52,16 +52,14 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     
     const versionCount = () => {
         let count;
-        if (versions.length > 2) {
-            count = '1 version';
+        if (versions.length === 1) {
+            count = '1 Version:';
         } else {
-            count = `${versions.length} versions`
+            count = `${versions.length} Versions:`
         }
 
         return (
-            <div className="detail-notes">
-                {count}
-            </div>
+            <h5>{count}</h5>
         );
     };
     
@@ -143,10 +141,12 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     };
 
     const renderDeleteButton = () => {
-        return <DeleteButton
-            onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
-            displayName={selectedVersion.name}
-        />;
+        if (authorized) {
+            return <DeleteButton
+                onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
+                displayName={selectedVersion.name}
+            />;
+        }
     };
 
     const latestTag = () => {
@@ -164,7 +164,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
             return (
                 <div className="detail-content">
                     <div className="detail-header">
-                        <h5>Version:</h5>
+                        {versionCount()}
                         <div className="dropdown">
                             <button className="dropbtn">
                                 {selectedVersion.name}
@@ -175,11 +175,8 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         </div>
                         {latestTag()}
                     </div>
-                    <div className="detail-sub">
-                        {versionCount()}
-                        <div className="detail-notes">
-                            {selectedVersion.notes}
-                        </div>
+                    <div className="detail-notes">
+                        {selectedVersion.notes}
                     </div>
                 </div>
             );

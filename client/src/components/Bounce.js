@@ -64,7 +64,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     };
 
-    const modalContent = () => {
+    const uploadContent = () => {
         return (
 
                 <div className='upload-image'>
@@ -153,10 +153,12 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     };
 
     const renderDeleteButton = () => {
-        return <DeleteButton
-            onSubmit={() => deleteBounce(selectedBounce.id, version.id, title.id)}
-            displayName={displayDate(selectedBounce.date)}
-        />;
+        if (authorized) {
+            return <DeleteButton
+                onSubmit={() => deleteBounce(selectedBounce.id, version.id, title.id)}
+                displayName={displayDate(selectedBounce.date)}
+            />;
+        }
     };
 
     const latestTag = () => {
@@ -172,15 +174,15 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     const bounceCount = () => {
         let count;
         if (bounces.length === 1) {
-            count = '1 version';
+            count = '1 Bounce:';
         } else {
-            count = `${bounces.length} versions`
+            count = `${bounces.length} Bounces:`
         }
 
         return (
-            <div className="detail-notes">
+            <h5>
                 {count}
-            </div>
+            </h5>
         );
     };
     
@@ -190,7 +192,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             return (
                 <div className='detail-content'>
                     <div className='detail-header'>
-                        <h5>Date:</h5>
+                        {bounceCount()}
                         <div className='dropdown'>
                             <button className='dropbtn'>
                                 {displayDate(selectedBounce.date)}
@@ -203,12 +205,9 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                             {latestTag()}
                         </div>
                     </div>
-                    <div className="detail-sub">
-                        {bounceCount()}
-                        <div className='detail-notes'>
-                            {selectedBounce.comments}
-                        </div>
-                    </div>         
+                    <div className='detail-notes'>
+                        {selectedBounce.comments}
+                    </div>
                 </div>
             );
         } else {
@@ -225,7 +224,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     if (modalActive) {
         return <div className="detail-box bounce">
-            {modalContent()}
+            {uploadContent()}
         </div>
     } else {
         if (version) {
