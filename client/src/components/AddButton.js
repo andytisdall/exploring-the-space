@@ -151,8 +151,9 @@ class AddButton extends React.Component {
             if (this.props.addClass) {
                 baseClass = 'addbox add-bounce';
             }
+            const addClass = this.props.addClass ? 'add-bounce' : '';
             return <>    
-                <div className={baseClass} onClick={e => e.stopPropagation()}>
+                <div className={`addbox ${addClass}`} onClick={e => e.stopPropagation()}>
                     <h3 className="addbox-title">{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}

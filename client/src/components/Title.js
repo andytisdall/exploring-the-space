@@ -9,7 +9,7 @@ import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, audio }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -185,9 +185,13 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
     const arrow = expand ? 'down-arrow' : '';
 
+    const current = audio.currentSong ? audio.currentSong.audio : null;
+
+    const currentClass = current ? 'current-song' : ''
+
     return (
         <div className="title-margin">
-            <div className="row title">
+            <div className={`row title ${currentClass}`}>
                 <div className="marqee" onClick={() => setExpand(!expand)}>
                     <div className="row-name"   >
                         <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
@@ -211,7 +215,8 @@ const mapStateToProps = state => {
         bounces: state.bounces,
         band: state.bands.currentBand,
         playlists: state.playlists,
-        titles: state.titles
+        titles: state.titles,
+        audio: state.audio
     }
 }
 

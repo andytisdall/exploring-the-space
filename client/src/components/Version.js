@@ -50,6 +50,21 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         });
     };
     
+    const versionCount = () => {
+        let count;
+        if (versions.length > 2) {
+            count = '1 version';
+        } else {
+            count = `${versions.length} versions`
+        }
+
+        return (
+            <div>
+                {count}
+            </div>
+        );
+    };
+    
     const renderBounces = () => {
 
         if (bounceList) {
@@ -160,8 +175,11 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         </div>
                         {latestTag()}
                     </div>
-                    <div className="detail-notes">
-                        {selectedVersion.notes}
+                    <div className="detail-sub">
+                        {versionCount()}
+                        <div className="detail-notes">
+                            {selectedVersion.notes}
+                        </div>
                     </div>
                 </div>
             );

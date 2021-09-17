@@ -168,6 +168,21 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             );
         }
     };
+
+    const bounceCount = () => {
+        let count;
+        if (bounces.length === 1) {
+            count = '1 version';
+        } else {
+            count = `${bounces.length} versions`
+        }
+
+        return (
+            <div>
+                {count}
+            </div>
+        );
+    };
     
 
     const renderBounceDetail = () => {
@@ -188,9 +203,12 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                             {latestTag()}
                         </div>
                     </div>
-                    <div className='detail-notes'>
-                        {selectedBounce.comments}
-                    </div>                         
+                    <div className="detail-sub">
+                        {bounceCount()}
+                        <div className='detail-notes'>
+                            {selectedBounce.comments}
+                        </div>
+                    </div>         
                 </div>
             );
         } else {

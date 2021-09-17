@@ -155,9 +155,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     <div className="tier-name">
                         <img className={`arrow ${arrow}`} src={`images/right-arrow.svg`} />
                         <h2>{tier.name}</h2>
+                        {renderAddButton()}
                     </div>
                     <div className="tier-count">
-                        {renderAddButton()}
+
                         <div className="song-count">{tier.trackList.length} songs</div>
                         <div className="song-count">{renderTotalTime()}</div>
                     </div>

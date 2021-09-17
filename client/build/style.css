@@ -235,6 +235,7 @@ a {
   background-color: rgb(230, 142, 142);
   padding: 1rem;
   border: 2px solid white;
+  position: fixed;
 }
 
 hr {
@@ -453,6 +454,17 @@ h2 {
   );
   color: rgb(0, 0, 0);
   width: 98%;
+}
+
+.current-song {
+  background-image: linear-gradient(
+    to right,
+    rgba(236, 233, 255, 0.479),
+    rgba(185, 115, 252, 0.616),
+    rgb(253, 120, 153),
+    rgba(248, 141, 164, 0.781),
+    rgba(210, 241, 255, 0)
+  );
 }
 
 h3 {
@@ -919,6 +931,11 @@ h5 {
     width: 15px;
   }
 
+  .section-header {
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .section-title {
     font-size: 1.2rem;
   }
@@ -1084,7 +1101,7 @@ h5 {
 
   .add,
   .delete {
-    padding-left: 0.3rem;
+    padding-left: 0.6rem;
   }
   .playcontainer {
     width: 60%;

@@ -107,15 +107,17 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
 
     return (
         <div className={`body-container ${playbarActive}`}>
-            <h2 className="section-title">Tiers</h2>
+            <div className="section-header">
+                <h2 className="section-title">Tiers</h2>
+                {renderTierAddButton()}
+            </div>
             <hr />
             {tiers && renderTiers()}
-            {renderTierAddButton()}
             <div className="playlists">
                 <h2 className="section-title">Playlists</h2>
+                {renderPlaylistAddButton()}
                 <hr />
                 {playlists && renderPlaylists()}
-                {renderPlaylistAddButton()}
             </div>
         </div>
 
