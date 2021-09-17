@@ -61,7 +61,6 @@ class AddButton extends React.Component {
     }
 
     onDrop = (e, input) => {
-        e.preventDefault();
         const { onChange } = input;
         onChange(e.target.files[0]);
     }
