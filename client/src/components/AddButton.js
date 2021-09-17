@@ -61,7 +61,7 @@ class AddButton extends React.Component {
     }
 
     onDrop = (e, input) => {
-        e.prgit merheventDefault();
+        e.preventDefault();
         let files = [...e.dataTransfer.files];
         const file = files[0];
         const { onChange } = input;
