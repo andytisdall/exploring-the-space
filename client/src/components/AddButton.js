@@ -54,14 +54,8 @@ class AddButton extends React.Component {
         });
     };
 
-    onFileInput = (e, input) => {
-        e.preventDefault();
-        const { onChange } = input;
-        onChange(e.target.files[0]);
-    }
-
     onDrop = (e, input) => {
-        const file = e.currentTarget.files[0];
+        const file = e.target.files[0];
         const { onChange } = input;
         onChange(file);
     }
@@ -83,7 +77,7 @@ class AddButton extends React.Component {
                     {...field.input}
                     type='file'
                     className='inputfile'
-                    onChange={(e) => this.onFileInput(e, field.input)}
+
                     onDrop={(e) => this.onDrop(e, field.input)}
                         
                 />
