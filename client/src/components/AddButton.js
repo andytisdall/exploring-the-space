@@ -60,6 +60,12 @@ class AddButton extends React.Component {
         onChange(e.target.files[0]);
     }
 
+    onDrop = (e, input) => {
+        let files = [...e.dataTransfer.files];
+        const { onChange } = input;
+        onChange(files[0]);
+    }
+
     input = (field) => {
         let addClass = '';
         if (field.type === 'date') {
@@ -77,7 +83,9 @@ class AddButton extends React.Component {
                     {...field.input}
                     type='file'
                     className='inputfile'
-                    onChange={(e) => this.onFileInput(e, field.input)}    
+                    onChange={(e) => this.onFileInput(e, field.input)}
+                    onDrop={(e) => this.onDrop(e, field.input)}
+                        
                 />
             </>;
         } else if (field.type === 'select') {
