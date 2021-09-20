@@ -535,6 +535,10 @@ h3 {
   margin-top: 0.2rem;
 }
 
+.download {
+  margin-left: auto;
+}
+
 .download img {
   padding-top: 10px;
   height: 17px;

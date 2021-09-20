@@ -7,13 +7,12 @@ import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 import { selectBounce, createBounce, editBounce, deleteBounce } from '../actions';
-import Modal from './Modal';
 
 const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce, editBounce, deleteBounce }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
-    const [modalActive, setModalActive] = useState(false);
+    const [uploadActive, setUploadActive] = useState(false);
 
     useEffect(() => {
         if (selectedBounce && selectedBounce !== title.selectedBounce) {
@@ -29,7 +28,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     useEffect(() => {
         setSelectedBounce(title.selectedBounce);
-        setModalActive(false);
+        setUploadActive(false);
     }, [bounces]);
 
     const displayDate = date => {
@@ -60,7 +59,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     const onAddSubmit = (formValues) => {
 
         createBounce(formValues, version.id, title.id);
-        setModalActive(true);
+        setUploadActive(true);
 
     };
 
@@ -222,7 +221,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     };
     
 
-    if (modalActive) {
+    if (uploadActive) {
         return <div className="detail-box bounce">
             {uploadContent()}
         </div>

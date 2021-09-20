@@ -28,7 +28,8 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     useEffect(() => {
         
-        setTitlesToRender(tier.trackList.map(id => titles[id]));
+        setTitlesToRender(tier.trackList
+            .map(id => titles[id]));
         
     }, [titles, tier]);
 
@@ -47,7 +48,22 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     }, [tiers]);
 
     const renderTitles = () => {
-        return titlesToRender.map(title => {
+
+        const sortedTitles = titlesToRender.sort((a, b) => {
+            if (a.selectedBounce && b.selectedBounce) {
+                if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            } else if (a.selectedBounce) {
+                return -1
+            } else if (b.selectedBounce) {
+                return 1;
+            }
+        });
+
+        return sortedTitles.map(title => {
             if (title) {
                 return (
                     <Title title={title} tier={tier} key={title.id} getTime={getTime} />
