@@ -176,7 +176,8 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                         {latestTag()}
                     </div>
                     <div className="detail-notes">
-                        {selectedVersion.notes}
+                        <div className="detail-notes-title">Notes:</div>
+                        <p>{selectedVersion.notes}</p>
                     </div>
                 </div>
             );

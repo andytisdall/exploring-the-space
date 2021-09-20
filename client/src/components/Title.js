@@ -76,7 +76,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 bounceToSelect = bounceList.find(b => b.latest);
             }
 
-            if (bounceToSelect) {
+            if (bounceToSelect !== title.selectedBounce) {
                 
                 selectBounce(bounceToSelect, title.id);
                 // console.log('select bounce');

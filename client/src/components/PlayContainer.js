@@ -1,13 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import fileDownload from 'js-file-download';
-import axios from 'axios';
 
-import { queueSongs, queuePlaylistSongs, playAudio } from '../actions';
+import { queueSongs, queuePlaylistSongs, playAudio, throwError } from '../actions';
 
 
-const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => {
+const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throwError }) => {
 
     const displayDate = (date) => {
         return moment.utc(date).format('MM/DD/YY');
@@ -28,23 +26,13 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => 
         }
     };
 
-    const handleDownload = (id, filename) => {
-        let baseUrl;
-        if (process.env.NODE_ENV === 'production') {
-            baseUrl = 'https://exploring-the-space.com'
-        } else {
-            baseUrl = 'http://localhost:3001';
-        }
-        axios.get(`${baseUrl}/api/audio/download/${id}.mp3`, {
-            responseType: 'blob'
-        })
-        .then(res => {
-            fileDownload(res.data, filename);
-        });
-    };
 
-
-
+    let baseUrl;
+    if (process.env.NODE_ENV === 'production') {
+        baseUrl = 'https://exploring-the-space.com'
+    } else {
+        baseUrl = 'http://localhost:3001';
+    }
 
     return (
         <div className='playcontainer'>
@@ -59,17 +47,16 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => 
                 <p>{song.version.name}</p>
                 <p>{displayDate(song.bounce.date)}</p>
             </div>
-            <div
+            <a
                 className='download'
-                onClick={e => {
-                    e.stopPropagation();
-                    handleDownload(song.bounce.id, `${song.title.title}-${moment.utc(song.bounce.date).format('MM-DD-yy')}.mp3`);
-                }}
+                onClick={e => e.stopPropagation()}
+                href={`${baseUrl}/api/audio/download/${song.title.title}/${song.bounce.id}.mp3`}
+                download
             >
                 <img src="/images/download.svg" />
-            </div>
+            </a>
         </div>
     );
 };
 
-export default connect(null, { queueSongs, queuePlaylistSongs, playAudio })(PlayContainer);
+export default connect(null, { queueSongs, queuePlaylistSongs, playAudio, throwError })(PlayContainer);

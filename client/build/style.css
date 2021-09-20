@@ -589,8 +589,14 @@ h3 {
 }
 
 .detail-notes {
+  width: 40%;
   margin: 0.7rem 1rem;
   font-size: 0.8rem;
+}
+
+.detail-notes-title {
+  font-size: 0.9rem;
+  color: rgb(202, 202, 202);
 }
 
 .detail-buttons {
@@ -1036,6 +1042,7 @@ h5 {
   }
 
   .detail-notes {
+    width: 25%;
     font-size: 0.5rem;
     padding-bottom: 0.5rem;
     margin-left: 0.5rem;

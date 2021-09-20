@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
+import moment from 'moment';
 
 let bucket;
 
@@ -84,9 +85,10 @@ router.get('/audio/:id', async (req, res) => {
 
 });
 
-router.get('/audio/download/:id', async (req, res) => {
+router.get('/audio/download/:title/:id', async (req, res) => {
 
     const id = req.params.id.split('.')[0];
+    const title = req.params.title;
     const thisSong = await Song.findById(id);
     let mp3Id = new mongodb.ObjectID(thisSong.mp3);
     const stream = bucket.openDownloadStream(mp3Id);
@@ -97,11 +99,15 @@ router.get('/audio/download/:id', async (req, res) => {
 
     res.set({
         'Content-Type': 'audio/mpeg',
-        'Content-Disposition': 'attachment'
+        'Content-Disposition': `attachment; filename=${title}-${moment.utc(thisSong.date).format('MM-DD-yy')}.mp3`
     });
 
     stream.on('data', (chunk) => {
         file.push(chunk);
+    });
+
+    stream.on('error', (err) => {
+        throw new Error(err.message);
     });
 
     stream.on('end', () => {

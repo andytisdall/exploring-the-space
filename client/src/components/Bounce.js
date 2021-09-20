@@ -205,7 +205,8 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                         </div>
                     </div>
                     <div className='detail-notes'>
-                        {selectedBounce.comments}
+                        <div className="detail-notes-title">Notes:</div>
+                        <p>{selectedBounce.comments}</p>
                     </div>
                 </div>
             );
