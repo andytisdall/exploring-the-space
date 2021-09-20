@@ -449,7 +449,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                     }
     
                     const response = await greenhouse.post(
-                        `/bounces${bounceId}`, 
+                        `/bounces/${bounceId}`, 
                         formData,
                         {
                             headers: { 'Content-Type': 'multipart/form-data'}

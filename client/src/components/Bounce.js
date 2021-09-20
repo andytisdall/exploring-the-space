@@ -63,6 +63,13 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
 
     };
 
+    const onEditSubmit = (formValues) => {
+
+        editBounce(formValues, selectedBounce.id, version.id);
+        setUploadActive(true);
+
+    };
+
     const uploadContent = () => {
         return (
 
@@ -140,7 +147,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                         type: 'checkbox',        
                     },
                 ]}
-                onSubmit={formValues => editBounce(formValues, selectedBounce.id, version.id)}
+                onSubmit={onEditSubmit}
                 initialValues={
                     { ..._.pick(selectedBounce, 'comments', 'latest'), date: moment.utc(selectedBounce.date).format('YYYY-MM-DD') }
                 }
