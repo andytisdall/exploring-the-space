@@ -418,7 +418,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
         if (thisBounce.latest) {
             formValues.latest = true;
         }
-        if (formValues.file) {
+        if (formValues.file && formValues.file.length) {
             formValues.file = formValues.file[0];
  
             // Create instance of FileReader
@@ -448,7 +448,7 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                         formData.append(key, formObject[key]);
                     }
     
-                    const response = await greenhouse.post(
+                    const response = await greenhouse.patch(
                         `/bounces/${bounceId}`, 
                         formData,
                         {
