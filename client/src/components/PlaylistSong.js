@@ -64,6 +64,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
 
             const otherSongs = Object.values(playlistSongs)
                 .filter(s => playlist.songs.includes(s.id))
+                .sort((a,b) => a.position < b.position ? -1 : 1)
                 .map(s => {
                     return { value: s.position, display: s.position };
             });
@@ -138,11 +139,12 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
     };
 
     const current = audio.currentSong ? audio.currentSong.audio : null;
+    const parent = audio.parent ? audio.parent.id : null;
 
     let currentClass = '';
 
     if (current && song.bounce) {
-        currentClass = current === song.bounce ? 'current-song' : '';
+        currentClass = parent === playlist.id && current === song.bounce ? 'current-song' : '';
     }
 
 

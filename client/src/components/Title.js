@@ -186,11 +186,12 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     const arrow = expand ? 'down-arrow' : '';
 
     const current = audio.currentSong ? audio.currentSong.audio : null;
+    const parent = audio.parent ? audio.parent.id : null;
 
     let currentClass = '';
 
     if (current && title.selectedBounce) {
-        currentClass = current === title.selectedBounce.id ? 'current-song' : '';
+        currentClass = parent === tier.id && current === title.selectedBounce.id ? 'current-song' : '';
     }
 
     return (
