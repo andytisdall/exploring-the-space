@@ -83,7 +83,7 @@ class AudioHeader extends React.Component {
         document.addEventListener('keydown', this.setSpaceBarToPlay);
 
 
-        // this.audio.current.addEventListener('canplay', this.audio.current.play);
+        this.audio.current.addEventListener('loadedmetadata', this.audio.current.play);
         
 
         
@@ -105,7 +105,7 @@ class AudioHeader extends React.Component {
             if (this.props.song !== prevProps.song) {
                 this.audio.current.src=this.wrapUrl(this.props.song.audio);
                 this.audio.current.volume = this.props.volume / 120;
-                this.audio.current.play();
+                // this.audio.current.play();
             } else if (this.props.play && prevProps.pause) {
 
                 this.audio.current.play();
@@ -128,15 +128,15 @@ class AudioHeader extends React.Component {
         this.audio.current.removeEventListener('timeupdate', this.updateSlider);
         this.audio.current.removeEventListener('error', this.audioError);
         this.audio.current.removeEventListener('ended', this.nextSong);
-        // this.audio.current.removeEventListener('canplay', this.audio.current.play);
+        this.audio.current.removeEventListener('loadedmetadata', this.audio.current.play);
 
         this.props.initializeAudio();
     }
 
     nextSong = () => {
-        setTimeout(() => {
-            this.props.nextSong();
-        }, 400);
+        // setTimeout(() => {
+        this.props.nextSong();
+        // }, 400);
     }
 
     play = () => {
