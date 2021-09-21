@@ -160,7 +160,6 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     const getTime = (track) => {
         if (!times[track.id]) {
             setTimes({ ...times, [track.id]: track.duration });
-            console.log(track.duration);
         }
     };
 

@@ -9,7 +9,7 @@ import { editPlaylistSong, fetchVersions, fetchBounces, deletePlaylistSong } fro
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio }) => {
+const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio, getTime }) => {
 
     const [playSong, setPlaySong] = useState(null);
 
@@ -29,7 +29,10 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     bounce: bounces[song.bounce],
                     position: song.position
                 });
-        }
+            }
+            if (bounces[song.bounce]) {
+                getTime({ id: song.id, duration: bounces[song.bounce].duration });
+            }   
     }, [playlistSongs[song.id], bounces[song.bounce], titles[song.title], versions[song.version]]);
 
     const renderPlayContainer = () => {

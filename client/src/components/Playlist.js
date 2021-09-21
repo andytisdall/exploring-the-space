@@ -12,7 +12,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
 
     const [expand, setExpand] = useState(false);
     const [playlistList, setPlaylistList] = useState([]);
-
+    const [times, setTimes] = useState({});
     const [songsToRender, setSongsToRender] = useState(null);
 
 
@@ -31,7 +31,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         return songsToRender.map(song => {
             if (song) {
                 return (
-                <PlaylistSong song={song} playlist={playlist} key={song.id} />
+                <PlaylistSong song={song} playlist={playlist} key={song.id} getTime={getTime} />
                 );
             }
         });
@@ -94,6 +94,32 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         }
     };
 
+    const renderTotalTime = () => {
+
+
+        const total = Object.values(times).reduce((prev, cur) => {
+            return prev + cur;
+        }, 0);
+
+        if (!total) {
+            return null;
+        }
+
+        const minutes = Math.floor(total / 60);
+        const seconds = Math.floor(total % 60) < 10 ? '0' + Math.floor(total % 60) : Math.floor(total % 60);
+        return (
+            <div>
+                {`${minutes}:${seconds}`}
+            </div>
+        );
+    };
+
+    const getTime = (track) => {
+        if (!times[track.id]) {
+            setTimes({ ...times, [track.id]: track.duration });
+        }
+    };
+
 
     const arrow = expand ? 'down-arrow' : '';
     const open = expand ? 'open' : '';
@@ -108,7 +134,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                     </div>
                     <div className="tier-count">
                         <div className="song-count">{playlist.songs.length} songs</div>
-                        {/* <div className="song-count">{playlist.totalTime}</div> */}
+                        <div className="song-count">{renderTotalTime()}</div>
                     </div>
                     <div className="tier-display">
                             {renderEditButton()}
