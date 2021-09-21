@@ -97,13 +97,14 @@ router.post('/playlistsongs/delete', currentUser, requireAuth, async (req, res) 
     if (playlist) {
         playlist.songs = playlist.songs.filter(s => s.id !== song.id);
         await playlist.save();
-    }
+    
 
-    const changePosition = playlist.songs.filter(p => p.position > song.position);
-    changePosition.forEach(async (pls) => {
-        pls.position = pls.position - 1;
-        await pls.save();
-    });
+        const changePosition = playlist.songs.filter(p => p.position > song.position);
+        changePosition.forEach(async (pls) => {
+            pls.position = pls.position - 1;
+            await pls.save();
+        });
+    }
     
     await PlaylistSong.deleteOne({ _id: playlistSongId });
     

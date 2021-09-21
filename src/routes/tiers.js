@@ -95,13 +95,14 @@ router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
 
     if (band) {
         await Band.updateOne({ _id: currentBand }, { $pull: {tiers: tierId} });
-    }
 
-    const changePosition = band.tiers.filter(t => t.position > thisTier.position);
-    changePosition.forEach(async (tier) => {
-        tier.position = tier.position - 1;
-        await tier.save();
-    });
+        const changePosition = band.tiers.filter(t => t.position > thisTier.position);
+        changePosition.forEach(async (tier) => {
+            tier.position = tier.position - 1;
+            await tier.save();
+        });
+    }
+    
     await Tier.deleteOne({ _id: tierId });
 
     res.send(thisTier);

@@ -397,6 +397,7 @@ export const editVersion = (formValues, versionId, titleId) => async (dispatch, 
             { ...formValues, currentBand: currentBand.id }
         );
         if (response.data.current && !thisVersion.current) {
+            console.log('ok');
             const parentTitle = getState().titles[titleId];
             const versionList = parentTitle.versions.map(id => getState().versions[id]);
             const oldCurrent = versionList.find(v => v.current);
@@ -456,7 +457,9 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                         }
                     );
 
+
                     if (response.data.latest && !thisBounce.latest) {
+                        console.log('hahahaha')
                         const parentVersion = getState().versions[versionId];
                         const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
                         const oldLatest = bounceList.find(b => b.latest);
@@ -483,6 +486,15 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                 `/bounces/${bounceId}`,
                 { ...formValues, currentBand: currentBand.id }
             );
+            if (response.data.latest && !thisBounce.latest) {
+                const parentVersion = getState().versions[versionId];
+                const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
+                const oldLatest = bounceList.find(b => b.latest);
+                oldLatest.latest = false;
+                dispatch(editBounce(
+                    _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
+                ));
+            }
             dispatch({ type: EDIT_BOUNCE, payload: response.data });
         }
     } catch (err) {
