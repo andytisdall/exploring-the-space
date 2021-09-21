@@ -111,16 +111,17 @@ router.post('/playlists/delete', currentUser, requireAuth, async (req, res) => {
  
     let thisPlaylist = await Playlist.findById(playlistId);
 
-    const band = await Band.findById(currentBand);
+    const band = await Band.findById(currentBand).populate('playlists');
     if (band) {
         await Band.updateOne({ _id: currentBand }, { $pull: { playlists: playlistId } });
     }
 
-    const changePosition = await Playlist.find({ position: { $gt: thisPlaylist.position }});
+    const changePosition = band.playlists.filter(p => p.position > thisPlaylist.position);
     changePosition.forEach(async (pl) => {
         pl.position = pl.position - 1;
         await pl.save();
     });
+    
     await Playlist.deleteOne({ _id: playlistId });
 
     res.send(thisPlaylist);

@@ -9,7 +9,7 @@ import { editPlaylistSong, fetchVersions, fetchBounces, deletePlaylistSong } fro
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong }) => {
+const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio }) => {
 
     const [playSong, setPlaySong] = useState(null);
 
@@ -27,7 +27,7 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                     title: titles[song.title],
                     version: versions[song.version],
                     bounce: bounces[song.bounce],
-                    self: song
+                    position: song.position
                 });
         }
     }, [playlistSongs[song.id], bounces[song.bounce], titles[song.title], versions[song.version]]);
@@ -131,16 +131,24 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
             return (
                 <DeleteButton
                     onSubmit={() => deletePlaylistSong(song.id, playlist.id)}
-                    displayName={song.title.title}
+                    displayName={titles[song.title].title}
                 />
             );
         }
     };
 
+    const current = audio.currentSong ? audio.currentSong.audio : null;
+
+    let currentClass = '';
+
+    if (current && song.bounce) {
+        currentClass = current === song.bounce ? 'current-song' : '';
+    }
+
 
     return (
         <div className='title-margin'>
-            <div className="row title">                    
+            <div className={`row title ${currentClass}`}>                    
                 <div className="marqee">
                     <div className='row-name'>
                         <div className="song-position">{song.position}</div>
@@ -171,7 +179,8 @@ const mapStateToProps = state => {
         playlists: state.playlists,
         versions: state.versions,
         bounces: state.bounces,
-        titles: state.titles
+        titles: state.titles,
+        audio: state.audio
     }
 
 }

@@ -31,7 +31,7 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_PLAYLISTSONG:
-            const changePosition = Object.values(state).filter(p => p.position > action.payload.position);
+            const changePosition = Object.values(state).filter(p => p.position > action.payload.playlistsong.position);
             changePosition.forEach((song) => {
                 song.position = song.position - 1;
             });

@@ -696,48 +696,112 @@ export const pauseAudio = () => {
 };
 
 export const queueSongs = (song) => (dispatch, getState) => {
+  
 
-    const allTitles = song.tier.trackList.map(id => getState().titles[id]);
-    const titleList = allTitles.splice(allTitles.indexOf(song.title));
-    const queue = [];
-    titleList.forEach(title => {
-        if (title && title.selectedVersion && title.selectedBounce) {
-            const version = getState().versions[title.selectedVersion.id];
-            const bounce = getState().bounces[title.selectedBounce.id];
-            queue.push({
-                title: title.title,
-                version: version.name,
-                date: bounce.date,
-                duration: bounce.duration,
-                audio: bounce.id
-            });
-        }
-    });
-    dispatch({ type: QUEUE_SONGS, payload: queue });
+    const songObject = {
+        title: song.title,
+        version: song.version.name,
+        date: song.bounce.date,
+        duration: song.bounce.duration,
+        audio: song.bounce.id
+    };
+
+    dispatch({ type: QUEUE_SONGS, payload: { song: songObject, parent: song.tier } });
+    
+
 };
 
 export const queuePlaylistSongs = (song) => (dispatch, getState) => {
 
-    const allSongs = song.playlist.songs.map(id => getState().playlistSongs[id]);
-    const songList = allSongs.splice(allSongs.indexOf(song.self));
-    const queue = songList.map(song => {
-        const version = getState().versions[song.version];
-        const bounce = getState().bounces[song.bounce];
-        const title = getState().titles[song.title];
-        return {
-            title: title.title,
-            version: version.name,
-            date: bounce.date,
-            duration: bounce.duration,
-            audio: bounce.id
-        };
-    });
-    dispatch({ type: QUEUE_SONGS, payload: queue });
+    // const version = getState().versions[song.version];
+    // const bounce = getState().bounces[song.bounce];
+    // const title = getState().titles[song.title];
+
+    const songObject = {
+        title: song.title,
+        version: song.version.name,
+        date: song.bounce.date,
+        duration: song.bounce.duration,
+        audio: song.bounce.id,
+        position: song.position
+    };
+
+    dispatch({ type: QUEUE_SONGS, payload: { song: songObject, parent: song.playlist } });
 };
 
 
-export const nextSong = () => {
-    return { type: NEXT_SONG };
+export const nextSong = () => (dispatch, getState) => {
+    const { parent, currentSong } = getState().audio;
+    if (parent.trackList) {
+        const allTitles = parent.trackList
+            .map(id => getState().titles[id])
+            .sort((a, b) => {
+                if (a.selectedBounce && b.selectedBounce) {
+                    if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else if (a.selectedBounce) {
+                    return -1
+                } else if (b.selectedBounce) {
+                    return 1;
+                }
+            });
+
+        const song = allTitles[allTitles.indexOf(currentSong.title) + 1];
+
+        if (song && song.selectedVersion && song.selectedBounce) {
+            const version = getState().versions[song.selectedVersion.id];
+            const bounce = getState().bounces[song.selectedBounce.id];
+
+            const songObject = {
+                title: song,
+                version: version.name,
+                date: bounce.date,
+                duration: bounce.duration,
+                audio: bounce.id
+            };
+
+            dispatch({ type: NEXT_SONG, payload: songObject });
+        } else {
+            dispatch({ type: INITIALIZE_AUDIO });
+        }
+    }
+    if (parent.songs) {
+        const allSongs = parent.songs.map(id => getState().playlistSongs[id])
+            .sort((a,b) => a.position < b.position  ? -1 : 1);
+
+        let song;
+        let index = currentSong.position;
+
+        while (index < allSongs.length) {
+            if (allSongs[index].bounce !== null) {
+                song = allSongs[index];
+                break;
+            }
+            index++;
+        }
+
+        if (!song) {
+            return dispatch({ type: INITIALIZE_AUDIO });
+        }
+
+        const version = getState().versions[song.version];
+        const bounce = getState().bounces[song.bounce];
+        const title = getState().titles[song.title];
+
+        const songObject = {
+            title: title,
+            version: version.name,
+            date: bounce.date,
+            duration: bounce.duration,
+            audio: bounce.id,
+            position: song.position
+        };
+        dispatch({ type: NEXT_SONG, payload: songObject });
+    }
+    
 }
 
 export const changeVolume = value => {

@@ -74,7 +74,7 @@ class AudioHeader extends React.Component {
 
         this.audio.current.addEventListener('error', this.audioError);
 
-        // if there's a queue, load next song
+        // load next song at song end
 
         this.audio.current.addEventListener('ended', this.nextSong);
 
@@ -83,7 +83,7 @@ class AudioHeader extends React.Component {
         document.addEventListener('keydown', this.setSpaceBarToPlay);
 
 
-
+        this.audio.current.addEventListener('canplay', this.audio.current.play);
         
 
         
@@ -105,8 +105,9 @@ class AudioHeader extends React.Component {
             if (this.props.song !== prevProps.song) {
                 this.audio.current.src=this.wrapUrl(this.props.song.audio);
                 this.audio.current.volume = this.props.volume / 120;
-                this.audio.current.play();
+                // this.audio.current.play();
             } else if (this.props.play && prevProps.pause) {
+
                 this.audio.current.play();
             } else if (this.props.pause && prevProps.play) {
                 this.audio.current.pause();
@@ -133,9 +134,7 @@ class AudioHeader extends React.Component {
 
     nextSong = () => {
         setTimeout(() => {
-            if (this.props.queue.length) {
-                this.props.nextSong();
-            }
+            this.props.nextSong();
         }, 400);
     }
 
@@ -171,7 +170,7 @@ class AudioHeader extends React.Component {
                     <div className="playbar-header">
                         {/* <Scroll> */}
                             <div className="playbar-title">
-                                <p>{this.props.song.title}</p>
+                                <p>{this.props.song.title.title}</p>
                             </div>
                         {/* </Scroll> */}
                         <div className="pause-container" onClick={this.onPauseButton}>
@@ -217,7 +216,6 @@ const mapStateToProps = state => {
         song: state.audio.currentSong,
         play: state.audio.play,
         pause: state.audio.pause,
-        queue: state.audio.queue,
         volume: state.audio.volume
     };
 };

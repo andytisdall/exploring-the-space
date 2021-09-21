@@ -29,7 +29,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     useEffect(() => {
         setSelectedBounce(title.selectedBounce);
         setUploadActive(false);
-    }, [bounces]);
+    }, [title.selectedBounce]);
 
     const displayDate = date => {
         return moment.utc(date).format('MM/DD/yy');

@@ -59,14 +59,16 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
 
     const otherTiers = band.tiers;
 
-    if (thisTier.position > position) {
-        const changePosition = otherTiers.filter(tier => tier.position >= position && tier.position < thisTier.position);
+    const oldPosition = thisTier.position;
+
+    if (oldPosition > position) {
+        const changePosition = otherTiers.filter(tier => tier.position >= position && tier.position < oldPosition);
         changePosition.forEach(async (tier) => {
             tier.position = tier.position + 1;
             await tier.save();
         });
-    } else if (thisTier.position < position) {
-        const changePosition = otherTiers.filter(tier => tier.position > thisTier.position && tier.position <= position);
+    } else if (oldPosition < position) {
+        const changePosition = otherTiers.filter(tier => tier.position > oldPosition && tier.position <= position);
         changePosition.forEach(async (tier) => {
             tier.position = tier.position - 1;
             await tier.save();
@@ -89,13 +91,13 @@ router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
 
     let thisTier = await Tier.findById(tierId);
 
-    const band = Band.findById(currentBand);
+    const band = Band.findById(currentBand).populate('tiers');
 
     if (band) {
         await Band.updateOne({ _id: currentBand }, { $pull: {tiers: tierId} });
     }
 
-    const changePosition = await Tier.find({ position: { $gt: thisTier.position }});
+    const changePosition = band.tiers.filter(t => t.position > thisTier.position);
     changePosition.forEach(async (tier) => {
         tier.position = tier.position - 1;
         await tier.save();
