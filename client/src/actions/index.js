@@ -397,7 +397,6 @@ export const editVersion = (formValues, versionId, titleId) => async (dispatch, 
             { ...formValues, currentBand: currentBand.id }
         );
         if (response.data.current && !thisVersion.current) {
-            console.log('ok');
             const parentTitle = getState().titles[titleId];
             const versionList = parentTitle.versions.map(id => getState().versions[id]);
             const oldCurrent = versionList.find(v => v.current);

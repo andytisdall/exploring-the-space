@@ -19,15 +19,12 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const [times, setTimes] = useState({});
 
-    
-
     useEffect(() => {
         fetchTitles(tier.id);
     }, []);
 
 
     useEffect(() => {
-        
         setTitlesToRender(tier.trackList
             .map(id => titles[id]));
         
@@ -139,6 +136,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderTotalTime = () => {
 
+        if (Object.values(times).length !== tier.trackList.length) {
+            return null;
+        }
+
         const total = Object.values(times).reduce((prev, cur) => {
             return prev + cur;
         }, 0);
@@ -154,11 +155,13 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                 {`${minutes}:${seconds}`}
             </div>
         );
-        
     };
 
     const getTime = (track) => {
-        setTimes({ ...times, [track.id]: track.duration });
+        if (!times[track.id]) {
+            setTimes({ ...times, [track.id]: track.duration });
+            console.log(track.duration);
+        }
     };
 
     const arrow = expand ? 'down-arrow' : '';

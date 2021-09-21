@@ -91,7 +91,8 @@ router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
 
     let thisTier = await Tier.findById(tierId);
 
-    const band = Band.findById(currentBand).populate('tiers');
+    const band = await Band.findById(currentBand).populate('tiers');
+
 
     if (band) {
         await Band.updateOne({ _id: currentBand }, { $pull: {tiers: tierId} });

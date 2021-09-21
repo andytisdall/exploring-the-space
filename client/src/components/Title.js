@@ -93,17 +93,20 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
         if (title.selectedBounce && title.selectedVersion) {
 
-            setSong({
-                tier,
-                title,
-                version: title.selectedVersion,
-                bounce: title.selectedBounce
-            });
-            // console.log('title update')
-            getTime({ id: title.id, duration: title.selectedBounce.duration });
+            if (!song || song.selectedVersion !== song.version || song.selectedBounce !== song.bounce) {
+
+                setSong({
+                    tier,
+                    title,
+                    version: title.selectedVersion,
+                    bounce: title.selectedBounce
+                });
+                // console.log('title update')
+                getTime({ id: title.id, duration: title.selectedBounce.duration });
+            }
         } else if (song && !title.selectedBounce) {
             setSong(null);
-            getTime({ id: title.id, duration: 0 })
+            getTime({ id: title.id, duration: 0 });
         }
         
     }, [titles]);
