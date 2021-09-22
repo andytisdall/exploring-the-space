@@ -25,6 +25,7 @@ body {
 
 .container {
   max-width: 65rem;
+  min-width: 400px;
   margin: 0.7rem;
   margin-top: 0px;
 }
@@ -507,17 +508,21 @@ h3 {
 
 .songtime {
   margin-right: 1rem;
+  font-size: 0.9rem;
+  width: 10%;
 }
 
 .title-display {
   display: flex;
   justify-content: space-between;
+  max-width: 50%;
 }
 
 .title-display p {
   margin-left: 1rem;
-
   font-size: 0.8rem;
+  margin: auto 0.5rem;
+  text-align: center;
 }
 
 .notitle {
@@ -538,13 +543,13 @@ h3 {
 .download {
   margin-left: auto;
 }
-
+/* 
 .download img {
   padding-top: 10px;
   height: 17px;
   margin-left: 1.5rem;
   margin-right: 1rem;
-}
+} */
 
 /* version */
 
@@ -912,7 +917,7 @@ h5 {
   margin: 3rem;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 650px) {
   body {
     font-size: 0.7rem;
     max-width: 100%;
@@ -922,11 +927,6 @@ h5 {
     padding: 0;
     margin-bottom: 0.2rem;
     width: 96%;
-  }
-
-  .download img {
-    height: 12px;
-    margin-left: 1rem;
   }
 
   .playbar-background {
@@ -963,8 +963,10 @@ h5 {
     top: 1.5rem;
   }
 
-  .add {
+  .add,
+  .delete {
     font-size: 0.65rem;
+    padding-left: 0.6rem;
   }
 
   .text-input {
@@ -980,16 +982,12 @@ h5 {
     max-width: 100%;
   }
 
-  .title {
-    height: 1.6rem;
-  }
-
   .notitle {
     margin-left: 1rem;
   }
 
   img {
-    height: 0.6rem;
+    height: 0.7rem;
   }
 
   h1 {
@@ -1025,7 +1023,7 @@ h5 {
 
   h3 {
     padding-left: 5px;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
   }
 
   .title-margin {
@@ -1033,33 +1031,43 @@ h5 {
     padding-left: 0.2rem;
   }
 
+  .title {
+    /* height: 2.5rem; */
+  }
+
   .tier-count {
     width: 200px;
   }
 
+  .tier-display {
+    margin: 0;
+  }
+
   .playcontainer {
-    height: 1.6rem;
+    margin: auto;
+    width: 35%;
   }
 
   .songtime {
     margin-right: 0.5rem;
+    font-size: 0.6rem;
   }
   .playicon {
     margin-right: 0.5rem;
   }
 
   .title-display {
+    display: inline;
     margin-right: 5px;
-    align-items: center;
   }
 
   .title-display p {
     margin: 5px;
-    font-size: 0.45rem;
+    font-size: 0.55rem;
   }
 
   .playicon {
-    width: 20px;
+    width: 25px;
   }
 
   .version-container {
@@ -1092,10 +1100,14 @@ h5 {
     margin-left: 0.5rem;
   }
 
+  .detail-notes-title {
+    font-size: 0.5rem;
+  }
+
   .current,
   .latest {
     padding: 3px;
-    font-size: 0.2rem;
+    font-size: 0.5rem;
     margin-top: 0.3rem;
   }
 
@@ -1116,9 +1128,31 @@ h5 {
   .hidden {
     display: none;
   }
+
+  .band-item h2 {
+    font-size: 1.5rem;
+  }
+
+  .help {
+    width: 90%;
+    margin: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .help p {
+    font-size: 1rem;
+  }
+
+  .help h2 {
+    font-size: 1.4rem;
+  }
+
+  .help h3 {
+    font-size: 1.2rem;
+  }
 }
 
-@media (max-width: 500px) {
+/* @media (max-width: 500px) {
   h1 {
     font-size: 1.2rem;
   }
@@ -1131,11 +1165,6 @@ h5 {
     margin-left: 0.2rem;
   }
 
-  h2 {
-    padding-top: 0.5rem;
-    font-size: 0.8rem;
-  }
-
   .section-title {
     font-size: 1rem;
   }
@@ -1144,19 +1173,11 @@ h5 {
     padding-bottom: 1px;
   }
 
-  .tier-display {
+  /* .tier-display {
     margin: 0;
-  }
+  } */
 
-  h3 {
-    font-size: 0.5rem;
-  }
-
-  .songtime {
-    font-size: 0.4rem;
-  }
-
-  .slidecontainer {
+/* .slidecontainer {
     width: 40%;
     padding-top: 1.2rem;
   }
@@ -1172,8 +1193,4 @@ h5 {
   .playcontainer {
     width: 60%;
   }
-
-  .title-display p {
-    font-size: 0.4rem;
-  }
-}
+} */
