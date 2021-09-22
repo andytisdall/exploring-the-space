@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -19,15 +19,15 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const [times, setTimes] = useState({});
 
+    const orderedTitles = useRef({});
+
     useEffect(() => {
         fetchTitles(tier.id);
     }, []);
 
-
     useEffect(() => {
         setTitlesToRender(tier.trackList
             .map(id => titles[id]));
-        
     }, [titles, tier]);
 
     useEffect(() => {
@@ -44,26 +44,35 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     }, [tiers]);
 
+    const findLatest = (title, bounce) => {
+        if (!orderedTitles.current[title.id]) {
+            orderedTitles.current[title.id] = new Date(bounce.date);
+        }
+    };
+
     const renderTitles = () => {
 
-        const sortedTitles = titlesToRender.sort((a, b) => {
-            if (a.selectedBounce && b.selectedBounce) {
-                if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
+        let titleList = titlesToRender;
+
+        titleList = titlesToRender.sort((a, b) => {
+            if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
+                if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
                     return -1;
                 } else {
                     return 1;
                 }
-            } else if (a.selectedBounce) {
-                return -1
-            } else if (b.selectedBounce) {
+            } else if (orderedTitles.current[a.id]) {
+                return -1;
+            } else if (orderedTitles.current[b.id]) {
                 return 1;
             }
         });
+        
 
-        return sortedTitles.map(title => {
+        return titleList.map(title => {
             if (title) {
                 return (
-                    <Title title={title} tier={tier} key={title.id} getTime={getTime} />
+                    <Title title={title} tier={tier} key={title.id} getTime={getTime} findLatest={findLatest}/>
                 );
             }
         });
@@ -136,9 +145,6 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderTotalTime = () => {
 
-        if (Object.values(times).length !== tier.trackList.length) {
-            return null;
-        }
 
         const total = Object.values(times).reduce((prev, cur) => {
             return prev + cur;

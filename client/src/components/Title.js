@@ -9,7 +9,7 @@ import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, audio }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, audio, findLatest }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -74,6 +74,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 bounceToSelect = title.selectedBounce;
             } else {
                 bounceToSelect = bounceList.find(b => b.latest);
+                findLatest(title, bounceToSelect);
             }
 
             if (bounceToSelect !== title.selectedBounce) {
