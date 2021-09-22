@@ -864,8 +864,52 @@ h5 {
   padding: 1.5rem;
 }
 
+.user-header-sub {
+  display: flex;
+}
+
+.user-link {
+  padding-left: 2rem;
+}
+
 .user-title {
   text-transform: uppercase;
+}
+
+.help {
+  width: 65%;
+  margin: 3rem auto;
+}
+
+.help-header {
+  font-size: 2rem;
+  color: #65d478;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.help h3 {
+  color: rgb(123, 240, 255);
+  margin-left: 2rem;
+}
+
+.help p {
+  margin: 1rem 0 2rem 5rem;
+}
+
+.danger {
+  color: rgb(250, 139, 222);
+}
+
+.tldr {
+  color: rgb(255, 255, 142);
+  font-size: 1.3rem;
+  width: 80%;
+  margin: 1rem auto 2rem auto;
+}
+
+.auth {
+  margin: 3rem;
 }
 
 @media (max-width: 700px) {

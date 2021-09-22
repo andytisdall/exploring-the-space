@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import history from '../history';
 import { signUp } from '../actions';
@@ -14,10 +15,23 @@ const SignUp = ({ signUp, isSignedIn }) => {
         }
     }, []);
 
-    return <>
-        <h1>Sign Up</h1>
-        <UserForm onSubmit={formValues => signUp(formValues)}/>
-    </>;
+    return (
+        <div className="auth">
+            <div className="help-header">
+                Exploring the Space
+            </div>
+            <h1>Sign Up</h1>
+            <UserForm onSubmit={formValues => signUp(formValues)}/>
+            <div className="home-buttons">
+                <Link to="/">
+                    Home
+                </Link>
+                <Link to="signin">
+                    Sign In
+                </Link>
+            </div>
+        </div>
+    );
 };
 
 const mapStateToProps = state => {

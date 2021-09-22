@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -10,19 +10,33 @@ import requireAuth from './requireAuth';
 const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
 
     const [expand, setExpand] = useState(false);
+    const menu = useRef(null);
 
     useEffect(() => {
         fetchBand(match.params.bandName);
+        document.addEventListener('click', clickToDismiss, { capture: true });
+        return () => {
+            document.removeEventListener('click', clickToDismiss, { capture: true });
+        };
     }, []);
 
     useEffect(() => {
         handleUpdate();
     }, [band, user]);
 
+    const clickToDismiss = (e) => {
+        if (menu.current && menu.current.contains(e.target)) {
+            return;
+        }
+        setExpand(false);
+        
+    };
+
     const renderAdmin = () => {
         return (
             <div className="menu">
                 <Link className="menu-item" to="/user">User Home</Link>
+                <Link className="menu-item" to="/help">Help</Link>
                 <div className="menu-item" onClick={signOut}>Sign Out</div>
             </div>
         );
@@ -32,6 +46,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
         return (
             <div className="menu">
                 <Link className="menu-item" to="/">Home</Link>
+                <Link className="menu-item" to="/help">Help</Link>
                 <Link className="menu-item" to="/signin">Sign In</Link>
             </div>
         );
@@ -54,7 +69,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
             <div className="band-header">
                 <div className="band-name">
                     <h1>{band && band.name}</h1>
-                    <div className="menu-button" onClick={() => setExpand(!expand)}>
+                    <div className="menu-button" ref={menu} onClick={() => setExpand(!expand)}>
                         <img src="images/dots.png" />
                         {expand && (authorized ? renderAdmin() : renderHomeLink())}
                     </div>

@@ -42,6 +42,9 @@ class Home extends React.Component {
                     <Link to="/signup">
                         Sign Up
                     </Link>
+                    <Link to="/help">
+                        What Is It?
+                    </Link>
                 </div>
                 <h1>All Bands:</h1>
                 <div className="band-list">

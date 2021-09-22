@@ -52,26 +52,36 @@ const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand, signO
     if (user) {
         return <>
             <div className="user-header">
-                <h1 className="user-title">{user.username}'s bands</h1>
-                <div onClick={signOut}>Sign Out</div>
+                <div className="user-header-sub">
+                    <h1 className="user-title">
+                        {user.username}'s bands
+                    </h1>
+                    <AddButton
+                        onSubmit={formValues => createBand(formValues)}
+                        title='Create a Band'
+                        image="images/add.png"
+                        fields={[{
+                            label: 'Band Name',
+                            name: 'bandName',
+                            type: 'input'
+                        }]}
+                    />
+                </div>
+                <div className="user-header-sub">
+                    <Link className="user-link" to="/">
+                        Home
+                        </Link>
+                    <div className="user-link" onClick={signOut}>
+                        Sign Out
+                    </div>
+                </div>
             </div>
             <hr />
             <div className="row band-list">
                 {renderBands()}
             </div>
             
-            <div className="centered-button">
-                <AddButton
-                    onSubmit={formValues => createBand(formValues)}
-                    title='Create a Band'
-                    image="images/add.png"
-                    fields={[{
-                        label: 'Band Name',
-                        name: 'bandName',
-                        type: 'input'
-                    }]}
-                />
-            </div>
+
         </>;
     } else {
         return null;

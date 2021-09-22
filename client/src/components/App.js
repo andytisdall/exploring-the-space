@@ -9,6 +9,7 @@ import User from './User';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
+import Help from './Help';
 import { fetchUser } from '../actions';
 
 
@@ -39,6 +40,7 @@ const App = ({ signedIn, fetchUser, error }) => {
                         }
                         return <User {...routeProps} />;
                     }} />
+                    <Route path="/help" exact component={Help} />
                     <Route path="/:bandName" component={BandHeader} />
                 </Switch>
             </Router>
