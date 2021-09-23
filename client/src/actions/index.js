@@ -372,14 +372,18 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
     }
 };
 
-export const editTitle = (formValues, titleId) => async (dispatch, getState) => {
+export const editTitle = (formValues, titleId, tierId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
+        let changeTier = null;
+        if (formValues.move !== tierId) {
+            changeTier = formValues.move;
+        }
         const response = await greenhouse.patch(
             `/titles/${titleId}`,
-            { ...formValues, currentBand: currentBand.id }
+            { ...formValues, currentTier: tierId, currentBand: currentBand.id }
         );
-        dispatch({ type: EDIT_TITLE, payload: response.data });
+        dispatch({ type: EDIT_TITLE, payload: { title:response.data, tier: { new: changeTier, old: tierId } } });
     } catch (err) {
         dispatch(errorHandler(err));
     }
@@ -517,11 +521,20 @@ export const editPlaylist = (formValues, playlistId) => async (dispatch, getStat
 export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
+        let changePlaylist = null;
+        if (formValues.move !== formValues.playlistId) {
+            changePlaylist = formValues.move;
+        }
         const response = await greenhouse.patch(
             `/playlistsongs/${playlistSongId}`,
             { ...formValues, currentBand: currentBand.id }
         );
-        dispatch({ type: EDIT_PLAYLISTSONG, payload: response.data });
+        dispatch({ type: EDIT_PLAYLISTSONG,
+            payload: { 
+                playlistsong: response.data,
+                playlist: { new: changePlaylist, old: formValues.playlistId } 
+            }
+        });
     } catch (err) {
         dispatch(errorHandler(err));
     }

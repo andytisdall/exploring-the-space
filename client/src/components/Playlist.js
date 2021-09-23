@@ -58,6 +58,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
     const renderEditButton = () => {
         if (authorized) {
 
+
             return (
                 <AddButton
                     title={`Edit ${playlist.name}`}

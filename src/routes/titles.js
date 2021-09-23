@@ -35,13 +35,23 @@ router.get('/titles/:tierId', async (req, res) => {
 router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
 
     const { id } = req.params;
-    const { title } = req.body;
+    const { title, move, currentTier } = req.body;
 
     const thisTitle = await Title.findById(id);
 
     if (title) {
         thisTitle.title = title;
     }
+
+    if (move !== currentTier) {
+        const oldTier = await Tier.findById(currentTier);
+        const newTier = await Tier.findById(move);
+        oldTier.trackList = oldTier.trackList.filter(title => title !== id);
+        newTier.trackList.push(id);
+        await oldTier.save();
+        await newTier.save();
+    }
+
     await thisTitle.save();
 
     res.send(thisTitle);

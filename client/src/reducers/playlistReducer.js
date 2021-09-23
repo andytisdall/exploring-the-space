@@ -1,6 +1,5 @@
-import { FETCH_PLAYLISTS, FETCH_PLAYLIST, CREATE_PLAYLIST, EDIT_PLAYLIST, DELETE_PLAYLIST, CREATE_PLAYLISTSONG, DELETE_PLAYLISTSONG } from '../actions/types';
+import { FETCH_PLAYLISTS, FETCH_PLAYLIST, CREATE_PLAYLIST, EDIT_PLAYLIST, DELETE_PLAYLIST, CREATE_PLAYLISTSONG, EDIT_PLAYLISTSONG, DELETE_PLAYLISTSONG } from '../actions/types';
 import _ from 'lodash';
-import { deletePlaylistSong } from '../actions';
 
 export default (state = {}, action) => {
 
@@ -45,6 +44,16 @@ export default (state = {}, action) => {
             const addToPlaylist = state[action.payload.playlist];
             addToPlaylist.songs.push(action.payload.playlistsong.id);
             return { ...state, [addToPlaylist.id]: addToPlaylist};
+        case EDIT_PLAYLISTSONG:
+            if (action.payload.playlist.new) {
+                const newPlaylist = state[action.payload.playlist.new];
+                newPlaylist.songs.push(action.payload.playlistsong.id);
+                const oldPlaylist = state[action.payload.playlist.old];
+                oldPlaylist.songs = oldPlaylist.songs.filter(id => id !== action.payload.playlistsong.id);
+                return { ...state, [newPlaylist.id]: newPlaylist, [oldPlaylist.id]: oldPlaylist };
+            } else {
+                return state;
+            }
         case DELETE_PLAYLISTSONG:
             const deleteFromPlaylist = state[action.payload.playlist];
             if (deleteFromPlaylist) {

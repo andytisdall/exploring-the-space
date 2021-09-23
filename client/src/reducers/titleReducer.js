@@ -11,7 +11,7 @@ export default (state = {}, action) => {
         case CREATE_TITLE:
             return { ...state, [action.payload.title.id]: action.payload.title };
         case EDIT_TITLE:
-            return { ...state, [action.payload.id]: action.payload };
+            return { ...state, [action.payload.title.id]: action.payload.title };
         case DELETE_TITLE:
             delete state[action.payload.title.id];
             return { ...state };

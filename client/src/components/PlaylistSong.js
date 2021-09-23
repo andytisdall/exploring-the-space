@@ -9,7 +9,7 @@ import { editPlaylistSong, fetchVersions, fetchBounces, deletePlaylistSong } fro
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio, getTime }) => {
+const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio, getTime, band }) => {
 
     const [playSong, setPlaySong] = useState(null);
 
@@ -102,6 +102,14 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                 }
             });
 
+
+            const bandPlaylists = band.playlists.map(id => playlists[id]);
+            const playlistOptions = bandPlaylists.map(pl => {
+                if (pl) {
+                    return { value: pl.id, display: pl.name };
+                }
+            });
+
             return (
                 <AddButton
                     image='/images/edit.png'
@@ -120,9 +128,15 @@ const PlaylistSong = ({ playlist, song, playlistSongs, authorized, versions, bou
                             type: 'select',
                             options: editOptions,
                             required: true
+                        },
+                        {
+                            label: 'Move to Playlist',
+                            name: 'move',
+                            type: 'select',
+                            options: playlistOptions
                         }
                     ]}
-                    initialValues={song.bounce ? _.pick(song, 'position', 'bounce') : _.pick(song, 'position')}
+                    initialValues={song.bounce ? { ..._.pick(song, 'position', 'bounce'), move: playlist.id } : { position: song.position, move: playlist.id }}
                     form={`edit-playlistsong-${song.id}`}
                     enableReinitialize={true}
                 />
@@ -180,7 +194,7 @@ const mapStateToProps = state => {
 
     return {
         playlistSongs: state.playlistSongs,
-        bands: state.bands,
+        band: state.bands.currentBand,
         playlists: state.playlists,
         versions: state.versions,
         bounces: state.bounces,

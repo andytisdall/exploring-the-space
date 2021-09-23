@@ -10,26 +10,35 @@ export default (state = {}, action) => {
         case CREATE_PLAYLISTSONG:
             return { ...state, [action.payload.playlistsong.id]: action.payload.playlistsong };
         case EDIT_PLAYLISTSONG:
-            const oldPosition = state[action.payload.id]['position'];
-            const newPosition = action.payload.position;
+            const oldPosition = state[action.payload.playlistsong.id]['position'];
+            const newPosition = action.payload.playlistsong.position;
             let changedPositions = {};
-            if (oldPosition > newPosition) {
+            if (action.payload.playlist.new !== action.payload.playlist.old) {
                 for (let item of Object.values(state)) {
-                    if (item.position >= newPosition && item.position < oldPosition) {
-                        const pos = item.position;
-                        changedPositions[item.id] = { ...item, position: pos + 1};
-                    }
-                }
-            }
-            if (oldPosition < newPosition) {
-                for (let item of Object.values(state)) {
-                    if (item.position > oldPosition && item.position <= newPosition) {
+                    if (item.position > oldPosition) {
                         const pos = item.position;
                         changedPositions[item.id] = { ...item, position: pos - 1};
                     }
                 }
+            } else {
+                if (oldPosition > newPosition) {
+                    for (let item of Object.values(state)) {
+                        if (item.position >= newPosition && item.position < oldPosition) {
+                            const pos = item.position;
+                            changedPositions[item.id] = { ...item, position: pos + 1};
+                        }
+                    }
+                }
+                if (oldPosition < newPosition) {
+                    for (let item of Object.values(state)) {
+                        if (item.position > oldPosition && item.position <= newPosition) {
+                            const pos = item.position;
+                            changedPositions[item.id] = { ...item, position: pos - 1};
+                        }
+                    }
+                }
             }
-            return { ...state, [action.payload.id]: action.payload, ...changedPositions };
+            return { ...state, [action.payload.playlistsong.id]: action.payload.playlistsong, ...changedPositions };
         case DELETE_PLAYLISTSONG:
             const changePosition = Object.values(state).filter(p => p.position > action.payload.playlistsong.position);
             changePosition.forEach((song) => {

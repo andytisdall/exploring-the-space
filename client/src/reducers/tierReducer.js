@@ -1,4 +1,4 @@
-import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, DELETE_TITLE } from '../actions/types';
+import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -31,7 +31,6 @@ export default (state = {}, action) => {
             }
             return { ...state, [action.payload.id]: action.payload, ...changedPositions };
         case DELETE_TIER:
-
             const changePosition = Object.values(_.omit(state, state.currentBand)).filter(t => t.position > action.payload.position);
             changePosition.forEach((tier) => {
                 tier.position = tier.position - 1;
@@ -42,6 +41,16 @@ export default (state = {}, action) => {
             const addToTier = state[action.payload.tier];
             addToTier.trackList.push(action.payload.title.id);
             return { ...state, [addToTier.id]: addToTier };
+        case EDIT_TITLE:
+            if (action.payload.tier.new) {
+                const newTier = state[action.payload.tier.new];
+                newTier.trackList.push(action.payload.title.id);
+                const oldTier = state[action.payload.tier.old];
+                oldTier.trackList = oldTier.trackList.filter(id => id !== action.payload.title.id);
+                return { ...state, [newTier.id]: newTier, [oldTier.id]: oldTier };
+            } else {
+                return state;
+            }
         case DELETE_TITLE:
             const deleteFromTier = state[action.payload.tier];
             if (deleteFromTier) {

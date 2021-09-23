@@ -9,7 +9,7 @@ import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 import DeleteButton from './DeleteButton';
 
-const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, audio, findLatest }) => {
+const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBounces, authorized, band, playlists, selectVersion, selectBounce, createPlaylistSong, editTitle, deleteTitle, getTime, audio, findLatest, tiers }) => {
 
     const [expand, setExpand] = useState(false);
     const [versionList, setVersionList] = useState(null);
@@ -145,6 +145,12 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                     return { value: pl.id, display: pl.name};
                 }
             });
+            const bandTiers = band.tiers.map(id => tiers[id]);
+            const tierOptions = bandTiers.map(t => {
+                if (t) {
+                    return { value: t.id, display: t.name };
+                }
+            });
             return (
                 <div className='tier-display'>
                     {song && <AddButton
@@ -171,10 +177,16 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                                 name: 'title',
                                 type: 'input',
                                 required: true
+                            },
+                            {
+                                label: 'Move to Tier',
+                                name: 'move',
+                                type: 'select',
+                                options: tierOptions
                             }
                         ]}
-                        onSubmit={formValues => editTitle(formValues, title.id)}
-                        initialValues={_.pick(title, 'title')}
+                        onSubmit={formValues => editTitle(formValues, title.id, tier.id)}
+                        initialValues={{ title: title.title, move: tier.id }}
                         form={`edit-title-${title.id}`}
                         enableReinitialize={true}
                     />
@@ -225,7 +237,8 @@ const mapStateToProps = state => {
         band: state.bands.currentBand,
         playlists: state.playlists,
         titles: state.titles,
-        audio: state.audio
+        audio: state.audio,
+        tiers: state.tiers
     }
 }
 

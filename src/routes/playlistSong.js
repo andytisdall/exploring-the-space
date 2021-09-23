@@ -49,30 +49,41 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 router.patch('/playlistsongs/:id', currentUser, requireAuth, async (req, res) => {
 
     const { id } = req.params;
-    const { bounce, position, version, playlistId } = req.body;
+    const { bounce, position, version, playlistId, move } = req.body;
     const song = await PlaylistSong.findById(id);
     if (!song) {
         throw new Error('Playlist song not found');
     }
 
     const playlist = await Playlist.findById(playlistId).populate('songs');
-
     const otherSongs = playlist.songs;
 
-    if (position !== song.position) {
+    if (move !== playlistId) {
+        const newPlaylist = await Playlist.findById(move);
+        playlist.songs = playlist.songs.filter(pls => pls.id !== id);
+        song.position = newPlaylist.songs.length + 1;
+        newPlaylist.songs.push(id);
+        newPlaylist.save();
+        playlist.save()
+        const greaterPlaylistSongs = otherSongs.filter(pls => pls.position > playlist.position);
+        greaterPlaylistSongs.forEach(gps => {
+            gps.position -= 1;
+            gps.save();
+        });
+    } else if (position !== song.position) {
         const oldPosition = song.position;
         let greaterPlaylistSongs;
         if (oldPosition > position) {
             greaterPlaylistSongs = otherSongs.filter(pls => pls.position >= position && pls.position < oldPosition);
-            greaterPlaylistSongs.forEach(async (gps) => {
+            greaterPlaylistSongs.forEach((gps) => {
                 gps.position += 1;
-                await gps.save();
+                gps.save();
             });
         } else if (oldPosition < position) {
             greaterPlaylistSongs = otherSongs.filter(pls => pls.position > oldPosition && pls.position <= position);
-            greaterPlaylistSongs.forEach(async (gps) => {
+            greaterPlaylistSongs.forEach((gps) => {
                 gps.position -= 1;
-                await gps.save();
+                gps.save();
             });
         }
         song.position = position;
@@ -81,7 +92,7 @@ router.patch('/playlistsongs/:id', currentUser, requireAuth, async (req, res) =>
     song.version = version;
     song.bounce = bounce;
 
-    await song.save();
+    song.save();
     res.send(song);
 
 });
@@ -94,19 +105,23 @@ router.post('/playlistsongs/delete', currentUser, requireAuth, async (req, res) 
     
     const playlist = await Playlist.findById(playlistId).populate('songs');
 
+
+
     if (playlist) {
         playlist.songs = playlist.songs.filter(s => s.id !== song.id);
-        await playlist.save();
+        playlist.save();
     
 
         const changePosition = playlist.songs.filter(p => p.position > song.position);
-        changePosition.forEach(async (pls) => {
+        changePosition.forEach(pls => {
             pls.position = pls.position - 1;
-            await pls.save();
+            pls.save();
         });
     }
+
+
     
-    await PlaylistSong.deleteOne({ _id: playlistSongId });
+    PlaylistSong.deleteOne({ _id: playlistSongId });
     
     res.send(song);
 
