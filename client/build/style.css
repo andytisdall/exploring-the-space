@@ -443,23 +443,13 @@ h2 {
   padding-left: 1rem;
 }
 
-@keyframes expandDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-2rem) scaleY(0.05);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
-.open {
-  animation: expandDown 0.2s;
+.closed {
+  opacity: 0;
+  transform: translateY(-2rem) scaleY(0.05);
 }
 
 .title-container {
-  transition: expandDown 0.2s backwards;
+  transition: all 0.3s;
 }
 
 .title {
@@ -535,7 +525,7 @@ h3 {
 }
 
 .playicon {
-  height: 1.6rem;
+  height: 1.7rem;
   margin-right: 1rem;
   margin-top: 0.2rem;
 }
@@ -1049,7 +1039,7 @@ h5 {
   }
 
   .songtime {
-    margin-right: 0.5rem;
+    margin-right: 0.8rem;
     font-size: 0.6rem;
   }
   .playicon {
@@ -1064,10 +1054,6 @@ h5 {
   .title-display p {
     margin: 5px;
     font-size: 0.55rem;
-  }
-
-  .playicon {
-    width: 25px;
   }
 
   .version-container {

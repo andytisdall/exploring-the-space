@@ -122,7 +122,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
 
 
     const arrow = expand ? 'down-arrow' : '';
-    const open = expand ? 'open' : '';
+    const open = expand ? 'open' : 'closed';
 
     return (
         <>
@@ -143,7 +143,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                 </div>
                 <hr />
             </div>
-            <div className={open}>
+            <div className={`title-container ${open}`}>
                 {expand && renderPlaylistSongs()}
             </div>
         </>

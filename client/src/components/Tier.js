@@ -170,7 +170,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const arrow = expand ? 'down-arrow' : '';
-    const open = expand ? 'open' : '';
+    const open = expand ? 'open' : 'closed';
 
     return (
         <>
@@ -193,7 +193,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                 </div>
                 <hr />
             </div>
-            <div className={open}>
+            <div className={`title-container ${open}`}>
                 {expand && titlesToRender && renderTitles()}
             </div>
         </>
