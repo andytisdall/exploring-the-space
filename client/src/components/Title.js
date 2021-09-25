@@ -134,7 +134,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             bounce: title.selectedBounce.id,
             version: title.selectedVersion.id,
             title: title.id
-        }, formValues.playlistId);
+        });
     }
 
     const renderButtons = () => {

@@ -51,6 +51,7 @@ const errorHandler = err => {
     } else {
         message = err.message;
     }
+    console.log(err)
     return { type: ERROR, payload: message };
 };
 
@@ -333,18 +334,17 @@ export const createPlaylist = formValues => async (dispatch, getState) => {
     }
 };
 
-export const createPlaylistSong = (formValues, playlistId) => async (dispatch, getState) => {
+export const createPlaylistSong = formValues => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
         const response = await greenhouse.post(
             '/playlistsongs',
             { 
                 ...formValues,
-                playlist: playlistId,
                 currentBand: currentBand.id
             }
         );
-        dispatch({ type: CREATE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: playlistId } });
+        dispatch({ type: CREATE_PLAYLISTSONG, payload: { playlistsong: response.data, playlist: formValues.playlistId } });
     } catch (err) {
         dispatch(errorHandler(err));
     }
@@ -521,9 +521,15 @@ export const editPlaylist = (formValues, playlistId) => async (dispatch, getStat
 export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
-        let changePlaylist = null;
+        const song = getState().playlistSongs[playlistSongId];
         if (formValues.move !== formValues.playlistId) {
-            changePlaylist = formValues.move;
+            const newSong = {
+                playlistId: formValues.move,
+                title: song.title,
+                version: song.version,
+                bounce: song.bounce
+            };
+            dispatch(createPlaylistSong(newSong));
         }
         const response = await greenhouse.patch(
             `/playlistsongs/${playlistSongId}`,
@@ -532,7 +538,7 @@ export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch,
         dispatch({ type: EDIT_PLAYLISTSONG,
             payload: { 
                 playlistsong: response.data,
-                playlist: { new: changePlaylist, old: formValues.playlistId } 
+                playlist: formValues.playlistId
             }
         });
     } catch (err) {

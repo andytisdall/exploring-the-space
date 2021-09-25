@@ -103,12 +103,17 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
             });
 
 
-            const bandPlaylists = band.playlists.map(id => playlists[id]);
+            const bandPlaylists = band.playlists
+                .filter(id => id !== playlist.id)
+                .map(id => playlists[id]);
+                
             const playlistOptions = bandPlaylists.map(pl => {
                 if (pl) {
                     return { value: pl.id, display: pl.name };
                 }
             });
+
+            playlistOptions.unshift({ value: null, display: ''})
 
             return (
                 <AddButton
@@ -130,13 +135,13 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
                             required: true
                         },
                         {
-                            label: 'Move to Playlist',
+                            label: 'Add to Playlist',
                             name: 'move',
                             type: 'select',
                             options: playlistOptions
                         }
                     ]}
-                    initialValues={song.bounce ? { ..._.pick(song, 'position', 'bounce'), move: playlist.id } : { position: song.position, move: playlist.id }}
+                    initialValues={song.bounce ? { ..._.pick(song, 'position', 'bounce'), move: null } : { position: song.position, move: null }}
                     form={`edit-playlistsong-${song.id}`}
                     enableReinitialize={true}
                 />

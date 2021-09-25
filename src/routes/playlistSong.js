@@ -49,7 +49,7 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 router.patch('/playlistsongs/:id', currentUser, requireAuth, async (req, res) => {
 
     const { id } = req.params;
-    const { bounce, position, version, playlistId, move } = req.body;
+    const { bounce, position, version, playlistId } = req.body;
     const song = await PlaylistSong.findById(id);
     if (!song) {
         throw new Error('Playlist song not found');
@@ -58,19 +58,7 @@ router.patch('/playlistsongs/:id', currentUser, requireAuth, async (req, res) =>
     const playlist = await Playlist.findById(playlistId).populate('songs');
     const otherSongs = playlist.songs;
 
-    if (move !== playlistId) {
-        const newPlaylist = await Playlist.findById(move);
-        playlist.songs = playlist.songs.filter(pls => pls.id !== id);
-        song.position = newPlaylist.songs.length + 1;
-        newPlaylist.songs.push(id);
-        newPlaylist.save();
-        playlist.save()
-        const greaterPlaylistSongs = otherSongs.filter(pls => pls.position > playlist.position);
-        greaterPlaylistSongs.forEach(gps => {
-            gps.position -= 1;
-            gps.save();
-        });
-    } else if (position !== song.position) {
+    if (position !== song.position) {
         const oldPosition = song.position;
         let greaterPlaylistSongs;
         if (oldPosition > position) {

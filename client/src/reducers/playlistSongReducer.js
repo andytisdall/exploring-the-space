@@ -13,31 +13,24 @@ export default (state = {}, action) => {
             const oldPosition = state[action.payload.playlistsong.id]['position'];
             const newPosition = action.payload.playlistsong.position;
             let changedPositions = {};
-            if (action.payload.playlist.new !== action.payload.playlist.old) {
+            
+            if (oldPosition > newPosition) {
                 for (let item of Object.values(state)) {
-                    if (item.position > oldPosition) {
+                    if (item.position >= newPosition && item.position < oldPosition) {
+                        const pos = item.position;
+                        changedPositions[item.id] = { ...item, position: pos + 1};
+                    }
+                }
+            }
+            if (oldPosition < newPosition) {
+                for (let item of Object.values(state)) {
+                    if (item.position > oldPosition && item.position <= newPosition) {
                         const pos = item.position;
                         changedPositions[item.id] = { ...item, position: pos - 1};
                     }
                 }
-            } else {
-                if (oldPosition > newPosition) {
-                    for (let item of Object.values(state)) {
-                        if (item.position >= newPosition && item.position < oldPosition) {
-                            const pos = item.position;
-                            changedPositions[item.id] = { ...item, position: pos + 1};
-                        }
-                    }
-                }
-                if (oldPosition < newPosition) {
-                    for (let item of Object.values(state)) {
-                        if (item.position > oldPosition && item.position <= newPosition) {
-                            const pos = item.position;
-                            changedPositions[item.id] = { ...item, position: pos - 1};
-                        }
-                    }
-                }
             }
+            
             return { ...state, [action.payload.playlistsong.id]: action.payload.playlistsong, ...changedPositions };
         case DELETE_PLAYLISTSONG:
             const changePosition = Object.values(state).filter(p => p.position > action.payload.playlistsong.position);
