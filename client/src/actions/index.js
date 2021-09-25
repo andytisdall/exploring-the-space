@@ -375,15 +375,12 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
 export const editTitle = (formValues, titleId, tierId) => async (dispatch, getState) => {
     try {
         const { currentBand } = getState().bands;
-        let changeTier = null;
-        if (formValues.move !== tierId) {
-            changeTier = formValues.move;
-        }
+        let changeTier = formValues.move;
         const response = await greenhouse.patch(
             `/titles/${titleId}`,
             { ...formValues, currentTier: tierId, currentBand: currentBand.id }
         );
-        dispatch({ type: EDIT_TITLE, payload: { title:response.data, tier: { new: changeTier, old: tierId } } });
+        dispatch({ type: EDIT_TITLE, payload: { title: response.data, tier: { new: changeTier, old: tierId } } });
     } catch (err) {
         dispatch(errorHandler(err));
     }

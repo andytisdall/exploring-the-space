@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import mongodb from 'mongodb';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
@@ -39,20 +40,20 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
 
     const thisTitle = await Title.findById(id);
 
-    if (title) {
-        thisTitle.title = title;
-    }
+    thisTitle.title = title;
 
     if (move !== currentTier) {
         const oldTier = await Tier.findById(currentTier);
         const newTier = await Tier.findById(move);
-        oldTier.trackList = oldTier.trackList.filter(title => title !== id);
+        oldTier.trackList = oldTier.trackList.filter(t => {
+            return t.toString() !== id
+        });
         newTier.trackList.push(id);
-        await oldTier.save();
-        await newTier.save();
+        oldTier.save();
+        newTier.save();
     }
 
-    await thisTitle.save();
+    thisTitle.save();
 
     res.send(thisTitle);
 
