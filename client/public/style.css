@@ -503,7 +503,7 @@ h3 {
 }
 
 .title-display {
-  width: 100%;
+  width: 50%;
   display: flex;
   justify-content: space-between;
 }
