@@ -171,7 +171,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         if (selectedBounce.latest) {
             return (
                 <div className="latest">
-                    Current Bounce
+                    Current
                 </div>
             );
         }

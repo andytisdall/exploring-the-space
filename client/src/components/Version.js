@@ -153,7 +153,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         if (selectedVersion.current) {
             return (
                 <div className="current">
-                    Current Version
+                    Current
                 </div>
             );
         }
