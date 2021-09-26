@@ -519,7 +519,7 @@ export const editPlaylistSong = (formValues, playlistSongId) => async (dispatch,
     try {
         const { currentBand } = getState().bands;
         const song = getState().playlistSongs[playlistSongId];
-        if (formValues.move !== formValues.playlistId) {
+        if (formValues.move) {
             const newSong = {
                 playlistId: formValues.move,
                 title: song.title,
