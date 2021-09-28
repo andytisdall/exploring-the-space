@@ -49,8 +49,7 @@
   }
 
   .playbar-title p {
-    font-size: 0.8rem;
-    padding: 3px;
+    font-size: 1.1rem;
   }
 
   .playbar-header {
@@ -60,6 +59,10 @@
   .volume-container {
     padding-top: 0.5rem;
     width: 150px;
+  }
+
+  .playbar-info-detail p {
+    font-size: 0.65rem;
   }
 
   /* HEADER */

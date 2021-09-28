@@ -211,7 +211,7 @@ hr {
 .playbar-title {
   height: 1.7rem;
   width: 45%;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 }
 
 .playbar-title p {
