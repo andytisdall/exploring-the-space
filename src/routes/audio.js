@@ -88,7 +88,7 @@ router.get('/audio/:id', async (req, res) => {
 router.get('/audio/download/:id/:title', async (req, res) => {
 
     const id = req.params.id;
-    const title = req.params.title.split('.')[0];
+    const title = req.params.title;
     const thisSong = await Song.findById(id);
     let mp3Id = new mongodb.ObjectID(thisSong.mp3);
     const stream = bucket.openDownloadStream(mp3Id);

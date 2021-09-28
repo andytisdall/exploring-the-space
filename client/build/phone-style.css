@@ -141,6 +141,11 @@
     font-size: 0.55rem;
   }
 
+  .play-container a {
+    margin-left: 0;
+    margin-right: 1rem;
+  }
+
   /* VERSION */
 
   .version-container {
