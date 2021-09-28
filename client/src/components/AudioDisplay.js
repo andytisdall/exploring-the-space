@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-// import Scroll from './Scroll';
 
 import { playAudio, pauseAudio, nextSong, throwError, initializeAudio } from '../actions';
 
@@ -169,11 +168,9 @@ class AudioDisplay extends React.Component {
             return (
                 <div className="playbar">
                     <div className="playbar-header">
-                        {/* <Scroll> */}
                             <div className="playbar-title">
                                 <p>{this.props.song.title.title}</p>
                             </div>
-                        {/* </Scroll> */}
                         <div className="big-play-container" onClick={this.onPauseButton}>
                             <img className="big-play-btn" src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
                         </div>

@@ -48,7 +48,7 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
             <a
                 className='download'
                 onClick={e => e.stopPropagation()}
-                href={`${baseUrl}/api/audio/download/${song.title.title}/${song.bounce.id}.mp3`}
+                href={`${baseUrl}/api/audio/download/${song.bounce.id}/${encodeURIComponent(song.title.title)}.mp3`}
                 download
             >
                 <img src="/images/download.svg" />

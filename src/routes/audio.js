@@ -85,7 +85,7 @@ router.get('/audio/:id', async (req, res) => {
 
 });
 
-router.get('/audio/download/:title/:id', async (req, res) => {
+router.get('/audio/download/:id/:title', async (req, res) => {
 
     const id = req.params.id.split('.')[0];
     const title = req.params.title;

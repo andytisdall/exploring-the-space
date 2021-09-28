@@ -58,7 +58,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 setBounceList(title.selectedVersion.bounces.map(id => bounces[id]));
                 // console.log('set bounce list')
             } else if (title.selectedBounce !== null) {
-                console.log('set bounce list null')
+                // console.log('set bounce list null')
                 setBounceList(null);
                 selectBounce(null, title.id);
             }
@@ -110,7 +110,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             getTime({ id: title.id, duration: 0 });
         }
         
-    }, [titles]);
+    }, [titles[title.id].selectedVersion, titles[title.id].selectedBounce]);
 
 
     const renderPlayContainer = () => {
@@ -145,12 +145,15 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                     return { value: pl.id, display: pl.name};
                 }
             });
-            const bandTiers = band.tiers.map(id => tiers[id]);
+            const bandTiers = band.tiers
+                .filter(t => t !== tier.id)
+                .map(id => tiers[id]);
             const tierOptions = bandTiers.map(t => {
                 if (t) {
                     return { value: t.id, display: t.name };
                 }
             });
+            tierOptions.unshift({ value: null, display: ''});
             return (
                 <div className='tier-display'>
                     {song && <AddButton
@@ -186,7 +189,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                             }
                         ]}
                         onSubmit={formValues => editTitle(formValues, title.id, tier.id)}
-                        initialValues={{ title: title.title, move: tier.id }}
+                        initialValues={{ title: title.title, move: null }}
                         form={`edit-title-${title.id}`}
                         enableReinitialize={true}
                     />
@@ -222,7 +225,6 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                     </div>
                     {renderPlayContainer()}
                     {renderButtons()}
-                    {/* {download} */}
                 </div>
             </div>
             <div className={`version-container ${open}`}>

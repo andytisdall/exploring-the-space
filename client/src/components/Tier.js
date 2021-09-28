@@ -12,11 +12,7 @@ import requireAuth from './requireAuth';
 const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier }) => {
 
     const [expand, setExpand] = useState(false);
-
     const [titlesToRender, setTitlesToRender] = useState(null);
-
-    const [tierList, setTierList] = useState([]);
-
     const [times, setTimes] = useState({});
 
     const orderedTitles = useRef({});
@@ -30,20 +26,6 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
             .map(id => titles[id]));
     }, [titles, tier]);
 
-    useEffect(() => {
-        if (band.tiers.length) {
-            const tiersToShow = band.tiers
-                .map(id => tiers[id])
-                .sort((a, b) => a.position < b.position ? -1 : 1);
-
-            setTierList(tiersToShow.map(t => {
-                if (t) {
-                    return { value: t.position, display: t.position };
-                }
-            }));
-        }
-    }, [tiers]);
-
     const findLatest = (title, bounce) => {
         if (!orderedTitles.current[title.id]) {
             orderedTitles.current[title.id] = new Date(bounce.date);
@@ -52,9 +34,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderTitles = () => {
 
-        let titleList = titlesToRender;
-
-        titleList = titlesToRender.sort((a, b) => {
+        const titleList = titlesToRender.sort((a, b) => {
             if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
                 if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
                     return -1;
@@ -106,6 +86,16 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     const renderEditButton = () => {
         if (authorized) {
 
+            const tierList = band.tiers
+                .map(id => tiers[id])
+                .sort((a, b) => a.position < b.position ? -1 : 1)
+                .map(t => {
+                    if (t) {
+                        return { value: t.position, display: t.position };
+                    }
+                });
+
+
             return (
                 <AddButton
                     title={`Edit ${tier.name}`}
@@ -124,7 +114,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         }
                     ]}
                     onSubmit={(formValues) => editTier(formValues, tier.id)}
-                    initialValues={_.pick(tier, 'name', 'position')}
+                    initialValues={{ name: tier.name, position: tier.position }}
                     form={`edit-tier-${tier.id}`}
                     enableReinitialize={true}
                 />

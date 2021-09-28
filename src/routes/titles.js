@@ -42,7 +42,7 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
 
     thisTitle.title = title;
 
-    if (move !== currentTier) {
+    if (move) {
         const oldTier = await Tier.findById(currentTier);
         const newTier = await Tier.findById(move);
         oldTier.trackList = oldTier.trackList.filter(t => {
