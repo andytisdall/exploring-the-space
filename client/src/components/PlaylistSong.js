@@ -144,6 +144,7 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
                     initialValues={song.bounce ? { ..._.pick(song, 'position', 'bounce'), move: null } : { position: song.position, move: null }}
                     form={`edit-playlistsong-${song.id}`}
                     enableReinitialize={true}
+                    addClass='add-right'
                 />
             );
         }

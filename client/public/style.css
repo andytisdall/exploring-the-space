@@ -16,7 +16,7 @@ body {
 }
 
 select {
-  margin: 0.2rem;
+  margin: 0.5rem 0 1rem 0;
   width: auto;
   border: 1px solid #ccc;
   height: 1.5rem;
@@ -50,12 +50,33 @@ select {
   box-sizing: border-box;
   z-index: 1;
   margin-left: -8rem;
+  box-shadow: 0 0.5rem 1rem 1rem rgba(0, 0, 0, 0.37);
+}
+
+.add-box-title {
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 
 .add-bounce {
-  top: -16rem;
-  left: 3rem;
-  margin: 0;
+  top: -10rem;
+  left: -4rem;
+  min-width: 12rem;
+}
+
+.add-version {
+  top: -10rem;
+  left: 11rem;
+  min-width: 12rem;
+}
+
+.add-left {
+  left: 8rem;
+}
+
+.add-right {
+  left: -6rem;
+  top: -4rem;
 }
 
 input {
@@ -66,6 +87,10 @@ input {
 
 .inputfile {
   width: 15rem;
+}
+
+label {
+  margin-top: 1rem;
 }
 
 .calendar {
@@ -209,7 +234,6 @@ hr {
 }
 
 .playbar-title {
-  height: 1.7rem;
   width: 45%;
   margin-left: 0.5rem;
 }
@@ -344,6 +368,7 @@ h1 {
   z-index: 10;
   background-color: rgb(59, 59, 59);
   border: solid 1px rgb(255, 106, 230);
+  box-shadow: 0 1rem 1rem 0.5rem rgba(0, 0, 0, 0.363);
 }
 
 .menu-item {

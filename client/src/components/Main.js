@@ -65,6 +65,8 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
                         type: 'input',
                         required: true          
                     }]}
+                    addClass='add-left'
+                    
                 />
             );
         }
@@ -83,6 +85,7 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
                         type: 'input',
                         required: true             
                     }]}
+                    addClass='add-left'
                 />
             );
         }

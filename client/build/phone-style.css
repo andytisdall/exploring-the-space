@@ -48,8 +48,12 @@
     height: 6rem;
   }
 
+  .playbar-title {
+    margin-left: 0;
+  }
+
   .playbar-title p {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .playbar-header {
@@ -143,7 +147,6 @@
 
   .play-container a {
     margin-left: 0;
-    margin-right: 1rem;
   }
 
   /* VERSION */

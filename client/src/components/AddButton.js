@@ -147,7 +147,7 @@ class AddButton extends React.Component {
 
     showBox = () => {
         if (this.state.boxVisible) {
-            const addClass = this.props.addClass ? 'add-bounce' : '';
+            const addClass = this.props.addClass ? this.props.addClass : '';
             return <>    
                 <div className={`add-box ${addClass}`} onClick={e => e.stopPropagation()}>
                     <h3 className="add-box-title">{this.props.title}</h3>

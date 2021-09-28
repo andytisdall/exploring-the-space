@@ -103,7 +103,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                     form={`add-version-${title.id}`}
                     initialValues={{ current: true }}
                     enableReinitialize={true}
-                    addClass={true}
+                    addClass='add-version'
                 />
             );
         }
@@ -135,7 +135,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                 initialValues={_.pick(selectedVersion, 'name', 'notes', 'current')}
                 form={`edit-version-${title.id}`}
                 enableReinitialize={true}
-                addClass={true}
+                addClass='add-version'
             />;
         }
     };

@@ -79,6 +79,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                     initialValues={_.pick(playlist, 'name', 'position')}
                     form={`edit-${playlist.id}`}
                     enableReinitialize={true}
+                    addClass='add-tier'
                 />
             );
         }

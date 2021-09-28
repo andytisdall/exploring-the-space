@@ -42,7 +42,7 @@ export default (state = {}, action) => {
             addToTier.trackList.push(action.payload.title.id);
             return { ...state, [addToTier.id]: addToTier };
         case EDIT_TITLE:
-            if (action.payload.tier.new !== action.payload.tier.old) {
+            if (action.payload.tier.new) {
                 const newTier = state[action.payload.tier.new];
                 newTier.trackList.push(action.payload.title.id);
                 const oldTier = state[action.payload.tier.old];

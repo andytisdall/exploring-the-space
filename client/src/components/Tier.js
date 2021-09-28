@@ -78,6 +78,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         setExpand(true);
                     }}
                     form={`add-title-${tier.id}`}
+                    addClass='add-left'
                 />
             )
         }
