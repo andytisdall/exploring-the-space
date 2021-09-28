@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 
 import Error from './Error';
-import BandHeader from './BandHeader';
+import Header from './Header';
 import User from './User';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -41,7 +41,7 @@ const App = ({ signedIn, fetchUser, error }) => {
                         return <User {...routeProps} />;
                     }} />
                     <Route path="/help" exact component={Help} />
-                    <Route path="/:bandName" component={BandHeader} />
+                    <Route path="/:bandName" component={Header} />
                 </Switch>
             </Router>
         </div>

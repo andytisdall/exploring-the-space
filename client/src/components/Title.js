@@ -210,22 +210,24 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
         currentClass = parent === tier.id && current === title.selectedBounce.id ? 'current-song' : '';
     }
 
+    let open = expand ? 'open' : 'closed';
+
     return (
         <div className="title-margin">
             <div className={`row title ${currentClass}`}>
                 <div className="marqee" onClick={() => setExpand(!expand)}>
-                    <div className="row-name"   >
-                        <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
-                        <div className="name-spot">
-                            <h3>{title.title}</h3>
-                        </div>
+                    <div className="title-name"   >
+                        <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />              
+                        <h3>{title.title}</h3>
                     </div>
                     {renderPlayContainer()}
                     {renderButtons()}
                     {/* {download} */}
                 </div>
             </div>
-            {expand && renderVersion()}
+            <div className={`version-container ${open}`}>
+                {expand && renderVersion()}
+            </div>
         </div>
     );
 };

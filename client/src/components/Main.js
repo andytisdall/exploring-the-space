@@ -102,7 +102,7 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
     const playbarActive = currentSong ? 'playbar-active' : ''
 
     return (
-        <div className={`body-container ${playbarActive}`}>
+        <div className={`main ${playbarActive}`}>
             <div className="section-header">
                 <h2 className="section-title">Tiers</h2>
                 <div className="section-add">

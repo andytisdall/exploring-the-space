@@ -1,0 +1,208 @@
+@media (max-width: 650px) {
+  body {
+    font-size: 0.7rem;
+    max-width: 100%;
+  }
+
+  /* INPUT */
+
+  .add,
+  .delete {
+    font-size: 0.65rem;
+    padding-left: 0.6rem;
+  }
+
+  .text-input {
+    padding: 2px;
+  }
+
+  select {
+    padding: 0;
+  }
+
+  /* LAYOUT */
+
+  .container {
+    padding: 0px;
+    max-width: 100%;
+  }
+
+  img {
+    height: 0.8rem;
+  }
+
+  .arrow {
+    height: 20px;
+    width: 15px;
+  }
+
+  /* PLAYBAR */
+
+  .playbar {
+    padding: 0;
+    margin-bottom: 0.2rem;
+    width: 96%;
+  }
+
+  .playbar-background {
+    height: 6rem;
+  }
+
+  .playbar-title p {
+    font-size: 0.8rem;
+    padding: 3px;
+  }
+
+  .playbar-header {
+    padding-bottom: 0.2rem;
+  }
+
+  .volume-container {
+    padding-top: 0.5rem;
+    width: 150px;
+  }
+
+  /* HEADER */
+
+  .menu {
+    flex-direction: column;
+    left: -2rem;
+    top: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  /* MAIN */
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    padding-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  /* TIER */
+
+  .marqee {
+    padding-bottom: 1px;
+  }
+
+  .tier {
+    padding-top: 0;
+    margin-left: 0.3rem;
+  }
+
+  .tier-count {
+    width: 200px;
+  }
+
+  /* TITLE */
+
+  h3 {
+    padding-left: 5px;
+    font-size: 0.8rem;
+  }
+
+  .title-margin {
+    margin-left: 0.6rem;
+    padding-left: 0.2rem;
+  }
+
+  .tier-display {
+    margin: 0;
+  }
+
+  /* PLAYCONTAINER */
+
+  .play-container-time {
+    margin-right: 0.8rem;
+    font-size: 0.6rem;
+  }
+
+  .play-icon {
+    margin-right: 0.5rem;
+    height: 1.6rem;
+  }
+
+  .play-container-display {
+    display: inline;
+    margin-right: 5px;
+  }
+
+  .play-container-display p {
+    margin: 5px;
+    font-size: 0.55rem;
+  }
+
+  /* VERSION */
+
+  .version-container {
+    margin-left: 1.5rem;
+    margin-top: 0.3rem;
+  }
+
+  .detail-box {
+    padding: 0.5rem;
+  }
+
+  h5 {
+    font-size: 0.75rem;
+  }
+
+  .detail-content {
+    padding-bottom: 0.3rem;
+  }
+
+  .dropbtn {
+    font-size: 0.55rem;
+    padding: 0.2rem;
+  }
+
+  .detail-notes {
+    width: 25%;
+    font-size: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .detail-notes-title {
+    font-size: 0.5rem;
+  }
+
+  .current,
+  .latest {
+    padding: 3px;
+    font-size: 0.5rem;
+    margin-top: 0.3rem;
+  }
+
+  /* HOME */
+
+  .band-item h2 {
+    font-size: 1.5rem;
+  }
+
+  /*  HELP */
+
+  .help {
+    width: 90%;
+    margin: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .help p {
+    font-size: 1rem;
+  }
+
+  .help h2 {
+    font-size: 1.4rem;
+  }
+
+  .help h3 {
+    font-size: 1.2rem;
+  }
+}

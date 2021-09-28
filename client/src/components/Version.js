@@ -195,8 +195,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
 
 
     
-    return (
-        <div className="version-container">
+    return <>
             <div className="detail-box">
                 {renderVersionDetail()}      
                 <div className="detail-buttons">
@@ -206,8 +205,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                 </div>
             </div>
             {renderBounces()}          
-        </div>
-    );
+    </>;
 };
 
 const mapStateToProps = state => {

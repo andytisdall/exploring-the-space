@@ -6,7 +6,7 @@ import moment from 'moment';
 import { playAudio, pauseAudio, nextSong, throwError, initializeAudio } from '../actions';
 
 
-class AudioHeader extends React.Component {
+class AudioDisplay extends React.Component {
 
     constructor(props) {
         super(props);
@@ -174,22 +174,22 @@ class AudioHeader extends React.Component {
                                 <p>{this.props.song.title.title}</p>
                             </div>
                         {/* </Scroll> */}
-                        <div className="pause-container" onClick={this.onPauseButton}>
+                        <div className="big-play-container" onClick={this.onPauseButton}>
                             <img className="big-play-btn" src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
                         </div>
                         <div className="playbar-info">
-                            <div className="playbar-detail">
+                            <div className="playbar-info-detail">
                                 <p>Version:</p>
                                 <p>{this.props.song.version}</p>
                             </div>
-                            <div className="playbar-detail">
+                            <div className="playbar-info-detail">
                                 <p>Date:</p>
                                 <p>{this.displayDate(this.props.song.date)}</p>
                             </div>
                         </div>
                     </div>
-                    <div className="playslidercontainer">
-                        <div className="playslidertime">
+                    <div className="playslider-container">
+                        <div className="playslider-time">
                             {this.time}
                         </div>
                         <input
@@ -200,7 +200,7 @@ class AudioHeader extends React.Component {
                             className='playslider'
                             onInput={this.onSliderChange}
                         />
-                        <div className="playslidertime">
+                        <div className="playslider-time">
                             {this.formatTime(this.props.song.duration)}
                         </div>
                     </div>
@@ -221,4 +221,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError, initializeAudio })(AudioHeader);
+export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError, initializeAudio })(AudioDisplay);

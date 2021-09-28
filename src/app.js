@@ -1,13 +1,9 @@
 import mongoose from 'mongoose';
 import express from 'express';
-// import session from 'express-session';
 import 'express-async-errors';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import path from 'path';
-// import https from 'https';
-// import fs from 'fs';
-
 
 
 import './models/models.js';

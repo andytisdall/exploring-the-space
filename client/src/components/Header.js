@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { fetchBand, signOut, changeVolume } from '../actions';
-import BodyContainer from './BodyContainer';
-import AudioHeader from './AudioHeader';
+import Main from './Main';
+import AudioDisplay from './AudioDisplay';
 import requireAuth from './requireAuth';
 
-const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
+const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
 
     const [expand, setExpand] = useState(false);
     const menu = useRef(null);
@@ -52,20 +52,20 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
         );
     };
 
-    const showBody = () => {
+    const showMain = () => {
         if (!band) {
             return null
         }
         if (signedIn && !user) {
             return null
         }
-        return <BodyContainer band={band}/>
+        return <Main band={band}/>
     }
 
     return <>
         
         <div className="header">
-            <AudioHeader />
+            <AudioDisplay />
             <div className="band-header">
                 <div className="band-name">
                     <h1>{band && band.name}</h1>
@@ -74,11 +74,11 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
                         {expand && (authorized ? renderAdmin() : renderHomeLink())}
                     </div>
                 </div>
-                <div className="slidecontainer">
+                <div className="volume-container">
                     <input
                         type="range"
                         min="0" max="100"
-                        className="master-volume"
+                        className="volume"
                         value={volume}
                         onInput={e => changeVolume(e.target.value)}
                     />
@@ -87,7 +87,7 @@ const BandHeader = ({ fetchBand, band, match, authorized, handleUpdate, user, si
             </div>
         </div>
 
-        {showBody()}
+        {showMain()}
 
     </>;
 
@@ -102,4 +102,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchBand, signOut, changeVolume })(requireAuth(BandHeader));
+export default connect(mapStateToProps, { fetchBand, signOut, changeVolume })(requireAuth(Header));

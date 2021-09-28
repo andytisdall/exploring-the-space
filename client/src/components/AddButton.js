@@ -147,14 +147,10 @@ class AddButton extends React.Component {
 
     showBox = () => {
         if (this.state.boxVisible) {
-            let baseClass = 'addbox';
-            if (this.props.addClass) {
-                baseClass = 'addbox add-bounce';
-            }
             const addClass = this.props.addClass ? 'add-bounce' : '';
             return <>    
-                <div className={`addbox ${addClass}`} onClick={e => e.stopPropagation()}>
-                    <h3 className="addbox-title">{this.props.title}</h3>
+                <div className={`add-box ${addClass}`} onClick={e => e.stopPropagation()}>
+                    <h3 className="add-box-title">{this.props.title}</h3>
                     <form onSubmit = {this.props.handleSubmit(this.submitForm)}>
                         {this.showFields()}
                         <div className="submit-button-centered">

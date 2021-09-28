@@ -35,15 +35,13 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
     }
 
     return (
-        <div className='playcontainer'>
-            <div className='songtime'>{displayTime(song.bounce.duration)}</div>
-            <div className='playbutton'>
-                <img
-                    src='/images/play.svg' className='playicon'
-                    onClick={onPlay}
-                />
-            </div>
-            <div className='title-display'>
+        <div className='play-container'>
+            <div className='play-container-time'>{displayTime(song.bounce.duration)}</div>           
+            <img
+                src='/images/play.svg' className='play-icon'
+                onClick={onPlay}
+            /> 
+            <div className='play-container-display'>
                 <p>{song.version.name}</p>
                 <p>{displayDate(song.bounce.date)}</p>
             </div>

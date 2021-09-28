@@ -9,11 +9,6 @@ const router = express.Router();
 router.get('/playlistsongs/:playlistId', async (req, res) => {
 
     const playlist = await Playlist.findById(req.params.playlistId).populate('songs');
-        // .populate({
-        //     path: 'songs',
-        //     populate: ['title', 'version', 'bounce'],
-        //     options: { sort: 'position' }
-        // });
 
     res.status(200).send(playlist.songs);
 
@@ -37,10 +32,6 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
 
     playlist.songs.push(newPlaylistSong);
     await playlist.save();
-
-    // newPlaylistSong.title = await Title.findById(title);
-    // newPlaylistSong.version = await Version.findById(version);
-    // newPlaylistSong.bounce = await Song.findById(bounce)
 
     res.status(201).send(newPlaylistSong);
 });

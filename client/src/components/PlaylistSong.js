@@ -174,11 +174,11 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
         <div className='title-margin'>
             <div className={`row title ${currentClass}`}>                    
                 <div className="marqee">
-                    <div className='row-name'>
-                        <div className="song-position">{song.position}</div>
-                        <div className='name-spot'>
-                            <h3>{song && titles[song.title] && titles[song.title].title}</h3>
+                    <div className='title-name'>
+                        <div className="song-position">
+                            <p>{song.position}</p>
                         </div>
+                        <h3>{song && titles[song.title] && titles[song.title].title}</h3>
                     </div>      
 
                     {renderPlayContainer()}
