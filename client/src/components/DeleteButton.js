@@ -6,7 +6,7 @@ const DeleteButton = ({ onSubmit, displayName }) => {
     const [visible, setVisible] = useState(false);
 
     const renderContent = () => {
-        return `Seriously delete ${displayName}?`;
+        return `Seriously delete "${displayName}"?`;
     };
 
     const renderActions = () => {
@@ -37,7 +37,10 @@ const DeleteButton = ({ onSubmit, displayName }) => {
             <Modal 
                 content={renderContent()}
                 actions={renderActions()}
-                onDismiss={() => setVisible(false)}
+                onDismiss={e => {
+                    e.stopPropagation();
+                    setVisible(false)
+                }}
             />
         );
     };

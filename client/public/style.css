@@ -829,10 +829,10 @@ h5 {
 
 /* MODAL */
 
-.dimmer {
+.modal-background {
   height: 100%;
   width: 100%;
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -844,31 +844,33 @@ h5 {
   opacity: 1;
 }
 
-.modal-box-active .container {
-  filter: blur(5px) grayscale(90%);
-}
-
 .modal-box {
   position: fixed;
   top: 30%;
-  left: 40%;
+  left: 50%;
+  transform: translate(-50%, -30%);
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: black;
   border: #34af49 2px solid;
-  width: auto;
-  padding: 2rem;
-  height: auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.modal-title {
+  font-size: 1.6rem;
+  color: rgb(255, 0, 140);
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .modal-button {
-  margin: 1rem;
   color: rgb(0, 0, 0);
   font-size: medium;
   background-color: rgb(0, 255, 255);
   border: rgb(237, 223, 100) 1px solid;
-  margin: 1rem;
+  margin: 1rem 0.5rem 0 0.5rem;
   padding: 0.3rem;
 }
 

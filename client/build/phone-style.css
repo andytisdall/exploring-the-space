@@ -20,6 +20,15 @@
     padding: 0;
   }
 
+  .modal-title {
+    font-size: 1.2rem;
+  }
+
+  .submit-button,
+  .modal-button {
+    font-size: 0.8rem;
+  }
+
   /* LAYOUT */
 
   .container {

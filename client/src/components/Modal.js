@@ -13,12 +13,12 @@ class Modal extends React.Component {
 
     render() {
         return ReactDOM.createPortal(
-            <div onClick={this.props.onDismiss} className="dimmer">
+            <div onClick={this.props.onDismiss} className="modal-background">
                 <div 
                     onClick={e => e.stopPropagation()}
                     className="modal-box"
                 >
-                    <div>
+                    <div className="modal-title">
                         {this.props.content}
                     </div>
                     <div>
