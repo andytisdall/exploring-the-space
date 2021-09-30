@@ -217,7 +217,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
     return (
         <div className="title-margin">
-            <div className={`row title ${currentClass}`}>
+            <div className={`row title ${currentClass} ${expand ? 'row-open' : ''}`}>
                 <div className="marqee" onClick={() => setExpand(!expand)}>
                     <div className="title-name"   >
                         <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />              

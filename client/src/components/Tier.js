@@ -165,7 +165,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     return (
         <>
-            <div className="row tier" onClick={() => setExpand(!expand)}>
+            <div className={`row tier ${expand ? 'row-open' : ''}`} onClick={() => setExpand(!expand)}>
                 <div className="marqee">
                     <div className="tier-name">
                         <img className={`arrow ${arrow}`} src={`images/right-arrow.svg`} />

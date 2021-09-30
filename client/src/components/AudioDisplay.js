@@ -103,7 +103,7 @@ class AudioDisplay extends React.Component {
             // reverse for pause
             if (this.props.song !== prevProps.song) {
                 this.audio.current.src=this.wrapUrl(this.props.song.audio);
-                this.audio.current.volume = this.props.volume / 120;
+                this.audio.current.volume = this.props.volume / 100;
                 // this.audio.current.play();
             } else if (this.props.play && prevProps.pause) {
 
@@ -112,7 +112,7 @@ class AudioDisplay extends React.Component {
                 this.audio.current.pause();
             }
             if (this.props.volume !== prevProps.volume) {
-                this.audio.current.volume = this.props.volume / 120;
+                this.audio.current.volume = this.props.volume / 100;
 
             }
         } else {

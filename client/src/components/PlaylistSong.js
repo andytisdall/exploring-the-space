@@ -173,7 +173,7 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
 
     return (
         <div className='title-margin'>
-            <div className={`row title ${currentClass}`}>                    
+            <div className={`row title playlistsong ${currentClass}`}>                    
                 <div className="marqee">
                     <div className='title-name'>
                         <div className="song-position">
