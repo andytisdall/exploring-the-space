@@ -38,6 +38,7 @@ import {
     NEXT_SONG,
     CHANGE_VOLUME,
     INITIALIZE_AUDIO,
+    ORDER_TIER,
     SELECT_VERSION,
     SELECT_BOUNCE,
 } from './types';
