@@ -1,4 +1,4 @@
-import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE } from '../actions/types';
+import { FETCH_TIERS, CREATE_TIER, EDIT_TIER, DELETE_TIER, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, ORDER_TIER } from '../actions/types';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -37,6 +37,9 @@ export default (state = {}, action) => {
             });
             delete state[action.payload.id];
             return { ...state, ..._.mapKeys(changePosition, 'id') };
+        case ORDER_TIER:
+            state[action.payload.tier].orderBy = action.payload.orderBy;
+            return { ...state };
         case CREATE_TITLE:
             const addToTier = state[action.payload.tier];
             addToTier.trackList.push(action.payload.title.id);

@@ -756,25 +756,40 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
     dispatch({ type: QUEUE_SONGS, payload: { song: songObject, parent: song.playlist } });
 };
 
+export const setOrder = (tier, orderBy) => {
+    return { type: ORDER_TIER, payload: { tier, orderBy } };
+};
+
 
 export const nextSong = () => (dispatch, getState) => {
     const { parent, currentSong } = getState().audio;
     if (parent.trackList) {
-        const allTitles = parent.trackList
-            .map(id => getState().titles[id])
-            .sort((a, b) => {
-                if (a.selectedBounce && b.selectedBounce) {
-                    if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
-                        return -1;
-                    } else {
+        let allTitles;
+        if (parent.orderBy === 'date') {
+            allTitles = parent.trackList
+                .map(id => getState().titles[id])
+                .sort((a, b) => {
+                    if (a.selectedBounce && b.selectedBounce) {
+                        if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else if (a.selectedBounce) {
+                        return -1
+                    } else if (b.selectedBounce) {
                         return 1;
                     }
-                } else if (a.selectedBounce) {
-                    return -1
-                } else if (b.selectedBounce) {
-                    return 1;
-                }
-            });
+                });
+        }
+
+        if (parent.orderBy === 'name') {
+            allTitles = parent.trackList
+                .map(id => getState().titles[id])
+                .sort((a, b) => {
+                    return a.title < b.title ? -1 : 1;
+                });
+        }
 
         const song = allTitles[allTitles.indexOf(currentSong.title) + 1];
 
@@ -834,21 +849,32 @@ export const nextSong = () => (dispatch, getState) => {
 export const prevSong = () => (dispatch, getState) => {
     const { parent, currentSong } = getState().audio;
     if (parent.trackList) {
-        const allTitles = parent.trackList
-            .map(id => getState().titles[id])
-            .sort((a, b) => {
-                if (a.selectedBounce && b.selectedBounce) {
-                    if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
-                        return -1;
-                    } else {
+        let allTitles;
+        if (parent.orderBy === 'date') {
+            allTitles = parent.trackList
+                .map(id => getState().titles[id])
+                .sort((a, b) => {
+                    if (a.selectedBounce && b.selectedBounce) {
+                        if (new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else if (a.selectedBounce) {
+                        return -1
+                    } else if (b.selectedBounce) {
                         return 1;
                     }
-                } else if (a.selectedBounce) {
-                    return -1
-                } else if (b.selectedBounce) {
-                    return 1;
-                }
-            });
+                });
+        }
+
+        if (parent.orderBy === 'name') {
+            allTitles = parent.trackList
+                .map(id => getState().titles[id])
+                .sort((a, b) => {
+                    return a.title < b.title ? -1 : 1;
+                });
+        }
 
         const song = allTitles[allTitles.indexOf(currentSong.title) -1];
 

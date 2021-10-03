@@ -2,19 +2,18 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { createTier, editTier, fetchTitles, createTitle, deleteTier } from '../actions';
+import { createTier, editTier, fetchTitles, createTitle, deleteTier, setOrder } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier, setOrder }) => {
 
     const [expand, setExpand] = useState(false);
     const [titlesToRender, setTitlesToRender] = useState(null);
     const [times, setTimes] = useState({});
-    const [orderBy, setOrderBy] = useState('date');
 
     const orderedTitles = useRef({});
 
@@ -34,11 +33,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const renderTitles = () => {
-        console.log(titlesToRender)
 
         const titleList = [...titlesToRender];
 
-        if (orderBy === 'date') {
+        if (!tier.orderBy || tier.orderBy === 'date') {
 
             titleList.sort((a, b) => {
                 if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
@@ -55,7 +53,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
             });
         }
 
-        if (orderBy === 'name') {
+        if (tier.orderBy === 'name') {
 
             titleList.sort((a, b) => {
                 return a.title < b.title ? -1 : 1;
@@ -175,7 +173,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const renderOrderButton = () => {
-        if (orderBy === 'date') {
+        if (!tier.orderBy || tier.orderBy === 'date') {
             return (
                 <div className='order-by'>
                     <div>Order by: </div>
@@ -189,14 +187,16 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         className='order-button'
                         onClick={e => {
                             e.stopPropagation();
-                            setOrderBy('name');
+                            setOrder(tier.id, 'name');
                         }}
                     >
                         ABC
                     </div>
                 </div>
             );
-        } else if (orderBy === 'name') {
+        }
+        
+        if (tier.orderBy === 'name') {
             return (
                 <div className='order-by'>
                     <div>Order by:</div>
@@ -204,7 +204,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         className='order-button'
                         onClick={e => {
                             e.stopPropagation();
-                            setOrderBy('date');
+                            setOrder(tier.id, 'date');
                         }}
                     >
                         Date
@@ -218,9 +218,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                 </div>
             );
         }
-
-     
-    }
+    };
 
     const arrow = expand ? 'down-arrow' : '';
     const open = expand ? 'open' : 'closed';
@@ -262,4 +260,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier })(requireAuth(Tier));
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier, setOrder })(requireAuth(Tier));

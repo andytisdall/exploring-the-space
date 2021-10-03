@@ -47,6 +47,7 @@ export const QUEUE_SONGS = 'QUEUE_SONGS';
 export const NEXT_SONG = 'NEXT_SONG';
 export const CHANGE_VOLUME = 'CHANGE_VOLUME';
 export const INITIALIZE_AUDIO = 'INITIALIZE_AUDIO';
+export const ORDER_TIER = 'ORDER_TIER';
 
 export const SELECT_VERSION = 'SELECT_VERSION';
 export const SELECT_BOUNCE = 'SELECT_BOUNCE';
