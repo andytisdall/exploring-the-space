@@ -35,11 +35,11 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderTitles = () => {
 
-        let titleList;
+        const titleList = titlesToRender;
 
         if (orderBy === 'date') {
 
-            titleList = titlesToRender.sort((a, b) => {
+            titleList.sort((a, b) => {
                 if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
                     if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
                         return -1;
@@ -56,7 +56,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
         if (orderBy === 'name') {
 
-            titleList = titlesToRender.sort((a, b) => {
+            titleList.sort((a, b) => {
                 return a.title < b.title ? -1 : 1;
             });
 
