@@ -34,8 +34,9 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const renderTitles = () => {
+        console.log(titlesToRender)
 
-        const titleList = titlesToRender;
+        const titleList = [...titlesToRender];
 
         if (orderBy === 'date') {
 
