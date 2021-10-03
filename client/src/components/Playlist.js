@@ -117,7 +117,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
     };
 
     const getTime = (track) => {
-        if (!times[track.id]) {
+        if (times[track.id] !== track.duration) {
             setTimes({ ...times, [track.id]: track.duration });
         }
     };
@@ -142,9 +142,9 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                             {renderEditButton()}
                             {renderDeleteButton()}
                     </div>
-                </div>
-                <hr />
+                </div>   
             </div>
+            <hr />
             <div className={`title-container ${open}`}>
                 {expand && renderPlaylistSongs()}
             </div>

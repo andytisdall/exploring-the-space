@@ -77,7 +77,7 @@ const User = ({ user, bands, createBand, fetchBands, editBand, deleteBand, signO
                 </div>
             </div>
             <hr />
-            <div className="row band-list">
+            <div className="band-list">
                 {renderBands()}
             </div>
             

@@ -14,6 +14,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     const [expand, setExpand] = useState(false);
     const [titlesToRender, setTitlesToRender] = useState(null);
     const [times, setTimes] = useState({});
+    const [orderBy, setOrderBy] = useState('date');
 
     const orderedTitles = useRef({});
 
@@ -34,20 +35,32 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderTitles = () => {
 
-        const titleList = titlesToRender.sort((a, b) => {
-            if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
-                if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
+        let titleList;
+
+        if (orderBy === 'date') {
+
+            titleList = titlesToRender.sort((a, b) => {
+                if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
+                    if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else if (orderedTitles.current[a.id]) {
                     return -1;
-                } else {
+                } else if (orderedTitles.current[b.id]) {
                     return 1;
                 }
-            } else if (orderedTitles.current[a.id]) {
-                return -1;
-            } else if (orderedTitles.current[b.id]) {
-                return 1;
-            }
-        });
-        
+            });
+        }
+
+        if (orderBy === 'name') {
+
+            titleList = titlesToRender.sort((a, b) => {
+                return a.title < b.title ? -1 : 1;
+            });
+
+        }
 
         return titleList.map(title => {
             if (title) {
@@ -155,10 +168,50 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const getTime = (track) => {
-        if (!times[track.id]) {
+        if (times[track.id] !== track.duration) {
             setTimes({ ...times, [track.id]: track.duration });
         }
     };
+
+    const renderOrderButton = () => {
+        if (orderBy === 'date') {
+            return (
+                <div className='order-by'>
+                    <div>Order by: </div>
+                    <div className='order-button order-active'>Date</div>
+                    <div
+                        className='order-button'
+                        onClick={e => {
+                            e.stopPropagation();
+                            setOrderBy('name');
+                        }}
+                    >
+                        ABC
+                    </div>
+                </div>
+            );
+        } else if (orderBy === 'name') {
+            return (
+                <div className='order-by'>
+                    <div>Order by:</div>
+                    <div
+                        className='order-button'
+                        onClick={e => {
+                            e.stopPropagation();
+                            setOrderBy('date');
+                        }}
+                    >
+                        Date
+                    </div>
+                    <div className='order-button order-active'>
+                        ABC
+                    </div>
+                </div>
+            );
+        }
+
+     
+    }
 
     const arrow = expand ? 'down-arrow' : '';
     const open = expand ? 'open' : 'closed';
@@ -173,17 +226,17 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                         {renderAddButton()}
                     </div>
                     <div className="tier-count">
-
                         <div className="song-count">{tier.trackList.length} songs</div>
                         <div className="song-count">{renderTotalTime()}</div>
                     </div>
+                    {renderOrderButton()}
                     <div className="tier-display">
                         {renderEditButton()}
                         {renderDeleteButton()}
                     </div>
-                </div>
-                <hr />
+                </div>   
             </div>
+            <hr />
             <div className={`title-container ${open}`}>
                 {expand && titlesToRender && renderTitles()}
             </div>
