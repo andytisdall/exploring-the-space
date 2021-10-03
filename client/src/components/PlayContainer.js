@@ -38,7 +38,9 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
         <div className='play-container'>
             <div className='play-container-time'>{displayTime(song.bounce.duration)}</div>           
             <img
-                src='/images/play.svg' className='play-icon'
+                src='/images/play.svg'
+                className='play-icon'
+                alt="loading..."
                 onClick={onPlay}
             /> 
             <div className='play-container-display'>

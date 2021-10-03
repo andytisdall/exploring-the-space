@@ -46,7 +46,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             selectVersion(versionToSelect, title.id);
             // console.log('select version')
         }
-        if (title.selectedVersion) {
+        if (title.selectedVersion && title.selectedVersion.bounces.length) {
             fetchBounces(title.selectedVersion.id);
             // console.log('fetch bounces')
         }
@@ -102,7 +102,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                     version: title.selectedVersion,
                     bounce: title.selectedBounce
                 });
-                // console.log('title update')
+                // console.log('song update')
                 getTime({ id: title.id, duration: title.selectedBounce.duration });
             }
         } else if (song && !title.selectedBounce) {
