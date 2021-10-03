@@ -178,7 +178,12 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
             return (
                 <div className='order-by'>
                     <div>Order by: </div>
-                    <div className='order-button order-active'>Date</div>
+                    <div
+                        className='order-button order-active'
+                        onClick={e => e.stopPropagation()}
+                    >
+                        Date
+                    </div>
                     <div
                         className='order-button'
                         onClick={e => {
@@ -203,7 +208,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     >
                         Date
                     </div>
-                    <div className='order-button order-active'>
+                    <div
+                        className='order-button order-active'
+                        onClick={e => e.stopPropagation()}
+                    >
                         ABC
                     </div>
                 </div>
