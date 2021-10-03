@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
@@ -6,6 +6,8 @@ import { queueSongs, queuePlaylistSongs, playAudio, throwError } from '../action
 
 
 const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throwError }) => {
+
+    const [loaded, setLoaded] = useState(false);
 
     const displayDate = (date) => {
         return moment.utc(date).format('MM/DD/YY');
@@ -26,6 +28,25 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
         }
     };
 
+    const renderSpinner = () => {
+        return (
+            <div className="sk-circle-fade">
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+                <div className="sk-circle-fade-dot"></div>
+            </div>
+        );
+    };
+
 
     let baseUrl;
     if (process.env.NODE_ENV === 'production') {
@@ -36,12 +57,14 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
 
     return (
         <div className='play-container'>
-            <div className='play-container-time'>{displayTime(song.bounce.duration)}</div>           
+            <div className='play-container-time'>{displayTime(song.bounce.duration)}</div> 
+            {!loaded && renderSpinner()}          
             <img
                 src='/images/play.svg'
                 className='play-icon'
                 alt="loading..."
                 onClick={onPlay}
+                onLoad={() => setLoaded(true)}
             /> 
             <div className='play-container-display'>
                 <p>{song.version.name}</p>
