@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { playAudio, pauseAudio, nextSong, throwError, initializeAudio } from '../actions';
+import { playAudio, pauseAudio, nextSong, prevSong, throwError, initializeAudio } from '../actions';
 
 
 class AudioDisplay extends React.Component {
@@ -132,10 +132,16 @@ class AudioDisplay extends React.Component {
         this.props.initializeAudio();
     }
 
+    prevSong = () => {
+        if (this.audio.current.currentTime < 1) {
+            this.props.prevSong();
+        } else {
+            this.audio.current.currentTime = 0;
+        }
+    }
+
     nextSong = () => {
-        // setTimeout(() => {
         this.props.nextSong();
-        // }, 400);
     }
 
     play = () => {
@@ -171,9 +177,24 @@ class AudioDisplay extends React.Component {
                             <div className="playbar-title">
                                 <p>{this.props.song.title.title}</p>
                             </div>
-                        <div className="big-play-container" onClick={this.onPauseButton}>
-                            <img className="big-play-btn" src={this.props.play ? "/images/pause.svg" : "/images/play.svg"} />
-                        </div>
+                            <div className="big-play-container">
+                                <img
+                                    src="/images/prev.svg"
+                                    className="audio-controls"
+                                    onClick={this.prevSong}
+                                />
+                                <img
+                                    className="big-play-btn"
+                                    src={this.props.play ? "/images/pause.svg" : "/images/play.svg"}
+                                    onClick={this.onPauseButton}
+                                />
+                                <img
+                                    src="/images/next.svg"
+                                    className="audio-controls"
+                                    onClick={this.nextSong}
+                                />
+                            </div>
+                    
                         <div className="playbar-info">
                             <div className="playbar-info-detail">
                                 <p>Version:</p>
@@ -218,4 +239,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, throwError, initializeAudio })(AudioDisplay);
+export default connect(mapStateToProps, { playAudio, pauseAudio, nextSong, prevSong, throwError, initializeAudio })(AudioDisplay);

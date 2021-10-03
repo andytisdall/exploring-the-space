@@ -261,8 +261,8 @@ hr {
 .big-play-container {
   padding-top: 0.2rem;
   display: flex;
-  justify-content: center;
-  width: 10%;
+  justify-content: space-between;
+  width: 20%;
   align-items: center;
 }
 
@@ -280,6 +280,12 @@ hr {
 
 .big-play-btn:active {
   transform: translateY(-1px);
+}
+
+.audio-controls {
+  height: 2rem;
+  width: auto;
+  color: rgb(163, 115, 226);
 }
 
 .playbar-info {

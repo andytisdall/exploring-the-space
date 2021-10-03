@@ -59,6 +59,7 @@
 
   .playbar-title {
     margin-left: 0;
+    width: 55%;
   }
 
   .playbar-title p {
@@ -69,13 +70,29 @@
     padding-bottom: 0.2rem;
   }
 
+  .big-play-container {
+    width: 65%;
+  }
+
   .volume-container {
     padding-top: 0.5rem;
     width: 150px;
   }
 
+  .playbar-info {
+    flex-direction: column;
+  }
+
+  .playbar-info-detail {
+    margin-bottom: 0.5rem;
+  }
+
   .playbar-info-detail p {
     font-size: 0.65rem;
+  }
+
+  .audio-controls {
+    height: 1.5rem;
   }
 
   /* HEADER */
