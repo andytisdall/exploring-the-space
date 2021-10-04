@@ -74,7 +74,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const renderAddButton = () => {
         if (authorized) {
-            return (
+            return <>
+                <div>
+                    Add a Title to this Tier
+                </div>
                 <AddButton
                     title={`Add a Title to ${tier.name}`}
                     image="images/add.png"
@@ -93,9 +96,9 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     form={`add-title-${tier.id}`}
                     addClass='add-left'
                 />
-            )
+            </>;
         }
-    }
+    };
 
     const renderEditButton = () => {
         if (authorized) {
@@ -222,11 +225,10 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const renderOptions = () => {
+
+
         return <>  
             <div className="order-by">
-                <div>
-                    Add a Title to this Tier
-                </div>
                 {renderAddButton()}
             </div>
             {renderOrderButton()}     
