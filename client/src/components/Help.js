@@ -16,7 +16,7 @@ const Help = () => {
                 Here's How This Works
             </h1>
             <div className="tldr">
-                TL;DR: Bands contain Tiers, which contain Titles, which contain different versions, each of which can have one or more recordings. Bands also have Playlists which are collections of particular recordings.
+                TL;DR: Bands contain Tiers, which contain Titles (songs), which contain different versions, each of which can have one or more recordings. Bands also have Playlists which are collections of particular recordings.
             </div>
             <p>
                 Each user can have 1 or more bands.  Each band has their own page.

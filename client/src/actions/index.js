@@ -45,7 +45,7 @@ import {
 import history from '../history';
 import _ from 'lodash';
 
-const errorHandler = err => {
+const errorHandler = err => (dispatch) => {
     let message;
     if (err.response) {
         message = err.response.data.error
@@ -53,7 +53,10 @@ const errorHandler = err => {
         message = err.message;
     }
     console.log(err)
-    return { type: ERROR, payload: message };
+    setTimeout(() => {
+        dispatch(throwError(null));
+    }, 10000);
+    dispatch({ type: ERROR, payload: message });
 };
 
 

@@ -51,29 +51,25 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signOu
         );
     };
 
-    if (!band) {
-        return (
-            <div className="no-band">
-                <h1>This band does not exist on Exploring the Space, but you can create it.</h1>
-                <div className="home-buttons">
-                    <Link to="/signin">
-                        Sign In
-                    </Link>
-                    <Link to="/signup">
-                        Sign Up
-                    </Link>
-                    <Link to="/help">
-                        What Is It?
-                    </Link>
-                </div>
-            </div>
-        );
-    }
+    const showContent = () => {
 
-    return <>
-        
-        <div className="header">
-            <AudioDisplay />
+        if (!band) {
+            return (
+                <div className="no-band">
+                    <h1>This band does not exist on Exploring the Space, but you can create it.</h1>
+                    <div className="home-buttons">
+                        <Link to="/">
+                            Home
+                        </Link>
+                        <Link to="/help">
+                            What Is It?
+                        </Link>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
             <div className="band-header">
                 <div className="band-name">
                     <h1>{band && band.name}</h1>
@@ -93,9 +89,19 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signOu
                     <img src="/images/volume.svg" />
                 </div>
             </div>
+        );
+    };
+
+
+
+    return <>
+        
+        <div className="header">
+            <AudioDisplay />
+            {showContent()}
         </div>
 
-        <Main band={band} />
+        {band && <Main band={band} />}
 
     </>;
 

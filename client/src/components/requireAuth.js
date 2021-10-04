@@ -31,7 +31,6 @@ export default ChildComponent => {
         }
 
         render() {
-
             return <ChildComponent {...this.props} authorized={this.state.authorized} handleUpdate={this.handleUpdate} />;
 
         }

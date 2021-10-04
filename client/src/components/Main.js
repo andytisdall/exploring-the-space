@@ -8,7 +8,7 @@ import Playlist from './Playlist';
 import AddButton from './AddButton';
 import requireAuth from './requireAuth';
 
-const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlists, band, authorized, createPlaylist, currentSong }) => {
+const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlists, band, authorized, createPlaylist, currentSong, handleUpdate, user }) => {
 
     const [tierList, setTierList] = useState([]);
     const [playlistList, setPlaylistList] = useState([]);
@@ -17,6 +17,10 @@ const BodyContainer = ({ fetchPlaylists, createTier, fetchTiers, tiers, playlist
         fetchTiers(band.id);
         fetchPlaylists(band.id);
     }, []);
+
+    useEffect(() => {
+        handleUpdate();
+    }, [user]);
 
     useEffect(() => {
         setTierList(band.tiers.map(id => tiers[id]).sort((a, b) => {
@@ -136,7 +140,8 @@ const mapStateToProps = state => {
     return {
         tiers: state.tiers,
         playlists: state.playlists,
-        currentSong: state.audio.currentSong
+        currentSong: state.audio.currentSong,
+        user: state.auth.user
     };
 };
 

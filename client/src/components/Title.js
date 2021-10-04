@@ -25,7 +25,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
         setVersionList(title.versions.map(id => versions[id]));
         // console.log('set version list')
         
-    }, [versions, title]);
+    }, [versions]);
 
     useEffect(() => {
         if (versionList && versionList[0]) {
@@ -91,7 +91,6 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
 
     useEffect(() => {
-
         if (title.selectedBounce && title.selectedVersion) {
 
             if (!song || song.selectedVersion !== song.version || song.selectedBounce !== song.bounce) {
@@ -110,7 +109,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             getTime({ id: title.id, duration: 0 });
         }
         
-    }, [titles[title.id].selectedVersion, titles[title.id].selectedBounce]);
+    }, [titles[title.id]]);
 
 
     const renderPlayContainer = () => {

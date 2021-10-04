@@ -1,9 +1,16 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { throwError } from '../actions';
+import history from '../history';
 
 const Error = ({ error, throwError }) => {
+
+    useEffect(() => {
+        history.listen(location => {
+            throwError(null);
+        });
+    }, [history]);
 
     if (!error) {
         return null;

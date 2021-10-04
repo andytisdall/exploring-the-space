@@ -18,11 +18,11 @@ export default (state = {}, action) => {
         case SELECT_VERSION:
             const versionTitle = state[action.payload.titleId];
             versionTitle.selectedVersion = action.payload.version;
-            return { ...state, [versionTitle.id]: versionTitle };
+            return { ...state, [versionTitle.id]: { ...versionTitle } };
         case SELECT_BOUNCE:
             const bounceTitle = state[action.payload.titleId];
             bounceTitle.selectedBounce = action.payload.bounce;
-            return { ...state, [bounceTitle.id]: bounceTitle }
+            return { ...state, [bounceTitle.id]: { ...bounceTitle } }
         case CREATE_VERSION:
             const addToTitle = state[action.payload.title];
             addToTitle.versions.push(action.payload.version.id);
