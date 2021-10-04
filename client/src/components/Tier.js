@@ -37,7 +37,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
         const titleList = [...titlesToRender];
 
-        if (tier.orderBy === 'date') {
+        if (!tier.orderBy || tier.orderBy === 'date') {
 
             titleList.sort((a, b) => {
                 if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
@@ -174,7 +174,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     };
 
     const renderOrderButton = () => {
-        if (tier.orderBy === 'date') {
+        if (!tier.orderBy || tier.orderBy === 'date') {
             return (
                 <div className='order-by'>
                     <div>Order by: </div>
