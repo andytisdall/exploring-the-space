@@ -62,7 +62,6 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
             <img
                 src='/images/play.svg'
                 className='play-icon'
-                alt="loading..."
                 onClick={onPlay}
                 onLoad={() => setLoaded(true)}
             /> 
