@@ -82,9 +82,7 @@ class AudioDisplay extends React.Component {
         document.addEventListener('keydown', this.setSpaceBarToPlay);
 
 
-        this.audio.current.addEventListener('loadedmetadata', this.audio.current.play);
-        
-
+        this.audio.current.addEventListener('loadedmetadata', this.playOnLoad);
         
     }
 
@@ -127,9 +125,15 @@ class AudioDisplay extends React.Component {
         this.audio.current.removeEventListener('timeupdate', this.updateSlider);
         this.audio.current.removeEventListener('error', this.audioError);
         this.audio.current.removeEventListener('ended', this.nextSong);
-        this.audio.current.removeEventListener('loadedmetadata', this.audio.current.play);
+        this.audio.current.removeEventListener('loadedmetadata', this.playOnLoad);
 
         this.props.initializeAudio();
+    }
+
+    playOnLoad = () => {
+        if (this.props.play) {
+            this.audio.current.play();
+        }
     }
 
     prevSong = () => {
