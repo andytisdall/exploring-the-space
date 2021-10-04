@@ -205,10 +205,28 @@ hr {
   margin-left: 2rem;
   text-align: center;
   font-size: 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-x {
+  font-size: 2.3rem;
+  color: black;
+  margin: 0 1rem;
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 0 0.9rem;
 }
 
 .error-margin {
   padding-top: 5rem;
+}
+
+.no-band {
+  width: 80%;
+  margin: 1rem auto;
+  text-align: center;
 }
 
 /* HEADER */
@@ -247,15 +265,15 @@ hr {
 .playbar-title {
   width: 45%;
   margin-left: 0.5rem;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .playbar-title p {
   font-size: 1.5rem;
-  color: #f7ccff;
-  display: inline-block;
+  color: #ffd64e;
   padding-bottom: 5px;
-  /* border-bottom: 1px solid #f7ccff; */
 }
 
 .big-play-container {
@@ -286,6 +304,7 @@ hr {
   height: 2rem;
   width: auto;
   color: rgb(163, 115, 226);
+  cursor: pointer;
 }
 
 .playbar-info {
@@ -461,7 +480,7 @@ h2 {
   font-size: 1.4rem;
   padding-left: 1rem;
   margin: 0px;
-  margin-bottom: 0.2rem;
+
   color: rgb(227, 210, 255);
 }
 
@@ -478,13 +497,13 @@ h2 {
 /* TIER */
 
 .tier {
-  padding-top: 0.3rem;
+  padding: 0.3rem 0 0.1rem 0;
   margin-left: 2rem;
 }
 
 .tier-name {
   align-items: center;
-  width: 40%;
+  width: 45%;
   display: flex;
 }
 
@@ -492,11 +511,11 @@ h2 {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 15%;
+  width: 35%;
 }
 
 .song-count {
-  margin-left: 1rem;
+  margin: 0 1rem 0 1rem;
 }
 
 .tier-display {
@@ -506,19 +525,35 @@ h2 {
   margin: 0 0.5rem;
 }
 
+.tier-options {
+  display: flex;
+  margin: 0 4rem;
+  padding: 0;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 0.7rem;
+  transition: all 0.3s;
+  transform: scaleY(0);
+}
+
+.options-visible {
+  border-top: solid 1px rgba(179, 231, 255, 0.781);
+  transform: scaleY(1);
+  padding-bottom: 0.2rem;
+  padding-top: 0.3rem;
+}
+
 .order-by {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20%;
-  font-size: 0.7rem;
 }
 
 .order-button {
   border: 1px solid rgb(212, 179, 255);
   cursor: pointer;
   padding: 0.2rem 0.4rem;
-  margin-left: 0.3rem;
+  margin-left: 0.5rem;
   border-radius: 50%;
 }
 
@@ -535,7 +570,7 @@ h2 {
 
 .closed {
   opacity: 0;
-  transform: translateY(-2rem) scaleY(0.05);
+  transform: translateY(-1rem) scaleY(0.05);
 }
 
 .title-margin {

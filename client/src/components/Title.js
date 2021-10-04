@@ -198,9 +198,9 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                         displayName={title.title}
                     />
                 </div>
-            )
+            );
         }
-    }
+    };
 
     const arrow = expand ? 'down-arrow' : '';
 

@@ -11,7 +11,9 @@ const Error = ({ error, throwError }) => {
 
     return (
         <div className="error" onClick={() => throwError(null)}>
+            <div className="error-x">X</div>
             {error}
+            <div className="error-x">X</div>
         </div>
     );
 

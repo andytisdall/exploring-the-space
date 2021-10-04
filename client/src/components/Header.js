@@ -7,7 +7,7 @@ import Main from './Main';
 import AudioDisplay from './AudioDisplay';
 import requireAuth from './requireAuth';
 
-const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signedIn, signOut, volume, changeVolume }) => {
+const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signOut, volume, changeVolume }) => {
 
     const [expand, setExpand] = useState(false);
     const menu = useRef(null);
@@ -29,7 +29,6 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signed
             return;
         }
         setExpand(false);
-        
     };
 
     const renderAdmin = () => {
@@ -52,14 +51,23 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signed
         );
     };
 
-    const showMain = () => {
-        if (!band) {
-            return null
-        }
-        if (signedIn && !user) {
-            return null
-        }
-        return <Main band={band}/>
+    if (!band) {
+        return (
+            <div className="no-band">
+                <h1>This band does not exist on Exploring the Space, but you can create it.</h1>
+                <div className="home-buttons">
+                    <Link to="/signin">
+                        Sign In
+                    </Link>
+                    <Link to="/signup">
+                        Sign Up
+                    </Link>
+                    <Link to="/help">
+                        What Is It?
+                    </Link>
+                </div>
+            </div>
+        );
     }
 
     return <>
@@ -87,7 +95,7 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signed
             </div>
         </div>
 
-        {showMain()}
+        <Main band={band} />
 
     </>;
 
@@ -97,7 +105,6 @@ const mapStateToProps = state => {
     return {
         band: state.bands.currentBand,
         user: state.auth.currentUser,
-        signedIn: state.auth.isSignedIn,
         volume: state.audio.volume
     }
 }

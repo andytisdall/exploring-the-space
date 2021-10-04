@@ -177,7 +177,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         if (!tier.orderBy || tier.orderBy === 'date') {
             return (
                 <div className='order-by'>
-                    <div>Order by: </div>
+                    <div>Order titles by: </div>
                     <div
                         className='order-button order-active'
                         onClick={e => e.stopPropagation()}
@@ -200,7 +200,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         if (tier.orderBy === 'name') {
             return (
                 <div className='order-by'>
-                    <div>Order by:</div>
+                    <div>Order titles by:</div>
                     <div
                         className='order-button'
                         onClick={e => {
@@ -221,6 +221,18 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     };
 
+    const renderOptions = () => {
+        return <>  
+            <div className="order-by">
+                <div>
+                    Add a Title to this Tier
+                </div>
+                {renderAddButton()}
+            </div>
+            {renderOrderButton()}     
+        </>;
+    };
+
     const arrow = expand ? 'down-arrow' : '';
     const open = expand ? 'open' : 'closed';
 
@@ -231,18 +243,20 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
                     <div className="tier-name">
                         <img className={`arrow ${arrow}`} src={`images/right-arrow.svg`} />
                         <h2>{tier.name}</h2>
-                        {renderAddButton()}
+                        
                     </div>
                     <div className="tier-count">
                         <div className="song-count">{tier.trackList.length} songs</div>
                         <div className="song-count">{renderTotalTime()}</div>
                     </div>
-                    {renderOrderButton()}
                     <div className="tier-display">
                         {renderEditButton()}
                         {renderDeleteButton()}
                     </div>
                 </div>   
+            </div>
+            <div className={`tier-options ${expand ? 'options-visible' : ''}`}>
+                {expand && renderOptions()}
             </div>
             <hr />
             <div className={`title-container ${open}`}>

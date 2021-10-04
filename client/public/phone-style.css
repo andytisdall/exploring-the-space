@@ -48,9 +48,7 @@
   /* PLAYBAR */
 
   .playbar {
-    padding: 0;
     margin-bottom: 0.2rem;
-    width: 96%;
   }
 
   .playbar-background {
@@ -63,7 +61,7 @@
   }
 
   .playbar-title p {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .playbar-header {
@@ -129,8 +127,8 @@
     margin-left: 0.3rem;
   }
 
-  .tier-count {
-    width: 20%;
+  .tier-options {
+    margin: 0 2rem;
   }
 
   .order-by {
