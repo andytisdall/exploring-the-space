@@ -93,17 +93,15 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     useEffect(() => {
         if (title.selectedBounce && title.selectedVersion) {
 
-            if (!song || song.selectedVersion !== song.version || song.selectedBounce !== song.bounce) {
-
-                setSong({
-                    tier,
-                    title,
-                    version: title.selectedVersion,
-                    bounce: title.selectedBounce
-                });
-                // console.log('song update')
-                getTime({ id: title.id, duration: title.selectedBounce.duration });
-            }
+            setSong({
+                tier,
+                title: titles[title.id],
+                version: title.selectedVersion,
+                bounce: title.selectedBounce
+            });
+            // console.log('song update')
+            getTime({ id: title.id, duration: title.selectedBounce.duration });
+            
         } else if (song && !title.selectedBounce) {
             setSong(null);
             getTime({ id: title.id, duration: 0 });

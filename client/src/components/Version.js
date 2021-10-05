@@ -18,7 +18,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
 
     useEffect(() => {
         // console.log(selectedVersion);
-        if (selectedVersion && selectedVersion !== title.selectedVersion) {
+        if (selectedVersion !== title.selectedVersion) {
             selectVersion(selectedVersion, title.id);
             setBounceList(selectedVersion.bounces.map(id => bounces[id]));
             fetchBounces(selectedVersion.id)
@@ -32,7 +32,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     }, [bounces]);
 
     useEffect(() => {
-        if (selectedVersion !== title.selectedVersion) {
+        if (title.selectedVersion && selectedVersion !== title.selectedVersion) {
             setSelectedVersion(title.selectedVersion);
             fetchBounces(title.selectedVersion.id);
         }

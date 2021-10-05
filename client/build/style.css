@@ -201,9 +201,8 @@ hr {
   border: 2px solid white;
   position: fixed;
   z-index: 30;
-  width: 90%;
   height: 2rem;
-  margin-left: 2rem;
+  margin: 0 auto;
   text-align: center;
   font-size: 1.3rem;
   display: flex;
@@ -213,9 +212,9 @@ hr {
 
 .error-x {
   font-size: 2.3rem;
-  color: black;
-  margin: 0 1rem;
-  border: 1px solid black;
+  color: rgb(202, 199, 199);
+  margin: 0 0.5rem;
+  border: 1px solid rgb(197, 189, 189);
   border-radius: 50%;
   padding: 0 0.9rem;
 }
@@ -242,7 +241,6 @@ hr {
   max-width: 65rem;
   width: 100%;
   padding-top: 1rem;
-  padding-right: 1rem;
   box-sizing: border-box;
 }
 
@@ -256,6 +254,7 @@ hr {
   max-width: 65rem;
   position: relative;
   z-index: 10;
+  margin: 0 auto;
 }
 
 .playbar-header {
@@ -499,7 +498,7 @@ h2 {
 /* TIER */
 
 .tier {
-  padding: 0.3rem 0 0.1rem 0;
+  padding: 0.3rem 0.5rem 0.1rem 0;
   margin-left: 2rem;
 }
 

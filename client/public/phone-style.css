@@ -45,6 +45,12 @@
     width: 15px;
   }
 
+  /* ERROR */
+
+  .error-margin {
+    padding-top: 5rem;
+  }
+
   /* PLAYBAR */
 
   .playbar {
@@ -69,7 +75,7 @@
   }
 
   .big-play-container {
-    width: 65%;
+    width: 40%;
   }
 
   .volume-container {
@@ -201,8 +207,8 @@
   }
 
   .dropbtn {
-    font-size: 0.55rem;
-    padding: 0.2rem;
+    font-size: 0.6rem;
+    padding: 0.3rem;
   }
 
   .detail-notes {
