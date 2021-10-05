@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -12,6 +12,9 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
     const [bounceList, setBounceList] = useState(null);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         // console.log(selectedVersion);
@@ -35,21 +38,15 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
     }, [versions, title.selectedVersion]);
 
-    const renderVersionList = () => {
-        const versionList = versions.filter(v => v.id !== selectedVersion.id);
+    useEffect(() => {
+        if (dropdownVisible) {
+            document.addEventListener('click', onBodyClick, {capture: true});
+        } else {
+            document.removeEventListener('click', onBodyClick, {capture: true});
+        }
+    }, [dropdownVisible]);
 
-        return versionList.map(v => {
-            const current = v.current ? <span className="list-current"> * current</span> : null;
-            return <div
-                className="dropdown-link change-version"
-                onClick={() => setSelectedVersion(v)}
-                key={v.id}
-            >
-                    {v.name}
-                    {current}
-            </div>
-        });
-    };
+
     
     const versionCount = () => {
         let count;
@@ -160,14 +157,49 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
     };
 
+    const renderVersionList = () => {
+        if (dropdownVisible) {
+            const versionList = versions.filter(v => v.id !== selectedVersion.id);
+
+            return versionList.map(v => {
+                const current = v.current ? <span className="list-current"> * current</span> : null;
+                return <div
+                    className="dropdown-link"
+                    onClick={() => {
+                        setSelectedVersion(v);
+                        setDropdownVisible(false);
+                    }}
+                    key={v.id}
+                >
+                        {v.name}
+                        {current}
+                </div>
+            });
+        }
+    };
+
+    const onBodyClick = e => {
+
+        if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
+            return;
+        }
+
+        if (dropdownVisible) {
+            setDropdownVisible(false);
+        }
+    };
+
     const renderVersionDetail = () => {
         if (selectedVersion) {
             return (
                 <div className="detail-content">
                     <div className="detail-header">
                         {versionCount()}
-                        <div className="dropdown">
-                            <button className="dropbtn">
+                        <div className="dropdown" ref={dropdownRef}>
+                            <button
+                                className="dropbtn"
+                                onClick={() => setDropdownVisible(!dropdownVisible)}
+                            >
                                 {selectedVersion.name}
                             </button>
                             <div className="dropdown-content">

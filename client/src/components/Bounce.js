@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
@@ -13,6 +13,10 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
     const [uploadActive, setUploadActive] = useState(false);
+
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         if (selectedBounce && selectedBounce !== title.selectedBounce) {
@@ -31,13 +35,31 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         setUploadActive(false);
     }, [title.selectedBounce]);
 
+    useEffect(() => {
+        if (dropdownVisible) {
+            document.addEventListener('click', onBodyClick, {capture: true});
+        } else {
+            document.removeEventListener('click', onBodyClick, {capture: true});
+        }
+    }, [dropdownVisible]);
+
+    const onBodyClick = e => {
+
+        if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
+            return;
+        }
+
+        if (dropdownVisible) {
+            setDropdownVisible(false);
+        }
+    };
+
     const displayDate = date => {
         return moment.utc(date).format('MM/DD/yy');
     }
 
     const renderBounceList = () => {
-
-        if (bounces[0]) {
+        if (dropdownVisible) {
 
             const bounceList = bounces.filter(b => b.id !== selectedBounce.id);
             bounceList.sort((a, b) => a.date < b.date ? 1 : -1);
@@ -45,8 +67,11 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
             return bounceList.map(b => {
                 const current = b.latest ? <span className="list-current"> * current</span> : null;
                 return <div
-                    className="dropdown-link change-song"
-                    onClick={() => setSelectedBounce(b)}
+                    className="dropdown-link"
+                    onClick={() => {
+                        setSelectedBounce(b);
+                        setDropdownVisible(false);
+                    }}
                     key={b.id}
                 >
                     {displayDate(b.date)}
@@ -199,8 +224,11 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                 <div className='detail-content'>
                     <div className='detail-header'>
                         {bounceCount()}
-                        <div className='dropdown'>
-                            <button className='dropbtn'>
+                        <div className='dropdown' ref={dropdownRef}>
+                            <button
+                                className='dropbtn'
+                                onClick={() => setDropdownVisible(!dropdownVisible)}
+                            >
                                 {displayDate(selectedBounce.date)}
                             </button>
                             <div className='dropdown-content'>
