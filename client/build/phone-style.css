@@ -47,6 +47,11 @@
 
   /* ERROR */
 
+  .error {
+    font-size: 0.75rem;
+    width: 75%;
+  }
+
   .error-margin {
     padding-top: 5rem;
   }
@@ -75,7 +80,8 @@
   }
 
   .big-play-container {
-    width: 40%;
+    width: 30%;
+    min-width: 8rem;
   }
 
   .volume-container {
@@ -85,6 +91,7 @@
 
   .playbar-info {
     flex-direction: column;
+    justify-content: space-around;
   }
 
   .playbar-info-detail {
