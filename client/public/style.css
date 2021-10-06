@@ -635,6 +635,7 @@ h3 {
 
 .play-icon-container {
   position: relative;
+  min-width: 2rem;
 }
 
 .play-icon {

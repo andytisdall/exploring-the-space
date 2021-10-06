@@ -59,7 +59,7 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
         <div className='play-container'>
             <div className='play-container-time'>{displayTime(song.bounce.duration)}</div> 
             <div className="play-icon-container">
-                {renderSpinner()}          
+                {!loaded && renderSpinner()}          
                 <img
                     src='/images/play.svg'
                     className='play-icon'

@@ -171,6 +171,10 @@
     font-size: 0.6rem;
   }
 
+  .play-icon-container {
+    min-width: 1.6rem;
+  }
+
   .play-icon {
     margin-right: 0.5rem;
     height: 1.6rem;
