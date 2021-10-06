@@ -101,7 +101,7 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signOu
             {showContent()}
         </div>
 
-        {band && <Main band={band} headerUpdate={handleUpdate} />}
+        {band && <Main />}
 
     </>;
 
