@@ -195,7 +195,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     const latestTag = () => {
         if (selectedBounce.latest) {
             return (
-                <div className="latest">
+                <div className="current">
                     Current
                 </div>
             );
@@ -234,10 +234,8 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                             <div className='dropdown-content'>
                                 {renderBounceList()}
                             </div>
-                        </div>
-                        <div>
-                            {latestTag()}
-                        </div>
+                        </div>                       
+                        {latestTag()}
                     </div>
                     <div className='detail-notes'>
                         <div className="detail-notes-title">Notes:</div>

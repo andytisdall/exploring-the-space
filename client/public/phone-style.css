@@ -59,7 +59,7 @@
   /* PLAYBAR */
 
   .playbar {
-    margin-bottom: 0.2rem;
+    width: 98%;
   }
 
   .playbar-background {
@@ -107,6 +107,11 @@
   }
 
   /* HEADER */
+
+  .header {
+    padding-top: 0.5rem;
+    width: 100%;
+  }
 
   .menu {
     flex-direction: column;
@@ -197,20 +202,27 @@
   /* VERSION */
 
   .version-container {
-    margin-left: 1.5rem;
+    margin-left: 0.75rem;
     /* margin-top: 0.3rem; */
   }
 
   .detail-box {
     padding: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .detail-header {
+    gap: 0.5rem;
+  }
+
+  .detail-content {
+    margin-bottom: 0.5rem;
   }
 
   h5 {
     font-size: 0.75rem;
-  }
-
-  .detail-content {
-    padding-bottom: 0.3rem;
+    margin-right: 0.5rem;
+    margin-left: 0;
   }
 
   .detail-buttons {
@@ -223,10 +235,8 @@
   }
 
   .detail-notes {
-    width: 25%;
     font-size: 0.5rem;
-    padding-bottom: 0.5rem;
-    margin-left: 0.5rem;
+    margin-top: 0.6rem;
   }
 
   .detail-notes-title {
@@ -237,7 +247,7 @@
   .latest {
     padding: 3px;
     font-size: 0.4rem;
-    margin-top: 0.4rem;
+    margin-left: 0.5rem;
   }
 
   /* PLAYLIST */
