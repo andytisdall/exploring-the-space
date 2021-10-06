@@ -268,4 +268,11 @@
   .help h3 {
     font-size: 1.2rem;
   }
+
+  /*  SPINNER */
+
+  .sk-circle-fade {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
 }

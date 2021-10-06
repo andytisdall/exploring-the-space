@@ -633,9 +633,13 @@ h3 {
   width: 10%;
 }
 
+.play-icon-container {
+  position: relative;
+}
+
 .play-icon {
   display: block;
-  height: 1.8rem;
+  height: 2rem;
   margin: auto 0.5rem;
   opacity: 1;
   transition: all 0.2s;
@@ -997,9 +1001,11 @@ h5 {
 /* SPINNER */
 
 .sk-circle-fade {
-  width: 1.4rem;
-  height: 1.4rem;
-  position: relative;
+  width: 1.7rem;
+  height: 1.7rem;
+  position: absolute;
+  left: 0.7rem;
+  top: 2px;
 }
 
 .sk-circle-fade-dot {

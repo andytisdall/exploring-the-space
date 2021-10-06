@@ -58,13 +58,15 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
     return (
         <div className='play-container'>
             <div className='play-container-time'>{displayTime(song.bounce.duration)}</div> 
-            {!loaded && renderSpinner()}          
-            <img
-                src='/images/play.svg'
-                className='play-icon'
-                onClick={onPlay}
-                onLoad={() => setLoaded(true)}
-            /> 
+            <div className="play-icon-container">
+                {renderSpinner()}          
+                <img
+                    src='/images/play.svg'
+                    className='play-icon'
+                    onClick={onPlay}
+                    onLoad={() => setLoaded(true)}
+                /> 
+            </div>
             <div className='play-container-display'>
                 <p>{song.version.name}</p>
                 <p>{displayDate(song.bounce.date)}</p>
