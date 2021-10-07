@@ -677,18 +677,18 @@ h3 {
 /* VERSION */
 
 .version-container {
-  margin-left: 2rem;
   display: flex;
+  justify-content: center;
   color: rgb(248, 147, 240);
   transition: all 0.2s;
+  display: flex;
 }
 
 .detail-box {
   margin-top: 0.5rem;
-  width: 35%;
+  width: 30%;
   border: solid white 1px;
   padding: 0.7rem;
-  margin-right: 1rem;
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -708,18 +708,17 @@ h3 {
 
 .detail-header {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 h5 {
   font-size: 1.1rem;
   display: block;
   width: max-content;
-  margin: 0 1rem 0 0.5rem;
   letter-spacing: 0.7px;
+  margin: 0;
 }
 
 .dropbtn {
@@ -759,12 +758,11 @@ h5 {
   font-size: 0.7rem;
   color: rgb(228, 125, 125);
   display: inline-block;
-  padding: 3px 5px;
+  padding: 4px 6px;
   border: 1px solid rgb(228, 125, 125);
   border-radius: 40px;
   text-align: center;
   text-transform: lowercase;
-  margin-left: 1rem;
 }
 
 .detail-notes {
@@ -790,11 +788,13 @@ h5 {
   justify-content: space-around;
 }
 
-/* BOUNCE */
-
-.bounce {
-  width: 55%;
+.version-arrow {
+  font-size: 5rem;
+  margin: 2rem;
+  align-self: center;
 }
+
+/* BOUNCE */
 
 .upload-image {
   font-size: 2rem;

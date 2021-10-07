@@ -176,10 +176,6 @@
     font-size: 0.6rem;
   }
 
-  .play-icon-container {
-    min-width: 2.1rem;
-  }
-
   .play-icon {
     margin-right: 0.5rem;
     height: 1.6rem;
@@ -201,28 +197,16 @@
 
   /* VERSION */
 
-  .version-container {
-    margin-left: 0.75rem;
-    /* margin-top: 0.3rem; */
-  }
-
   .detail-box {
     padding: 0.5rem;
-    margin-right: 0.5rem;
-  }
-
-  .detail-header {
-    gap: 0.5rem;
   }
 
   .detail-content {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   h5 {
-    font-size: 0.75rem;
-    margin-right: 0.5rem;
-    margin-left: 0;
+    font-size: 0.8rem;
   }
 
   .detail-buttons {
@@ -245,9 +229,12 @@
 
   .current,
   .latest {
-    padding: 3px;
     font-size: 0.4rem;
-    margin-left: 0.5rem;
+  }
+
+  .version-arrow {
+    font-size: 3rem;
+    margin: 1rem;
   }
 
   /* PLAYLIST */

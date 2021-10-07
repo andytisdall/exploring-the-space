@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -7,14 +7,12 @@ import Bounce from './Bounce';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
+import DetailBox from './DetailBox';
 
 const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized, editVersion, deleteVersion }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
     const [bounceList, setBounceList] = useState(null);
-    const [dropdownVisible, setDropdownVisible] = useState(false);
-
-    const dropdownRef = useRef(null);
 
     useEffect(() => {
         // console.log(selectedVersion);
@@ -38,28 +36,6 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
     }, [versions, title.selectedVersion]);
 
-    useEffect(() => {
-        if (dropdownVisible) {
-            document.addEventListener('click', onBodyClick, {capture: true});
-        } else {
-            document.removeEventListener('click', onBodyClick, {capture: true});
-        }
-    }, [dropdownVisible]);
-
-
-    
-    const versionCount = () => {
-        let count;
-        if (versions.length === 1) {
-            count = '1 Version:';
-        } else {
-            count = `${versions.length} Versions:`
-        }
-
-        return (
-            <h5>{count}</h5>
-        );
-    };
     
     const renderBounces = () => {
 
@@ -147,98 +123,30 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
     };
 
-    const latestTag = () => {
-        if (selectedVersion.current) {
-            return (
-                <div className="current">
-                    Current
-                </div>
-            );
-        }
+    const itemList = () => {
+        return versions.filter(v => v.id !== selectedVersion.id);
     };
 
-    const renderVersionList = () => {
-        if (dropdownVisible) {
-            const versionList = versions.filter(v => v.id !== selectedVersion.id);
-
-            return versionList.map(v => {
-                const current = v.current ? <span className="list-current"> * current</span> : null;
-                return <div
-                    className="dropdown-link"
-                    onClick={() => {
-                        setSelectedVersion(v);
-                        setDropdownVisible(false);
-                    }}
-                    key={v.id}
-                >
-                        {v.name}
-                        {current}
-                </div>
-            });
-        }
+    const displayVersion = v => {
+        return `${v.name}`;
     };
-
-    const onBodyClick = e => {
-
-        if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
-            return;
-        }
-
-        if (dropdownVisible) {
-            setDropdownVisible(false);
-        }
-    };
-
-    const renderVersionDetail = () => {
-        if (selectedVersion) {
-            return (
-                <div className="detail-content">
-                    <div className="detail-header">
-                        {versionCount()}
-                        <div className="dropdown" ref={dropdownRef}>
-                            <button
-                                className="dropbtn"
-                                onClick={() => setDropdownVisible(!dropdownVisible)}
-                            >
-                                {selectedVersion.name}
-                            </button>
-                            <div className="dropdown-content">
-                                {renderVersionList()}
-                            </div>
-                        </div>
-                        {latestTag()}
-                    </div>
-                    <div className="detail-notes">
-                        <div className="detail-notes-title">Notes:</div>
-                        <p>{selectedVersion.notes}</p>
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div className="detail-content">
-                    <div className="detail-header">
-                        <h5>No Versions for this Song Yet</h5>
-                    </div>
-                </div>
-            );
-        }
-    };
-
-
-
     
-    return <>
-            <div className="detail-box">
-                {renderVersionDetail()}      
-                <div className="detail-buttons">
-                    {renderAddButton()}
-                    {selectedVersion && renderEditButton()}
-                    {selectedVersion && renderDeleteButton()}
-                </div>
-            </div>
+    return (
+        <>
+            <DetailBox
+                selectedItem={selectedVersion}
+                itemType="Version"
+                itemList={itemList}
+                displayItem={displayVersion}
+                setSelected={setSelectedVersion}
+                renderAddButton={renderAddButton}
+                renderEditButton={renderEditButton}
+                renderDeleteButton={renderDeleteButton}
+            />
+            <div className="version-arrow">&rarr;</div>
             {renderBounces()}          
-    </>;
+        </>
+    );
 };
 
 const mapStateToProps = state => {
