@@ -205,8 +205,12 @@
     margin-bottom: 0.75rem;
   }
 
+  .detail-header {
+    margin-bottom: 0.5rem;
+  }
+
   h5 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .detail-buttons {
@@ -233,8 +237,8 @@
   }
 
   .version-arrow {
-    font-size: 3rem;
-    margin: 1rem;
+    font-size: 2rem;
+    margin: 0.5rem;
   }
 
   /* PLAYLIST */
