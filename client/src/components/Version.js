@@ -42,10 +42,11 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         if (bounceList) {
 
             return (
-                <Bounce bounces={bounceList} title={title} version={selectedVersion} />
-            );
-        
-            
+                <>
+                    <div className="version-arrow">&rarr;</div>
+                    <Bounce bounces={bounceList} title={title} version={selectedVersion} />
+                </>
+            );   
         }
     };
 
@@ -143,7 +144,6 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
                 renderEditButton={renderEditButton}
                 renderDeleteButton={renderDeleteButton}
             />
-            <div className="version-arrow">&rarr;</div>
             {renderBounces()}          
         </>
     );

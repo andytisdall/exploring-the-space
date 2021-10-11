@@ -45,10 +45,11 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             }
             selectVersion(versionToSelect, title.id);
             // console.log('select version')
-        }
-        if (title.selectedVersion && title.selectedVersion.bounces.length) {
-            fetchBounces(title.selectedVersion.id);
-            // console.log('fetch bounces')
+        
+            if (title.selectedVersion && title.selectedVersion.bounces.length) {
+                fetchBounces(title.selectedVersion.id);
+                // console.log('fetch bounces')
+            }
         }
     }, [versionList]);
 
