@@ -30,16 +30,15 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
     }, [bounces]);
 
     useEffect(() => {
-        if (title.selectedVersion && selectedVersion !== title.selectedVersion) {
+        if (selectedVersion !== title.selectedVersion) {
             setSelectedVersion(title.selectedVersion);
-            fetchBounces(title.selectedVersion.id);
         }
-    }, [versions, title.selectedVersion]);
+    }, [title.selectedVersion]);
 
     
     const renderBounces = () => {
 
-        if (bounceList) {
+        if (bounceList && selectedVersion) {
 
             return (
                 <>

@@ -24,6 +24,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
         setVersionList(title.versions.map(id => versions[id]));
         // console.log('set version list')
+
         
     }, [versions]);
 
@@ -37,21 +38,19 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
             if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
                 versionToSelect = versionList.find(v => v.current);
             } else if (title.selectedVersion) {
-                if (!versionList.includes(title.selectedVersion)) {
-                    versionToSelect = versionList.find(v => v.id === title.selectedVersion.id);
+                if (!versions[title.selectedVersion.id]) {
+                    versionToSelect = null;
                 } else {
                     versionToSelect = title.selectedVersion;
                 }
             }
             selectVersion(versionToSelect, title.id);
-            // console.log('select version')
-        
-
         }
     }, [versionList]);
 
     useEffect(() => {
-        if (title.selectedVersion && title.selectedVersion.bounces.length) {
+        // console.log(title)
+        if (title.selectedVersion && title.selectedVersion.id) {
             fetchBounces(title.selectedVersion.id);
             // console.log('fetch bounces')
         }

@@ -635,7 +635,7 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
                     ));
                 } else {
                     dispatch(selectVersion(null, titleId));     
-                }   
+                } 
             }
         }
         response.data.bounces.forEach(bounceId => {
@@ -768,7 +768,9 @@ export const setOrder = (tier, orderBy) => {
 export const nextSong = () => (dispatch, getState) => {
     const { parent, currentSong } = getState().audio;
     if (parent.trackList) {
+
         let allTitles;
+
         if (parent.orderBy === 'date') {
             allTitles = parent.trackList
                 .map(id => getState().titles[id])
@@ -815,7 +817,9 @@ export const nextSong = () => (dispatch, getState) => {
         }
     }
     if (parent.songs) {
-        const allSongs = parent.songs.map(id => getState().playlistSongs[id])
+
+        const allSongs = parent.songs
+            .map(id => getState().playlistSongs[id])
             .sort((a,b) => a.position < b.position  ? -1 : 1);
 
         let song;
