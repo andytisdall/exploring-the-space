@@ -99,7 +99,7 @@ router.get('/audio/download/:id/:title', async (req, res) => {
 
     res.status(200).set({
         'Content-Type': 'audio/mpeg',
-        'Content-Disposition': `attachment; filename="${title}-${moment.utc(thisSong.date).format('MM-DD-yy')}.mp3"`
+        'Content-Disposition': `attachment; filename="${title} ${moment.utc(thisSong.date).format('MM-DD-yy')}.mp3"`
     });
 
     stream.on('data', (chunk) => {

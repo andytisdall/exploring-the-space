@@ -726,7 +726,7 @@ export const pauseAudio = () => {
     return { type: PAUSE_AUDIO };
 };
 
-export const queueSongs = (song) => (dispatch, getState) => {
+export const queueSongs = song => dispatch => {
   
 
     const songObject = {

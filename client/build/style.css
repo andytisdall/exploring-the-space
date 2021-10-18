@@ -658,15 +658,16 @@ h3 {
 }
 
 .play-container-display {
-  width: 50%;
+  width: 60%;
   display: flex;
   justify-content: space-around;
+  margin-left: 1rem;
 }
 
 .play-container-display p {
-  margin-left: 1rem;
   font-size: 0.8rem;
   margin: auto 0.5rem;
+  width: 50%;
 }
 
 .download {
@@ -719,6 +720,10 @@ h5 {
   width: max-content;
   letter-spacing: 0.5px;
   margin: 0;
+}
+
+.dropdown-container {
+  display: flex;
 }
 
 .dropbtn {

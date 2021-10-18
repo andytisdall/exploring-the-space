@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const DetailBox = ({ selectedItem, itemList, itemType, displayItem, setSelected, renderAddButton, renderEditButton, renderDeleteButton }) => {
+const DetailBox = ({ selectedItem, itemList, itemType, displayItem, setSelected, renderAddButton, renderEditButton, renderDeleteButton, playButton }) => {
 
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -77,17 +77,21 @@ const DetailBox = ({ selectedItem, itemList, itemType, displayItem, setSelected,
                         {count()}
                         {currentTag()}
                     </div>
-                    <div className="dropdown" ref={dropdownRef}>
-                        <button
-                            className="dropbtn"
-                            onClick={() => setDropdownVisible(!dropdownVisible)}
-                        >
-                            {displayItem(selectedItem)}
-                        </button>
-                        <div className="dropdown-content">
-                            {renderItemList()}
+                    <div className='dropdown-container'>
+                        <div className="dropdown" ref={dropdownRef}>
+                            <button
+                                className="dropbtn"
+                                onClick={() => setDropdownVisible(!dropdownVisible)}
+                            >
+                                {displayItem(selectedItem)}
+                            </button>
+                            <div className="dropdown-content">
+                                {renderItemList()}
+                            </div>
                         </div>
+                        {playButton && playButton()}
                     </div>
+                    
                     
                     <div className="detail-notes">
                         <div className="detail-notes-title">Notes:</div>

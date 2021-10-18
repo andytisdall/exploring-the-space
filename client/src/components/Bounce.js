@@ -7,17 +7,20 @@ import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 import DetailBox from './DetailBox';
-import { selectBounce, createBounce, editBounce, deleteBounce } from '../actions';
+import { selectBounce, createBounce, editBounce, deleteBounce, queueSongs } from '../actions';
 
-const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce, editBounce, deleteBounce }) => {
+const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounce, editBounce, deleteBounce, song, queueSongs }) => {
 
     const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
 
     const [uploadActive, setUploadActive] = useState(false);
 
+    // const [playButtonVisible, setPlayButtonVisible] = useState(false);
+
     useEffect(() => {
         if (selectedBounce && selectedBounce !== title.selectedBounce) {
             selectBounce(selectedBounce, title.id);
+            // setPlayButtonVisible(true);
         }
     }, [selectedBounce]);
 
@@ -160,6 +163,21 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
         }
     };
 
+    const showPlayButton = () => {
+
+        // if (playButtonVisible) {
+
+            return (
+                <img
+                    src='/images/play.svg'
+                    className='play-icon'
+                    onClick={() => queueSongs(song)}
+                /> 
+            );
+        // }
+
+    };
+
     
 
     if (uploadActive) {
@@ -180,6 +198,7 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
                     renderAddButton={renderAddButton}
                     renderEditButton={renderEditButton}
                     renderDeleteButton={renderDeleteButton}
+                    playButton={showPlayButton}
                 />
             );
         } else {
@@ -188,4 +207,4 @@ const Bounce = ({ bounces, selectBounce, title, authorized, version, createBounc
     }
 };
 
-export default connect(null, { selectBounce, createBounce, editBounce, deleteBounce })(requireAuth(Bounce));
+export default connect(null, { selectBounce, createBounce, editBounce, deleteBounce, queueSongs })(requireAuth(Bounce));

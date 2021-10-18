@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { queueSongs, queuePlaylistSongs, playAudio, throwError } from '../actions';
+import { queueSongs, queuePlaylistSongs, playAudio } from '../actions';
 
 
-const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throwError }) => {
+const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs }) => {
 
     const [loaded, setLoaded] = useState(false);
 
@@ -83,4 +83,4 @@ const PlayContainer = ({ song, queueSongs, parentType, queuePlaylistSongs, throw
     );
 };
 
-export default connect(null, { queueSongs, queuePlaylistSongs, playAudio, throwError })(PlayContainer);
+export default connect(null, { queueSongs, queuePlaylistSongs, playAudio })(PlayContainer);

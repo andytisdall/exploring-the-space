@@ -125,7 +125,7 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
 
    
         return (
-            <Version versions={versionList} title={title} />
+            <Version versions={versionList} title={title} song={song} />
         )
     }
 

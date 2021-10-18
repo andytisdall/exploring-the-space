@@ -9,7 +9,7 @@ import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 import DetailBox from './DetailBox';
 
-const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized, editVersion, deleteVersion }) => {
+const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized, editVersion, deleteVersion, song }) => {
 
     const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
     const [bounceList, setBounceList] = useState(null);
@@ -43,7 +43,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
             return (
                 <>
                     <div className="version-arrow">&rarr;</div>
-                    <Bounce bounces={bounceList} title={title} version={selectedVersion} />
+                    <Bounce bounces={bounceList} title={title} version={selectedVersion} song={song} />
                 </>
             );   
         }
