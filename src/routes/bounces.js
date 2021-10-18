@@ -49,7 +49,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
 
     stream.on('error', (err) => {
-        throw new Error('Error uploading mp3!')
+        throw new Error('Error uploading mp3!');
     });
 
     // Finish up on completed upload

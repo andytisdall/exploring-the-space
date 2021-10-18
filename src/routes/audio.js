@@ -97,9 +97,9 @@ router.get('/audio/download/:id/:title', async (req, res) => {
     // read the whole stream to an array and then send the buffer with the response
     let file = [];
 
-    res.set({
+    res.status(200).set({
         'Content-Type': 'audio/mpeg',
-        'Content-Disposition': `attachment; filename=${title}-${moment.utc(thisSong.date).format('MM-DD-yy')}.mp3`
+        'Content-Disposition': `attachment; filename="${title}-${moment.utc(thisSong.date).format('MM-DD-yy')}.mp3"`
     });
 
     stream.on('data', (chunk) => {
