@@ -184,11 +184,12 @@
   .play-container-display {
     display: inline;
     margin-right: 5px;
+    margin-left: 5px;
   }
 
   .play-container-display p {
-    margin: 5px;
     font-size: 0.55rem;
+    width: auto;
   }
 
   .play-container a {
