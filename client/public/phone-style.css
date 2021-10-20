@@ -189,7 +189,7 @@
 
   .play-container-display p {
     font-size: 0.55rem;
-    width: auto;
+    width: 100%;
   }
 
   .play-container a {
