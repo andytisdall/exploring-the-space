@@ -636,7 +636,7 @@ h3 {
 
 .play-icon-container {
   position: relative;
-  min-width: 3rem;
+  min-width: 2.5rem;
 }
 
 .play-icon {
@@ -666,7 +666,7 @@ h3 {
 
 .play-container-display p {
   font-size: 0.8rem;
-  margin: auto 0.5rem;
+  margin: 0.3rem 0.5rem;
   width: 50%;
 }
 
