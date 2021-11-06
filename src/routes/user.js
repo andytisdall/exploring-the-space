@@ -1,6 +1,5 @@
 import express from 'express';
 import { currentUser } from '../middlewares/current-user.js';
-import { User } from '../models/user.js';
 
 const router = express.Router();
 

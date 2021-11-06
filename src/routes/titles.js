@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import mongodb from 'mongodb';
 
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
