@@ -8,7 +8,7 @@ import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
-const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, authorized, deletePlaylist, band }) => {
+const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, authorized, editPlaylist, deletePlaylist, band }) => {
 
     const [expand, setExpand] = useState(false);
     const [playlistList, setPlaylistList] = useState([]);
@@ -152,9 +152,10 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                     <div className="tier-name"  >
                         <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`}/>
                         <h2>{playlist.name}</h2>
-                    </div>
 
-                    {showUpdatePlaylistCheckbox()}
+                        {showUpdatePlaylistCheckbox()}
+
+                    </div>
 
                     <div className="tier-count">
                         <div className="song-count">{playlist.songs.length} songs</div>
@@ -182,4 +183,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchPlaylistSongs, deletePlaylist })(requireAuth(Playlist));
+export default connect(mapStateToProps, { fetchPlaylistSongs, deletePlaylist, editPlaylist })(requireAuth(Playlist));
