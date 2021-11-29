@@ -22,6 +22,9 @@ const Header = ({ fetchBand, band, match, authorized, handleUpdate, user, signOu
 
     useEffect(() => {
         handleUpdate();
+        if (band.name !== match.params.bandName) {
+            fetchBand(match.params.bandName);
+        }
     }, [band, user]);
 
     const clickToDismiss = (e) => {
