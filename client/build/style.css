@@ -824,6 +824,14 @@ h5 {
   color: rgb(82, 236, 236);
 }
 
+.playlist-update {
+  display: flex;
+  font-size: 0.7rem;
+  align-items: center;
+  justify-content: start;
+  width: 25%;
+}
+
 /* PLAYLISTSONG */
 
 .playlistsong {

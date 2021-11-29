@@ -9,7 +9,7 @@ import { editPlaylistSong, fetchVersions, fetchBounces, deletePlaylistSong } fro
 import PlayContainer from './PlayContainer';
 import requireAuth from './requireAuth';
 
-const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio, getTime, band }) => {
+const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, versions, bounces, titles, fetchBounces, fetchVersions, editPlaylistSong, deletePlaylistSong, audio, getTime, band, doUpdate }) => {
 
     const [playSong, setPlaySong] = useState(null);
 
@@ -34,6 +34,13 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
                 getTime({ id: song.id, duration: bounces[song.bounce].duration });
             }   
     }, [playlistSongs[song.id], bounces[song.bounce], titles[song.title], versions[song.version]]);
+
+    useEffect(() => {
+        // console.log(doUpdate);
+        if (doUpdate) {
+            updateToCurrent();
+        }
+    }, [doUpdate]);
 
     const renderPlayContainer = () => {
 
@@ -60,6 +67,27 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
             version: thisVersion.id,
             playlistId: playlist.id
         }, song.id);
+    };
+
+    const updateToCurrent = () => {
+
+        const thisTitle = titles[song.title];
+        const titleVersions = thisTitle.versions.map(id => versions[id]);
+        const currentVersion = titleVersions.find(v => v && v.current);
+        if (currentVersion) {
+            const versionBounces = currentVersion.bounces.map(id => bounces[id]);
+            console.log(versionBounces);
+            const currentBounce = versionBounces.find(b => b && b.latest);
+            if (currentBounce) {
+                editPlaylistSong({
+                    bounce: currentBounce.id,
+                    version: currentVersion.id,
+                    position: song.position,
+                    playlistId: playlist.id
+                }, song.id);
+            }
+        }
+
     };
 
     const renderEditButton = () => {

@@ -14,6 +14,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
     const [playlistList, setPlaylistList] = useState([]);
     const [times, setTimes] = useState({});
     const [songsToRender, setSongsToRender] = useState(null);
+    const [doUpdate, setDoUpdate] = useState(false);
 
 
     useEffect(() => {
@@ -31,7 +32,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         return songsToRender.map(song => {
             if (song) {
                 return (
-                <PlaylistSong song={song} playlist={playlist} key={song.id} getTime={getTime} />
+                <PlaylistSong song={song} playlist={playlist} key={song.id} getTime={getTime} doUpdate={doUpdate} />
                 );
             }
         });
@@ -122,6 +123,24 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         }
     };
 
+    const showUpdatePlaylistCheckbox = () => {
+        if (expand) {
+            return (
+                <div className="playlist-update">
+                    <div>
+                        Update all songs to current bounce?
+                    </div>
+                    <input
+                        type="checkbox"
+                        onChange={() => setDoUpdate(!doUpdate)}
+                        onClick={e => e.stopPropagation()}
+                        checked={doUpdate}
+                    />
+                </div>
+            );
+        }
+    };
+
 
     const arrow = expand ? 'down-arrow' : '';
     const open = expand ? 'open' : 'closed';
@@ -134,6 +153,9 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
                         <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`}/>
                         <h2>{playlist.name}</h2>
                     </div>
+
+                    {showUpdatePlaylistCheckbox()}
+
                     <div className="tier-count">
                         <div className="song-count">{playlist.songs.length} songs</div>
                         <div className="song-count">{renderTotalTime()}</div>
