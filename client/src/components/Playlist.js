@@ -124,7 +124,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
     };
 
     const showUpdatePlaylistCheckbox = () => {
-        if (expand) {
+        if (authorized && expand) {
             return (
                 <div className="playlist-update">
                     <div>
