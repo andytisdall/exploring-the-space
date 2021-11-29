@@ -128,7 +128,7 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
             return (
                 <div className="playlist-update">
                     <div>
-                        Update all songs to current bounce?
+                        Set all as current
                     </div>
                     <input
                         type="checkbox"
