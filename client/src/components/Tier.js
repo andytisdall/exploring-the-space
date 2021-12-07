@@ -35,7 +35,7 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
 
     const prune = () => {
 
-        tier.titles.forEach(title => {
+        tier.trackList.forEach(title => {
             if (!titles[title]) {
                 deleteTitle(title, tier.id);
             }
