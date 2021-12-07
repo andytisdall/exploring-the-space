@@ -42,11 +42,10 @@ router.get('/audio/:id', async (req, res) => {
     if ((start === 0 || start === end-1) && !partialend) {
         
         const stream = bucket.openDownloadStream(mp3Id);
+
         stream.on('error', (err) => {
             throw new Error('Could not find mp3');
         });
-
-        console.log
         
         stream.pipe(res);
     
@@ -59,7 +58,6 @@ router.get('/audio/:id', async (req, res) => {
         let file = [];
         stream.on('data', (chunk) => {
             file.push(chunk);
-
         });
 
         stream.on('error', (err) => {

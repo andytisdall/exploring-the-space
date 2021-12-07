@@ -97,7 +97,7 @@ class AudioDisplay extends React.Component {
         
         if (this.props.song) {
             // if the current song is changed to something other than what is already loaded, change the src url and play the audio
-                        // if redux gets a signal to play, play if not already
+            // if redux gets a signal to play, play if not already
             // reverse for pause
             if (this.props.song !== prevProps.song) {
                 this.audio.current.src=this.wrapUrl(this.props.song.audio);
@@ -111,7 +111,6 @@ class AudioDisplay extends React.Component {
             }
             if (this.props.volume !== prevProps.volume) {
                 this.audio.current.volume = this.props.volume / 100;
-
             }
         } else {
             this.audio.current.pause();

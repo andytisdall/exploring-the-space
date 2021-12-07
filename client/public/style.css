@@ -834,7 +834,8 @@ h5 {
 }
 
 .playlist-update input {
-  width: auto;
+  width: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 /* PLAYLISTSONG */

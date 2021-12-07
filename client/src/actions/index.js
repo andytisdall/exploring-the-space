@@ -463,7 +463,6 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
 
 
                     if (response.data.latest && !thisBounce.latest) {
-                        console.log('hahahaha')
                         const parentVersion = getState().versions[versionId];
                         const bounceList = parentVersion.bounces.map(id => getState().bounces[id]);
                         const oldLatest = bounceList.find(b => b.latest);

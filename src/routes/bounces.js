@@ -94,9 +94,17 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
     thisBounce.date = date;
     thisBounce.latest = latest;
 
+    //
+
 
     if (req.files) {
         const file = req.files.file;
+
+        // delete old mp3
+
+        const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
+
+
 
         // Edit bounce object form values
 
@@ -119,10 +127,22 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
         // Finish up on completed upload
         stream.on('finish', async () => {
 
-            // Get id of mp3 from stream object
-            thisBounce.mp3 = stream.id;
-            await thisBounce.save();
-            res.send(thisBounce);
+            bucket.delete(mp3Id, async (err) => {
+                if (err) {
+                    throw new Error('Error attempting to delete mp3');
+                } else {
+                    console.log('mp3 deleted');
+
+                    // Get id of mp3 from stream object
+                    thisBounce.mp3 = stream.id;
+                    await thisBounce.save();
+
+                    res.send(thisBounce);
+                }
+            });
+
+
+            
         });
 
     } else {
