@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { createTier, editTier, fetchTitles, createTitle, deleteTier, setOrder, deleteTitle } from '../actions';
+import { createTier, editTier, fetchTitles, createTitle, deleteTier, setOrder } from '../actions';
 import Title from './Title';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 
 
-const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier, setOrder, deleteTitle }) => {
+const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, createTitle, deleteTier, setOrder }) => {
 
     const [expand, setExpand] = useState(false);
     const [titlesToRender, setTitlesToRender] = useState(null);
@@ -33,15 +33,6 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
         }
     };
 
-    const prune = () => {
-
-        tier.trackList.forEach(title => {
-            if (!titles[title]) {
-                deleteTitle(title, tier.id);
-            }
-        });
-
-    };
 
     const renderTitles = () => {
 
@@ -239,9 +230,6 @@ const Tier = ({ tier, titles, fetchTitles, authorized, band, tiers, editTier, cr
     const renderOptions = () => {
 
         return <>
-            <div
-                onClick={prune}
-            >prune</div>
             {renderAddButton()}
             {renderOrderButton()}     
         </>;
@@ -289,4 +277,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier, setOrder, deleteTitle })(requireAuth(Tier));
+export default connect(mapStateToProps, { createTier, fetchTitles, editTier, createTitle, deleteTier, setOrder })(requireAuth(Tier));
