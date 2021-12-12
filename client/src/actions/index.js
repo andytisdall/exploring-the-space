@@ -951,8 +951,5 @@ export const selectVersion = (version, titleId) => {
 }
 
 export const selectBounce = (bounce, titleId) => {
-    if (!bounce) {
-        return { type: ERROR, payload: "select bounce was called with no bounce!" };
-    }
     return { type: SELECT_BOUNCE, payload: { bounce, titleId } };
 }
