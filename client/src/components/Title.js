@@ -41,9 +41,10 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                 if (!versions[title.selectedVersion.id]) {
                     versionToSelect = null;
                 } else {
-                    versionToSelect = title.selectedVersion;
+                    versionToSelect = versionList.find(v => v.current);
                 }
             }
+
             selectVersion(versionToSelect, title.id);
         }
     }, [versionList]);

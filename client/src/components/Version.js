@@ -29,6 +29,7 @@ const Version = ({ versions, bounces, fetchBounces, selectVersion, title, create
         }
     }, [bounces, selectedVersion]);
 
+
     useEffect(() => {
         if (selectedVersion !== title.selectedVersion) {
             setSelectedVersion(title.selectedVersion);
