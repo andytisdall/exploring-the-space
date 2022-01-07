@@ -10,7 +10,6 @@ export default (state = {}, action) => {
         case CREATE_VERSION:
             return { ...state, [action.payload.version.id]: action.payload.version };
         case EDIT_VERSION:
-
             return { ...state, [action.payload.version.id]: action.payload.version };
         case DELETE_VERSION:
             delete state[action.payload.version.id];

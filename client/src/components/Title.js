@@ -45,7 +45,6 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
                     versionToSelect = null;
                 } else {
                     versionToSelect = versions[parentTitle.selectedVersion.id];
-                    console.log('boyo')
                 }
             }
 

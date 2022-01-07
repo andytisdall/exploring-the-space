@@ -632,12 +632,12 @@ export const deleteVersion = (versionId, titleId) => async (dispatch, getState) 
                 if (remainingVersions.length) {
                     const newCurrent = getState().versions[remainingVersions[remainingVersions.length-1]];
                     newCurrent.current = true;
-                    dispatch(selectVersion(newCurrent.id, titleId));
+                    dispatch(selectVersion(newCurrent, titleId));
                     dispatch(editVersion(
                         _.pick(newCurrent, 'name', 'notes', 'current'), newCurrent.id, titleId
                     ));
                 } else {
-                    dispatch(selectVersion(null, titleId));     
+                    dispatch(selectVersion(null, titleId));
                 } 
             }
         }
