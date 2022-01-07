@@ -238,9 +238,9 @@ export const createVersion = (formValues, titleId) => async (dispatch, getState)
                     _.pick(oldCurrent, 'name', 'notes', 'current'), oldCurrent.id, titleId
                 ));
             }
-            dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
         }
 
+        // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
         dispatch({ type: CREATE_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
         dispatch(errorHandler(err));
@@ -304,10 +304,10 @@ export const createBounce = (formValues, versionId, titleId) => async (dispatch,
                         dispatch(editBounce(
                             _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
                         ));
-                    }
-                    dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
+                    }                  
                 }
 
+                // dispatch({ type: SELECT_BOUNCE, payload: { titleId, bounce: response.data } });
                 dispatch({ type: CREATE_BOUNCE, payload: { bounce: response.data, version: versionId } });
             });
         };
@@ -410,7 +410,9 @@ export const editVersion = (formValues, versionId, titleId) => async (dispatch, 
                 _.pick(oldCurrent, 'name', 'notes', 'current'), oldCurrent.id, titleId
             ));   
         }
-        dispatch({ type: EDIT_VERSION, payload: response.data });
+
+        // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
+        dispatch({ type: EDIT_VERSION, payload: { version: response.data, title: titleId } });
     } catch (err) {
         dispatch(errorHandler(err));
     }
@@ -498,6 +500,8 @@ export const editBounce = (formValues, bounceId, versionId) => async (dispatch, 
                     _.pick(oldLatest, 'date', 'comments', 'latest'), oldLatest.id, versionId
                 ));
             }
+
+            
             dispatch({ type: EDIT_BOUNCE, payload: response.data });
         }
     } catch (err) {

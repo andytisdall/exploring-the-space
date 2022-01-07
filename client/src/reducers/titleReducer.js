@@ -1,4 +1,4 @@
-import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE, CREATE_VERSION, DELETE_VERSION } from '../actions/types';
+import { FETCH_TITLES, CREATE_TITLE, EDIT_TITLE, DELETE_TITLE, SELECT_VERSION, SELECT_BOUNCE, CREATE_VERSION, DELETE_VERSION, EDIT_VERSION } from '../actions/types';
 import _ from 'lodash';
 
 
@@ -30,7 +30,11 @@ export default (state = {}, action) => {
         case CREATE_VERSION:
             const addToTitle = state[action.payload.title];
             addToTitle.versions.push(action.payload.version.id);
+            addToTitle.selectedVersion = action.payload.version;
             return { ...state, [addToTitle.id]: addToTitle};
+        case EDIT_VERSION:
+            const editTitleVersion = state[action.payload.title];
+            return { ...state, [editTitleVersion.id]: { ...editTitleVersion } };
         case DELETE_VERSION:
             const deleteFromTitle = state[action.payload.title];
             if (deleteFromTitle) {

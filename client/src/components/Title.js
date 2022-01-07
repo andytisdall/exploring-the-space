@@ -29,19 +29,23 @@ const Title = ({ tier, title, titles, fetchVersions, versions, bounces, fetchBou
     }, [versions]);
 
     useEffect(() => {
+        // console.log(versionList);
         if (versionList && versionList[0]) {
             
             let versionToSelect;
 
+            const parentTitle = titles[title.id];
+
             const versionIds = versionList.map(v => v.id);
 
-            if (!title.selectedVersion || !versionIds.includes(title.selectedVersion.id)) {
+            if (!parentTitle.selectedVersion || !versionIds.includes(parentTitle.selectedVersion.id)) {
                 versionToSelect = versionList.find(v => v.current);
-            } else if (title.selectedVersion) {
-                if (!versions[title.selectedVersion.id]) {
+            } else if (parentTitle.selectedVersion) {
+                if (!versions[parentTitle.selectedVersion.id]) {
                     versionToSelect = null;
                 } else {
-                    versionToSelect = versionList.find(v => v.current);
+                    versionToSelect = versions[parentTitle.selectedVersion.id];
+                    console.log('boyo')
                 }
             }
 

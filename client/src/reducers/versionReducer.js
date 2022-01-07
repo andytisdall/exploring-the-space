@@ -1,5 +1,4 @@
 import { FETCH_VERSIONS, CREATE_VERSION, EDIT_VERSION, DELETE_VERSION, CREATE_BOUNCE, DELETE_BOUNCE } from '../actions/types';
-import { selectVersion } from '../actions';
 import _ from 'lodash';
 
 export default (state = {}, action) => {
@@ -11,7 +10,8 @@ export default (state = {}, action) => {
         case CREATE_VERSION:
             return { ...state, [action.payload.version.id]: action.payload.version };
         case EDIT_VERSION:
-            return { ...state, [action.payload.id]: action.payload };
+
+            return { ...state, [action.payload.version.id]: action.payload.version };
         case DELETE_VERSION:
             delete state[action.payload.version.id];
             return { ...state };
