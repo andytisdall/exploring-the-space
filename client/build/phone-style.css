@@ -246,6 +246,21 @@
     padding-top: 0.7rem;
   }
 
+  .playlist-update {
+    display: flex;
+    font-size: 0.4rem;
+    align-items: center;
+    justify-content: start;
+    width: 25%;
+    margin-left: 2.5rem;
+  }
+
+  .playlist-update-btn {
+    width: 0.6rem;
+    height: 0.5rem;
+    margin-left: 0.1rem;
+  }
+
   /* HOME */
 
   .band-item h2 {

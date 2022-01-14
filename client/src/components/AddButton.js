@@ -61,50 +61,52 @@ class AddButton extends React.Component {
     }
 
     input = (field) => {
-        let addClass = '';
+        let inputClass = '';
         if (field.type === 'date') {
-            addClass = 'calendar';
+            inputClass = 'calendar';
         }
+        if (field.type === 'checkbox') {
+            inputClass = 'checkbox';
+        }
+        if (field.type === 'input') {
+            inputClass = 'text-input';
+        }
+
+        const errors = 
+            <div className="form-errors">
+            {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
+            </div>;
 
         if (field.type === 'file') {
             delete field.input.value;
-
             return <>
-                <div className="form-errors">
-                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
-                </div>
+                {errors}
                 <input
                     {...field.input}
                     type='file'
                     className='inputfile'
-
                     onDrop={(e) => this.onDrop(e, field.input)}
                         
                 />
             </>;
         } else if (field.type === 'select') {
             return <>
-                <div className="form-errors">
-                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
-                </div>
+                {errors}
                 <select
                     {...field.input}
                     autoFocus={field.autoFocus}
-                    type={field.type}
                 >
                     {field.options ? this.showOptions(field) : null}
                 </select>
             </>;
         } else {
             return <>
-                <div className="form-errors">
-                    {field.meta.touched && (field.meta.error && <p>{field.meta.error}<span>&darr;</span></p>)}
-                </div>
+                {errors}
                 <input
                     {...field.input}
                     autoFocus={field.autoFocus}
                     type={field.type}
-                    className={`text-input ${addClass}`}
+                    className={inputClass}
                 />
             </>;
         }
@@ -119,9 +121,9 @@ class AddButton extends React.Component {
         return this.props.fields.map((field, i) => {
             const autoFocus = i === 0 ? true : false;
             let comp = this.input;
-            // if (field.type === 'select') {
-            //     comp = 'select'
-            // }
+            if (field.type === 'textarea') {
+                comp = 'textarea'
+            }
             return <div key={field.label}>
                 <label>{field.label}: </label>
                 <Field

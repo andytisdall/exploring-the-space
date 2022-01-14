@@ -56,6 +56,12 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
         }
     }, [playlists]);
 
+    useEffect(() => {
+        if (doUpdate) {
+            setDoUpdate(false);
+        }
+    }, [doUpdate]);
+
     const renderEditButton = () => {
         if (authorized) {
 
@@ -128,13 +134,14 @@ const Playlist = ({ playlist, playlists, fetchPlaylistSongs, playlistSongs, auth
             return (
                 <div className="playlist-update">
                     <div>
-                        Set all as current
+                        Set all to current
                     </div>
-                    <input
-                        type="checkbox"
-                        onChange={() => setDoUpdate(!doUpdate)}
-                        onClick={e => e.stopPropagation()}
-                        checked={doUpdate}
+                    <div
+                        className="playlist-update-btn"
+                        onClick={e => {
+                            e.stopPropagation();
+                            setDoUpdate(true);
+                        }}
                     />
                 </div>
             );

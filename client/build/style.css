@@ -86,6 +86,15 @@ input {
   margin-bottom: 1rem;
 }
 
+.checkbox {
+  width: 1rem;
+}
+
+textarea {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 .inputfile {
   width: 12rem;
 }
@@ -829,13 +838,22 @@ h5 {
   font-size: 0.7rem;
   align-items: center;
   justify-content: start;
-  width: 25%;
-  margin-left: 1.5rem;
+  width: 20%;
+  margin-left: 4rem;
 }
 
-.playlist-update input {
+.playlist-update-btn {
   width: 1rem;
-  margin-bottom: 0.5rem;
+  height: 0.8rem;
+  border: 2px solid rgb(70, 197, 112);
+  border-radius: 50%;
+  margin-left: 0.25rem;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.playlist-update-btn:active {
+  background-color: rgb(70, 197, 112);
 }
 
 /* PLAYLISTSONG */

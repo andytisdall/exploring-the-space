@@ -76,7 +76,6 @@ const PlaylistSong = ({ playlist, playlists, song, playlistSongs, authorized, ve
         const currentVersion = titleVersions.find(v => v && v.current);
         if (currentVersion) {
             const versionBounces = currentVersion.bounces.map(id => bounces[id]);
-            console.log(versionBounces);
             const currentBounce = versionBounces.find(b => b && b.latest);
             if (currentBounce) {
                 editPlaylistSong({
