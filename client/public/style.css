@@ -1149,3 +1149,32 @@ h5 {
     transform: scale(1);
   }
 }
+
+/* RECORDER */
+
+.recorder {
+  padding: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+.recorder-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recorder-btn {
+  border: 1px solid white;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.recorder-btn:active {
+  transform: translateY(3px);
+}
+
+.recorder-player {
+  margin: 20px;
+}

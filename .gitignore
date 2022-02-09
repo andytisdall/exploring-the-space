@@ -8,6 +8,8 @@ src/jwt-key.js
 /.pnp
 .pnp.js
 .pem
+client/cert
+client/build
 
 # testing
 client/coverage
