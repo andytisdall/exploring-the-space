@@ -61,13 +61,15 @@ const Recorder = ({ match }) => {
 
   return (
     <div className={isRecording ? 'recorder recording' : 'recorder'}>
+      <div className="playhead-container">
+        {audio && !isRecording && (
+          <Playhead audio={audio} isRecording={isRecording} />
+        )}
+      </div>
+
       {renderButtons()}
 
       <Timer isRecording={isRecording} />
-
-      {audio && !isRecording && (
-        <Playhead audio={audio} isRecording={isRecording} />
-      )}
 
       <DeviceControl
         inputSource={inputSource}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import createFileList from 'create-file-list';
 
 import {
   fetchTiers,
@@ -24,6 +23,7 @@ const AddRecording = ({
   fetchBounces,
   createBounce,
   audio,
+  uploadStarted,
 }) => {
   const defaultItem = { name: 'choose...', id: '0' };
   const displayDate = () => {
@@ -34,6 +34,8 @@ const AddRecording = ({
   const [selectedTier, setSelectedTier] = useState(defaultItem);
   const [selectedVersion, setSelectedVersion] = useState(defaultItem);
   const [selectedDate, setSelectedDate] = useState(displayDate());
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const [titleList, setTitleList] = useState([]);
   const [tierList, setTierList] = useState([]);
@@ -90,6 +92,19 @@ const AddRecording = ({
     }
   }, [selectedVersion]);
 
+  useEffect(() => {
+    if (uploadLoading && !uploadStarted) {
+      setUploadLoading(false);
+      setUploadSuccess(true);
+      setTimeout(() => {
+        setUploadSuccess(false);
+      }, 10000);
+    }
+    if (uploadStarted && !uploadLoading) {
+      setUploadLoading(true);
+    }
+  }, [uploadStarted]);
+
   const selector = (stateList, onSelect, selectedItem) => {
     const onChange = (e) => {
       const selected = stateList.find((item) => item.id === e.target.value);
@@ -115,19 +130,20 @@ const AddRecording = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (submitActive()) {
+      const file = new File([audio], 'recording.mp3', { lastModified: Date() });
 
-    const file = new File([audio], 'recording.mp3', { lastModified: Date() });
-
-    const form = {
-      date: selectedDate,
-      latest: true,
-      file: [file],
-    };
-    // const form = new FormData();
-    // form.append('date', selectedDate);
-    // form.append('latest', true);
-    // form.append('file', file, file.name);
-    createBounce(form, selectedVersion.id);
+      const form = {
+        date: selectedDate,
+        latest: true,
+        file: [file],
+      };
+      // const form = new FormData();
+      // form.append('date', selectedDate);
+      // form.append('latest', true);
+      // form.append('file', file, file.name);
+      createBounce(form, selectedVersion.id);
+    }
   };
 
   const submitActive = () => {
@@ -135,6 +151,19 @@ const AddRecording = ({
       return true;
     }
     return false;
+  };
+
+  const renderUploadSuccess = () => {
+    return <div className="upload-success">Recording Successfully Saved!</div>;
+  };
+
+  const renderUploadLoading = () => {
+    return (
+      <div className="upload-image">
+        <p>Uploading...</p>
+        <img src="/images/windmill.gif" className="windmill" />
+      </div>
+    );
   };
 
   return (
@@ -179,12 +208,16 @@ const AddRecording = ({
       </div>
       <form onSubmit={onSubmit}>
         <button
-          className={`${submitActive() ? 'submit-button' : 'submit-inactive'}`}
+          className={`${
+            submitActive() ? 'submit-button-centered' : 'submit-inactive'
+          }`}
           type="submit"
         >
           Save Bounce
         </button>
       </form>
+      {uploadSuccess && renderUploadSuccess()}
+      {uploadLoading && renderUploadLoading()}
     </div>
   );
 };
@@ -195,6 +228,7 @@ const mapStateToProps = (state) => {
     titles: state.titles,
     versions: state.versions,
     currentBand: state.bands.currentBand,
+    uploadStarted: state.bands.uploadStarted,
   };
 };
 

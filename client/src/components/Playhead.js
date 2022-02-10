@@ -78,6 +78,7 @@ const Playhead = ({ audio, isRecording }) => {
 
   return (
     <>
+      {renderPlayButton()}
       <div className="waveform-display">
         <Waveform audio={audio} isRecording={isRecording} />
         <input
@@ -89,7 +90,6 @@ const Playhead = ({ audio, isRecording }) => {
           onInput={onSliderChange}
         />
       </div>
-      {renderPlayButton()}
     </>
   );
 };

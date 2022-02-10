@@ -41,6 +41,7 @@ import {
   ORDER_TIER,
   SELECT_VERSION,
   SELECT_BOUNCE,
+  UPLOAD_STARTED,
 } from './types';
 import history from '../history';
 import _ from 'lodash';
@@ -261,6 +262,7 @@ export const createVersion =
 
 export const createBounce =
   (formValues, versionId) => async (dispatch, getState) => {
+    dispatch({ type: UPLOAD_STARTED });
     try {
       const { currentBand } = getState().bands;
       const parentVersion = getState().versions[versionId];
