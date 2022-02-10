@@ -44,7 +44,7 @@ const App = ({ signedIn, fetchUser, error }) => {
               }}
             />
             <Route path="/help" exact component={Help} />
-            <Route path="/record" exact component={Recorder} />
+            <Route path="/:bandName/record" exact component={Recorder} />
             <Route path="/:bandName" component={Header} />
           </Switch>
         </Router>

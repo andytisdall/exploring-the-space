@@ -1153,21 +1153,36 @@ h5 {
 /* RECORDER */
 
 .recorder {
-  padding: 5rem;
+  padding: 3rem;
+  box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
-  width: 30%;
+  margin-top: 3rem;
+  width: 80%;
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #24093a;
 }
 
 .recorder-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .recorder-btn {
   border: 1px solid white;
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 50px;
+  display: flex;
+  height: 4rem;
+  width: 4rem;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(202, 15, 46);
+  color: black;
   cursor: pointer;
 }
 
@@ -1176,5 +1191,102 @@ h5 {
 }
 
 .recorder-player {
+  height: 20%;
+  display: flex;
+  justify-content: center;
   margin: 20px;
+}
+
+.recording {
+  background-color: rgb(202, 15, 46);
+}
+
+.recording .recorder-buttons .recorder-btn {
+  color: white;
+  border-color: black;
+  background-color: #24093a;
+}
+
+.recorder-time {
+  height: 3rem;
+  color: rgb(13, 0, 128);
+  margin-top: 2rem;
+  font-size: 2rem;
+  box-sizing: border-box;
+}
+
+.waveform-display {
+  width: 500px;
+  height: 100px;
+  background-color: white;
+  position: relative;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.playhead {
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  transform: translateY(-13px);
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+}
+
+.playhead::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3px;
+  height: 100px;
+  background: rgb(19, 83, 0);
+  cursor: pointer;
+}
+
+.playhead::-moz-range-thumb {
+  width: 3px;
+  height: 100px;
+  background: rgb(19, 83, 0);
+  cursor: pointer;
+}
+
+.device-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  margin-bottom: 1rem;
+}
+
+.mic-select {
+  transform: translateY(5px);
+}
+
+.add-recording {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: white solid 1px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.add-recording-select-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-recording-label {
+  margin-right: 2rem;
+  transform: translateY(-5px);
 }
