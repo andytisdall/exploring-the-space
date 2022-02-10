@@ -9,8 +9,8 @@ src/jwt-key.js
 .pnp.js
 .pem
 client/cert
-client/build
-client/package-lock.json
+# client/build
+# client/package-lock.json
 
 # testing
 client/coverage
