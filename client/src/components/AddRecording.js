@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import createFileList from 'create-file-list';
 
-import { fetchTiers, fetchTitles, fetchVersions, fetchBand } from '../actions';
+import {
+  fetchTiers,
+  fetchTitles,
+  fetchVersions,
+  fetchBand,
+  fetchBounces,
+  createBounce,
+} from '../actions';
 
 const AddRecording = ({
   currentBand,
@@ -13,6 +21,9 @@ const AddRecording = ({
   fetchTiers,
   fetchTitles,
   fetchVersions,
+  fetchBounces,
+  createBounce,
+  audio,
 }) => {
   const defaultItem = { name: 'choose...', id: '0' };
   const displayDate = () => {
@@ -73,6 +84,12 @@ const AddRecording = ({
     }
   }, [versions]);
 
+  useEffect(() => {
+    if (selectedVersion.id !== '0') {
+      fetchBounces(selectedVersion.id);
+    }
+  }, [selectedVersion]);
+
   const selector = (stateList, onSelect, selectedItem) => {
     const onChange = (e) => {
       const selected = stateList.find((item) => item.id === e.target.value);
@@ -94,6 +111,30 @@ const AddRecording = ({
         {options}
       </select>
     );
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const file = new File([audio], 'recording.mp3', { lastModified: Date() });
+
+    const form = {
+      date: selectedDate,
+      latest: true,
+      file: [file],
+    };
+    // const form = new FormData();
+    // form.append('date', selectedDate);
+    // form.append('latest', true);
+    // form.append('file', file, file.name);
+    createBounce(form, selectedVersion.id);
+  };
+
+  const submitActive = () => {
+    if (audio && selectedDate && selectedVersion.id !== '0') {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -136,6 +177,14 @@ const AddRecording = ({
           />
         </div>
       </div>
+      <form onSubmit={onSubmit}>
+        <button
+          className={`${submitActive() ? 'submit-button' : 'submit-inactive'}`}
+          type="submit"
+        >
+          Save Bounce
+        </button>
+      </form>
     </div>
   );
 };
@@ -154,4 +203,6 @@ export default connect(mapStateToProps, {
   fetchTitles,
   fetchVersions,
   fetchBand,
+  createBounce,
+  fetchBounces,
 })(AddRecording);

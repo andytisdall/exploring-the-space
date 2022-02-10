@@ -1290,3 +1290,13 @@ canvas {
   margin-right: 2rem;
   transform: translateY(-5px);
 }
+
+.submit-inactive {
+  color: rgb(219, 219, 219);
+  font-size: medium;
+  background-color: rgb(133, 133, 133);
+  border: rgb(237, 223, 100) 1px solid;
+  margin: 0.5rem auto;
+  padding: 0.4rem;
+  cursor: pointer;
+}

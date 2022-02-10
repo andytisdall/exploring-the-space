@@ -74,7 +74,7 @@ const Recorder = ({ match }) => {
         setInputSource={setInputSource}
       />
 
-      <AddRecording bandName={match.params.bandName} />
+      <AddRecording bandName={match.params.bandName} audio={audio} />
     </div>
   );
 };
