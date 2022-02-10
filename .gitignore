@@ -10,6 +10,7 @@ src/jwt-key.js
 .pem
 client/cert
 client/build
+client/package-lock.json
 
 # testing
 client/coverage
