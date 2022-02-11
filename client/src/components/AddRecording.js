@@ -110,7 +110,7 @@ const AddRecording = ({
       const selected = stateList.find((item) => item.id === e.target.value);
       onSelect(selected);
     };
-    const list = [defaultItem].concat(stateList);
+    const list = [defaultItem, ...stateList];
     const options = list.map((item) => {
       if (item) {
         const name = item.name || item.title;
@@ -132,16 +132,12 @@ const AddRecording = ({
     e.preventDefault();
     if (submitActive()) {
       const file = new File([audio], 'recording.mp3', { lastModified: Date() });
-
       const form = {
         date: selectedDate,
         latest: true,
         file: [file],
       };
-      // const form = new FormData();
-      // form.append('date', selectedDate);
-      // form.append('latest', true);
-      // form.append('file', file, file.name);
+
       createBounce(form, selectedVersion.id);
     }
   };

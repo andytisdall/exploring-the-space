@@ -11,6 +11,7 @@ const Recorder = ({ match }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audio, setAudio] = useState();
   const [inputSource, setInputSource] = useState();
+  const [error, setError] = useState('');
 
   const mediaRecorder = useRef();
 
@@ -39,6 +40,7 @@ const Recorder = ({ match }) => {
         } catch (e) {
           console.error(e);
           setIsLoading(false);
+          setError(e);
         }
       } else {
         const blob = await mediaRecorder.current.stopRecording();
@@ -61,6 +63,7 @@ const Recorder = ({ match }) => {
 
   return (
     <div className={isRecording ? 'recorder recording' : 'recorder'}>
+      <div>{error}</div>
       <div className="playhead-container">
         {audio && !isRecording && (
           <Playhead audio={audio} isRecording={isRecording} />
