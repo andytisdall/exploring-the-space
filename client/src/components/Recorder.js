@@ -23,31 +23,31 @@ const Recorder = ({ match }) => {
   }, []);
 
   const onRecord = async () => {
-    if (!isLoading) {
-      setIsLoading(true);
-      if (!isRecording) {
-        try {
-          await navigator.mediaDevices.getUserMedia({
-            audio: {
-              deviceId: inputSource.deviceId,
-            },
-          });
-          await mediaRecorder.current.initAudio();
-          await mediaRecorder.current.initWorker();
-          mediaRecorder.current.startRecording();
-          setIsLoading(false);
-          setIsRecording(true);
-        } catch (e) {
-          console.error(e);
-          setIsLoading(false);
-          setError(e);
-        }
-      } else {
-        const blob = await mediaRecorder.current.stopRecording();
-        setAudio(blob);
-        setIsLoading(false);
-        setIsRecording(false);
+    // setError(isLoading);
+    // if (!isLoading) {
+    // setIsLoading(true);
+    if (!isRecording) {
+      try {
+        await navigator.mediaDevices.getUserMedia({
+          audio: {
+            deviceId: inputSource.deviceId,
+          },
+        });
+        await mediaRecorder.current.initAudio();
+        await mediaRecorder.current.initWorker();
+        mediaRecorder.current.startRecording();
+        // setIsLoading(false);
+        setIsRecording(true);
+      } catch (e) {
+        console.error(e);
+        // setIsLoading(false);
+        setError(e);
       }
+    } else {
+      const blob = await mediaRecorder.current.stopRecording();
+      setAudio(blob);
+      // setIsLoading(false);
+      setIsRecording(false);
     }
   };
 
