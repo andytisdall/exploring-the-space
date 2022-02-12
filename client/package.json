@@ -20,6 +20,7 @@
     "redux-thunk": "^2.3.0",
     "vmsg": "^0.4.0",
     "waveform-data": "^4.3.0",
+    "web-audio-recorder-js": "^0.0.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
