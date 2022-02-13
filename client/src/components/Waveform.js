@@ -24,7 +24,6 @@ const Waveform = ({ audio, isRecording, audioContext }) => {
     //     scale: 128,
     //   };
     const buffer = await audio.arrayBuffer();
-    console.log(buffer);
     const options = {
       audio_context: audioContext,
       array_buffer: buffer,
