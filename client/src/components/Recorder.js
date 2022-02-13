@@ -62,7 +62,7 @@ const Recorder = ({ match }) => {
         options: {
           timeLimit: 18000,
         },
-        encodeAfterRecord: true,
+        encodeAfterRecord: false,
         onComplete: (recorder, blob) => {
           console.log(blob);
           setAudio(blob);
