@@ -50,7 +50,10 @@ const Playhead = ({ audio, isRecording, audioContext }) => {
         <img
           src="/images/play.svg"
           className="play-icon"
-          onClick={() => player.current.play()}
+          onClick={() => {
+            console.log(player.current);
+            player.current.play();
+          }}
         />
       );
     } else if (!isRecording && audio) {

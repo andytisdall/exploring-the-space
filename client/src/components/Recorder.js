@@ -19,26 +19,27 @@ const Recorder = ({ match }) => {
   const chunks = useRef([]);
 
   useEffect(async () => {
-    if (inputSource) {
-      const constraints = {
-        audio: {
-          deviceId: inputSource.deviceId,
-        },
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    // if (inputSource) {
+    //   const constraints = {
+    //     audio: {
+    //       deviceId: inputSource.deviceId,
+    //     },
+    //   };
+    //   const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-      mediaRecorder.current = new MediaRecorder(stream);
-      mediaRecorder.current.ondataavailable = (e) => {
-        chunks.current.push(e.data);
-      };
-      mediaRecorder.current.onstop = (e) => {
-        const blob = new Blob(chunks.current, {
-          type: 'audio/ogg; codecs=opus',
-        });
-        setAudio(blob);
-        chunks.current = [];
-      };
-    }
+    //   mediaRecorder.current = new MediaRecorder(stream);
+    //   mediaRecorder.current.ondataavailable = (e) => {
+    //     chunks.current.push(e.data);
+    //   };
+    //   mediaRecorder.current.onstop = (e) => {
+    //     const blob = new Blob(chunks.current, {
+    //       type: 'audio/ogg; codecs=opus',
+    //     });
+    //     setAudio(blob);
+    //     chunks.current = [];
+    //   };
+    // }
+
     // navigator.serviceWorker.register(
     //   process.env.PUBLIC_URL + '/web-audio-recorder/WebAudioRecorderMp3.js'
     // );
@@ -46,38 +47,39 @@ const Recorder = ({ match }) => {
     // mediaRecorder.current = new vmsg.Recorder({
     //   wasmURL: 'https://unpkg.com/vmsg@0.3.0/vmsg.wasm',
     // });
-    // if (inputSource) {
-    //   const inputStream = await navigator.mediaDevices.getUserMedia({
-    //     audio: {
-    //       deviceId: inputSource.deviceId,
-    //     },
-    //   });
-    //   const node = audioContext.current.createMediaStreamSource(inputStream);
-    //   node.disconnect(audioContext.current.destination);
-    //   mediaRecorder.current = new WebAudioRecorder(node, {
-    //     workerDir: process.env.PUBLIC_URL + '/web-audio-recorder/',
-    //     encoding: 'mp3',
-    //     options: {
-    //       timeLimit: 18000,
-    //     },
-    //     encodeAfterRecord: true,
-    //     onComplete: (recorder, blob) => {
-    //       console.log(blob);
-    //       setAudio(blob);
-    //       setIsRecording(false);
-    //     },
-    //     onTimeout: (recorder) => {
-    //       const time = recorder.recordingTime();
-    //       setError(`timeout at ${time} seconds`);
-    //     },
-    //     onError: (recorder, message) => {
-    //       setError(message);
-    //     },
-    //     onEncoderLoaded: () => {
-    //       console.log('encoder loaded');
-    //     },
-    //   });
-    // }
+
+    if (inputSource) {
+      const inputStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: inputSource.deviceId,
+        },
+      });
+      const node = audioContext.current.createMediaStreamSource(inputStream);
+      // node.disconnect(audioContext.current.destination);
+      mediaRecorder.current = new WebAudioRecorder(node, {
+        workerDir: process.env.PUBLIC_URL + '/web-audio-recorder/',
+        encoding: 'mp3',
+        options: {
+          timeLimit: 18000,
+        },
+        encodeAfterRecord: true,
+        onComplete: (recorder, blob) => {
+          console.log(blob);
+          setAudio(blob);
+          setIsRecording(false);
+        },
+        onTimeout: (recorder) => {
+          const time = recorder.recordingTime();
+          setError(`timeout at ${time} seconds`);
+        },
+        onError: (recorder, message) => {
+          setError(message);
+        },
+        onEncoderLoaded: () => {
+          console.log('encoder loaded');
+        },
+      });
+    }
   }, [inputSource]);
 
   const onRecord = async () => {
@@ -89,11 +91,11 @@ const Recorder = ({ match }) => {
         // const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
         // var mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.current.start();
+        // mediaRecorder.current.start();
         // mediaRecorder.current.startRecording();
         // await mediaRecorder.current.initAudio();
         // await mediaRecorder.current.initWorker();
-        // mediaRecorder.current.startRecording();
+        mediaRecorder.current.startRecording();
         // setIsLoading(false);
         setIsRecording(true);
       } catch (e) {
@@ -102,11 +104,11 @@ const Recorder = ({ match }) => {
         setError(e.message);
       }
     } else {
-      // mediaRecorder.current.finishRecording();
+      mediaRecorder.current.finishRecording();
       // const blob = await mediaRecorder.current.stopRecording();
       // setAudio(blob);
       // setIsLoading(false);
-      mediaRecorder.current.stop();
+      // mediaRecorder.current.stop();
       setIsRecording(false);
     }
   };
