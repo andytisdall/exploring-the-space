@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import Waveform from './Waveform';
 
-const Playhead = ({ audio, isRecording }) => {
+const Playhead = ({ audio, isRecording, audioContext }) => {
   const [playheadPosition, setPlayheadPosition] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -83,7 +83,11 @@ const Playhead = ({ audio, isRecording }) => {
     <>
       {renderPlayButton()}
       <div className="waveform-display">
-        <Waveform audio={audio} isRecording={isRecording} />
+        <Waveform
+          audio={audio}
+          isRecording={isRecording}
+          audioContext={audioContext}
+        />
         <input
           type="range"
           min="0"

@@ -1,28 +1,36 @@
 import React, { useRef, useEffect } from 'react';
 import WaveformData from 'waveform-data';
 
-const Waveform = ({ audio, isRecording }) => {
+const Waveform = ({ audio, isRecording, audioContext }) => {
   const canvas = useRef();
-  const audioContext = useRef();
 
   useEffect(async () => {
     if (isRecording && canvas.current) {
       const ctx = canvas.current.getContext('2d');
       ctx.clearRect(0, 0, canvas.current.width, canvas.current.height);
-      await audioContext.current.close();
     } else {
       renderWaveform();
     }
   }, [isRecording]);
 
   const renderWaveform = async () => {
-    audioContext.current = new AudioContext();
+    // const reader = new FileReader();
+
+    // reader.onload = (event) => {
+    //   const buffer = event.target.result;
+    //   const options = {
+    //     audio_context: audioContext,
+    //     array_buffer: buffer,
+    //     scale: 128,
+    //   };
     const buffer = await audio.arrayBuffer();
+    console.log(buffer);
     const options = {
-      audio_context: audioContext.current,
+      audio_context: audioContext,
       array_buffer: buffer,
       scale: 128,
     };
+
     WaveformData.createFromAudio(options, (err, waveform) => {
       if (err) {
         console.log(err);
@@ -30,6 +38,9 @@ const Waveform = ({ audio, isRecording }) => {
         drawWaveform(waveform);
       }
     });
+    // };
+
+    // reader.readAsArrayBuffer(audio);
   };
 
   const drawWaveform = (waveform) => {

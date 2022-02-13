@@ -149,7 +149,10 @@ module.exports = (function () {
     initWorker: function () {
       if (this.worker != null) this.worker.terminate();
       this.onEncoderLoading(this, this.encoding);
-      this.worker = new Worker(this.workerDir + WORKER_FILE[this.encoding]);
+      this.worker = new Worker(
+        'https://unpkg.com/web-audio-recorder-js@0.0.2/lib-minified/WebAudioRecorderMp3.min.js'
+      );
+
       var _this = this;
       this.worker.onmessage = function (event) {
         var data = event.data;
