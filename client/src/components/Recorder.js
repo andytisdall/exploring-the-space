@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import vmsg from 'vmsg';
+import { Recorder } from '../vmsg';
 
 import Playhead from './Playhead';
 import Timer from './Timer';
@@ -17,7 +17,7 @@ const Recorder = ({ match }) => {
 
   useEffect(async () => {
     // Initialize vmsg recorder
-    mediaRecorder.current = new vmsg.Recorder({
+    mediaRecorder.current = new Recorder({
       wasmURL: 'https://unpkg.com/vmsg@0.3.0/vmsg.wasm',
     });
   }, []);
@@ -37,16 +37,22 @@ const Recorder = ({ match }) => {
           mediaRecorder.current.startRecording();
           setIsLoading(false);
           setIsRecording(true);
-        } catch (e) {
-          console.error(e);
+        } catch (err) {
+          console.error(err);
           setIsLoading(false);
-          setError(e);
+          setError(err.message);
         }
       } else {
-        const blob = await mediaRecorder.current.stopRecording();
-        setAudio(blob);
-        setIsLoading(false);
-        setIsRecording(false);
+        try {
+          const blob = await mediaRecorder.current.stopRecording();
+          setAudio(blob);
+          setIsLoading(false);
+          setIsRecording(false);
+        } catch (err) {
+          console.error(err);
+          setIsLoading(false);
+          setError(err.message);
+        }
       }
     }
   };
@@ -61,8 +67,28 @@ const Recorder = ({ match }) => {
     );
   };
 
+  const renderSpinner = () => {
+    return (
+      <div className="sk-circle-fade">
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+      </div>
+    );
+  };
+
   return (
     <div className={isRecording ? 'recorder recording' : 'recorder'}>
+      {isLoading && renderSpinner()}
       <div>{error}</div>
       <div className="playhead-container">
         {audio && !isRecording && (
