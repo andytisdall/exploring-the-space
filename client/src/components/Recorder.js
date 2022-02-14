@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Recorder } from '../vmsg';
+import vmsg from '../vmsg';
 
 import Playhead from './Playhead';
 import Timer from './Timer';
@@ -17,7 +17,7 @@ const Recorder = ({ match }) => {
 
   useEffect(async () => {
     // Initialize vmsg recorder
-    mediaRecorder.current = new Recorder({
+    mediaRecorder.current = new vmsg.Recorder({
       wasmURL: 'https://unpkg.com/vmsg@0.3.0/vmsg.wasm',
     });
   }, []);

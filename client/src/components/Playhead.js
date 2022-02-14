@@ -31,6 +31,9 @@ const Playhead = ({ audio, isRecording }) => {
   useEffect(() => {
     if (isRecording) {
       setIsPlaying(false);
+      if (player.current && !player.current.paused) {
+        player.current.pause();
+      }
     }
   }, [isRecording]);
 
