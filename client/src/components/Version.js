@@ -1,159 +1,219 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
-import { fetchBounces, selectVersion, createVersion, editVersion, deleteVersion } from '../actions';
+import {
+  fetchBounces,
+  selectVersion,
+  createVersion,
+  editVersion,
+  deleteVersion,
+} from '../actions';
 import Bounce from './Bounce';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 import requireAuth from './requireAuth';
 import DetailBox from './DetailBox';
 
-const Version = ({ versions, bounces, fetchBounces, selectVersion, title, createVersion, authorized, editVersion, deleteVersion, song }) => {
+const Version = ({
+  versions,
+  bounces,
+  fetchBounces,
+  selectVersion,
+  title,
+  createVersion,
+  authorized,
+  editVersion,
+  deleteVersion,
+  song,
+  tier,
+  band,
+}) => {
+  const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
+  const [bounceList, setBounceList] = useState(null);
 
-    const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
-    const [bounceList, setBounceList] = useState(null);
+  useEffect(() => {
+    // console.log(selectedVersion);
+    if (selectedVersion !== title.selectedVersion) {
+      selectVersion(selectedVersion, title.id);
+      setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
+      fetchBounces(selectedVersion.id);
+    }
+  }, [selectedVersion]);
 
-    useEffect(() => {
-        // console.log(selectedVersion);
-        if (selectedVersion !== title.selectedVersion) {
-            selectVersion(selectedVersion, title.id);
-            setBounceList(selectedVersion.bounces.map(id => bounces[id]));
-            fetchBounces(selectedVersion.id)
-        } 
-    }, [selectedVersion]);
+  useEffect(() => {
+    if (selectedVersion) {
+      // console.log(title.selectedVersion)
+      setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
+    }
+  }, [bounces, selectedVersion]);
 
-    useEffect(() => {
-        if (selectedVersion) {
-            // console.log(title.selectedVersion)
-            setBounceList(selectedVersion.bounces.map(id => bounces[id]));
-        }
-    }, [bounces, selectedVersion]);
+  useEffect(() => {
+    if (selectedVersion !== title.selectedVersion) {
+      setSelectedVersion(title.selectedVersion);
+    }
+  }, [title.selectedVersion]);
 
+  const renderBounces = () => {
+    if (bounceList && selectedVersion) {
+      return (
+        <Bounce
+          bounces={bounceList}
+          title={title}
+          version={selectedVersion}
+          song={song}
+        />
+      );
+    }
+  };
 
-    useEffect(() => {
-        if (selectedVersion !== title.selectedVersion) {
-            setSelectedVersion(title.selectedVersion);
-        }
-    }, [title.selectedVersion]);
+  const renderArrow = () => {
+    if (bounceList && selectedVersion) {
+      return <div className="version-arrow">&rarr;</div>;
+    }
+  };
 
-    
-    const renderBounces = () => {
+  const renderRecordLink = () => {
+    if (authorized && selectedVersion) {
+      return (
+        <Link
+          to={{
+            pathname: `/${band.url}/record`,
+            state: {
+              version: selectedVersion,
+              title,
+              tier,
+            },
+          }}
+          className="record-link"
+        >
+          record a bounce
+        </Link>
+      );
+    }
+  };
 
-        if (bounceList && selectedVersion) {
+  const renderAddButton = () => {
+    if (authorized) {
+      return (
+        <AddButton
+          title={`Add a Version of ${title.title}`}
+          image="images/add.png"
+          fields={[
+            {
+              label: 'Name',
+              name: 'name',
+              type: 'input',
+              required: true,
+            },
+            {
+              label: 'Notes',
+              name: 'notes',
+              type: 'textarea',
+            },
+            {
+              label: 'Current Version?',
+              name: 'current',
+              type: 'checkbox',
+            },
+          ]}
+          onSubmit={(formValues) => createVersion(formValues, title.id)}
+          form={`add-version-${title.id}`}
+          initialValues={{ current: true }}
+          enableReinitialize={true}
+          addClass="add-version"
+        />
+      );
+    }
+  };
 
-            return (
-                <>
-                    <div className="version-arrow">&rarr;</div>
-                    <Bounce bounces={bounceList} title={title} version={selectedVersion} song={song} />
-                </>
-            );   
-        }
-    };
+  const renderEditButton = () => {
+    if (authorized) {
+      return (
+        <AddButton
+          title={`Edit ${selectedVersion.name}`}
+          image="images/edit.png"
+          fields={[
+            {
+              label: 'Name',
+              name: 'name',
+              type: 'input',
+            },
+            {
+              label: 'Notes',
+              name: 'notes',
+              type: 'textarea',
+            },
+            {
+              label: 'Current Version?',
+              name: 'current',
+              type: 'checkbox',
+            },
+          ]}
+          onSubmit={(formValues) =>
+            editVersion(formValues, selectedVersion.id, title.id)
+          }
+          initialValues={_.pick(selectedVersion, 'name', 'notes', 'current')}
+          form={`edit-version-${title.id}`}
+          enableReinitialize={true}
+          addClass="add-version"
+        />
+      );
+    }
+  };
 
-    const renderAddButton = () => {
-        if (authorized) {
-            return (
-                <AddButton
-                    title={`Add a Version of ${title.title}`}
-                    image="images/add.png"
-                    fields={[
-                        {
-                            label: 'Name',
-                            name: 'name',
-                            type: 'input',
-                            required: true         
-                        },
-                        {
-                            label: 'Notes',
-                            name: 'notes',
-                            type: 'textarea',          
-                        },
-                        {
-                            label: 'Current Version?',
-                            name: 'current',
-                            type: 'checkbox',      
-                        },
-                    ]}
-                    onSubmit={(formValues) => createVersion(formValues, title.id)}
-                    form={`add-version-${title.id}`}
-                    initialValues={{ current: true }}
-                    enableReinitialize={true}
-                    addClass='add-version'
-                />
-            );
-        }
-    };
+  const renderDeleteButton = () => {
+    if (authorized) {
+      return (
+        <DeleteButton
+          onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
+          displayName={selectedVersion.name}
+        />
+      );
+    }
+  };
 
-    const renderEditButton = () => {
-        if (authorized) {
-            return <AddButton
-                title={`Edit ${selectedVersion.name}`}
-                image="images/edit.png"
-                fields={[
-                    {
-                        label: 'Name',
-                        name: 'name',
-                        type: 'input', 
-                    },
-                    {
-                        label: 'Notes',
-                        name: 'notes',
-                        type: 'textarea',          
-                    },
-                    {
-                        label: 'Current Version?',
-                        name: 'current',
-                        type: 'checkbox',        
-                    },
-                ]}
-                onSubmit={formValues => editVersion(formValues, selectedVersion.id, title.id)}
-                initialValues={_.pick(selectedVersion, 'name', 'notes', 'current')}
-                form={`edit-version-${title.id}`}
-                enableReinitialize={true}
-                addClass='add-version'
-            />;
-        }
-    };
+  const itemList = () => {
+    return versions.filter((v) => v.id !== selectedVersion.id);
+  };
 
-    const renderDeleteButton = () => {
-        if (authorized) {
-            return <DeleteButton
-                onSubmit={() => deleteVersion(selectedVersion.id, title.id)}
-                displayName={selectedVersion.name}
-            />;
-        }
-    };
+  const displayVersion = (v) => {
+    return `${v.name}`;
+  };
 
-    const itemList = () => {
-        return versions.filter(v => v.id !== selectedVersion.id);
-    };
-
-    const displayVersion = v => {
-        return `${v.name}`;
-    };
-    
-    return (
-        <>
-            <DetailBox
-                selectedItem={selectedVersion}
-                itemType="Version"
-                itemList={itemList}
-                displayItem={displayVersion}
-                setSelected={setSelectedVersion}
-                renderAddButton={renderAddButton}
-                renderEditButton={renderEditButton}
-                renderDeleteButton={renderDeleteButton}
-            />
-            {renderBounces()}          
-        </>
-    );
+  return (
+    <>
+      <DetailBox
+        selectedItem={selectedVersion}
+        itemType="Version"
+        itemList={itemList}
+        displayItem={displayVersion}
+        setSelected={setSelectedVersion}
+        renderAddButton={renderAddButton}
+        renderEditButton={renderEditButton}
+        renderDeleteButton={renderDeleteButton}
+      />
+      <div className="detail-box-between">
+        {renderRecordLink()}
+        {renderArrow()}
+      </div>
+      {renderBounces()}
+    </>
+  );
 };
 
-const mapStateToProps = state => {
-    return {
-        bounces: state.bounces
-    };
-}
+const mapStateToProps = (state) => {
+  return {
+    bounces: state.bounces,
+    band: state.bands.currentBand,
+  };
+};
 
-export default connect(mapStateToProps, { fetchBounces, selectVersion, createVersion, editVersion, deleteVersion })(requireAuth(Version));
+export default connect(mapStateToProps, {
+  fetchBounces,
+  selectVersion,
+  createVersion,
+  editVersion,
+  deleteVersion,
+})(requireAuth(Version));

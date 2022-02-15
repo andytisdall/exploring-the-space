@@ -23,8 +23,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "HTTPS=true SSL_CRT_FILE='./cert/server.pem' SSL_KEY_FILE='./cert/cert.key' react-scripts start",
-    "prestart": "cp -f ./cert/server.pem ./node_modules/webpack-dev-server/ssl",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

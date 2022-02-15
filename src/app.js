@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+import '@babel/polyfill';
 
 import mongoose from 'mongoose';
 import express from 'express';
@@ -6,7 +6,6 @@ import 'express-async-errors';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import path from 'path';
-
 
 import './models/models.js';
 import './models/user.js';
@@ -33,41 +32,38 @@ let PORT;
 let STATIC_FILES;
 
 if (process.env.NODE_ENV === 'production') {
-    PORT = '3000';
-    STATIC_FILES = 'client/build';
+  PORT = '3000';
+  STATIC_FILES = 'client/build';
 } else {
-    PORT = '3001';
-    STATIC_FILES = 'client/public';
+  PORT = '3001';
+  STATIC_FILES = 'client/public';
 }
 
 app.use(express.static(path.join(__dirname, STATIC_FILES)));
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileUpload());
 app.use(cors());
-
-
 
 // connect mongo database
 
 const mongo = 'mongodb://localhost/greenhouse';
 
 mongoose.connect(mongo, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 mongoose.connection.on('connected', () => {
-    console.log('Connected to mongo instance');
+  console.log('Connected to mongo instance');
 });
 
 mongoose.connection.on('error', (err) => {
-    console.error('Error connecting to mongo');
-    console.log(err);
+  console.error('Error connecting to mongo');
+  console.log(err);
 });
-
 
 // add /api to all routers so we don't get our urls mixed up with frontend
 
@@ -89,9 +85,9 @@ apiRouter.use(errorHandler);
 app.use('/api', apiRouter);
 
 app.get('/*', (req, res) => {
-    res.sendFile('client/build/index.html', { root: __dirname });
+  res.sendFile('client/build/index.html', { root: __dirname });
 });
 
 app.listen(PORT, () => {
-    console.log(`Express running on port ${PORT}`);
+  console.log(`Express running on port ${PORT}`);
 });

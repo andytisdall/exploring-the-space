@@ -26,9 +26,7 @@ const Timer = ({ isRecording }) => {
     return `${minutes}:${seconds}`;
   };
 
-  return (
-    <div className="recorder-time">{isRecording && formatTime(timer)}</div>
-  );
+  return <div className="recorder-time">{formatTime(timer)}</div>;
 };
 
 export default Timer;

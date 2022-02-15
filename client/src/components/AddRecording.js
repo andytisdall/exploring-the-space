@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import {
   fetchTiers,
@@ -24,6 +25,8 @@ const AddRecording = ({
   createBounce,
   audio,
   uploadStarted,
+  error,
+  user,
 }) => {
   const defaultItem = { name: 'choose...', id: '0' };
   const displayDate = () => {
@@ -41,6 +44,8 @@ const AddRecording = ({
   const [tierList, setTierList] = useState([]);
   const [versionList, setVersionList] = useState([]);
 
+  const location = useLocation();
+
   useEffect(() => {
     fetchBand(bandName);
   }, []);
@@ -55,6 +60,9 @@ const AddRecording = ({
     if (currentBand) {
       const list = currentBand.tiers.map((id) => tiers[id]);
       setTierList(list);
+      if (location.state) {
+        setSelectedTier(location.state.tier);
+      }
     }
   }, [tiers]);
 
@@ -70,6 +78,9 @@ const AddRecording = ({
     if (selectedTier !== defaultItem) {
       const list = selectedTier.trackList.map((id) => titles[id]);
       setTitleList(list);
+      if (location.state) {
+        setSelectedTitle(location.state.title);
+      }
     }
   }, [titles]);
 
@@ -83,6 +94,9 @@ const AddRecording = ({
     if (selectedTitle !== defaultItem) {
       const list = selectedTitle.versions.map((id) => versions[id]);
       setVersionList(list);
+      if (location.state) {
+        setSelectedVersion(location.state.version);
+      }
     }
   }, [versions]);
 
@@ -115,7 +129,7 @@ const AddRecording = ({
       if (item) {
         const name = item.name || item.title;
         return (
-          <option value={item.id} key={item.id}>
+          <option value={item.id} key={item.id} disabled={item.id === '0'}>
             {name}
           </option>
         );
@@ -162,8 +176,18 @@ const AddRecording = ({
     );
   };
 
+  if (!user || !currentBand || !user.bands.includes(currentBand.id)) {
+    return (
+      <div className="add-recording">
+        Warning: you will not be able to save this recording because you are not
+        signed in or this is not your band.
+      </div>
+    );
+  }
+
   return (
     <div className="add-recording">
+      <h2>Save recording for {currentBand.name}</h2>
       <div className="add-recording-select-row">
         <div className="add-recording-label">Tier:</div>
         <div>
@@ -214,6 +238,7 @@ const AddRecording = ({
       </form>
       {uploadSuccess && renderUploadSuccess()}
       {uploadLoading && renderUploadLoading()}
+      {error}
     </div>
   );
 };
@@ -225,6 +250,8 @@ const mapStateToProps = (state) => {
     versions: state.versions,
     currentBand: state.bands.currentBand,
     uploadStarted: state.bands.uploadStarted,
+    error: state.error.error,
+    user: state.auth.user,
   };
 };
 

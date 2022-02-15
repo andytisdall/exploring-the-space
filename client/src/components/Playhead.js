@@ -6,6 +6,8 @@ const Playhead = ({ audio, isRecording }) => {
   const [playheadPosition, setPlayheadPosition] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [half, setHalf] = useState(false);
+
   const player = useRef();
 
   useEffect(() => {
@@ -39,10 +41,14 @@ const Playhead = ({ audio, isRecording }) => {
 
   useEffect(() => {
     if (audio) {
-      const url = URL.createObjectURL(audio);
+      let source = audio;
+      if (half) {
+        source = audio.slice(0, audio.size / 2, audio.type);
+      }
+      const url = URL.createObjectURL(source);
       player.current.src = url;
     }
-  }, [audio]);
+  }, [audio, half]);
 
   const renderPlayButton = () => {
     if (!isRecording && audio && !isPlaying) {
@@ -79,9 +85,27 @@ const Playhead = ({ audio, isRecording }) => {
     }
   };
 
+  const formatTime = (time) => {
+    let minutes =
+      time < 600 ? `0${Math.floor(time / 60)}` : Math.floor(time / 60);
+    let seconds =
+      time % 60 < 10 ? `0${Math.floor(time % 60)}` : Math.floor(time % 60);
+    return `${minutes}:${seconds}`;
+  };
+
+  const renderAudioTime = () => {
+    if (player.current) {
+      return formatTime(player.current.currentTime);
+    }
+  };
+
   return (
     <>
-      {renderPlayButton()}
+      <div className="audio-controls">
+        {renderPlayButton()}
+        {renderAudioTime()}
+      </div>
+      <div onClick={() => setHalf(!half)}>{`Half: ${half}`}</div>
       <div className="waveform-display">
         <Waveform audio={audio} isRecording={isRecording} />
         <input

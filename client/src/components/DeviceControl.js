@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const DeviceControl = ({ inputSource, setInputSource }) => {
+const DeviceControl = ({ inputSource, setInputSource, isRecording }) => {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const DeviceControl = ({ inputSource, setInputSource }) => {
         return <option key={device.deviceId}>{device.label}</option>;
       }
     });
-    return <select>{deviceList}</select>;
+    return <select disabled={isRecording}>{deviceList}</select>;
   };
 
   return (

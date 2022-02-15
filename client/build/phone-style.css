@@ -194,6 +194,21 @@
 
   /* VERSION */
 
+  .detail-box-between {
+    margin: 0 0.5rem;
+  }
+
+  .record-link {
+    font-size: 0.45rem;
+    height: 2.3rem;
+    width: 2.3rem;
+  }
+
+  .version-arrow {
+    font-size: 2.4rem;
+    padding: 3px;
+  }
+
   .detail-box {
     padding: 0.5rem;
   }
@@ -231,12 +246,6 @@
   .current,
   .latest {
     font-size: 0.4rem;
-  }
-
-  .version-arrow {
-    font-size: 2rem;
-    margin: 0.5rem;
-    padding: 3px;
   }
 
   /* PLAYLIST */

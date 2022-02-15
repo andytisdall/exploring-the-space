@@ -11,6 +11,7 @@ import {
   SIGN_OUT,
   UPLOAD_STARTED,
   CREATE_BOUNCE,
+  UPLOAD_FAILURE,
 } from '../actions/types';
 import _ from 'lodash';
 
@@ -59,6 +60,8 @@ export default (state = {}, action) => {
       return _.omit(state, state.currentBand);
     case UPLOAD_STARTED:
       return { ...state, uploadStarted: true };
+    case UPLOAD_FAILURE:
+      return { ...state, uploadStarted: false };
     case CREATE_BOUNCE:
       return { ...state, uploadStarted: false };
     default:

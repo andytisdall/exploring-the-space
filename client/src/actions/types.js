@@ -26,6 +26,7 @@ export const CREATE_BOUNCE = 'CREATE_BOUNCE';
 export const CREATE_BAND = 'CREATE_BAND';
 
 export const UPLOAD_STARTED = 'UPLOAD_STARTED';
+export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
 
 export const EDIT_TIER = 'EDIT_TIER';
 export const EDIT_PLAYLIST = 'EDIT_PLAYLIST';

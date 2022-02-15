@@ -67,6 +67,16 @@ const Recorder = ({ match }) => {
     );
   };
 
+  const renderDisplay = () => {
+    let display = '';
+    if (audio && !isRecording) {
+      display = <Playhead audio={audio} isRecording={isRecording} />;
+    } else if (isRecording) {
+      display = <Timer isRecording={isRecording} />;
+    }
+    return <div className="playhead-container">{display}</div>;
+  };
+
   const renderSpinner = () => {
     return (
       <div className="sk-circle-fade">
@@ -88,23 +98,15 @@ const Recorder = ({ match }) => {
 
   return (
     <div className={isRecording ? 'recorder recording' : 'recorder'}>
+      {error}
       {isLoading && renderSpinner()}
-      <div>{error}</div>
-      <div className="playhead-container">
-        {audio && !isRecording && (
-          <Playhead audio={audio} isRecording={isRecording} />
-        )}
-      </div>
-
+      {renderDisplay()}
       {renderButtons()}
-
-      <Timer isRecording={isRecording} />
-
       <DeviceControl
         inputSource={inputSource}
         setInputSource={setInputSource}
+        isRecording={isRecording}
       />
-
       <AddRecording bandName={match.params.bandName} audio={audio} />
     </div>
   );

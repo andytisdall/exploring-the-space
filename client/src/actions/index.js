@@ -42,6 +42,7 @@ import {
   SELECT_VERSION,
   SELECT_BOUNCE,
   UPLOAD_STARTED,
+  UPLOAD_FAILURE,
 } from './types';
 import history from '../history';
 import _ from 'lodash';
@@ -341,6 +342,7 @@ export const createBounce =
       // Read file as an ArrayBuffer, important !
       reader.readAsArrayBuffer(formValues.file);
     } catch (err) {
+      dispatch({ type: UPLOAD_FAILURE });
       dispatch(errorHandler(err));
     }
   };
