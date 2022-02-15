@@ -1238,11 +1238,49 @@ h5 {
   min-height: 160px;
 }
 
+.playhead-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .audio-controls {
   display: flex;
-  width: 80%;
   justify-content: start;
   align-items: center;
+}
+
+.editor-controls {
+  display: flex;
+  align-items: center;
+  width: 40%;
+  min-width: 150px;
+  max-width: 250px;
+  justify-content: space-between;
+}
+
+.editor-controls input[type='checkbox'] {
+  width: 1.5rem;
+  transform: translateY(3px);
+}
+
+.editor-controls label {
+  font-size: 0.7rem;
+}
+
+.editor-btn {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.6rem;
+  border: white 1px solid;
+  border-radius: 50%;
+  padding: 2px;
+  background-color: #76cdffb0;
+  color: black;
+  margin-left: 5px;
 }
 
 .waveform-display {
@@ -1296,6 +1334,22 @@ canvas {
   height: 100px;
   background: rgb(19, 83, 0);
   cursor: pointer;
+}
+
+.start-line::-webkit-slider-thumb {
+  background: rgb(250, 163, 33);
+}
+
+.start-line::-moz-range-thumb {
+  background: rgb(250, 163, 33);
+}
+
+.end-line::-webkit-slider-thumb {
+  background: rgb(220, 46, 255);
+}
+
+.endline::-moz-range-thumb {
+  background: rgb(220, 46, 255);
 }
 
 .device-control {

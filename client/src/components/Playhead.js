@@ -5,8 +5,10 @@ import Waveform from './Waveform';
 const Playhead = ({ audio, isRecording }) => {
   const [playheadPosition, setPlayheadPosition] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const [half, setHalf] = useState(false);
+  const [editedAudio, setEditedAudio] = useState(audio);
+  const [zoomIn, setZoomIn] = useState(false);
+  const [start, setStart] = useState(0);
+  const [end, setEnd] = useState(1000);
 
   const player = useRef();
 
@@ -40,15 +42,11 @@ const Playhead = ({ audio, isRecording }) => {
   }, [isRecording]);
 
   useEffect(() => {
-    if (audio) {
-      let source = audio;
-      if (half) {
-        source = audio.slice(0, audio.size / 2, audio.type);
-      }
-      const url = URL.createObjectURL(source);
+    if (editedAudio) {
+      const url = URL.createObjectURL(editedAudio);
       player.current.src = url;
     }
-  }, [audio, half]);
+  }, [editedAudio]);
 
   const renderPlayButton = () => {
     if (!isRecording && audio && !isPlaying) {
@@ -70,11 +68,22 @@ const Playhead = ({ audio, isRecording }) => {
     }
   };
 
+  useEffect(() => {
+    const blobStart = audio.size * (start * 0.001);
+    const blobEnd = audio.size * (end * 0.001);
+    if (zoomIn) {
+      const edited = audio.slice(blobStart, blobEnd, audio.type);
+      setEditedAudio(edited);
+    } else {
+      setEditedAudio(audio);
+    }
+  }, [zoomIn]);
+
   const updateSlider = () => {
     const position =
       (player.current.currentTime / player.current.duration) * 1000;
     if (!isNaN(position)) {
-      setPlayheadPosition(position + player.current.duration / 300);
+      setPlayheadPosition(position);
     }
   };
 
@@ -99,15 +108,73 @@ const Playhead = ({ audio, isRecording }) => {
     }
   };
 
+  const onStartClick = () => {
+    const start = playheadPosition;
+    if (start < end) {
+      setStart(start);
+    }
+  };
+
+  const onEndClick = () => {
+    const end = playheadPosition;
+    if (end > start) {
+      setEnd(end);
+    }
+  };
+
+  const renderEditor = () => {
+    return (
+      <div className="editor-controls">
+        <div onClick={onStartClick} className="editor-btn">
+          Set start
+        </div>
+        <div onClick={onEndClick} className="editor-btn">
+          Set end
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            onChange={() => setZoomIn(!zoomIn)}
+            value={zoomIn}
+          />
+          <label>Zoom</label>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <div className="audio-controls">
-        {renderPlayButton()}
-        {renderAudioTime()}
+      <div className="playhead-controls">
+        <div className="audio-controls">
+          {renderPlayButton()}
+          {renderAudioTime()}
+        </div>
+        {renderEditor()}
       </div>
-      <div onClick={() => setHalf(!half)}>{`Half: ${half}`}</div>
+
       <div className="waveform-display">
-        <Waveform audio={audio} isRecording={isRecording} />
+        <Waveform audio={editedAudio} isRecording={isRecording} />
+        {!zoomIn && (
+          <input
+            type="range"
+            min="0"
+            max="1000"
+            value={start}
+            className="playhead start-line"
+            readOnly
+          />
+        )}
+        {!zoomIn && (
+          <input
+            type="range"
+            min="0"
+            max="1000"
+            value={end}
+            className="playhead end-line"
+            readOnly
+          />
+        )}
         <input
           type="range"
           min="0"

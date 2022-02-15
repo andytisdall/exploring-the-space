@@ -9,14 +9,23 @@ const Waveform = ({ audio, isRecording }) => {
     if (isRecording && canvas.current) {
       const ctx = canvas.current.getContext('2d');
       ctx.clearRect(0, 0, canvas.current.width, canvas.current.height);
-      await audioContext.current.close();
-    } else {
-      renderWaveform();
     }
   }, [isRecording]);
 
+  useEffect(async () => {
+    if (audio) {
+      if (canvas.current) {
+        const ctx = canvas.current.getContext('2d');
+        ctx.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      }
+      renderWaveform();
+    }
+  }, [audio]);
+
   const renderWaveform = async () => {
-    audioContext.current = new AudioContext();
+    if (!audioContext.current) {
+      audioContext.current = new AudioContext();
+    }
     const buffer = await audio.arrayBuffer();
     const options = {
       audio_context: audioContext.current,
