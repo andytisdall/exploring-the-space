@@ -13,7 +13,6 @@ const Playhead = ({ audio, isRecording }) => {
   const player = useRef();
 
   useEffect(() => {
-    console.log({ audio });
     player.current = new Audio();
     player.current.onended = () => {
       setIsPlaying(false);
@@ -25,12 +24,6 @@ const Playhead = ({ audio, isRecording }) => {
       setIsPlaying(false);
     };
     player.current.ontimeupdate = updateSlider;
-    return () => {
-      player.current.ontimeupdate = null;
-      player.current.onended = null;
-      player.current.onplay = null;
-      player.current.onpause = null;
-    };
   }, []);
 
   useEffect(() => {
@@ -48,6 +41,20 @@ const Playhead = ({ audio, isRecording }) => {
       player.current.src = url;
     }
   }, [editedAudio]);
+
+  useEffect(() => {
+    setIsPlaying(false);
+    player.current.pause();
+    setPlayheadPosition(0);
+    const blobStart = audio.size * (start * 0.001);
+    const blobEnd = audio.size * (end * 0.001);
+    if (zoomIn) {
+      const edited = audio.slice(blobStart, blobEnd, audio.type);
+      setEditedAudio(edited);
+    } else {
+      setEditedAudio(audio);
+    }
+  }, [zoomIn]);
 
   const renderPlayButton = () => {
     if (!isRecording && audio && !isPlaying) {
@@ -68,17 +75,6 @@ const Playhead = ({ audio, isRecording }) => {
       );
     }
   };
-
-  useEffect(() => {
-    const blobStart = audio.size * (start * 0.001);
-    const blobEnd = audio.size * (end * 0.001);
-    if (zoomIn) {
-      const edited = audio.slice(blobStart, blobEnd, audio.type);
-      setEditedAudio(edited);
-    } else {
-      setEditedAudio(audio);
-    }
-  }, [zoomIn]);
 
   const updateSlider = () => {
     const position =
@@ -155,7 +151,7 @@ const Playhead = ({ audio, isRecording }) => {
       </div>
 
       <div className="waveform-display">
-        {/* <Waveform audio={editedAudio} isRecording={isRecording} /> */}
+        <Waveform audio={editedAudio} isRecording={isRecording} />
         {!zoomIn && (
           <input
             type="range"

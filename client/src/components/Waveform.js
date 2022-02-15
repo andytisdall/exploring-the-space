@@ -5,6 +5,8 @@ const Waveform = ({ audio, isRecording }) => {
   const canvas = useRef();
   const audioContext = useRef();
 
+  const cache = useRef({});
+
   useEffect(async () => {
     if (isRecording && canvas.current) {
       const ctx = canvas.current.getContext('2d');
@@ -18,7 +20,11 @@ const Waveform = ({ audio, isRecording }) => {
         const ctx = canvas.current.getContext('2d');
         ctx.clearRect(0, 0, canvas.current.width, canvas.current.height);
       }
-      renderWaveform();
+      if (!cache.current[audio.size]) {
+        renderWaveform();
+      } else {
+        drawWaveform(cache.current[audio.size]);
+      }
     }
   }, [audio]);
 
@@ -30,13 +36,14 @@ const Waveform = ({ audio, isRecording }) => {
     const options = {
       audio_context: audioContext.current,
       array_buffer: buffer,
-      scale: 128,
+      scale: 64,
     };
     WaveformData.createFromAudio(options, (err, waveform) => {
       if (err) {
         console.log(err);
       } else {
         drawWaveform(waveform);
+        cache.current[audio.size] = waveform;
       }
     });
   };

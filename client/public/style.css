@@ -1299,6 +1299,9 @@ h5 {
   margin-bottom: 1rem;
 }
 
+.waveform-image {
+}
+
 canvas {
   position: absolute;
   width: 100%;
@@ -1408,4 +1411,17 @@ canvas {
   background-color: #5e9660;
   text-align: center;
   padding: 1rem;
+}
+
+.editor {
+  margin: 1rem auto;
+  width: 90%;
+  min-width: 400px;
+  padding: 1rem;
+  border: 1px solid white;
+  background-color: #8953b66c;
+}
+
+.editor-title {
+  margin-bottom: 0.8rem;
 }

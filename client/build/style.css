@@ -147,6 +147,7 @@ label {
 .marqee {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   min-height: 2.3rem;
 }
 
@@ -682,6 +683,11 @@ h3 {
 .download {
   margin: 0.2rem 0.5rem 0 0.5rem;
   cursor: s-resize;
+}
+
+.edit-link {
+  font-size: 0.6rem;
+  color: rgb(80, 80, 80);
 }
 
 /* VERSION */
@@ -1293,6 +1299,9 @@ h5 {
   margin-bottom: 1rem;
 }
 
+.waveform-image {
+}
+
 canvas {
   position: absolute;
   width: 100%;
@@ -1402,4 +1411,17 @@ canvas {
   background-color: #5e9660;
   text-align: center;
   padding: 1rem;
+}
+
+.editor {
+  margin: 1rem auto;
+  width: 90%;
+  min-width: 400px;
+  padding: 1rem;
+  border: 1px solid white;
+  background-color: #8953b66c;
+}
+
+.editor-title {
+  margin-bottom: 0.8rem;
 }

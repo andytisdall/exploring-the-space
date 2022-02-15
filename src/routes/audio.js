@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import mongodb from 'mongodb';
 import moment from 'moment';
 import { encode } from 'base64-arraybuffer';
+import audioEncoder from 'audio-encoder';
+import { Writable } from 'stream';
+import { Blob } from 'node:buffer';
 
 let bucket;
 
@@ -116,6 +119,8 @@ router.get('/audio/edit/:id', async (req, res) => {
   const stream = bucket.openDownloadStream(mp3Id);
 
   // read the whole stream to an array and then send the buffer with the response
+
+  // const thing = new Writable();
   let file = [];
 
   res.status(200).set({
@@ -132,6 +137,11 @@ router.get('/audio/edit/:id', async (req, res) => {
 
   stream.on('end', () => {
     file = Buffer.concat(file);
+    // let arraybuffer = Uint8Array.from(file).buffer;
+    // res.send(arraybuffer);
+
+    // res.send(file);
+
     const base64String = encode(file);
     res.send(base64String);
   });
