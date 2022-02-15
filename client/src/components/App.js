@@ -10,6 +10,7 @@ import SignUp from './SignUp';
 import Home from './Home';
 import Help from './Help';
 import Recorder from './Recorder';
+import Editor from './Editor';
 import { fetchUser } from '../actions';
 
 import history from '../history';
@@ -45,6 +46,7 @@ const App = ({ signedIn, fetchUser, error }) => {
             />
             <Route path="/help" exact component={Help} />
             <Route path="/:bandName/record" exact component={Recorder} />
+            <Route path="/:bandName/edit" component={Editor} />
             <Route path="/:bandName" component={Header} />
           </Switch>
         </Router>

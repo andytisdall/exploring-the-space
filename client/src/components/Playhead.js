@@ -13,6 +13,7 @@ const Playhead = ({ audio, isRecording }) => {
   const player = useRef();
 
   useEffect(() => {
+    console.log({ audio });
     player.current = new Audio();
     player.current.onended = () => {
       setIsPlaying(false);
@@ -154,7 +155,7 @@ const Playhead = ({ audio, isRecording }) => {
       </div>
 
       <div className="waveform-display">
-        <Waveform audio={editedAudio} isRecording={isRecording} />
+        {/* <Waveform audio={editedAudio} isRecording={isRecording} /> */}
         {!zoomIn && (
           <input
             type="range"

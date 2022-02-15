@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
 import Version from './Version';
 import AddButton from './AddButton';
@@ -141,6 +142,27 @@ const Title = ({
     }
   };
 
+  const renderAudioEditLink = () => {
+    if (authorized && song) {
+      const { tier, title, version, bounce } = song;
+      return (
+        <Link
+          to={{
+            pathname: `/${band.url}/edit`,
+            state: {
+              tier,
+              title,
+              version,
+              bounce,
+            },
+          }}
+          className="edit-link"
+        >
+          edit audio
+        </Link>
+      );
+    }
+  };
   const renderVersion = () => {
     return (
       <Version versions={versionList} title={title} song={song} tier={tier} />
@@ -247,6 +269,7 @@ const Title = ({
             <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
             <h3>{title.title}</h3>
           </div>
+          {renderAudioEditLink()}
           {renderPlayContainer()}
           {renderButtons()}
         </div>

@@ -147,6 +147,7 @@ label {
 .marqee {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   min-height: 2.3rem;
 }
 
@@ -682,6 +683,11 @@ h3 {
 .download {
   margin: 0.2rem 0.5rem 0 0.5rem;
   cursor: s-resize;
+}
+
+.edit-link {
+  font-size: 0.6rem;
+  color: rgb(80, 80, 80);
 }
 
 /* VERSION */

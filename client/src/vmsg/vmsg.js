@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-const MEGABYTES_ALLOCATED = 300;
-
 function pad2(n) {
   n |= 0;
   return n < 10 ? `0${n}` : `${Math.min(n, 99)}`;
@@ -46,7 +44,7 @@ function inlineWorker() {
 
   // Must be in sync with emcc settings!
   const TOTAL_STACK = 5 * 1024 * 1024;
-  const TOTAL_MEMORY = MEGABYTES_ALLOCATED * 1024 * 1024;
+  const TOTAL_MEMORY = 300 * 1024 * 1024;
   const WASM_PAGE_SIZE = 64 * 1024;
   let memory = null;
   let dynamicTop = TOTAL_STACK;
