@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import vmsg from '../vmsg';
 
-import Playhead from './Playhead';
 import Timer from './Timer';
 import DeviceControl from './DeviceControl';
 import AddRecording from './AddRecording';
@@ -70,7 +69,8 @@ const Recorder = ({ match }) => {
   const renderDisplay = () => {
     let display = '';
     if (audio && !isRecording) {
-      display = <Playhead audio={audio} isRecording={isRecording} />;
+      const url = URL.createObjectURL(audio);
+      display = <audio controls src={url} />;
     } else if (isRecording) {
       display = <Timer isRecording={isRecording} />;
     }

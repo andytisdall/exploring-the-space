@@ -10,17 +10,28 @@ import playlistSongReducer from './playlistSongReducer';
 import bandReducer from './bandReducer';
 import errorReducer from './errorReducer';
 import audioReducer from './audioReducer';
+import { FETCH_BAND } from '../actions/types';
 
-export default combineReducers({
-    form: formReducer,
-    auth: authReducer,
-    tiers: tierReducer,
-    titles: titleReducer,
-    versions: versionReducer,
-    bounces: bounceReducer,
-    playlists: playlistReducer,
-    playlistSongs: playlistSongReducer,
-    bands: bandReducer,
-    error: errorReducer,
-    audio: audioReducer
+const appReducer = combineReducers({
+  form: formReducer,
+  auth: authReducer,
+  tiers: tierReducer,
+  titles: titleReducer,
+  versions: versionReducer,
+  bounces: bounceReducer,
+  playlists: playlistReducer,
+  playlistSongs: playlistSongReducer,
+  bands: bandReducer,
+  error: errorReducer,
+  audio: audioReducer,
 });
+
+// clear the store if we are loading a new band's data
+
+export default (state, action) => {
+  if (action.type === FETCH_BAND) {
+    const clearedState = { auth: state.auth };
+    return appReducer(clearedState, action);
+  }
+  return appReducer(state, action);
+};

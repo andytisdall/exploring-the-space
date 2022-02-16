@@ -67,7 +67,7 @@ const AddRecording = ({
   }, [tiers]);
 
   useEffect(() => {
-    if (selectedTier !== defaultItem) {
+    if (selectedTier.id !== '0') {
       fetchTitles(selectedTier.id);
       setVersionList([]);
       setSelectedVersion(defaultItem);
@@ -75,7 +75,7 @@ const AddRecording = ({
   }, [selectedTier]);
 
   useEffect(() => {
-    if (selectedTier !== defaultItem) {
+    if (selectedTier.id !== '0') {
       const list = selectedTier.trackList.map((id) => titles[id]);
       setTitleList(list);
       if (location.state) {
@@ -85,13 +85,13 @@ const AddRecording = ({
   }, [titles]);
 
   useEffect(() => {
-    if (selectedTitle !== defaultItem) {
+    if (selectedTitle.id !== '0') {
       fetchVersions(selectedTitle.id);
     }
   }, [selectedTitle]);
 
   useEffect(() => {
-    if (selectedTitle !== defaultItem) {
+    if (selectedTitle.id !== '0') {
       const list = selectedTitle.versions.map((id) => versions[id]);
       setVersionList(list);
       if (location.state) {
