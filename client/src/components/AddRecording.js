@@ -9,7 +9,6 @@ import {
   fetchBand,
   fetchBounces,
   createBounce,
-  clearRecordings,
 } from '../actions';
 
 const AddRecording = ({
@@ -27,7 +26,7 @@ const AddRecording = ({
   error,
   user,
   recording,
-  clearRecordings,
+  onSuccess,
 }) => {
   const defaultItem = { name: 'choose...', id: '0' };
   const displayDate = () => {
@@ -113,7 +112,7 @@ const AddRecording = ({
       setTimeout(() => {
         setUploadSuccess(false);
       }, 10000);
-      clearRecordings();
+      onSuccess();
     }
     if (uploadStarted && !uploadLoading) {
       setUploadLoading(true);
@@ -266,5 +265,4 @@ export default connect(mapStateToProps, {
   fetchBand,
   createBounce,
   fetchBounces,
-  clearRecordings,
 })(AddRecording);

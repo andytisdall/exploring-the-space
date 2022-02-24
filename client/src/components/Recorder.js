@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import vmsg from '../vmsg';
 import { connect } from 'react-redux';
 
-import { createRecording, fetchRecording } from '../actions';
+import { clearRecordings, createRecording, fetchRecording } from '../actions';
 import AddRecording from './AddRecording';
 import Timer from './Timer';
 import DeviceControl from './DeviceControl';
@@ -58,7 +58,7 @@ const Recorder = ({ recordings, createRecording, fetchRecording }) => {
       const file = new File([blob], 'recording.mp3', {
         lastModified: Date(),
       });
-      createRecording(file);
+      createRecording(blob);
       setAudio(blob);
       setIsRecording(false);
     } catch (err) {
@@ -114,11 +114,18 @@ const Recorder = ({ recordings, createRecording, fetchRecording }) => {
     }
   };
 
+  const onCreateBounce = () => {
+    clearRecordings();
+    setAudio(null);
+  };
+
   const renderAddRecording = () => {
     const consolidatedBlob = recordings.length
       ? new Blob(recordings, { type: 'audio/mpeg' })
       : null;
-    return <AddRecording recording={consolidatedBlob} />;
+    return (
+      <AddRecording recording={consolidatedBlob} onSuccess={onCreateBounce} />
+    );
   };
 
   return (
