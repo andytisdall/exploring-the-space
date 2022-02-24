@@ -59,7 +59,7 @@ const Recorder = ({ recordings, createRecording, fetchRecording }) => {
         lastModified: Date(),
       });
       createRecording(file);
-      setAudio(file);
+      setAudio(blob);
       setIsRecording(false);
     } catch (err) {
       setError(err.message);

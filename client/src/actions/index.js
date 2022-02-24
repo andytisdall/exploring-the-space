@@ -831,10 +831,12 @@ export const deletePlaylistSong =
 
 export const clearRecordings = () => (dispatch) => {
   const recordingList = JSON.parse(localStorage.getItem('recording-list'));
-  recordingList.forEach((id) => {
-    greenhouse.post('/recordings/delete', { id });
-  });
-  localStorage.removeItem('recording-list');
+  if (recordingList) {
+    recordingList.forEach((id) => {
+      greenhouse.post('/recordings/delete', { id });
+    });
+    localStorage.removeItem('recording-list');
+  }
   dispatch({ type: CLEAR_RECORDINGS });
 };
 
