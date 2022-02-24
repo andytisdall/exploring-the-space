@@ -12,6 +12,7 @@ export const FETCH_BANDS = 'FETCH_BANDS';
 export const FETCH_TITLES = 'FETCH_TITLES';
 export const FETCH_VERSIONS = 'FETCH_VERSIONS';
 export const FETCH_BOUNCES = 'FETCH_BOUNCES';
+export const FETCH_RECORDING = 'FETCH_RECORDING';
 
 export const FETCH_TITLE = 'FETCH_TITLE';
 export const FETCH_VERSION = 'FETCH_VERSION';
@@ -24,6 +25,7 @@ export const CREATE_PLAYLIST = 'CREATE_PLAYLIST';
 export const CREATE_VERSION = 'CREATE_VERSION';
 export const CREATE_BOUNCE = 'CREATE_BOUNCE';
 export const CREATE_BAND = 'CREATE_BAND';
+export const CREATE_RECORDING = 'CREATE_RECORDING';
 
 export const UPLOAD_STARTED = 'UPLOAD_STARTED';
 export const UPLOAD_FAILURE = 'UPLOAD_FAILURE';
@@ -43,6 +45,7 @@ export const DELETE_TITLE = 'DELETE_TITLE';
 export const DELETE_VERSION = 'DELETE_VERSION';
 export const DELETE_BOUNCE = 'DELETE_BOUNCE';
 export const DELETE_BAND = 'DELETE_BAND';
+export const CLEAR_RECORDINGS = 'CLEAR_RECORDINGS';
 
 export const PLAY_AUDIO = 'PLAY_AUDIO';
 export const PAUSE_AUDIO = 'PAUSE_AUDIO';

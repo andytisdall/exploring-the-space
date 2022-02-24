@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import Waveform from './Waveform';
 
-const Playhead = ({ audio, isRecording }) => {
+const Playhead = ({ audio, isRecording, addToSongList }) => {
   const [playheadPosition, setPlayheadPosition] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [editedAudio, setEditedAudio] = useState(audio);
@@ -109,6 +109,9 @@ const Playhead = ({ audio, isRecording }) => {
     const start = playheadPosition;
     if (start < end) {
       setStart(start);
+    } else {
+      setStart(start);
+      setEnd(start + 1);
     }
   };
 
@@ -116,6 +119,9 @@ const Playhead = ({ audio, isRecording }) => {
     const end = playheadPosition;
     if (end > start) {
       setEnd(end);
+    } else {
+      setEnd(end);
+      setStart(end - 1);
     }
   };
 
@@ -140,6 +146,19 @@ const Playhead = ({ audio, isRecording }) => {
     );
   };
 
+  const renderSelectSectionButton = () => {
+    if (zoomIn) {
+      return (
+        <div
+          onClick={() => addToSongList(editedAudio)}
+          className="select-section-btn"
+        >
+          save zoomed section
+        </div>
+      );
+    }
+  };
+
   return (
     <>
       <div className="playhead-controls">
@@ -147,11 +166,13 @@ const Playhead = ({ audio, isRecording }) => {
           {renderPlayButton()}
           {renderAudioTime()}
         </div>
+        {renderSelectSectionButton()}
         {renderEditor()}
       </div>
 
       <div className="waveform-display">
         <Waveform audio={editedAudio} isRecording={isRecording} />
+
         {!zoomIn && (
           <input
             type="range"
@@ -162,6 +183,7 @@ const Playhead = ({ audio, isRecording }) => {
             readOnly
           />
         )}
+
         {!zoomIn && (
           <input
             type="range"
@@ -172,6 +194,7 @@ const Playhead = ({ audio, isRecording }) => {
             readOnly
           />
         )}
+
         <input
           type="range"
           min="0"

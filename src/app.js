@@ -21,6 +21,7 @@ import { playlistSongRouter } from './routes/playlistSong.js';
 import { authRouter } from './routes/auth.js';
 import { audioRouter } from './routes/audio.js';
 import { userRouter } from './routes/user.js';
+import { recordingsRouter } from './routes/recordings.js';
 
 import { errorHandler } from './middlewares/error-handler.js';
 
@@ -79,6 +80,7 @@ apiRouter.use(bounceRouter);
 apiRouter.use(audioRouter);
 apiRouter.use(playlistRouter);
 apiRouter.use(playlistSongRouter);
+apiRouter.use(recordingsRouter);
 
 apiRouter.use(errorHandler);
 

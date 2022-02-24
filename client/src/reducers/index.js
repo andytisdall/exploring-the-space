@@ -10,6 +10,7 @@ import playlistSongReducer from './playlistSongReducer';
 import bandReducer from './bandReducer';
 import errorReducer from './errorReducer';
 import audioReducer from './audioReducer';
+import recordingReducer from './recordingReducer';
 import { FETCH_BAND } from '../actions/types';
 
 const appReducer = combineReducers({
@@ -24,6 +25,7 @@ const appReducer = combineReducers({
   bands: bandReducer,
   error: errorReducer,
   audio: audioReducer,
+  recordings: recordingReducer,
 });
 
 // clear the store if we are loading a new band's data

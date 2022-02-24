@@ -18,6 +18,7 @@ import {
   CREATE_BOUNCE,
   CREATE_PLAYLIST,
   CREATE_PLAYLISTSONG,
+  CREATE_RECORDING,
   EDIT_BAND,
   EDIT_TIER,
   EDIT_TITLE,
@@ -32,6 +33,7 @@ import {
   DELETE_BOUNCE,
   DELETE_PLAYLIST,
   DELETE_PLAYLISTSONG,
+  CLEAR_RECORDINGS,
   PLAY_AUDIO,
   PAUSE_AUDIO,
   QUEUE_SONGS,
@@ -43,6 +45,7 @@ import {
   SELECT_BOUNCE,
   UPLOAD_STARTED,
   UPLOAD_FAILURE,
+  FETCH_RECORDING,
 } from './types';
 import history from '../history';
 import _ from 'lodash';
@@ -177,6 +180,19 @@ export const fetchPlaylistSongs = (playlistId) => async (dispatch) => {
     dispatch(errorHandler(err));
   }
 };
+
+export const fetchRecording =
+  (recordingId, index) => async (dispatch, getState) => {
+    try {
+      const response = await greenhouse.get(`/recordings/${recordingId}`);
+      dispatch({
+        type: FETCH_RECORDING,
+        payload: { index, file: response.data },
+      });
+    } catch (err) {
+      dispatch(errorHandler(err));
+    }
+  };
 
 export const createBand = (formValues) => async (dispatch) => {
   try {
@@ -346,6 +362,31 @@ export const createBounce =
       dispatch(errorHandler(err));
     }
   };
+
+export const createRecording = (file) => async (dispatch, getState) => {
+  try {
+    const currentBand = getState().bands.currentBand;
+    const formData = new FormData();
+    formData.append('currentBand', currentBand.id);
+    formData.append('file', file);
+    const response = await greenhouse.post('/recordings', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    // get the existing list of current recordings from local storage and add new stream id
+    const recordingList =
+      JSON.parse(localStorage.getItem('recording-list')) || [];
+    localStorage.setItem(
+      'recording-list',
+      JSON.stringify([...recordingList, response.data])
+    );
+
+    const index = recordingList.length;
+
+    dispatch({ type: CREATE_RECORDING, payload: { file, index } });
+  } catch (err) {
+    dispatch(errorHandler(err));
+  }
+};
 
 export const createPlaylist = (formValues) => async (dispatch, getState) => {
   try {
@@ -787,6 +828,15 @@ export const deletePlaylistSong =
       dispatch(errorHandler(err));
     }
   };
+
+export const clearRecordings = () => (dispatch) => {
+  const recordingList = JSON.parse(localStorage.getItem('recording-list'));
+  recordingList.forEach((id) => {
+    greenhouse.post('/recordings/delete', { id });
+  });
+  localStorage.removeItem('recording-list');
+  dispatch({ type: CLEAR_RECORDINGS });
+};
 
 export const playAudio = () => {
   return { type: PLAY_AUDIO };

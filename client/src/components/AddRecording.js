@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import {
   fetchTiers,
@@ -9,6 +9,7 @@ import {
   fetchBand,
   fetchBounces,
   createBounce,
+  clearRecordings,
 } from '../actions';
 
 const AddRecording = ({
@@ -16,17 +17,17 @@ const AddRecording = ({
   tiers,
   titles,
   versions,
-  bandName,
   fetchBand,
   fetchTiers,
   fetchTitles,
   fetchVersions,
   fetchBounces,
   createBounce,
-  audio,
   uploadStarted,
   error,
   user,
+  recording,
+  clearRecordings,
 }) => {
   const defaultItem = { name: 'choose...', id: '0' };
   const displayDate = () => {
@@ -45,9 +46,15 @@ const AddRecording = ({
   const [versionList, setVersionList] = useState([]);
 
   const location = useLocation();
+  const params = useParams();
 
   useEffect(() => {
-    fetchBand(bandName);
+    fetchBand(params.bandName);
+    if (location.state) {
+      setSelectedTier(location.state.tier);
+      setSelectedTitle(location.state.title);
+      setSelectedVersion(location.state.version);
+    }
   }, []);
 
   useEffect(() => {
@@ -60,9 +67,6 @@ const AddRecording = ({
     if (currentBand) {
       const list = currentBand.tiers.map((id) => tiers[id]);
       setTierList(list);
-      if (location.state) {
-        setSelectedTier(location.state.tier);
-      }
     }
   }, [tiers]);
 
@@ -71,6 +75,7 @@ const AddRecording = ({
       fetchTitles(selectedTier.id);
       setVersionList([]);
       setSelectedVersion(defaultItem);
+      setSelectedTitle(defaultItem);
     }
   }, [selectedTier]);
 
@@ -78,15 +83,13 @@ const AddRecording = ({
     if (selectedTier.id !== '0') {
       const list = selectedTier.trackList.map((id) => titles[id]);
       setTitleList(list);
-      if (location.state) {
-        setSelectedTitle(location.state.title);
-      }
     }
   }, [titles]);
 
   useEffect(() => {
     if (selectedTitle.id !== '0') {
       fetchVersions(selectedTitle.id);
+      setSelectedVersion(defaultItem);
     }
   }, [selectedTitle]);
 
@@ -94,9 +97,6 @@ const AddRecording = ({
     if (selectedTitle.id !== '0') {
       const list = selectedTitle.versions.map((id) => versions[id]);
       setVersionList(list);
-      if (location.state) {
-        setSelectedVersion(location.state.version);
-      }
     }
   }, [versions]);
 
@@ -113,6 +113,7 @@ const AddRecording = ({
       setTimeout(() => {
         setUploadSuccess(false);
       }, 10000);
+      clearRecordings();
     }
     if (uploadStarted && !uploadLoading) {
       setUploadLoading(true);
@@ -145,19 +146,20 @@ const AddRecording = ({
   const onSubmit = (e) => {
     e.preventDefault();
     if (submitActive()) {
-      const file = new File([audio], 'recording.mp3', { lastModified: Date() });
+      const file = new File([recording], 'recording.mp3', {
+        lastModified: Date(),
+      });
       const form = {
         date: selectedDate,
         latest: true,
         file: [file],
       };
-
       createBounce(form, selectedVersion.id);
     }
   };
 
   const submitActive = () => {
-    if (audio && selectedDate && selectedVersion.id !== '0') {
+    if (recording && selectedDate && selectedVersion.id !== '0') {
       return true;
     }
     return false;
@@ -229,7 +231,9 @@ const AddRecording = ({
       <form onSubmit={onSubmit}>
         <button
           className={`${
-            submitActive() ? 'submit-button-centered' : 'submit-inactive'
+            submitActive()
+              ? 'submit-button submit-button-centered'
+              : 'submit-inactive'
           }`}
           type="submit"
         >
@@ -262,4 +266,5 @@ export default connect(mapStateToProps, {
   fetchBand,
   createBounce,
   fetchBounces,
+  clearRecordings,
 })(AddRecording);

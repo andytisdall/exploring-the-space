@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import vmsg from '../vmsg';
+import { connect } from 'react-redux';
 
+import { createRecording, fetchRecording } from '../actions';
+import AddRecording from './AddRecording';
 import Timer from './Timer';
 import DeviceControl from './DeviceControl';
-import AddRecording from './AddRecording';
 
-const Recorder = ({ match }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const Recorder = ({ recordings, createRecording, fetchRecording }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audio, setAudio] = useState();
   const [inputSource, setInputSource] = useState();
@@ -14,45 +15,54 @@ const Recorder = ({ match }) => {
 
   const mediaRecorder = useRef();
 
-  useEffect(async () => {
+  useEffect(() => {
     // Initialize vmsg recorder
     mediaRecorder.current = new vmsg.Recorder({
-      wasmURL: 'https://unpkg.com/vmsg@0.3.0/vmsg.wasm',
+      wasmURL: 'https://unpkg.com/vmsg@0.4.0/vmsg.wasm',
     });
+
+    const recordingList = JSON.parse(localStorage.getItem('recording-list'));
+    if (recordingList) {
+      recordingList.forEach((id, index) => {
+        fetchRecording(id, index);
+      });
+    }
   }, []);
 
-  const onRecord = async () => {
-    if (!isLoading) {
-      setIsLoading(true);
-      if (!isRecording) {
-        try {
-          await navigator.mediaDevices.getUserMedia({
-            audio: {
-              deviceId: inputSource.deviceId,
-            },
-          });
-          await mediaRecorder.current.initAudio();
-          await mediaRecorder.current.initWorker();
-          mediaRecorder.current.startRecording();
-          setIsLoading(false);
-          setIsRecording(true);
-        } catch (err) {
-          console.error(err);
-          setIsLoading(false);
-          setError(err.message);
-        }
-      } else {
-        try {
-          const blob = await mediaRecorder.current.stopRecording();
-          setAudio(blob);
-          setIsLoading(false);
-          setIsRecording(false);
-        } catch (err) {
-          console.error(err);
-          setIsLoading(false);
-          setError(err.message);
-        }
-      }
+  const onRecord = () => {
+    if (!isRecording) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: inputSource.deviceId,
+        },
+      });
+      await mediaRecorder.current.init();
+      mediaRecorder.current.startRecording();
+      setIsRecording(true);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      const blob = await mediaRecorder.current.stopRecording();
+      const file = new File([blob], 'recording.mp3', {
+        lastModified: Date(),
+      });
+      createRecording(file);
+      setAudio(file);
+      setIsRecording(false);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -77,29 +87,43 @@ const Recorder = ({ match }) => {
     return <div className="playhead-container">{display}</div>;
   };
 
-  const renderSpinner = () => {
-    return (
-      <div className="sk-circle-fade">
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-      </div>
-    );
+  const renderList = () => {
+    if (recordings) {
+      return recordings.map((item, index) => {
+        if (!item) {
+          return;
+        }
+        const selectedRecording = audio === item ? 'selected-recording' : '';
+        const url = URL.createObjectURL(item);
+        return (
+          <div
+            onClick={() => setAudio(item)}
+            key={item.size}
+            className={`recording-list-item ${selectedRecording}`}
+          >
+            {`${index + 1}: `}
+            <audio
+              src={url}
+              controls
+              onClick={(e) => e.preventDefault()}
+              className="small-audio-player"
+            />
+          </div>
+        );
+      });
+    }
+  };
+
+  const renderAddRecording = () => {
+    const consolidatedBlob = recordings.length
+      ? new Blob(recordings, { type: 'audio/mpeg' })
+      : null;
+    return <AddRecording recording={consolidatedBlob} />;
   };
 
   return (
     <div className={isRecording ? 'recorder recording' : 'recorder'}>
       {error}
-      {isLoading && renderSpinner()}
       {renderDisplay()}
       {renderButtons()}
       <DeviceControl
@@ -107,9 +131,20 @@ const Recorder = ({ match }) => {
         setInputSource={setInputSource}
         isRecording={isRecording}
       />
-      <AddRecording bandName={match.params.bandName} audio={audio} />
+      <div className="recording-list">
+        {renderList()}
+        {renderAddRecording()}
+      </div>
     </div>
   );
 };
 
-export default Recorder;
+const mapStateToProps = (state) => {
+  return {
+    recordings: state.recordings,
+  };
+};
+
+export default connect(mapStateToProps, { createRecording, fetchRecording })(
+  Recorder
+);

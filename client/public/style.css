@@ -1349,18 +1349,26 @@ canvas {
 
 .start-line::-webkit-slider-thumb {
   background: rgb(250, 163, 33);
+  height: 110px;
+  transform: translateY(-5px);
 }
 
 .start-line::-moz-range-thumb {
   background: rgb(250, 163, 33);
+  height: 110px;
+  transform: translateY(-5px);
 }
 
 .end-line::-webkit-slider-thumb {
   background: rgb(220, 46, 255);
+  height: 110px;
+  transform: translateY(-5px);
 }
 
 .endline::-moz-range-thumb {
   background: rgb(220, 46, 255);
+  height: 110px;
+  transform: translateY(-5px);
 }
 
 .device-control {
@@ -1426,4 +1434,41 @@ canvas {
 
 .editor-title {
   margin-bottom: 0.8rem;
+}
+
+.recording-list-item {
+  border: white 1px solid;
+  background-color: #76cdff;
+  color: black;
+  display: flex;
+  align-items: center;
+}
+
+.selected-recording {
+  background-color: rgb(250, 224, 110);
+}
+
+.select-section-btn {
+  border: white 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #2cb142;
+  color: black;
+  font-size: 0.8rem;
+}
+
+.small-audio-player {
+  height: 15px;
+  width: 150px;
+}
+
+.recording-section-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: black solid 1px;
 }
