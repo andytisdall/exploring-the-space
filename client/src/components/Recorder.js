@@ -55,9 +55,6 @@ const Recorder = ({ recordings, createRecording, fetchRecording }) => {
   const stopRecording = async () => {
     try {
       const blob = await mediaRecorder.current.stopRecording();
-      const file = new File([blob], 'recording.mp3', {
-        lastModified: Date(),
-      });
       createRecording(blob);
       setAudio(blob);
       setIsRecording(false);

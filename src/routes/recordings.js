@@ -36,9 +36,13 @@ router.get('/recordings/:id', async (req, res) => {
   });
 
   stream.on('end', () => {
-    file = Buffer.concat(file);
-    const base64String = encode(file);
-    res.send(base64String);
+    try {
+      file = Buffer.concat(file);
+      const base64String = encode(file);
+      res.send(base64String);
+    } catch (err) {
+      throw new Error(err.message);
+    }
   });
 });
 
