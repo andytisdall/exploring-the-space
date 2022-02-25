@@ -18,6 +18,7 @@ router.get('/recordings/:id', async (req, res) => {
   const stream = bucket.openDownloadStream(mp3Id);
 
   if (!stream) {
+    console.log('!stream');
     throw new Error('stream not found');
   }
 
