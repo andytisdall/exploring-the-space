@@ -38,12 +38,12 @@ router.get('/recordings/:id', async (req, res) => {
   stream.on('end', () => {
     try {
       file = Buffer.concat(file);
-      // const base64String = encode(file);
+      const base64String = encode(file);
       // if (id === '62185a527b5729c1544b147f') {
       //   console.log('file encoded');
       // }
-      // res.send(base64String);
-      res.send(file);
+      res.send(base64String);
+      // res.send(file);
     } catch (err) {
       throw new Error(err.message);
     }
