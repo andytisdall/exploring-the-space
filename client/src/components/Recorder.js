@@ -7,7 +7,12 @@ import AddRecording from './AddRecording';
 import Timer from './Timer';
 import DeviceControl from './DeviceControl';
 
-const Recorder = ({ recordings, createRecording, fetchRecording }) => {
+const Recorder = ({
+  recordings,
+  createRecording,
+  fetchRecording,
+  clearRecordings,
+}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audio, setAudio] = useState();
   const [inputSource, setInputSource] = useState();
@@ -149,6 +154,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { createRecording, fetchRecording })(
-  Recorder
-);
+export default connect(mapStateToProps, {
+  createRecording,
+  fetchRecording,
+  clearRecordings,
+})(Recorder);

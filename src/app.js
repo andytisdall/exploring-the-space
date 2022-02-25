@@ -34,10 +34,10 @@ let STATIC_FILES;
 
 if (process.env.NODE_ENV === 'production') {
   PORT = '3000';
-  STATIC_FILES = 'client/build';
+  STATIC_FILES = 'client/build/';
 } else {
   PORT = '3001';
-  STATIC_FILES = 'client/public';
+  STATIC_FILES = 'client/public/';
 }
 
 app.use(express.static(path.join(__dirname, STATIC_FILES)));

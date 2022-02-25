@@ -830,6 +830,7 @@ export const deletePlaylistSong =
   };
 
 export const clearRecordings = () => (dispatch) => {
+  console.log('ok');
   const recordingList = JSON.parse(localStorage.getItem('recording-list'));
   if (recordingList) {
     recordingList.forEach((id) => {
