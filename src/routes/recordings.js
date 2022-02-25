@@ -41,6 +41,9 @@ router.get('/recordings/:id', async (req, res) => {
         console.log('stream ended');
       }
       file = Buffer.concat(file);
+      if (id === '62185a527b5729c1544b147f') {
+        console.log('file concatenated');
+      }
       const base64String = encode(file);
       if (id === '62185a527b5729c1544b147f') {
         console.log('file encoded');
