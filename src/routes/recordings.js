@@ -15,12 +15,9 @@ router.get('/recordings/:id', async (req, res) => {
   const { id } = req.params;
   let mp3Id = new mongodb.ObjectID(id);
 
-  console.log('good so far');
-
   const stream = bucket.openDownloadStream(mp3Id);
 
   if (!stream) {
-    console.log('!stream');
     throw new Error('stream not found');
   }
 
@@ -31,7 +28,6 @@ router.get('/recordings/:id', async (req, res) => {
   });
 
   stream.on('data', (chunk) => {
-    console.log('pushing chunk');
     file.push(chunk);
   });
 
@@ -41,9 +37,14 @@ router.get('/recordings/:id', async (req, res) => {
 
   stream.on('end', () => {
     try {
-      console.log('stream ended');
+      if (id === '62185a527b5729c1544b147f') {
+        console.log('stream ended');
+      }
       file = Buffer.concat(file);
       const base64String = encode(file);
+      if (id === '62185a527b5729c1544b147f') {
+        console.log('file encoded');
+      }
       res.send(base64String);
     } catch (err) {
       throw new Error(err.message);
