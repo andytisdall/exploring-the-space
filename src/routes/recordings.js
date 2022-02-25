@@ -14,11 +14,12 @@ router.get('/recordings/:id', async (req, res) => {
   req.socket.setTimeout(10 * 60 * 1000);
   const { id } = req.params;
   let mp3Id = new mongodb.ObjectID(id);
+  let stream;
 
-  const stream = bucket.openDownloadStream(mp3Id);
-
-  if (!stream) {
-    throw new Error('stream not found');
+  try {
+    stream = bucket.openDownloadStream(mp3Id);
+  } catch (err) {
+    throw new Error(err.message);
   }
 
   let file = [];
@@ -49,6 +50,8 @@ router.get('/recordings/:id', async (req, res) => {
     }
   });
 });
+
+// recording-list	["621757a17b5729c1544b109b","621757ae7b5729c1544b10a8","621757b87b5729c1544b10ca","621757c97b5729c1544b10e4","6217595b7b5729c1544b11ad","621759987b5729c1544b11c3","62185a527b5729c1544b147f","621862d00c7f23fcb5d07a47","621865e6ad4788fe3d420024"]
 
 router.post('/recordings/', async (req, res) => {
   req.socket.setTimeout(10 * 60 * 1000);

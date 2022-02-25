@@ -73,8 +73,8 @@ const AddRecording = ({
     if (selectedTier.id !== '0') {
       fetchTitles(selectedTier.id);
       setVersionList([]);
-      setSelectedVersion(defaultItem);
-      setSelectedTitle(defaultItem);
+      // setSelectedVersion(defaultItem);
+      // setSelectedTitle(defaultItem);
     }
   }, [selectedTier]);
 
@@ -88,7 +88,7 @@ const AddRecording = ({
   useEffect(() => {
     if (selectedTitle.id !== '0') {
       fetchVersions(selectedTitle.id);
-      setSelectedVersion(defaultItem);
+      // setSelectedVersion(defaultItem);
     }
   }, [selectedTitle]);
 
