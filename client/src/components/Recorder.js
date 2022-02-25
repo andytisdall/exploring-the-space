@@ -91,7 +91,7 @@ const Recorder = ({ recordings, createRecording, fetchRecording }) => {
     if (recordings) {
       return recordings.map((item, index) => {
         if (!item) {
-          return;
+          return <div key={index}>{`${index + 1}: ${item}`}</div>;
         }
         const selectedRecording = audio === item ? 'selected-recording' : '';
         const url = URL.createObjectURL(item);

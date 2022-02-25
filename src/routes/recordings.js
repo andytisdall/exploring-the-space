@@ -11,6 +11,7 @@ import { currentUser } from '../middlewares/current-user.js';
 const router = express.Router();
 
 router.get('/recordings/:id', async (req, res) => {
+  req.socket.setTimeout(10 * 60 * 1000);
   const { id } = req.params;
   let mp3Id = new mongodb.ObjectID(id);
 
