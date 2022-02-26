@@ -1,51 +1,44 @@
 import express from 'express';
 import mongodb from 'mongodb';
-import { encode } from 'base64-arraybuffer';
 
 import { Readable } from 'stream';
 import { bucket } from './audio.js';
 
 const router = express.Router();
 
-router.get('/recordings/:id', async (req, res) => {
-  req.socket.setTimeout(10 * 60 * 1000);
+router.post('/recordings/combine', async (req, res) => {
+  const { recordingList } = req.body;
+  let file = [];
+  const streamSequentially = (id) => {
+    const mp3Id = new mongodb.ObjectID(id);
+    const stream = bucket.openDownloadStream(mp3Id);
+
+    stream.on('data', (chunk) => {
+      file.push(chunk);
+    });
+
+    stream.on('end', () => {
+      if (recordingList.length) {
+        streamSequentially(recordingList.pop(0));
+      } else {
+        file = Buffer.concat(file);
+        res.send(file);
+      }
+    });
+  };
+
+  streamSequentially(recordingList.pop(0));
+});
+
+router.get('/recordings/:id', (req, res) => {
   const { id } = req.params;
   let mp3Id = new mongodb.ObjectID(id);
-  let stream;
 
-  try {
-    stream = bucket.openDownloadStream(mp3Id);
-  } catch (err) {
-    throw new Error(err.message);
-  }
+  const stream = bucket.openDownloadStream(mp3Id);
 
+  // read the whole stream to an array and then send the buffer with the response for safari
   let file = [];
-
-  res.status(200).set({
-    'Content-Type': 'audio/mpeg',
-  });
-
-  stream.on('data', (chunk) => {
-    file.push(chunk);
-  });
-
-  stream.on('error', (err) => {
-    throw new Error(err.message);
-  });
-
-  stream.on('end', () => {
-    try {
-      file = Buffer.concat(file);
-      // const base64String = encode(file);
-      // if (id === '62185a527b5729c1544b147f') {
-      //   console.log('file encoded');
-      // }
-      // res.send(base64String);
-      res.send(file);
-    } catch (err) {
-      throw new Error(err.message);
-    }
-  });
+  stream.pipe(res);
 });
 
 router.post('/recordings/', async (req, res) => {

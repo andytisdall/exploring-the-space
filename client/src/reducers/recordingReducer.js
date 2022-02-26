@@ -3,28 +3,29 @@ import {
   CREATE_RECORDING,
   CLEAR_RECORDINGS,
   DELETE_RECORDING,
+  COMBINE_RECORDINGS,
 } from '../actions/types';
 
-export default (state = [], action) => {
+const initialState = { recordingList: [] };
+
+export default (state = initialState, action) => {
   switch (action.type) {
     case FETCH_RECORDING:
-      const thisState = [...state];
-      const recording = { id: action.payload.id, audio: action.payload.blob };
-      thisState[action.payload.index] = recording;
-      return thisState;
+      const thisList = [...state.recordingList];
+      thisList[action.payload.index] = action.payload.id;
+      return { ...state, recordingList: thisList };
     case CREATE_RECORDING:
-      const newState = [...state];
-      const newRecording = {
-        id: action.payload.id,
-        audio: action.payload.blob,
-      };
-      newState[action.payload.index] = newRecording;
-      return newState;
+      const newList = [...state.recordingList, action.payload];
+      return { ...state, recordingList: newList };
     case CLEAR_RECORDINGS:
-      return [];
+      return { ...initialState };
     case DELETE_RECORDING:
-      const editedState = state.filter((rec) => rec.id !== action.payload);
-      return editedState;
+      const editedList = state.recordingList.filter(
+        (id) => id !== action.payload
+      );
+      return { ...state, recordingList: editedList };
+    case COMBINE_RECORDINGS:
+      return { ...state, combinedRecording: action.payload };
     default:
       return state;
   }

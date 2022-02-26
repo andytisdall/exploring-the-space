@@ -31,7 +31,10 @@ const appReducer = combineReducers({
 // clear the store if we are loading a new band's data
 
 export default (state, action) => {
-  if (action.type === FETCH_BAND) {
+  if (
+    action.type === FETCH_BAND &&
+    action.payload !== state.bands.currentBand
+  ) {
     const clearedState = { auth: state.auth };
     return appReducer(clearedState, action);
   }

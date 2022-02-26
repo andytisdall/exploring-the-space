@@ -10,7 +10,6 @@ import {
   fetchTiers,
   fetchTitles,
   fetchVersions,
-  fetchBand,
   fetchBounces,
   createBounce,
 } from '../../actions';
@@ -20,7 +19,6 @@ const AddRecording = ({
   tiers,
   titles,
   versions,
-  fetchBand,
   fetchTiers,
   fetchTitles,
   fetchVersions,
@@ -49,10 +47,8 @@ const AddRecording = ({
   const [versionList, setVersionList] = useState([]);
 
   const location = useLocation();
-  const params = useParams();
 
   useEffect(() => {
-    fetchBand(params.bandName);
     if (location.state) {
       setSelectedTier(location.state.tier);
       setSelectedTitle(location.state.title);
@@ -244,7 +240,6 @@ export default connect(mapStateToProps, {
   fetchTiers,
   fetchTitles,
   fetchVersions,
-  fetchBand,
   createBounce,
   fetchBounces,
 })(AddRecording);
