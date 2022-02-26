@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Error from './Error';
-import Header from './Header';
-import User from './User';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Home from './Home';
-import Help from './Help';
-import Recorder from './Recorder';
-import Editor from './Editor';
+import Error from './layout/Error';
+import Header from './layout/Header';
+import User from './user/User';
+import SignIn from './auth/SignIn';
+import SignUp from './auth/SignUp';
+import Home from './pages/Home';
+import Help from './pages/Help';
+import Recorder from './recording/Recorder';
+import Editor from './recording/Editor';
 import { fetchUser } from '../actions';
 
 import history from '../history';

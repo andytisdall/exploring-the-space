@@ -1406,6 +1406,11 @@ canvas {
   transform: translateY(-5px);
 }
 
+.add-recording-input {
+  display: flex;
+  align-items: center;
+}
+
 .submit-inactive {
   color: rgb(219, 219, 219);
   font-size: medium;
@@ -1461,7 +1466,7 @@ canvas {
 
 .small-audio-player {
   height: 15px;
-  width: 150px;
+  width: 300px;
 }
 
 .recording-section-item {
