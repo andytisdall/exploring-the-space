@@ -1185,8 +1185,8 @@ h5 {
   box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2rem;
-  width: 80%;
+  margin-top: 1rem;
+  width: 90%;
   border: 1px solid white;
   display: flex;
   flex-direction: column;
@@ -1242,7 +1242,7 @@ h5 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 160px;
+  min-height: 80px;
 }
 
 .playhead-container audio {

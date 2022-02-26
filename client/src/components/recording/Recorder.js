@@ -139,7 +139,7 @@ const Recorder = ({
   const renderAddRecording = () => {
     const allAudio = recordings.map((rec) => rec.audio);
     const consolidatedBlob = recordings.length
-      ? new Blob(allAudio, { type: 'audio/mpeg' })
+      ? new Blob(allAudio.flat(), { type: 'audio/mpeg' })
       : null;
     return (
       <AddRecording recording={consolidatedBlob} onSuccess={onCreateBounce} />
