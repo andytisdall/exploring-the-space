@@ -15,10 +15,12 @@ const Editor = () => {
 
   useEffect(async () => {
     const { bounce } = location.state;
-    const response = await greenhouse.get(`/audio/edit/${bounce.id}`);
-    const decoded = decode(response.data);
-    const arrayBuffer = new Uint8Array(decoded);
-    const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+    const response = await greenhouse.get(`/audio/edit/${bounce.id}`, {
+      responseType: 'blob',
+    });
+    // const decoded = decode(response.data);
+    // const arrayBuffer = new Uint8Array(decoded);
+    const blob = new Blob([response.data], { type: 'audio/mpeg' });
     setAudio(blob);
   }, []);
 

@@ -17,18 +17,31 @@ const DeviceControl = ({ inputSource, setInputSource, isRecording }) => {
       }
     });
     setDevices(inputDevices);
-    if (!inputSource) {
-      setInputSource(devices[0]);
-    }
+    // if (!inputSource) {
+    //   setInputSource(devices[0]);
+    // }
   };
 
   const micSelect = () => {
     const deviceList = devices.map((device) => {
       if (device) {
-        return <option key={device.deviceId}>{device.label}</option>;
+        return (
+          <option key={device.deviceId} value={device.deviceId}>
+            {device.label}
+          </option>
+        );
       }
     });
-    return <select disabled={isRecording}>{deviceList}</select>;
+    const blank = <option key={'blank_device'} value={null}></option>;
+    deviceList.unshift(blank);
+    return (
+      <select
+        onChange={(e) => setInputSource(e.target.value)}
+        disabled={isRecording}
+      >
+        {deviceList}
+      </select>
+    );
   };
 
   return (
