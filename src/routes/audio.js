@@ -2,7 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
 import moment from 'moment';
-import { encode } from 'base64-arraybuffer';
 
 let bucket;
 
@@ -138,9 +137,7 @@ router.get('/audio/edit/:id', async (req, res) => {
     // res.send(arraybuffer);
 
     // res.send(file);
-
-    const base64String = encode(file);
-    res.send(base64String);
+    res.send(file);
   });
 });
 

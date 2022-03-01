@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { decode } from 'base64-arraybuffer';
-
 import Playhead from './Playhead';
 import greenhouse from '../../apis/greenhouse';
 import AddRecording from './AddRecording';

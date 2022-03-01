@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import vmsg from '../../vmsg/vmsg';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import recorderJs from '../../recorder/lib';
@@ -34,15 +33,9 @@ const Recorder = ({
   const [readyToSave, setReadyToSave] = useState(false);
 
   const mediaRecorder = useRef();
-  const chunks = useRef([]);
   const params = useParams();
 
   useEffect(async () => {
-    // Initialize vmsg recorder
-    // mediaRecorder.current = new vmsg.Recorder({
-    //   wasmURL: 'https://unpkg.com/vmsg@0.4.0/vmsg.wasm',
-    // });
-    // mediaRecorder.current = new recorderJs(new AudioContext());
     fetchBand(params.bandName);
   }, []);
 
@@ -58,17 +51,6 @@ const Recorder = ({
       mediaRecorder.current = new recorderJs(input, {
         numChannels: 1,
       });
-      // mediaRecorder.current.init(stream);
-      // mediaRecorder.current = new MediaRecorder(stream);
-      // mediaRecorder.current.ondataavailable = (e) => {
-      //   chunks.current.push(e.data);
-      // };
-      // mediaRecorder.current.onstop = (e) => {
-      //   // console.log(chunks.current);
-      //   createRecording(chunks.current);
-      //   setIsRecording(false);
-      //   chunks.current = [];
-      // };
     }
   }, [inputSource]);
 
@@ -93,7 +75,6 @@ const Recorder = ({
 
   const startRecording = async () => {
     try {
-      // await mediaRecorder.current.init();
       mediaRecorder.current.record();
       setIsRecording(true);
       setReadyToSave(false);
@@ -106,7 +87,6 @@ const Recorder = ({
     try {
       mediaRecorder.current.stop();
       mediaRecorder.current.exportWAV(createRecording);
-      // createRecording(blob);
       mediaRecorder.current.clear();
       setIsRecording(false);
     } catch (err) {
@@ -168,7 +148,7 @@ const Recorder = ({
 
   const onCreateBounce = () => {
     clearRecordings();
-    setReadyToSave(false);
+    // setReadyToSave(false);
   };
 
   const renderAddRecording = () => {
