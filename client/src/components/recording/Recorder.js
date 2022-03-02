@@ -37,6 +37,11 @@ const Recorder = ({
 
   useEffect(async () => {
     fetchBand(params.bandName);
+    await navigator.mediaDevices.getUserMedia({
+      audio: {
+        sampleRate: 41000,
+      },
+    });
   }, []);
 
   useEffect(async () => {
