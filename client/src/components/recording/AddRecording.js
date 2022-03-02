@@ -49,14 +49,6 @@ const AddRecording = ({
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state) {
-      setSelectedTier(location.state.tier);
-      setSelectedTitle(location.state.title);
-      setSelectedVersion(location.state.version);
-    }
-  }, []);
-
-  useEffect(() => {
     if (currentBand) {
       fetchTiers(currentBand.id);
     }
@@ -66,8 +58,18 @@ const AddRecording = ({
     if (currentBand) {
       const list = currentBand.tiers.map((id) => tiers[id]);
       setTierList(list);
+      if (
+        selectedTier.id !== '0' &&
+        tierList[0] &&
+        !tierList.includes(selectedTier)
+      ) {
+        setSelectedTier(tierList.find((tier) => tier.id === selectedTier.id));
+      }
+      if (location.state.tier && selectedTier.id === '0') {
+        setSelectedTier(location.state.tier);
+      }
     }
-  }, [tiers]);
+  }, [tiers, titles, selectedTier]);
 
   useEffect(() => {
     if (selectedTier.id !== '0') {
@@ -82,8 +84,22 @@ const AddRecording = ({
     if (selectedTier.id !== '0') {
       const list = selectedTier.trackList.map((id) => titles[id]);
       setTitleList(list);
+      if (
+        selectedTitle.id !== '0' &&
+        titleList[0] &&
+        !selectedTier.trackList.includes(selectedTitle.id)
+      ) {
+        setSelectedTitle(defaultItem);
+      }
+      if (
+        location.state.title &&
+        selectedTitle.id === '0' &&
+        selectedTier.trackList.includes(location.state.title.id)
+      ) {
+        setSelectedTitle(location.state.title);
+      }
     }
-  }, [titles]);
+  }, [titles, versions, selectedTier]);
 
   useEffect(() => {
     if (selectedTitle.id !== '0') {
@@ -96,8 +112,16 @@ const AddRecording = ({
     if (selectedTitle.id !== '0') {
       const list = selectedTitle.versions.map((id) => versions[id]);
       setVersionList(list);
+
+      if (
+        location.state.version &&
+        selectedVersion.id === '0' &&
+        selectedTitle.versions.includes(location.state.version.id)
+      ) {
+        setSelectedVersion(location.state.version);
+      }
     }
-  }, [versions]);
+  }, [versions, selectedTitle]);
 
   useEffect(() => {
     if (selectedVersion.id !== '0') {

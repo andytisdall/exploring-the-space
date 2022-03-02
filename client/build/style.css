@@ -1443,14 +1443,11 @@ canvas {
 
 .recording-list-item {
   border: white 1px solid;
-  background-color: #76cdff;
-  color: black;
+  padding: 0.5rem;
+  color: white;
   display: flex;
   align-items: center;
-}
-
-.selected-recording {
-  background-color: rgb(250, 224, 110);
+  justify-content: space-between;
 }
 
 .select-section-btn {
@@ -1466,7 +1463,7 @@ canvas {
 
 .small-audio-player {
   height: 15px;
-  width: 300px;
+  width: 250px;
 }
 
 .recording-section-item {

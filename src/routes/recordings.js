@@ -30,6 +30,9 @@ router.post('/recordings/combine', async (req, res) => {
         fs.unlinkSync(mp3);
       });
       const file = fs.readFileSync(`${mediaDir}/combined.mp3`);
+      res.set({
+        'Content-Type': 'audio/mpeg',
+      });
       res.send(file);
     });
 });
@@ -37,6 +40,9 @@ router.post('/recordings/combine', async (req, res) => {
 router.get('/recordings/:id', (req, res) => {
   const { id } = req.params;
   const file = fs.readFileSync(`${mediaDir}/${id}.wav`);
+  res.set({
+    'Content-Type': 'audio/wav',
+  });
   res.send(file);
 });
 
@@ -48,6 +54,7 @@ router.post('/recordings/', async (req, res) => {
     `${mediaDir}/${newId}.wav`,
     Buffer.from(new Uint8Array(file.data))
   );
+
   res.send(`${newId}`);
 });
 

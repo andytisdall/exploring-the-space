@@ -17,9 +17,9 @@ const DeviceControl = ({ inputSource, setInputSource, isRecording }) => {
       }
     });
     setDevices(inputDevices);
-    // if (!inputSource) {
-    //   setInputSource(devices[0]);
-    // }
+    if (!inputSource) {
+      setInputSource(devices[0]);
+    }
   };
 
   const micSelect = () => {
@@ -38,6 +38,7 @@ const DeviceControl = ({ inputSource, setInputSource, isRecording }) => {
       <select
         onChange={(e) => setInputSource(e.target.value)}
         disabled={isRecording}
+        value={inputSource ? inputSource.deviceId : 'blank_device'}
       >
         {deviceList}
       </select>
