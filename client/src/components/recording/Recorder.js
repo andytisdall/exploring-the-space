@@ -37,11 +37,11 @@ const Recorder = ({
 
   useEffect(async () => {
     fetchBand(params.bandName);
-    await navigator.mediaDevices.getUserMedia({
-      audio: {
-        sampleRate: 41000,
-      },
-    });
+    // await navigator.mediaDevices.getUserMedia({
+    //   audio: {
+    //     sampleRate: 41000,
+    //   },
+    // });
   }, []);
 
   useEffect(async () => {
@@ -186,11 +186,11 @@ const Recorder = ({
       {error}
       {renderDisplay()}
       {renderButtons()}
-      <DeviceControl
+      {/* <DeviceControl
         inputSource={inputSource}
         setInputSource={setInputSource}
         isRecording={isRecording}
-      />
+      /> */}
       <div className="recording-list">
         {renderList()}
         {renderAddRecording()}

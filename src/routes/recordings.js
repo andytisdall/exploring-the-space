@@ -40,10 +40,35 @@ router.post('/recordings/combine', async (req, res) => {
 router.get('/recordings/:id', (req, res) => {
   const { id } = req.params;
   const file = fs.readFileSync(`${mediaDir}/${id}.wav`);
+
+  const parts = req.headers.range.replace(/bytes=/, '').split('-');
+  const partialstart = parts[0];
+  const partialend = parts[1];
+  const start = parseInt(partialstart, 10);
+  const end = partialend ? parseInt(partialend, 10) : file.length - 1;
+  const chunksize = end - start + 1;
+
   res.set({
+    'Accept-Ranges': 'bytes',
+    'Content-Length': chunksize,
     'Content-Type': 'audio/wav',
+    'Content-Range': 'bytes ' + start + '-' + end + '/' + file.length,
   });
-  res.send(file);
+
+  // chrome sends the first range request as bytes=0-
+  // and it wants the whole file
+  if (
+    ((start === 0 || start === end - 1) && !partialend) ||
+    chunksize === file.length
+  ) {
+    res.send(file);
+  } else {
+    // for partial chrome requests and
+    // for the initial safari request
+    const partialFile = file.slice(start, end - 1);
+    res.status(206);
+    res.send(partialFile);
+  }
 });
 
 router.post('/recordings/', async (req, res) => {
