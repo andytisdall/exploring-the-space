@@ -65,7 +65,7 @@ const AddRecording = ({
       ) {
         setSelectedTier(tierList.find((tier) => tier.id === selectedTier.id));
       }
-      if (location.state.tier && selectedTier.id === '0') {
+      if (location.state && location.state.tier && selectedTier.id === '0') {
         setSelectedTier(location.state.tier);
       }
     }
@@ -92,6 +92,7 @@ const AddRecording = ({
         setSelectedTitle(defaultItem);
       }
       if (
+        location.state &&
         location.state.title &&
         selectedTitle.id === '0' &&
         selectedTier.trackList.includes(location.state.title.id)
@@ -114,6 +115,7 @@ const AddRecording = ({
       setVersionList(list);
 
       if (
+        location.state &&
         location.state.version &&
         selectedVersion.id === '0' &&
         selectedTitle.versions.includes(location.state.version.id)
