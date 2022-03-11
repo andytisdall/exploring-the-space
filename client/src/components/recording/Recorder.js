@@ -186,11 +186,11 @@ const Recorder = ({
       {error}
       {renderDisplay()}
       {renderButtons()}
-      {/* <DeviceControl
+      <DeviceControl
         inputSource={inputSource}
         setInputSource={setInputSource}
         isRecording={isRecording}
-      /> */}
+      />
       <div className="recording-list">
         {renderList()}
         {renderAddRecording()}
