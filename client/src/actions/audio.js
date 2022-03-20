@@ -51,6 +51,7 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
 };
 
 export const nextSong = () => (dispatch, getState) => {
+  console.log('here');
   const { parent, currentSong } = getState().audio;
   if (parent.trackList) {
     let allTitles;

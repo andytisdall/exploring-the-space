@@ -46,38 +46,35 @@ const Title = ({
 
   useEffect(() => {
     fetchVersions(title.id);
-  }, []);
+  }, [fetchVersions, title.id]);
 
   useEffect(() => {
     setVersionList(title.versions.map((id) => versions[id]));
     // console.log('set version list')
-  }, [versions]);
+  }, [versions, title.versions]);
 
   useEffect(() => {
     // console.log(versionList);
     if (versionList && versionList[0]) {
       let versionToSelect;
 
-      const parentTitle = titles[title.id];
+      const selectedVersion = title.selectedVersion;
 
       const versionIds = versionList.map((v) => v.id);
 
-      if (
-        !parentTitle.selectedVersion ||
-        !versionIds.includes(parentTitle.selectedVersion.id)
-      ) {
+      if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
         versionToSelect = versionList.find((v) => v.current);
-      } else if (parentTitle.selectedVersion) {
-        if (!versions[parentTitle.selectedVersion.id]) {
+        selectVersion(versionToSelect, title.id);
+      } else if (selectedVersion) {
+        if (!versions[selectedVersion.id]) {
           versionToSelect = null;
         } else {
-          versionToSelect = versions[parentTitle.selectedVersion.id];
+          versionToSelect = versions[selectedVersion.id];
         }
+        selectVersion(versionToSelect, title.id);
       }
-
-      selectVersion(versionToSelect, title.id);
     }
-  }, [versionList]);
+  }, [versionList, selectVersion, title.id, versions, title.selectedVersion]);
 
   useEffect(() => {
     // console.log(title)
@@ -85,7 +82,7 @@ const Title = ({
       fetchBounces(title.selectedVersion.id);
       // console.log('fetch bounces')
     }
-  }, [title.selectedVersion]);
+  }, [title.selectedVersion, fetchBounces]);
 
   useEffect(() => {
     if (title.selectedVersion) {
@@ -98,7 +95,13 @@ const Title = ({
         selectBounce(null, title.id);
       }
     }
-  }, [bounces]);
+  }, [
+    bounces,
+    selectBounce,
+    title.id,
+    title.selectedBounce,
+    title.selectedVersion,
+  ]);
 
   useEffect(() => {
     if (bounceList && bounceList[0]) {
@@ -118,7 +121,7 @@ const Title = ({
     } else if (song) {
       setSong(null);
     }
-  }, [bounceList]);
+  }, [bounceList, findLatest, selectBounce, song, title]);
 
   useEffect(() => {
     if (title.selectedBounce && title.selectedVersion) {
