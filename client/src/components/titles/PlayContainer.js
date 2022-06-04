@@ -72,6 +72,7 @@ const PlayContainer = ({
           className="play-icon"
           onClick={onPlay}
           onLoad={() => setLoaded(true)}
+          alt="play button"
         />
       </div>
       <div className="play-container-display">
@@ -85,7 +86,7 @@ const PlayContainer = ({
           song.bounce.id
         }/${encodeURIComponent(song.title.title)}`}
       >
-        <img src="/images/download.svg" />
+        <img src="/images/download.svg" alt="download button" />
       </a>
     </div>
   );

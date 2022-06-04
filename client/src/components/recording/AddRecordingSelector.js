@@ -25,6 +25,7 @@ const AddRecordingSelector = ({
             </option>
           );
         }
+        return null;
       });
 
       return (

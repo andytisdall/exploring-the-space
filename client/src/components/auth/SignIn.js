@@ -11,7 +11,7 @@ const SignIn = ({ signIn, isSignedIn }) => {
     if (isSignedIn) {
       history.push('/user');
     }
-  }, []);
+  }, [isSignedIn]);
 
   return (
     <div className="auth">

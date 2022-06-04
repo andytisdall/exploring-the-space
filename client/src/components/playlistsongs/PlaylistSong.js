@@ -39,7 +39,7 @@ const PlaylistSong = ({
     titles[song.title].versions.forEach((id) => {
       fetchBounces(id);
     });
-  }, []);
+  }, [fetchBounces, song, titles, fetchVersions]);
 
   useEffect(() => {
     if (titles[song.title]) {
@@ -54,19 +54,33 @@ const PlaylistSong = ({
     if (bounces[song.bounce]) {
       getTime({ id: song.id, duration: bounces[song.bounce].duration });
     }
-  }, [
-    playlistSongs[song.id],
-    bounces[song.bounce],
-    titles[song.title],
-    versions[song.version],
-  ]);
+  }, [playlistSongs, bounces, titles, versions, song, getTime, playlist]);
 
   useEffect(() => {
-    // console.log(doUpdate);
+    const updateToCurrent = () => {
+      const thisTitle = titles[song.title];
+      const titleVersions = thisTitle.versions.map((id) => versions[id]);
+      const currentVersion = titleVersions.find((v) => v && v.current);
+      if (currentVersion) {
+        const versionBounces = currentVersion.bounces.map((id) => bounces[id]);
+        const currentBounce = versionBounces.find((b) => b && b.latest);
+        if (currentBounce) {
+          editPlaylistSong(
+            {
+              bounce: currentBounce.id,
+              version: currentVersion.id,
+              position: song.position,
+              playlistId: playlist.id,
+            },
+            song.id
+          );
+        }
+      }
+    };
     if (doUpdate) {
       updateToCurrent();
     }
-  }, [doUpdate]);
+  }, [doUpdate, bounces, song, titles, editPlaylistSong, versions, playlist]);
 
   const renderPlayContainer = () => {
     if (playSong && playSong.bounce && playSong.version) {
@@ -99,27 +113,6 @@ const PlaylistSong = ({
     );
   };
 
-  const updateToCurrent = () => {
-    const thisTitle = titles[song.title];
-    const titleVersions = thisTitle.versions.map((id) => versions[id]);
-    const currentVersion = titleVersions.find((v) => v && v.current);
-    if (currentVersion) {
-      const versionBounces = currentVersion.bounces.map((id) => bounces[id]);
-      const currentBounce = versionBounces.find((b) => b && b.latest);
-      if (currentBounce) {
-        editPlaylistSong(
-          {
-            bounce: currentBounce.id,
-            version: currentVersion.id,
-            position: song.position,
-            playlistId: playlist.id,
-          },
-          song.id
-        );
-      }
-    }
-  };
-
   const renderEditButton = () => {
     if (authorized && titles[song.title]) {
       const otherSongs = Object.values(playlistSongs)
@@ -137,6 +130,7 @@ const PlaylistSong = ({
         if (v) {
           return v.bounces.map((id) => bounces[id]);
         }
+        return null;
       });
 
       const editOptions = [];
@@ -168,6 +162,7 @@ const PlaylistSong = ({
         if (pl) {
           return { value: pl.id, display: pl.name };
         }
+        return null;
       });
 
       playlistOptions.unshift({ value: null, display: '' });

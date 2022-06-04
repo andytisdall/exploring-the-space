@@ -47,7 +47,12 @@ const DeleteButton = ({ onSubmit, displayName }) => {
 
   return (
     <div>
-      <img src="/images/delete.png" className="delete" onClick={onClick} />
+      <img
+        src="/images/delete.png"
+        className="delete"
+        onClick={onClick}
+        alt="delete"
+      />
       {visible && showModal()}
     </div>
   );

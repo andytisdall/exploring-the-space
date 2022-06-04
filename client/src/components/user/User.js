@@ -23,7 +23,7 @@ const User = ({
 }) => {
   useEffect(() => {
     fetchBands();
-  }, []);
+  }, [fetchBands]);
 
   const renderBands = () => {
     const bandList = user.bands.map((id) => bands[id]);
@@ -61,6 +61,7 @@ const User = ({
           </div>
         );
       }
+      return null;
     });
   };
 

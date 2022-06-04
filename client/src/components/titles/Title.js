@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import { Link } from 'react-router-dom';
 
 import Version from '../versions/Version';
@@ -137,7 +136,7 @@ const Title = ({
       setSong(null);
       getTime({ id: title.id, duration: 0 });
     }
-  }, [titles[title.id]]);
+  }, [title, titles, getTime, setSong, song, tier]);
 
   const renderPlayContainer = () => {
     if (song) {
@@ -188,6 +187,7 @@ const Title = ({
         if (pl) {
           return { value: pl.id, display: pl.name };
         }
+        return null;
       });
       const bandTiers = band.tiers
         .filter((t) => t !== tier.id)
@@ -196,6 +196,7 @@ const Title = ({
         if (t) {
           return { value: t.id, display: t.name };
         }
+        return null;
       });
       tierOptions.unshift({ value: null, display: '' });
       return (
@@ -269,7 +270,11 @@ const Title = ({
       <div className={`row title ${currentClass} ${expand ? 'row-open' : ''}`}>
         <div className="marqee" onClick={() => setExpand(!expand)}>
           <div className="title-name">
-            <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
+            <img
+              className={`arrow ${arrow}`}
+              src={`/images/right-arrow.svg`}
+              alt="title arrow"
+            />
             <h3>{title.title}</h3>
           </div>
           {renderAudioEditLink()}

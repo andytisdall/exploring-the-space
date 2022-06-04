@@ -27,11 +27,11 @@ const Header = ({
     return () => {
       document.removeEventListener('click', clickToDismiss, { capture: true });
     };
-  }, []);
+  }, [fetchBand, match.params.bandName]);
 
   useEffect(() => {
     handleUpdate();
-  }, [band, user]);
+  }, [band, user, handleUpdate]);
 
   const clickToDismiss = (e) => {
     if (menu.current && menu.current.contains(e.target)) {
@@ -97,7 +97,7 @@ const Header = ({
             ref={menu}
             onClick={() => setExpand(!expand)}
           >
-            <img src="images/dots.png" />
+            <img src="images/dots.png" alt="navigation" />
             {expand && (authorized ? renderAdmin() : renderHomeLink())}
           </div>
         </div>
@@ -110,7 +110,7 @@ const Header = ({
             value={volume}
             onInput={(e) => changeVolume(e.target.value)}
           />
-          <img src="/images/volume.svg" />
+          <img src="/images/volume.svg" alt="volume" />
         </div>
       </div>
     );

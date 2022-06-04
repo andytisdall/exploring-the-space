@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 import {
   createTier,
@@ -35,7 +34,7 @@ const Tier = ({
   useEffect(() => {
     setOrder(tier.id, 'date');
     fetchTitles(tier.id);
-  }, []);
+  }, [fetchTitles, setOrder, tier]);
 
   useEffect(() => {
     setTitlesToRender(tier.trackList.map((id) => titles[id]));
@@ -63,6 +62,7 @@ const Tier = ({
         } else if (orderedTitles.current[b.id]) {
           return 1;
         }
+        return -1;
       });
     }
 
@@ -84,6 +84,7 @@ const Tier = ({
           />
         );
       }
+      return null;
     });
   };
 
@@ -107,6 +108,7 @@ const Tier = ({
           if (t) {
             return { value: t.position, display: t.position };
           }
+          return null;
         });
 
       return (
@@ -238,7 +240,11 @@ const Tier = ({
       >
         <div className="marqee">
           <div className="tier-name">
-            <img className={`arrow ${arrow}`} src={`images/right-arrow.svg`} />
+            <img
+              className={`arrow ${arrow}`}
+              src={`images/right-arrow.svg`}
+              alt="tier arrow"
+            />
             <h2>{tier.name}</h2>
           </div>
           <div className="tier-count">

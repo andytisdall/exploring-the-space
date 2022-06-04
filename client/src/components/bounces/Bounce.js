@@ -38,13 +38,13 @@ const Bounce = ({
       selectBounce(selectedBounce, title.id);
       // setPlayButtonVisible(true);
     }
-  }, [selectedBounce]);
+  }, [selectedBounce, selectBounce, title]);
 
   useEffect(() => {
     if (selectedBounce && selectedBounce !== title.selectedBounce) {
       selectBounce(title.selectedBounce, title.id);
     }
-  }, [title.selectedBounce]);
+  }, [selectedBounce, selectBounce, title]);
 
   useEffect(() => {
     setSelectedBounce(title.selectedBounce);
@@ -81,7 +81,11 @@ const Bounce = ({
     return (
       <div className="upload-image">
         <p>Uploading...</p>
-        <img className="windmill" src="/images/windmill.gif" />
+        <img
+          className="windmill"
+          src="/images/windmill.gif"
+          alt="upload in progress"
+        />
       </div>
     );
   };
@@ -185,6 +189,7 @@ const Bounce = ({
         src="/images/play.svg"
         className="play-icon"
         onClick={() => queueSongs(song)}
+        alt="play button"
       />
     );
     // }

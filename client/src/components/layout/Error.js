@@ -5,10 +5,10 @@ import history from '../../history';
 
 const Error = ({ error, throwError }) => {
   useEffect(() => {
-    history.listen((location) => {
+    history.listen(() => {
       throwError(null);
     });
-  }, [history]);
+  }, [throwError]);
 
   if (!error) {
     return null;

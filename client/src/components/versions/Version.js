@@ -23,7 +23,6 @@ const Version = ({
   fetchBounces,
   selectVersion,
   title,
-  createVersion,
   authorized,
   editVersion,
   deleteVersion,
@@ -41,7 +40,14 @@ const Version = ({
       setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
       fetchBounces(selectedVersion.id);
     }
-  }, [selectedVersion]);
+  }, [
+    selectedVersion,
+    selectVersion,
+    setBounceList,
+    fetchBounces,
+    title,
+    bounces,
+  ]);
 
   useEffect(() => {
     if (selectedVersion) {
@@ -54,7 +60,7 @@ const Version = ({
     if (selectedVersion !== title.selectedVersion) {
       setSelectedVersion(title.selectedVersion);
     }
-  }, [title.selectedVersion]);
+  }, [title.selectedVersion, selectedVersion]);
 
   const renderBounces = () => {
     if (bounceList && selectedVersion) {

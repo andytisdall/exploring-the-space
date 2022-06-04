@@ -30,7 +30,7 @@ const Playlist = ({
 
   useEffect(() => {
     fetchPlaylistSongs(playlist.id);
-  }, []);
+  }, [fetchPlaylistSongs, playlist]);
 
   useEffect(() => {
     setSongsToRender(playlist.songs.map((id) => playlistSongs[id]));
@@ -51,6 +51,7 @@ const Playlist = ({
           />
         );
       }
+      return null;
     });
   };
 
@@ -65,16 +66,18 @@ const Playlist = ({
           if (b.position < a.position) {
             return 1;
           }
+          return -1;
         });
       setPlaylistList(
         playlistsToShow.map((t) => {
           if (t) {
             return { value: t.position, display: t.position };
           }
+          return null;
         })
       );
     }
-  }, [playlists]);
+  }, [playlists, setPlaylistList, band]);
 
   useEffect(() => {
     if (doUpdate) {
@@ -173,7 +176,11 @@ const Playlist = ({
       >
         <div className="marqee tier-info">
           <div className="tier-name">
-            <img className={`arrow ${arrow}`} src={`/images/right-arrow.svg`} />
+            <img
+              className={`arrow ${arrow}`}
+              src={`/images/right-arrow.svg`}
+              alt="playlist arrow"
+            />
             <h2>{playlist.name}</h2>
 
             {showUpdatePlaylistCheckbox()}

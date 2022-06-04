@@ -20,7 +20,7 @@ const App = ({ signedIn, fetchUser, error }) => {
     if (signedIn) {
       fetchUser();
     }
-  }, []);
+  }, [fetchUser, signedIn]);
 
   const errClass = error ? 'error-margin' : '';
 

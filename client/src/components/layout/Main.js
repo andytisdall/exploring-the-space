@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 import {
   fetchTiers,
@@ -33,11 +32,11 @@ const BodyContainer = ({
   useEffect(() => {
     fetchTiers(band.id);
     fetchPlaylists(band.id);
-  }, [band]);
+  }, [band, fetchTiers, fetchPlaylists]);
 
   useEffect(() => {
     handleUpdate();
-  }, [user]);
+  }, [user, handleUpdate]);
 
   useEffect(() => {
     setTierList(
@@ -50,9 +49,10 @@ const BodyContainer = ({
           if (b.position < a.position) {
             return 1;
           }
+          return -1;
         })
     );
-  }, [tiers]);
+  }, [tiers, setTierList, band]);
 
   useEffect(() => {
     setPlaylistList(
@@ -65,15 +65,17 @@ const BodyContainer = ({
           if (b.position < a.position) {
             return 1;
           }
+          return -1;
         })
     );
-  }, [playlists]);
+  }, [playlists, band]);
 
   const renderTiers = () => {
     return tierList.map((tier) => {
       if (tier) {
         return <Tier tier={tier} key={tier.id} />;
       }
+      return null;
     });
   };
 
@@ -109,6 +111,7 @@ const BodyContainer = ({
       if (playlist) {
         return <Playlist playlist={playlist} key={playlist.id} />;
       }
+      return null;
     });
   };
 

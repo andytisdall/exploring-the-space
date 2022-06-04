@@ -182,16 +182,19 @@ class AudioDisplay extends React.Component {
                 src="/images/prev.svg"
                 className="audio-controls"
                 onClick={this.prevSong}
+                alt="previous song"
               />
               <img
                 className="big-play-btn"
                 src={this.props.play ? '/images/pause.svg' : '/images/play.svg'}
                 onClick={this.onPauseButton}
+                alt="play button"
               />
               <img
                 src="/images/next.svg"
                 className="audio-controls"
                 onClick={this.nextSong}
+                alt="next song"
               />
             </div>
 
