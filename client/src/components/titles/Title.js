@@ -136,7 +136,7 @@ const Title = ({
       setSong(null);
       getTime({ id: title.id, duration: 0 });
     }
-  }, [title, titles, getTime, setSong, song, tier]);
+  }, [title, titles, getTime, setSong, tier]);
 
   const renderPlayContainer = () => {
     if (song) {

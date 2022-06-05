@@ -592,6 +592,12 @@ h2 {
   padding-left: 1rem;
 }
 
+.title-enlarged {
+  transform:  scale(1.05);
+  margin: 3px 0;
+}
+
+
 .title {
   border-top: rgb(20, 29, 11) solid 1px;
   background-image: linear-gradient(
