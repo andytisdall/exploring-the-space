@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import Version from '../versions/Version';
 import AddButton from '../reusable/AddButton';
@@ -136,6 +135,7 @@ const Title = ({
       setSong(null);
       getTime({ id: title.id, duration: 0 });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, titles, getTime, setSong, tier]);
 
   const renderPlayContainer = () => {
@@ -144,27 +144,27 @@ const Title = ({
     }
   };
 
-  const renderAudioEditLink = () => {
-    if (authorized && song) {
-      const { tier, title, version, bounce } = song;
-      return (
-        <Link
-          to={{
-            pathname: `/${band.url}/edit`,
-            state: {
-              tier,
-              title,
-              version,
-              bounce,
-            },
-          }}
-          className="edit-link"
-        >
-          edit audio
-        </Link>
-      );
-    }
-  };
+  // const renderAudioEditLink = () => {
+  //   if (authorized && song) {
+  //     const { tier, title, version, bounce } = song;
+  //     return (
+  //       <Link
+  //         to={{
+  //           pathname: `/${band.url}/edit`,
+  //           state: {
+  //             tier,
+  //             title,
+  //             version,
+  //             bounce,
+  //           },
+  //         }}
+  //         className="edit-link"
+  //       >
+  //         edit audio
+  //       </Link>
+  //     );
+  //   }
+  // };
   const renderVersion = () => {
     return (
       <Version versions={versionList} title={title} song={song} tier={tier} />
@@ -277,7 +277,7 @@ const Title = ({
             />
             <h3>{title.title}</h3>
           </div>
-          {renderAudioEditLink()}
+          {/* {renderAudioEditLink()} */}
           {renderPlayContainer()}
           {renderButtons()}
         </div>

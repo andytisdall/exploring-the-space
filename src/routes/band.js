@@ -52,6 +52,7 @@ router.get('/bands/:bandName', async (req, res) => {
   const band = await Band.findOne({ url: bandName });
 
   if (!band) {
+    res.status(404);
     throw new Error('Band does not exist');
   }
 

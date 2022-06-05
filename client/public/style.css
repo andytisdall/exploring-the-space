@@ -153,7 +153,6 @@ label {
 
 .arrow {
   height: 2.4rem;
-  margin-left: 0.2rem;
   transition: all 0.2s;
   padding-bottom: 0.2rem;
 }
@@ -202,6 +201,11 @@ hr {
   padding: 0 0.5rem;
 }
 
+.drag-handle {
+  width: 1.5rem;
+  height: auto;
+}
+
 /* ERROR */
 
 .error {
@@ -209,12 +213,9 @@ hr {
   background-color: rgb(238, 31, 31);
   padding: 1rem;
   border: 2px solid white;
-  position: fixed;
-  z-index: 30;
-  margin: 1rem 2rem;
+  margin: 0 auto 1rem auto;
   width: 85%;
   height: 2rem;
-  max-width: 55rem;
   text-align: center;
   font-size: 1.3rem;
   display: flex;
@@ -230,11 +231,6 @@ hr {
   border-radius: 50%;
   padding: 0 0.9rem;
 }
-
-.error-margin {
-  padding-top: 5rem;
-}
-
 .no-band {
   width: 80%;
   margin: 1rem auto;
@@ -254,6 +250,12 @@ hr {
   width: 98%;
   padding-top: 1rem;
   box-sizing: border-box;
+}
+
+.loading {
+  position: absolute;
+  top: 10rem;
+  left: 50%;
 }
 
 /* audio display */
@@ -512,7 +514,6 @@ h2 {
 
 .tier {
   padding: 0.3rem 0.5rem 0.1rem 0;
-  margin-left: 2rem;
 }
 
 .tier-name {
@@ -1102,6 +1103,10 @@ h5 {
   background-color: black;
   border-radius: 100%;
   animation: sk-circle-fade 1.2s infinite ease-in-out both;
+}
+
+.loading .sk-circle-fade-dot:before {
+  background-color: wheat;
 }
 
 .sk-circle-fade-dot:nth-child(1) {

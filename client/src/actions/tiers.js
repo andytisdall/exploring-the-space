@@ -33,6 +33,12 @@ export const createTier = (formValues) => async (dispatch, getState) => {
 
 export const editTier = (formValues, tierId) => async (dispatch, getState) => {
   try {
+    const tier = getState().tiers[tierId];
+    const optimisticallyEditedTier = {
+      ...tier,
+      position: formValues.position,
+    };
+    dispatch({ type: EDIT_TIER, payload: optimisticallyEditedTier });
     const { currentBand } = getState().bands;
     const response = await greenhouse.patch(`/tiers/${tierId}`, {
       ...formValues,

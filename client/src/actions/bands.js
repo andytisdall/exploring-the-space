@@ -14,6 +14,9 @@ export const fetchBand = (bandName) => async (dispatch) => {
     const response = await greenhouse.get(`/bands/${bandName}`);
     dispatch({ type: FETCH_BAND, payload: response.data });
   } catch (err) {
+    if (err.response && err.response.status === 404) {
+      dispatch({ type: FETCH_BAND, payload: { id: 404 } });
+    }
     dispatch(errorHandler(err));
   }
 };

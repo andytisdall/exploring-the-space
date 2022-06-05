@@ -3,6 +3,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 
 import { queueSongs, queuePlaylistSongs, playAudio } from '../../actions';
+import { spinner } from '../reusable/Spinner';
 
 const PlayContainer = ({
   song,
@@ -34,25 +35,6 @@ const PlayContainer = ({
     }
   };
 
-  const renderSpinner = () => {
-    return (
-      <div className="sk-circle-fade">
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-        <div className="sk-circle-fade-dot"></div>
-      </div>
-    );
-  };
-
   let baseUrl;
   if (process.env.NODE_ENV === 'production') {
     baseUrl = 'https://exploring-the-space.com';
@@ -66,7 +48,7 @@ const PlayContainer = ({
         {displayTime(song.bounce.duration)}
       </div>
       <div className="play-icon-container">
-        {!loaded && renderSpinner()}
+        {!loaded && spinner()}
         <img
           src="/images/play.svg"
           className="play-icon"

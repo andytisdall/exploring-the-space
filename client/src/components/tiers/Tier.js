@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Sortable } from '@shopify/draggable';
+import { Draggable } from 'react-beautiful-dnd';
+// import { Sortable } from '@shopify/draggable';
 
 import {
   createTier,
@@ -41,24 +42,24 @@ const Tier = ({
     setTitlesToRender(tier.trackList.map((id) => titles[id]));
   }, [titles, tier]);
 
-  useEffect(() => {
-    if (expand) {
-      const sortable = new Sortable(
-        document.querySelectorAll('.title-container'),
-        {
-          draggable: '.title-margin',
-          classes: {
-            'draggable:over': ['empty-title'],
-            mirror: ['hidden'],
-            'source:dragging': ['title-enlarged'],
-          },
-        }
-      );
-      sortable.on('drag:over', (e) => {
-        console.log(e.over);
-      });
-    }
-  }, [expand]);
+  // useEffect(() => {
+  //   if (expand) {
+  //     const sortable = new Sortable(
+  //       document.querySelectorAll('.title-container'),
+  //       {
+  //         draggable: '.title-margin',
+  //         classes: {
+  //           'draggable:over': ['empty-title'],
+  //           mirror: ['hidden'],
+  //           'source:dragging': ['title-enlarged'],
+  //         },
+  //       }
+  //     );
+  //     sortable.on('drag:over', (e) => {
+  //       console.log(e.over);
+  //     });
+  //   }
+  // }, [expand]);
 
   const findLatest = (title, bounce) => {
     if (!orderedTitles.current[title.id]) {
@@ -253,38 +254,56 @@ const Tier = ({
   const open = expand ? 'open' : 'closed';
 
   return (
-    <>
-      <div
-        className={`row tier ${expand ? 'row-open' : ''}`}
-        onClick={() => setExpand(!expand)}
-      >
-        <div className="marqee">
-          <div className="tier-name">
-            <img
-              className={`arrow ${arrow}`}
-              src={`images/right-arrow.svg`}
-              alt="tier arrow"
-            />
-            <h2>{tier.name}</h2>
+    <Draggable draggableId={tier.id} index={tier.position - 1}>
+      {(provided) => {
+        return (
+          <div {...provided.draggableProps} ref={provided.innerRef}>
+            <div
+              className={`row tier ${expand ? 'row-open' : ''}`}
+              onClick={() => setExpand(!expand)}
+            >
+              <div className="marqee">
+                <div className="tier-name">
+                  <div
+                    {...provided.dragHandleProps}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img
+                      src="images/drag-handle.svg"
+                      alt="drag handle"
+                      className="drag-handle"
+                    />
+                  </div>
+                  <img
+                    className={`arrow ${arrow}`}
+                    src={`images/right-arrow.svg`}
+                    alt="tier arrow"
+                  />
+                  <h2>{tier.name}</h2>
+                </div>
+                <div className="tier-count">
+                  <div className="song-count">
+                    {tier.trackList.length} songs
+                  </div>
+                  <div className="song-count">{renderTotalTime()}</div>
+                </div>
+                <div className="tier-display">
+                  {renderEditButton()}
+                  {renderDeleteButton()}
+                </div>
+              </div>
+            </div>
+            <div className={`tier-options ${expand ? 'options-visible' : ''}`}>
+              {expand && renderOptions()}
+            </div>
+            <hr />
+            <div className={`title-container ${open}`}>
+              {expand && titlesToRender && renderTitles()}
+            </div>
           </div>
-          <div className="tier-count">
-            <div className="song-count">{tier.trackList.length} songs</div>
-            <div className="song-count">{renderTotalTime()}</div>
-          </div>
-          <div className="tier-display">
-            {renderEditButton()}
-            {renderDeleteButton()}
-          </div>
-        </div>
-      </div>
-      <div className={`tier-options ${expand ? 'options-visible' : ''}`}>
-        {expand && renderOptions()}
-      </div>
-      <hr />
-      <div className={`title-container ${open}`}>
-        {expand && titlesToRender && renderTitles()}
-      </div>
-    </>
+        );
+      }}
+    </Draggable>
   );
 };
 

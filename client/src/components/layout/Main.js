@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+// import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import {
   fetchTiers,
   fetchPlaylists,
   createTier,
   createPlaylist,
+  editTier,
 } from '../../actions';
 import Tier from '../tiers/Tier';
 import Playlist from '../playlists/Playlist';
 import AddButton from '../reusable/AddButton';
 import requireAuth from '../reusable/requireAuth';
 import AddTier from '../tiers/AddTier';
+import DragContainer from './Draggable';
 
 const BodyContainer = ({
   fetchPlaylists,
-  createTier,
   fetchTiers,
   tiers,
   playlists,
@@ -25,6 +27,7 @@ const BodyContainer = ({
   currentSong,
   handleUpdate,
   user,
+  editTier,
 }) => {
   const [tierList, setTierList] = useState([]);
   const [playlistList, setPlaylistList] = useState([]);
@@ -115,6 +118,18 @@ const BodyContainer = ({
     });
   };
 
+  // const onDragEnd = (result) => {
+  //   const { destination, source, draggableId } = result;
+  //   if (!destination) {
+  //     return;
+  //   }
+  //   if (destination.index === source.index) {
+  //     return;
+  //   }
+  //   const position = destination.index + 1;
+  //   editTier({ position }, draggableId);
+  // };
+
   const playbarActive = currentSong ? 'playbar-active' : '';
 
   return (
@@ -124,7 +139,11 @@ const BodyContainer = ({
         <div className="section-add">{renderTierAddButton()}</div>
       </div>
       <hr />
-      {tiers && renderTiers()}
+      {tiers && (
+        <DragContainer listType="tiers" action={editTier}>
+          {renderTiers()}
+        </DragContainer>
+      )}
       <div className="playlists">
         <div className="section-header">
           <h2 className="section-title">Playlists</h2>
@@ -152,4 +171,5 @@ export default connect(mapStateToProps, {
   fetchPlaylists,
   createTier,
   createPlaylist,
+  editTier,
 })(requireAuth(BodyContainer));

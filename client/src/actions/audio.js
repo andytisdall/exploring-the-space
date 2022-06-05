@@ -51,7 +51,6 @@ export const queuePlaylistSongs = (song) => (dispatch, getState) => {
 };
 
 export const nextSong = () => (dispatch, getState) => {
-  console.log('here');
   const { parent, currentSong } = getState().audio;
   if (parent.trackList) {
     let allTitles;
@@ -73,6 +72,7 @@ export const nextSong = () => (dispatch, getState) => {
           } else if (b.selectedBounce) {
             return 1;
           }
+          return -1;
         });
     }
 
@@ -160,6 +160,7 @@ export const prevSong = () => (dispatch, getState) => {
           } else if (b.selectedBounce) {
             return 1;
           }
+          return -1;
         });
     }
 

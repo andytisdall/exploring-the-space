@@ -6,6 +6,8 @@ import { fetchBand, signOut, changeVolume } from '../../actions';
 import Main from './Main';
 import AudioDisplay from '../layout/AudioDisplay';
 import requireAuth from '../reusable/requireAuth';
+import { spinner } from '../reusable/Spinner';
+import Error from './Error';
 
 const Header = ({
   fetchBand,
@@ -74,6 +76,9 @@ const Header = ({
 
   const showContent = () => {
     if (!band) {
+      return <div className="loading">{spinner()}</div>;
+    }
+    if (band.id === 404) {
       return (
         <div className="no-band">
           <h1>
@@ -119,11 +124,12 @@ const Header = ({
   return (
     <>
       <div className="header">
+        <Error />
         <AudioDisplay />
         {showContent()}
       </div>
 
-      {band && <Main />}
+      {band && band.id !== 404 && <Main />}
     </>
   );
 };

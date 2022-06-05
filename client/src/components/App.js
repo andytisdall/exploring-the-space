@@ -2,32 +2,28 @@ import React, { useEffect } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Error from './layout/Error';
 import Header from './layout/Header';
 import User from './user/User';
 import SignIn from './auth/SignIn';
 import SignUp from './auth/SignUp';
 import Home from './pages/Home';
 import Help from './pages/Help';
-import Recorder from './recording/Recorder';
-import Editor from './recording/Editor';
+// import Recorder from './recording/Recorder';
+// import Editor from './recording/Editor';
 import { fetchUser } from '../actions';
 
 import history from '../history';
 
-const App = ({ signedIn, fetchUser, error }) => {
+const App = ({ signedIn, fetchUser, error, user }) => {
   useEffect(() => {
-    if (signedIn) {
+    if (signedIn && !user) {
       fetchUser();
     }
-  }, [fetchUser, signedIn]);
-
-  const errClass = error ? 'error-margin' : '';
+  }, [fetchUser, signedIn, user]);
 
   return (
     <>
-      <Error />
-      <div className={`container ${errClass}`}>
+      <div className="container">
         <Router history={history}>
           <Switch>
             <Route path="/" exact component={Home} />
@@ -45,8 +41,8 @@ const App = ({ signedIn, fetchUser, error }) => {
               }}
             />
             <Route path="/help" exact component={Help} />
-            <Route path="/:bandName/record" exact component={Recorder} />
-            <Route path="/:bandName/edit" component={Editor} />
+            {/* <Route path="/:bandName/record" exact component={Recorder} />
+            <Route path="/:bandName/edit" component={Editor} /> */}
             <Route path="/:bandName" component={Header} />
           </Switch>
         </Router>
@@ -58,6 +54,7 @@ const App = ({ signedIn, fetchUser, error }) => {
 const mapStateToProps = (state) => {
   return {
     signedIn: state.auth.isSignedIn,
+    user: state.auth.user,
     error: state.error.error,
   };
 };
