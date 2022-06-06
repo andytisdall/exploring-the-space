@@ -52,7 +52,6 @@ const Title = ({
   }, [versions, title.versions]);
 
   useEffect(() => {
-    // console.log(versionList);
     if (versionList && versionList[0]) {
       let versionToSelect;
 

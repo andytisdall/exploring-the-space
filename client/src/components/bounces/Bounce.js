@@ -28,23 +28,14 @@ const Bounce = ({
   queueSongs,
 }) => {
   const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
-
   const [uploadActive, setUploadActive] = useState(false);
-
-  // const [playButtonVisible, setPlayButtonVisible] = useState(false);
 
   useEffect(() => {
     if (selectedBounce && selectedBounce !== title.selectedBounce) {
       selectBounce(selectedBounce, title.id);
-      // setPlayButtonVisible(true);
     }
-  }, [selectedBounce, selectBounce, title]);
-
-  useEffect(() => {
-    if (selectedBounce && selectedBounce !== title.selectedBounce) {
-      selectBounce(title.selectedBounce, title.id);
-    }
-  }, [selectedBounce, selectBounce, title]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBounce, selectBounce, title.id]);
 
   useEffect(() => {
     setSelectedBounce(title.selectedBounce);
@@ -182,8 +173,6 @@ const Bounce = ({
   };
 
   const showPlayButton = () => {
-    // if (playButtonVisible) {
-
     return (
       <img
         src="/images/play.svg"
@@ -192,7 +181,6 @@ const Bounce = ({
         alt="play button"
       />
     );
-    // }
   };
 
   if (uploadActive) {
@@ -200,17 +188,20 @@ const Bounce = ({
   } else {
     if (version) {
       return (
-        <DetailBox
-          selectedItem={selectedBounce}
-          itemType="Bounce"
-          itemList={itemList}
-          displayItem={displayBounce}
-          setSelected={setSelectedBounce}
-          renderAddButton={renderAddButton}
-          renderEditButton={renderEditButton}
-          renderDeleteButton={renderDeleteButton}
-          playButton={showPlayButton}
-        />
+        <>
+          <DetailBox
+            selectedItem={selectedBounce}
+            itemType="Bounce"
+            itemList={itemList}
+            displayItem={displayBounce}
+            setSelected={setSelectedBounce}
+            renderAddButton={renderAddButton}
+            renderEditButton={renderEditButton}
+            renderDeleteButton={renderDeleteButton}
+            playButton={showPlayButton}
+            onAddSubmit={onAddSubmit}
+          />
+        </>
       );
     } else {
       return null;

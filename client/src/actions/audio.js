@@ -84,7 +84,10 @@ export const nextSong = () => (dispatch, getState) => {
         });
     }
 
-    const song = allTitles[allTitles.indexOf(currentSong.title) + 1];
+    const currentIndex = allTitles.findIndex(
+      (title) => title.id === currentSong.title.id
+    );
+    const song = allTitles[currentIndex + 1];
 
     if (song && song.selectedVersion && song.selectedBounce) {
       const version = getState().versions[song.selectedVersion.id];

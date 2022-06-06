@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 
 import {
   fetchBounces,
@@ -81,25 +80,25 @@ const Version = ({
     }
   };
 
-  const renderRecordLink = () => {
-    if (authorized && selectedVersion) {
-      return (
-        <Link
-          to={{
-            pathname: `/${band.url}/record`,
-            state: {
-              version: selectedVersion,
-              title,
-              tier,
-            },
-          }}
-          className="record-link"
-        >
-          record a bounce
-        </Link>
-      );
-    }
-  };
+  // const renderRecordLink = () => {
+  //   if (authorized && selectedVersion) {
+  //     return (
+  //       <Link
+  //         to={{
+  //           pathname: `/${band.url}/record`,
+  //           state: {
+  //             version: selectedVersion,
+  //             title,
+  //             tier,
+  //           },
+  //         }}
+  //         className="record-link"
+  //       >
+  //         record a bounce
+  //       </Link>
+  //     );
+  //   }
+  // };
 
   const renderAddButton = () => {
     if (authorized) {
@@ -174,7 +173,7 @@ const Version = ({
         renderDeleteButton={renderDeleteButton}
       />
       <div className="detail-box-between">
-        {renderRecordLink()}
+        {/* {renderRecordLink()} */}
         {renderArrow()}
       </div>
       {renderBounces()}

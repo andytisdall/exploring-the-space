@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import moment from 'moment';
 
 const DetailBox = ({
   selectedItem,
@@ -10,8 +11,10 @@ const DetailBox = ({
   renderEditButton,
   renderDeleteButton,
   playButton,
+  onAddSubmit,
 }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [droppingFile, setDroppingFile] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -74,6 +77,17 @@ const DetailBox = ({
     }
   };
 
+  const renderNotes = () => {
+    if (selectedItem.notes || selectedItem.comments) {
+      return (
+        <div className="detail-notes">
+          <div className="detail-notes-title">Notes:</div>
+          <p>{selectedItem.notes || selectedItem.comments}</p>
+        </div>
+      );
+    }
+  };
+
   const renderDetail = () => {
     if (selectedItem) {
       return (
@@ -94,11 +108,7 @@ const DetailBox = ({
             </div>
             {playButton && playButton()}
           </div>
-
-          <div className="detail-notes">
-            <div className="detail-notes-title">Notes:</div>
-            <p>{selectedItem.notes || selectedItem.comments}</p>
-          </div>
+          {renderNotes()}
         </div>
       );
     } else {
@@ -119,16 +129,76 @@ const DetailBox = ({
     }
   };
 
-  return (
-    <div className={`detail-box ${itemType === 'Bounce' ? 'bounce' : ''}`}>
-      {renderDetail()}
-      <div className="detail-buttons">
-        {renderAddButton()}
-        {selectedItem && renderEditButton()}
-        {selectedItem && renderDeleteButton()}
+  const onDragOver = (e) => {
+    if (!droppingFile) {
+      setDroppingFile(true);
+    }
+  };
+
+  const onMouseOver = (e) => {
+    if (droppingFile) {
+      setDroppingFile(false);
+    }
+  };
+
+  const onDrop = (e) => {
+    // this is the only way the file would be defined!
+    setTimeout(() => {
+      const { files } = e.target;
+      // const words = files[0].name.split(' ');
+      // let date = new Date(words[words.length - 1].split('.')[0]);
+
+      // if (!date instanceof Date || isNaN(date)) {
+      //   date = new Date();
+      // }
+      const fileName = files[0].name.split('.')[0];
+      let date = new moment(fileName);
+      if (!date.isValid()) {
+        date = new Date();
+      }
+      const formValues = {
+        date,
+        comments: '',
+        latest: true,
+        file: files,
+      };
+      onAddSubmit(formValues);
+    }, 0);
+  };
+
+  if (itemType === 'Bounce') {
+    return (
+      <div className={`detail-box ${itemType === 'Bounce' ? 'bounce' : ''}`}>
+        <div className="drag" onDragOver={onDragOver}>
+          <input
+            type="file"
+            onDrop={onDrop}
+            onMouseOver={onMouseOver}
+            onClick={(e) => e.preventDefault()}
+            className={`bounce-drop-zone ${droppingFile && 'dropping'}`}
+          />
+
+          {renderDetail()}
+          <div className="detail-buttons">
+            {renderAddButton()}
+            {selectedItem && renderEditButton()}
+            {selectedItem && renderDeleteButton()}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className={`detail-box ${itemType === 'Bounce' ? 'bounce' : ''}`}>
+        {renderDetail()}
+        <div className="detail-buttons">
+          {renderAddButton()}
+          {selectedItem && renderEditButton()}
+          {selectedItem && renderDeleteButton()}
+        </div>
+      </div>
+    );
+  }
 };
 
 export default DetailBox;
