@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
+import { Draggable } from 'react-beautiful-dnd';
 
 import AddButton from '../reusable/AddButton';
 import DeleteButton from '../reusable/DeleteButton';
@@ -228,24 +229,44 @@ const PlaylistSong = ({
   }
 
   return (
-    <div className="title-margin">
-      <div className={`row title playlistsong ${currentClass}`}>
-        <div className="marqee">
-          <div className="title-name">
-            <div className="song-position">
-              <p>{song.position}</p>
-            </div>
-            <h3>{song && titles[song.title] && titles[song.title].title}</h3>
-          </div>
+    <Draggable index={song.position - 1} draggableId={song.id}>
+      {(provided) => {
+        return (
+          <div {...provided.draggableProps} ref={provided.innerRef}>
+            <div className="title-margin">
+              <div className={`row title playlistsong ${currentClass}`}>
+                <div className="marqee">
+                  <div className="title-name">
+                    <div
+                      {...provided.dragHandleProps}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src="images/drag-handle.svg"
+                        alt="drag handle"
+                        className="drag-handle"
+                      />
+                    </div>
+                    <div className="song-position">
+                      <p>{song.position}</p>
+                    </div>
+                    <h3>
+                      {song && titles[song.title] && titles[song.title].title}
+                    </h3>
+                  </div>
 
-          {renderPlayContainer()}
-          <div className="tier-display">
-            {renderEditButton()}
-            {renderDeleteButton()}
+                  {renderPlayContainer()}
+                  <div className="tier-display">
+                    {renderEditButton()}
+                    {renderDeleteButton()}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+        );
+      }}
+    </Draggable>
   );
 };
 

@@ -183,12 +183,14 @@ const Title = ({
   const renderButtons = () => {
     if (authorized) {
       const bandPlaylists = band.playlists.map((id) => playlists[id]);
-      const playlistOptions = bandPlaylists.map((pl) => {
-        if (pl) {
-          return { value: pl.id, display: pl.name };
-        }
-        return null;
-      });
+      const playlistOptions = bandPlaylists
+        .sort((a, b) => (a.position > b.position ? 1 : -1))
+        .map((pl) => {
+          if (pl) {
+            return { value: pl.id, display: pl.name };
+          }
+          return null;
+        });
       const bandTiers = band.tiers
         .filter((t) => t !== tier.id)
         .map((id) => tiers[id]);

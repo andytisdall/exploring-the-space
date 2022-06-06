@@ -1,6 +1,6 @@
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-const DragContainer = ({ listType, action, children }) => {
+const DragContainer = ({ listType, action, actionArguments, children }) => {
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -10,7 +10,8 @@ const DragContainer = ({ listType, action, children }) => {
       return;
     }
     const position = destination.index + 1;
-    action({ position }, draggableId);
+    const args = actionArguments || {};
+    action({ position, ...args }, draggableId);
   };
 
   return (

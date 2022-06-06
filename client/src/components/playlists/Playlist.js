@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { Draggable } from 'react-beautiful-dnd';
 
 import {
   fetchPlaylistSongs,
   deletePlaylist,
   editPlaylist,
+  editPlaylistSong,
 } from '../../actions';
 import PlaylistSong from '../playlistsongs/PlaylistSong';
 import AddButton from '../reusable/AddButton';
 import DeleteButton from '../reusable/DeleteButton';
 import requireAuth from '../reusable/requireAuth';
+
+import DragContainer from '../layout/DragContainer';
 
 const Playlist = ({
   playlist,
@@ -21,6 +25,7 @@ const Playlist = ({
   editPlaylist,
   deletePlaylist,
   band,
+  editPlaylistSong,
 }) => {
   const [expand, setExpand] = useState(false);
   const [playlistList, setPlaylistList] = useState([]);
@@ -169,38 +174,64 @@ const Playlist = ({
   const open = expand ? 'open' : 'closed';
 
   return (
-    <>
-      <div
-        className={`row tier ${expand ? 'row-open' : ''}`}
-        onClick={() => setExpand(!expand)}
-      >
-        <div className="marqee tier-info">
-          <div className="tier-name">
-            <img
-              className={`arrow ${arrow}`}
-              src={`/images/right-arrow.svg`}
-              alt="playlist arrow"
-            />
-            <h2>{playlist.name}</h2>
+    <Draggable draggableId={playlist.id} index={playlist.position - 1}>
+      {(provided) => {
+        return (
+          <div {...provided.draggableProps} ref={provided.innerRef}>
+            <div
+              className={`row tier ${expand ? 'row-open' : ''}`}
+              onClick={() => setExpand(!expand)}
+            >
+              <div className="marqee tier-info">
+                <div className="tier-name">
+                  <div
+                    {...provided.dragHandleProps}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img
+                      src="images/drag-handle.svg"
+                      alt="drag handle"
+                      className="drag-handle"
+                    />
+                  </div>
+                  <img
+                    className={`arrow ${arrow}`}
+                    src={`/images/right-arrow.svg`}
+                    alt="playlist arrow"
+                  />
+                  <h2>{playlist.name}</h2>
 
-            {showUpdatePlaylistCheckbox()}
-          </div>
+                  {showUpdatePlaylistCheckbox()}
+                </div>
 
-          <div className="tier-count">
-            <div className="song-count">{playlist.songs.length} songs</div>
-            <div className="song-count">{renderTotalTime()}</div>
+                <div className="tier-count">
+                  <div className="song-count">
+                    {playlist.songs.length} songs
+                  </div>
+                  <div className="song-count">{renderTotalTime()}</div>
+                </div>
+                <div className="tier-display">
+                  {renderEditButton()}
+                  {renderDeleteButton()}
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className={`title-container ${open}`}>
+              {expand && (
+                <DragContainer
+                  action={editPlaylistSong}
+                  listType="playlistsongs"
+                  actionArguments={{ playlistId: playlist.id }}
+                >
+                  {renderPlaylistSongs()}
+                </DragContainer>
+              )}
+            </div>
           </div>
-          <div className="tier-display">
-            {renderEditButton()}
-            {renderDeleteButton()}
-          </div>
-        </div>
-      </div>
-      <hr />
-      <div className={`title-container ${open}`}>
-        {expand && renderPlaylistSongs()}
-      </div>
-    </>
+        );
+      }}
+    </Draggable>
   );
 };
 
@@ -216,4 +247,5 @@ export default connect(mapStateToProps, {
   fetchPlaylistSongs,
   deletePlaylist,
   editPlaylist,
+  editPlaylistSong,
 })(requireAuth(Playlist));

@@ -33,6 +33,12 @@ export const createPlaylist = (formValues) => async (dispatch, getState) => {
 export const editPlaylist =
   (formValues, playlistId) => async (dispatch, getState) => {
     try {
+      const playlist = getState().playlists[playlistId];
+      const optimisticallyEditedPlaylist = {
+        ...playlist,
+        ...formValues,
+      };
+      dispatch({ type: EDIT_PLAYLIST, payload: optimisticallyEditedPlaylist });
       const { currentBand } = getState().bands;
       const response = await greenhouse.patch(`/playlists/${playlistId}`, {
         ...formValues,

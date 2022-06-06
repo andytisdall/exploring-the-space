@@ -8,13 +8,14 @@ import {
   createTier,
   createPlaylist,
   editTier,
+  editPlaylist,
 } from '../../actions';
 import Tier from '../tiers/Tier';
 import Playlist from '../playlists/Playlist';
 import AddButton from '../reusable/AddButton';
 import requireAuth from '../reusable/requireAuth';
 import AddTier from '../tiers/AddTier';
-import DragContainer from './Draggable';
+import DragContainer from './DragContainer';
 
 const BodyContainer = ({
   fetchPlaylists,
@@ -28,6 +29,7 @@ const BodyContainer = ({
   handleUpdate,
   user,
   editTier,
+  editPlaylist,
 }) => {
   const [tierList, setTierList] = useState([]);
   const [playlistList, setPlaylistList] = useState([]);
@@ -150,7 +152,11 @@ const BodyContainer = ({
           <div className="section-add">{renderPlaylistAddButton()}</div>
         </div>
         <hr />
-        {playlists && renderPlaylists()}
+        {playlists && (
+          <DragContainer listType="playlists" action={editPlaylist}>
+            {renderPlaylists()}
+          </DragContainer>
+        )}
       </div>
     </div>
   );
@@ -172,4 +178,5 @@ export default connect(mapStateToProps, {
   createTier,
   createPlaylist,
   editTier,
+  editPlaylist,
 })(requireAuth(BodyContainer));

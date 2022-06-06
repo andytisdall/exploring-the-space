@@ -123,6 +123,10 @@
     font-size: 1.5rem;
   }
 
+  .volume-container {
+    display: none;
+  }
+
   /* MAIN */
 
   .section-title {

@@ -45,6 +45,9 @@ const Header = ({
   const renderAdmin = () => {
     return (
       <div className="menu">
+        <Link className="menu-item" to="/">
+          Home
+        </Link>
         <Link className="menu-item" to="/user">
           User Home
         </Link>

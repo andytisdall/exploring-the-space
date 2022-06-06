@@ -39,6 +39,19 @@ export const createPlaylistSong =
 export const editPlaylistSong =
   (formValues, playlistSongId) => async (dispatch, getState) => {
     try {
+      const playlistsong = getState().playlistSongs[playlistSongId];
+      const optimisticallyEditedPlaylistSong = {
+        ...playlistsong,
+        ...formValues,
+      };
+      dispatch({
+        type: EDIT_PLAYLISTSONG,
+        payload: {
+          playlistsong: optimisticallyEditedPlaylistSong,
+          playlist: formValues.playlistId,
+        },
+      });
+
       const { currentBand } = getState().bands;
       const song = getState().playlistSongs[playlistSongId];
       if (formValues.move) {

@@ -36,7 +36,7 @@ export const editTier = (formValues, tierId) => async (dispatch, getState) => {
     const tier = getState().tiers[tierId];
     const optimisticallyEditedTier = {
       ...tier,
-      position: formValues.position,
+      ...formValues,
     };
     dispatch({ type: EDIT_TIER, payload: optimisticallyEditedTier });
     const { currentBand } = getState().bands;
