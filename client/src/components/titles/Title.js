@@ -48,7 +48,7 @@ const Title = ({
 
   useEffect(() => {
     setVersionList(title.versions.map((id) => versions[id]));
-    // console.log('set version list')
+    // console.log('set version list');
   }, [versions, title.versions]);
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const Title = ({
       let versionToSelect;
       const selectedVersion = title.selectedVersion;
       const versionIds = versionList.map((v) => v.id);
-      // console.log(selectedVersion ? selectedVersion.name : 'none');
 
       if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
         versionToSelect = versionList.find((v) => v.current);
@@ -76,7 +75,7 @@ const Title = ({
     // console.log(title)
     if (title.selectedVersion && title.selectedVersion.id) {
       fetchBounces(title.selectedVersion.id);
-      // console.log('fetch bounces')
+      // console.log('fetch bounces');
     }
   }, [title.selectedVersion, fetchBounces]);
 
@@ -91,22 +90,28 @@ const Title = ({
         selectBounce(null, title.id);
       }
     }
-  }, [bounces, selectBounce, title]);
+  }, [
+    bounces,
+    selectBounce,
+    title.selectedBounce,
+    title.selectedVersion,
+    title.id,
+  ]);
 
   useEffect(() => {
     if (bounceList && bounceList[0]) {
       let bounceToSelect;
 
-      const selectedBounce = title.selectedBounce;
-      const bounceIds = bounceList.map((b) => b.id);
-
-      if (!selectedBounce || !bounceIds.includes(selectedBounce.id)) {
+      if (title.selectedBounce && bounceList.includes(title.selectedBounce)) {
+        bounceToSelect = title.selectedBounce;
+      } else {
         bounceToSelect = bounceList.find((b) => b.latest);
         findLatest(title, bounceToSelect);
+      }
+
+      if (bounceToSelect !== title.selectedBounce) {
         selectBounce(bounceToSelect, title.id);
-      } else if (selectedBounce) {
-        bounceToSelect = title.selectedBounce;
-        selectBounce(bounceToSelect, title.id);
+        // console.log('select bounce');
       }
     } else if (song) {
       setSong(null);
@@ -122,7 +127,7 @@ const Title = ({
         version: title.selectedVersion,
         bounce: title.selectedBounce,
       });
-      // console.log('song update')
+      // console.log('song update');
       getTime({ id: title.id, duration: title.selectedBounce.duration });
     } else if (song && !title.selectedBounce) {
       setSong(null);

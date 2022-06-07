@@ -31,9 +31,8 @@ const Bounce = ({
   const [uploadActive, setUploadActive] = useState(false);
 
   useEffect(() => {
-    if (selectedBounce && selectedBounce !== title.selectedBounce) {
+    if (selectedBounce && selectedBounce.id !== title.selectedBounce.id) {
       selectBounce(selectedBounce, title.id);
-      console.log('m');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBounce, selectBounce]);
@@ -60,7 +59,7 @@ const Bounce = ({
   };
 
   const onAddSubmit = (formValues) => {
-    createBounce(formValues, version.id);
+    createBounce(formValues, version.id, title.id);
     setUploadActive(true);
   };
 
@@ -113,7 +112,7 @@ const Bounce = ({
             },
           ]}
           onSubmit={(formValues) => onAddSubmit(formValues)}
-          form={`add-bounce-${title.id}`}
+          form={`add-bounce-${version.id}`}
           initialValues={{ latest: true }}
           addClass="add-bounce"
         />

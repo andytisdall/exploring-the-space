@@ -51,53 +51,55 @@ export const fetchBounces = (versionId) => async (dispatch) => {
   }
 };
 
-export const createBounce = (formValues, versionId) => (dispatch, getState) => {
-  dispatch({ type: UPLOAD_STARTED });
-  const { currentBand } = getState().bands;
-  const parentVersion = getState().versions[versionId];
+export const createBounce =
+  (formValues, versionId, titleId) => (dispatch, getState) => {
+    dispatch({ type: UPLOAD_STARTED });
+    const { currentBand } = getState().bands;
+    const parentVersion = getState().versions[versionId];
 
-  if (!parentVersion.bounces.length) {
-    formValues.latest = true;
-  }
-  formValues.currentBand = currentBand.id;
-  formValues.version = versionId;
-
-  processMp3(formValues, dispatchAction);
-
-  // call this to finish dispatching after the mp3 is processed
-  async function dispatchAction(formData) {
-    try {
-      const response = await greenhouse.post('/bounces', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      if (response.data.latest) {
-        if (parentVersion.bounces.length) {
-          const bounceList = parentVersion.bounces.map(
-            (id) => getState().bounces[id]
-          );
-          const oldLatest = bounceList.find((b) => b.latest);
-          oldLatest.latest = false;
-          dispatch(
-            editBounce(
-              _.pick(oldLatest, 'date', 'comments', 'latest'),
-              oldLatest.id,
-              versionId
-            )
-          );
-        }
-      }
-
-      dispatch({
-        type: CREATE_BOUNCE,
-        payload: { bounce: response.data, version: versionId },
-      });
-    } catch (err) {
-      dispatch({ type: UPLOAD_FAILURE });
-      dispatch(errorHandler(err));
+    if (!parentVersion.bounces.length) {
+      formValues.latest = true;
     }
-  }
-};
+    formValues.currentBand = currentBand.id;
+    formValues.version = versionId;
+
+    processMp3(formValues, dispatchAction);
+
+    // call this to finish dispatching after the mp3 is processed
+    async function dispatchAction(formData) {
+      try {
+        const response = await greenhouse.post('/bounces', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (response.data.latest) {
+          if (parentVersion.bounces.length) {
+            const bounceList = parentVersion.bounces.map(
+              (id) => getState().bounces[id]
+            );
+            const oldLatest = bounceList.find((b) => b.latest);
+            oldLatest.latest = false;
+            dispatch(
+              editBounce(
+                _.pick(oldLatest, 'date', 'comments', 'latest'),
+                oldLatest.id,
+                versionId
+              )
+            );
+          }
+        }
+
+        dispatch({
+          type: CREATE_BOUNCE,
+          payload: { bounce: response.data, version: versionId },
+        });
+        dispatch(selectBounce(response.data, titleId));
+      } catch (err) {
+        dispatch({ type: UPLOAD_FAILURE });
+        dispatch(errorHandler(err));
+      }
+    }
+  };
 
 export const editBounce =
   (formValues, bounceId, versionId) => (dispatch, getState) => {

@@ -30,7 +30,7 @@ const appReducer = combineReducers({
 
 // clear the store if we are loading a new band's data
 
-export default (state, action) => {
+const reducers = (state, action) => {
   if (
     action.type === FETCH_BAND &&
     action.payload !== state.bands.currentBand
@@ -40,3 +40,5 @@ export default (state, action) => {
   }
   return appReducer(state, action);
 };
+
+export default reducers;
