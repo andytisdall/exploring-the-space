@@ -104,10 +104,9 @@ const Title = ({
         bounceToSelect = bounceList.find((b) => b.latest);
         findLatest(title, bounceToSelect);
         selectBounce(bounceToSelect, title.id);
-        // } else if (selectedBounce) {
-        //   bounceToSelect = title.selectedBounce;
-        //   selectBounce(bounceToSelect, title.id);
-        // }
+      } else if (selectedBounce) {
+        bounceToSelect = title.selectedBounce;
+        selectBounce(bounceToSelect, title.id);
       }
     } else if (song) {
       setSong(null);

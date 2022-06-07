@@ -1,11 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
-import reduxThunk from 'redux-thunk';
 
+import Root from './root';
 import App from './components/App';
-import reducers from './reducers';
 
 const initialState = {};
 
@@ -15,16 +12,9 @@ if (token) {
   initialState.auth = { isSignedIn: true };
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  reducers,
-  initialState,
-  composeEnhancers(applyMiddleware(reduxThunk))
-);
-
 ReactDOM.render(
-  <Provider store={store}>
+  <Root initialState={initialState}>
     <App />
-  </Provider>,
+  </Root>,
   document.querySelector('#root')
 );
