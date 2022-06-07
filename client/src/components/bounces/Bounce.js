@@ -33,9 +33,10 @@ const Bounce = ({
   useEffect(() => {
     if (selectedBounce && selectedBounce !== title.selectedBounce) {
       selectBounce(selectedBounce, title.id);
+      console.log('m');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBounce, selectBounce, title.id]);
+  }, [selectedBounce, selectBounce]);
 
   useEffect(() => {
     setSelectedBounce(title.selectedBounce);

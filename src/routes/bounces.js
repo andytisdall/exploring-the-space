@@ -13,6 +13,23 @@ const PlaylistSong = mongoose.model('PlaylistSong');
 
 const router = express.Router();
 
+const saveMp3 = (file, next) => {
+  // Create upload stream object
+  let stream = bucket.openUploadStream(file.name);
+
+  const readableStream = new Readable();
+  readableStream.push(file.data);
+  readableStream.push(null);
+  readableStream.pipe(stream);
+
+  stream.on('error', (err) => {
+    throw new Error('Error uploading mp3!');
+  });
+
+  //
+  stream.on('finish', () => next(stream.id));
+};
+
 router.post('/bounces', currentUser, requireAuth, async (req, res) => {
   // Increase timeout length for long uploads
 
@@ -31,7 +48,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
   const file = req.files.file;
 
-  // Create a new bounce object form values
+  // Create a new bounce object
 
   const newBounce = new Song({
     date,
@@ -41,22 +58,9 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
     latest,
   });
 
-  // Create upload stream object
-  let stream = bucket.openUploadStream(file.name);
-
-  const readableStream = new Readable();
-  readableStream.push(file.data);
-  readableStream.push(null);
-  readableStream.pipe(stream);
-
-  stream.on('error', (err) => {
-    throw new Error('Error uploading mp3!');
-  });
-
-  // Finish up on completed upload
-  stream.on('finish', async () => {
+  saveMp3(file, async (streamId) => {
     // Get id of mp3 from stream object
-    newBounce.mp3 = stream.id;
+    newBounce.mp3 = streamId;
 
     // Add bounce to parent version's bounce list
     parentVersion.songs.push(newBounce);
@@ -64,7 +68,6 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
     // Finally save new bounce object
     await newBounce.save();
     await parentVersion.save();
-
     console.log('Uploaded & created bounce record:', newBounce);
 
     return res.status(201).send(newBounce);
@@ -89,34 +92,12 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
   thisBounce.date = date;
   thisBounce.latest = latest;
 
-  //
-
   if (req.files) {
     const file = req.files.file;
 
-    // delete old mp3
-
-    const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
-
-    // Edit bounce object form values
-
-    thisBounce.size = file.size;
-    thisBounce.duration = duration;
-
-    // Create upload stream object
-    let stream = bucket.openUploadStream(file.name);
-
-    const readableStream = new Readable();
-    readableStream.push(file.data);
-    readableStream.push(null);
-    readableStream.pipe(stream);
-
-    stream.on('error', (err) => {
-      throw new Error('Error uploading mp3!');
-    });
-
-    // Finish up on completed upload
-    stream.on('finish', async () => {
+    saveMp3(file, async (streamId) => {
+      // delete old mp3
+      const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
       bucket.delete(mp3Id, async (err) => {
         if (err) {
           throw new Error('Error attempting to delete mp3');
@@ -124,7 +105,10 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
           console.log('mp3 deleted');
 
           // Get id of mp3 from stream object
-          thisBounce.mp3 = stream.id;
+          thisBounce.mp3 = streamId;
+          // Edit bounce object form values
+          thisBounce.size = file.size;
+          thisBounce.duration = duration;
           await thisBounce.save();
 
           res.send(thisBounce);

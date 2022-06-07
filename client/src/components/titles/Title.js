@@ -54,10 +54,9 @@ const Title = ({
   useEffect(() => {
     if (versionList && versionList[0]) {
       let versionToSelect;
-
       const selectedVersion = title.selectedVersion;
-
       const versionIds = versionList.map((v) => v.id);
+      // console.log(selectedVersion ? selectedVersion.name : 'none');
 
       if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
         versionToSelect = versionList.find((v) => v.current);
@@ -71,7 +70,7 @@ const Title = ({
         selectVersion(versionToSelect, title.id);
       }
     }
-  }, [versionList, selectVersion, title.id, versions, title.selectedVersion]);
+  }, [versionList, selectVersion, versions, title.selectedVersion, title.id]);
 
   useEffect(() => {
     // console.log(title)
@@ -85,40 +84,36 @@ const Title = ({
     if (title.selectedVersion) {
       if (title.selectedVersion.bounces[0]) {
         setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
-        // console.log('set bounce list')
+        // console.log('set bounce list');
       } else if (title.selectedBounce !== null) {
-        // console.log('set bounce list null')
+        // console.log('set bounce list null');
         setBounceList(null);
         selectBounce(null, title.id);
       }
     }
-  }, [
-    bounces,
-    selectBounce,
-    title.id,
-    title.selectedBounce,
-    title.selectedVersion,
-  ]);
+  }, [bounces, selectBounce, title]);
 
   useEffect(() => {
     if (bounceList && bounceList[0]) {
       let bounceToSelect;
 
-      if (title.selectedBounce && bounceList.includes(title.selectedBounce)) {
-        bounceToSelect = title.selectedBounce;
-      } else {
+      const selectedBounce = title.selectedBounce;
+      const bounceIds = bounceList.map((b) => b.id);
+
+      if (!selectedBounce || !bounceIds.includes(selectedBounce.id)) {
         bounceToSelect = bounceList.find((b) => b.latest);
         findLatest(title, bounceToSelect);
-      }
-
-      if (bounceToSelect !== title.selectedBounce) {
         selectBounce(bounceToSelect, title.id);
-        // console.log('select bounce');
+        // } else if (selectedBounce) {
+        //   bounceToSelect = title.selectedBounce;
+        //   selectBounce(bounceToSelect, title.id);
+        // }
       }
     } else if (song) {
       setSong(null);
     }
-  }, [bounceList, findLatest, selectBounce, song, title]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bounceList, findLatest, selectBounce, song]);
 
   useEffect(() => {
     if (title.selectedBounce && title.selectedVersion) {

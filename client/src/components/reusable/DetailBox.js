@@ -34,6 +34,8 @@ const DetailBox = ({
     } else {
       document.removeEventListener('click', onBodyClick, { capture: true });
     }
+    return () =>
+      document.removeEventListener('click', onBodyClick, { capture: true });
   }, [dropdownVisible]);
 
   const count = () => {
