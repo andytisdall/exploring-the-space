@@ -44,7 +44,7 @@ const Playlist = ({
   const renderPlaylistSongs = () => {
     songsToRender.sort((a, b) => (a.position < b.position ? -1 : 1));
 
-    return songsToRender.map((song) => {
+    const plsList = songsToRender.map((song) => {
       if (song) {
         return (
           <PlaylistSong
@@ -58,6 +58,20 @@ const Playlist = ({
       }
       return null;
     });
+
+    if (authorized) {
+      return (
+        <DragContainer
+          action={editPlaylistSong}
+          listType="playlistsongs"
+          actionArguments={{ playlistId: playlist.id }}
+        >
+          {plsList}
+        </DragContainer>
+      );
+    } else {
+      return plsList;
+    }
   };
 
   useEffect(() => {
@@ -170,69 +184,72 @@ const Playlist = ({
     }
   };
 
-  const arrow = expand ? 'down-arrow' : '';
-  const open = expand ? 'open' : 'closed';
-
-  return (
-    <Draggable draggableId={playlist.id} index={playlist.position - 1}>
-      {(provided) => {
-        return (
-          <div {...provided.draggableProps} ref={provided.innerRef}>
-            <div
-              className={`row tier ${expand ? 'row-open' : ''}`}
-              onClick={() => setExpand(!expand)}
-            >
-              <div className="marqee tier-info">
-                <div className="tier-name">
-                  <div
-                    {...provided.dragHandleProps}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img
-                      src="images/drag-handle.svg"
-                      alt="drag handle"
-                      className="drag-handle"
-                    />
-                  </div>
-                  <img
-                    className={`arrow ${arrow}`}
-                    src={`/images/right-arrow.svg`}
-                    alt="playlist arrow"
-                  />
-                  <h2>{playlist.name}</h2>
-
-                  {showUpdatePlaylistCheckbox()}
-                </div>
-
-                <div className="tier-count">
-                  <div className="song-count">
-                    {playlist.songs.length} songs
-                  </div>
-                  <div className="song-count">{renderTotalTime()}</div>
-                </div>
-                <div className="tier-display">
-                  {renderEditButton()}
-                  {renderDeleteButton()}
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className={`title-container ${open}`}>
-              {expand && (
-                <DragContainer
-                  action={editPlaylistSong}
-                  listType="playlistsongs"
-                  actionArguments={{ playlistId: playlist.id }}
+  const renderPlaylist = (drag = null) => {
+    const arrow = expand ? 'down-arrow' : '';
+    const open = expand ? 'open' : 'closed';
+    return (
+      <>
+        <div
+          className={`row tier ${expand ? 'row-open' : ''}`}
+          onClick={() => setExpand(!expand)}
+        >
+          <div className="marqee tier-info">
+            <div className="tier-name">
+              {drag && (
+                <div
+                  {...drag.dragHandleProps}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {renderPlaylistSongs()}
-                </DragContainer>
+                  <img
+                    src="images/drag-handle.svg"
+                    alt="drag handle"
+                    className="drag-handle"
+                  />
+                </div>
               )}
+              <img
+                className={`arrow ${arrow}`}
+                src={`/images/right-arrow.svg`}
+                alt="playlist arrow"
+              />
+              <h2>{playlist.name}</h2>
+
+              {showUpdatePlaylistCheckbox()}
+            </div>
+
+            <div className="tier-count">
+              <div className="song-count">{playlist.songs.length} songs</div>
+              <div className="song-count">{renderTotalTime()}</div>
+            </div>
+            <div className="tier-display">
+              {renderEditButton()}
+              {renderDeleteButton()}
             </div>
           </div>
-        );
-      }}
-    </Draggable>
-  );
+        </div>
+        <hr />
+        <div className={`title-container ${open}`}>
+          {expand && renderPlaylistSongs()}
+        </div>
+      </>
+    );
+  };
+
+  if (authorized) {
+    return (
+      <Draggable draggableId={playlist.id} index={playlist.position - 1}>
+        {(provided) => {
+          return (
+            <div {...provided.draggableProps} ref={provided.innerRef}>
+              {renderPlaylist(provided)}
+            </div>
+          );
+        }}
+      </Draggable>
+    );
+  } else {
+    return renderPlaylist();
+  }
 };
 
 const mapStateToProps = (state) => {

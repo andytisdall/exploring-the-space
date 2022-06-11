@@ -89,4 +89,9 @@ router.post('/recordings/delete', (req, res) => {
   res.send(`${id}`);
 });
 
+router.get('/mock-recording', (req, res) => {
+  const file = fs.readFileSync(`${mediaDir}/short snippet 5-19-87.mp3`);
+  res.send(file);
+});
+
 export { router as recordingsRouter };

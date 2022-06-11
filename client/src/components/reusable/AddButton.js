@@ -139,17 +139,19 @@ class AddButton extends React.Component {
       }
       return (
         <div key={field.label}>
-          <label>{field.label}: </label>
-          <Field
-            name={field.name}
-            component={comp}
-            autoFocus={autoFocus}
-            type={field.type}
-            validate={field.required ? this.required : null}
-            options={field.options}
-          >
-            {field.options ? this.showOptions(field) : null}
-          </Field>
+          <label>
+            {field.label}:
+            <Field
+              name={field.name}
+              component={comp}
+              autoFocus={autoFocus}
+              type={field.type}
+              validate={field.required ? this.required : null}
+              options={field.options}
+            >
+              {field.options ? this.showOptions(field) : null}
+            </Field>
+          </label>
         </div>
       );
     });
@@ -201,7 +203,7 @@ class AddButton extends React.Component {
     return (
       <>
         <div className="add" onClick={this.click} ref={this.ref}>
-          <img src={this.props.image} alt="add icon" />
+          <img src={this.props.image} alt={this.props.title} />
           {this.showBox()}
         </div>
       </>

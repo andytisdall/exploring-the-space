@@ -253,58 +253,72 @@ const Tier = ({
   const arrow = expand ? 'down-arrow' : '';
   const open = expand ? 'open' : 'closed';
 
-  return (
-    <Draggable draggableId={tier.id} index={tier.position - 1}>
-      {(provided) => {
-        return (
-          <div {...provided.draggableProps} ref={provided.innerRef}>
-            <div
-              className={`row tier ${expand ? 'row-open' : ''}`}
-              onClick={() => setExpand(!expand)}
-            >
-              <div className="marqee">
-                <div className="tier-name">
-                  <div
-                    {...provided.dragHandleProps}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img
-                      src="images/drag-handle.svg"
-                      alt="drag handle"
-                      className="drag-handle"
-                    />
-                  </div>
+  const renderTier = (drag = null) => {
+    return (
+      <>
+        <div
+          className={`row tier ${expand ? 'row-open' : ''}`}
+          onClick={() => setExpand(!expand)}
+        >
+          <div className="marqee">
+            <div className="tier-name">
+              {drag && (
+                <div
+                  {...drag.dragHandleProps}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <img
-                    className={`arrow ${arrow}`}
-                    src={`images/right-arrow.svg`}
-                    alt="tier arrow"
+                    src="images/drag-handle.svg"
+                    alt="drag handle"
+                    className="drag-handle"
                   />
-                  <h2>{tier.name}</h2>
                 </div>
-                <div className="tier-count">
-                  <div className="song-count">
-                    {tier.trackList.length} songs
-                  </div>
-                  <div className="song-count">{renderTotalTime()}</div>
-                </div>
-                <div className="tier-display">
-                  {renderEditButton()}
-                  {renderDeleteButton()}
-                </div>
-              </div>
+              )}
+              <img
+                className={`arrow ${arrow}`}
+                src={`images/right-arrow.svg`}
+                alt="tier arrow"
+              />
+              <h2>{tier.name}</h2>
             </div>
-            <div className={`tier-options ${expand ? 'options-visible' : ''}`}>
-              {expand && renderOptions()}
+            <div className="tier-count">
+              <div className="song-count">{tier.trackList.length} songs</div>
+              <div className="song-count">{renderTotalTime()}</div>
             </div>
-            <hr />
-            <div className={`title-container ${open}`}>
-              {expand && titlesToRender && renderTitles()}
+            <div className="tier-display">
+              {renderEditButton()}
+              {renderDeleteButton()}
             </div>
           </div>
-        );
-      }}
-    </Draggable>
-  );
+        </div>
+        <div className={`tier-options ${expand ? 'options-visible' : ''}`}>
+          {expand && renderOptions()}
+        </div>
+        <hr />
+        <div className={`title-container ${open}`}>
+          {expand && titlesToRender && renderTitles()}
+        </div>
+      </>
+    );
+  };
+
+  // check auth status to render draggable tiers
+
+  if (authorized) {
+    return (
+      <Draggable draggableId={tier.id} index={tier.position - 1}>
+        {(drag) => {
+          return (
+            <div {...drag.draggableProps} ref={drag.innerRef}>
+              {renderTier(drag)}
+            </div>
+          );
+        }}
+      </Draggable>
+    );
+  } else {
+    return renderTier();
+  }
 };
 
 const mapStateToProps = (state) => {

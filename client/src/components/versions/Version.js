@@ -26,8 +26,6 @@ const Version = ({
   editVersion,
   deleteVersion,
   song,
-  tier,
-  band,
 }) => {
   const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
   const [bounceList, setBounceList] = useState(null);

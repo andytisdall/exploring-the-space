@@ -76,12 +76,22 @@ const BodyContainer = ({
   }, [playlists, band]);
 
   const renderTiers = () => {
-    return tierList.map((tier) => {
+    const renderedTiers = tierList.map((tier) => {
       if (tier) {
         return <Tier tier={tier} key={tier.id} />;
       }
       return null;
     });
+
+    if (authorized) {
+      return (
+        <DragContainer listType="tiers" action={editTier}>
+          {renderedTiers}
+        </DragContainer>
+      );
+    } else {
+      return renderedTiers;
+    }
   };
 
   const renderTierAddButton = () => {
@@ -112,25 +122,23 @@ const BodyContainer = ({
   };
 
   const renderPlaylists = () => {
-    return playlistList.map((playlist) => {
+    const renderedPlaylists = playlistList.map((playlist) => {
       if (playlist) {
         return <Playlist playlist={playlist} key={playlist.id} />;
       }
       return null;
     });
-  };
 
-  // const onDragEnd = (result) => {
-  //   const { destination, source, draggableId } = result;
-  //   if (!destination) {
-  //     return;
-  //   }
-  //   if (destination.index === source.index) {
-  //     return;
-  //   }
-  //   const position = destination.index + 1;
-  //   editTier({ position }, draggableId);
-  // };
+    if (authorized) {
+      return (
+        <DragContainer listType="playlists" action={editPlaylist}>
+          {renderedPlaylists}
+        </DragContainer>
+      );
+    } else {
+      return renderedPlaylists;
+    }
+  };
 
   const playbarActive = currentSong ? 'playbar-active' : '';
 
@@ -141,22 +149,14 @@ const BodyContainer = ({
         <div className="section-add">{renderTierAddButton()}</div>
       </div>
       <hr />
-      {tiers && (
-        <DragContainer listType="tiers" action={editTier}>
-          {renderTiers()}
-        </DragContainer>
-      )}
+      {tiers && renderTiers()}
       <div className="playlists">
         <div className="section-header">
           <h2 className="section-title">Playlists</h2>
           <div className="section-add">{renderPlaylistAddButton()}</div>
         </div>
         <hr />
-        {playlists && (
-          <DragContainer listType="playlists" action={editPlaylist}>
-            {renderPlaylists()}
-          </DragContainer>
-        )}
+        {playlists && renderPlaylists()}
       </div>
     </div>
   );

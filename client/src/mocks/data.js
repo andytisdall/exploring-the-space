@@ -8,6 +8,26 @@ export const mockBounce = {
   duration: 5865,
 };
 
+export const mockBounce2 = {
+  id: '2',
+  date: new Date('4-20-99'),
+  latest: false,
+  comments: 'No Comment',
+  mp3: 42097249,
+  size: 34094249,
+  duration: 5865,
+};
+
+export const mockBounce3 = {
+  id: '3',
+  date: new Date('01-01-2000'),
+  latest: false,
+  comments: 'No Comment',
+  mp3: 42097249,
+  size: 34094249,
+  duration: 5865,
+};
+
 export const mockVersion = {
   id: '1',
   name: 'Pervy Version',

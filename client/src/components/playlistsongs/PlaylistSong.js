@@ -40,7 +40,8 @@ const PlaylistSong = ({
     titles[song.title].versions.forEach((id) => {
       fetchBounces(id);
     });
-  }, [fetchBounces, song, titles, fetchVersions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchBounces, song, fetchVersions]);
 
   useEffect(() => {
     if (titles[song.title]) {
@@ -218,56 +219,65 @@ const PlaylistSong = ({
     }
   };
 
-  const current = audio.currentSong ? audio.currentSong.audio : null;
-  const parent = audio.parent ? audio.parent.id : null;
+  const renderPlaylistSong = (drag = null) => {
+    const current = audio.currentSong ? audio.currentSong.audio : null;
+    const parent = audio.parent ? audio.parent.id : null;
 
-  let currentClass = '';
+    let currentClass = '';
 
-  if (current && song.bounce) {
-    currentClass =
-      parent === playlist.id && current === song.bounce ? 'current-song' : '';
-  }
-
-  return (
-    <Draggable index={song.position - 1} draggableId={song.id}>
-      {(provided) => {
-        return (
-          <div {...provided.draggableProps} ref={provided.innerRef}>
-            <div className="title-margin">
-              <div className={`row title playlistsong ${currentClass}`}>
-                <div className="marqee">
-                  <div className="title-name">
-                    <div
-                      {...provided.dragHandleProps}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <img
-                        src="images/drag-handle.svg"
-                        alt="drag handle"
-                        className="drag-handle"
-                      />
-                    </div>
-                    <div className="song-position">
-                      <p>{song.position}</p>
-                    </div>
-                    <h3>
-                      {song && titles[song.title] && titles[song.title].title}
-                    </h3>
-                  </div>
-
-                  {renderPlayContainer()}
-                  <div className="tier-display">
-                    {renderEditButton()}
-                    {renderDeleteButton()}
-                  </div>
+    if (current && song.bounce) {
+      currentClass =
+        parent === playlist.id && current === song.bounce ? 'current-song' : '';
+    }
+    return (
+      <div className="title-margin">
+        <div className={`row title playlistsong ${currentClass}`}>
+          <div className="marqee">
+            <div className="title-name">
+              {drag && (
+                <div
+                  {...drag.dragHandleProps}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src="images/drag-handle.svg"
+                    alt="drag handle"
+                    className="drag-handle"
+                  />
                 </div>
+              )}
+              <div className="song-position">
+                <p>{song.position}</p>
               </div>
+              <h3>{song && titles[song.title] && titles[song.title].title}</h3>
+            </div>
+
+            {renderPlayContainer()}
+            <div className="tier-display">
+              {renderEditButton()}
+              {renderDeleteButton()}
             </div>
           </div>
-        );
-      }}
-    </Draggable>
-  );
+        </div>
+      </div>
+    );
+  };
+
+  if (authorized) {
+    return (
+      <Draggable index={song.position - 1} draggableId={song.id}>
+        {(provided) => {
+          return (
+            <div {...provided.draggableProps} ref={provided.innerRef}>
+              {renderPlaylistSong(provided)}
+            </div>
+          );
+        }}
+      </Draggable>
+    );
+  } else {
+    return renderPlaylistSong();
+  }
 };
 
 const mapStateToProps = (state) => {

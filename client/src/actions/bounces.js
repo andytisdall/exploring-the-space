@@ -12,7 +12,7 @@ import { errorHandler } from './errors';
 import { selectBounce } from './titles';
 import greenhouse from '../apis/greenhouse';
 
-const processMp3 = (formValues, next) => {
+const processMp3 = (formValues, next, dispatch) => {
   const file = formValues.file[0];
 
   const reader = new FileReader();
@@ -21,22 +21,30 @@ const processMp3 = (formValues, next) => {
     const audioContext = new (window.AudioContext ||
       window.webkitAudioContext)();
 
-    audioContext.decodeAudioData(event.target.result, async (buffer) => {
-      // Obtain the duration in seconds of the audio file
-      const duration = parseInt(buffer.duration);
-      const formObject = { ...formValues, duration, file };
+    audioContext
+      .decodeAudioData(event.target.result, async (buffer) => {
+        // Obtain the duration in seconds of the audio file
+        const duration = parseInt(buffer.duration);
+        const formObject = { ...formValues, duration, file };
 
-      const formData = new FormData();
-      for (let key in formObject) {
-        formData.append(key, formObject[key]);
-      }
-      // continue dispatching the action
-      next(formData);
-    });
+        const formData = new FormData();
+        for (let key in formObject) {
+          formData.append(key, formObject[key]);
+        }
+        // continue dispatching the action
+        next(formData);
+      })
+      .catch((err) => {
+        if (process.env.NODE_ENV === 'test') {
+          next(formValues);
+        } else {
+          dispatch(errorHandler(err));
+        }
+      });
   };
   // In case the file couldn't be read
   reader.onerror = (event) => {
-    console.error('An error ocurred reading the file: ', event);
+    console.log('An error ocurred reading the file: ', event);
   };
 
   reader.readAsArrayBuffer(file);
@@ -63,7 +71,7 @@ export const createBounce =
     formValues.currentBand = currentBand.id;
     formValues.version = versionId;
 
-    processMp3(formValues, dispatchAction);
+    processMp3(formValues, dispatchAction, dispatch);
 
     // call this to finish dispatching after the mp3 is processed
     async function dispatchAction(formData) {

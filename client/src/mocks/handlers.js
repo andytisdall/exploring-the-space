@@ -2,6 +2,7 @@ import { rest } from 'msw';
 import {
   mockBand,
   mockBounce,
+  mockBounce3,
   mockPlaylist,
   mockPlaylistSong,
   mockTier,
@@ -37,5 +38,8 @@ export const handlers = [
   }),
   rest.get('http://localhost:3001/api/user', (req, res, ctx) => {
     return res(ctx.json(mockUser));
+  }),
+  rest.post('http://localhost:3001/api/bounces', (req, res, ctx) => {
+    return res(ctx.json(mockBounce3));
   }),
 ];
