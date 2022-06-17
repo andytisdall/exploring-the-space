@@ -10,70 +10,60 @@ const Title = mongoose.model('Title');
 const router = express.Router();
 
 router.post('/titles', currentUser, requireAuth, async (req, res) => {
-
-    const { title, tier } = req.body;
-    const newTitle = new Title({title});
-    try {
-        await newTitle.save();
-        await Tier.updateOne({ _id: tier }, {$push: { trackList: newTitle }});
-    } catch (err) {
-        throw new Error('There was an error creating the title or updating the tier tracklist.');
-    }
-    return res.status(201).send(newTitle);
+  const { title, tier } = req.body;
+  const newTitle = new Title({ title });
+  try {
+    await newTitle.save();
+    await Tier.updateOne({ _id: tier }, { $push: { trackList: newTitle } });
+  } catch (err) {
+    throw new Error(err.message);
+  }
+  return res.status(201).send(newTitle);
 });
 
-
 router.get('/titles/:tierId', async (req, res) => {
+  const tier = await Tier.findById(req.params.tierId).populate('trackList');
 
-    const tier = await Tier.findById(req.params.tierId).populate('trackList');
-
-    res.status(200).send(tier.trackList);
-
-
+  res.status(200).send(tier.trackList);
 });
 
 router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const { title, move, currentTier } = req.body;
 
-    const { id } = req.params;
-    const { title, move, currentTier } = req.body;
+  const thisTitle = await Title.findById(id);
 
-    const thisTitle = await Title.findById(id);
+  thisTitle.title = title;
 
-    thisTitle.title = title;
+  if (move) {
+    const oldTier = await Tier.findById(currentTier);
+    const newTier = await Tier.findById(move);
+    oldTier.trackList = oldTier.trackList.filter((t) => {
+      return t.toString() !== id;
+    });
+    newTier.trackList.push(id);
+    oldTier.save();
+    newTier.save();
+  }
 
-    if (move) {
-        const oldTier = await Tier.findById(currentTier);
-        const newTier = await Tier.findById(move);
-        oldTier.trackList = oldTier.trackList.filter(t => {
-            return t.toString() !== id
-        });
-        newTier.trackList.push(id);
-        oldTier.save();
-        newTier.save();
-    }
+  thisTitle.save();
 
-    thisTitle.save();
-
-    res.send(thisTitle);
-
+  res.send(thisTitle);
 });
 
 router.post('/titles/delete', currentUser, requireAuth, async (req, res) => {
-    const { titleId, tierId } = req.body;
+  const { titleId, tierId } = req.body;
 
+  const parentTier = await Tier.findById(tierId);
+  if (parentTier) {
+    await Tier.updateOne({ _id: tierId }, { $pull: { trackList: titleId } });
+  }
 
+  const thisTitle = await Title.findById(titleId);
 
-    const parentTier = await Tier.findById(tierId);
-    if (parentTier) {
-        await Tier.updateOne({ _id: tierId }, { $pull: { trackList: titleId } });
-    }
+  await Title.deleteOne({ _id: titleId });
 
-    const thisTitle = await Title.findById(titleId);
-
-    await Title.deleteOne({ _id: titleId });
-
-    res.send(thisTitle);
-
+  res.send(thisTitle);
 });
 
 export { router as titleRouter };
