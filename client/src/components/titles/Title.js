@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import Version from '../versions/Version';
@@ -41,6 +41,25 @@ const Title = ({
   const [versionList, setVersionList] = useState(null);
   const [bounceList, setBounceList] = useState(null);
   const [song, setSong] = useState(null);
+  const [showChords, setShowChords] = useState(false);
+
+  const chordButtonRef = useRef();
+
+  useEffect(() => {
+    const bodyClick = (e) => {
+      if (chordButtonRef.current && chordButtonRef.current.contains(e.target)) {
+        return;
+      }
+      if (showChords) {
+        setShowChords(false);
+      }
+    };
+
+    document.addEventListener('mousedown', bodyClick, { capture: true });
+    return () => {
+      document.removeEventListener('mousedown', bodyClick, { capture: true });
+    };
+  }, [showChords]);
 
   useEffect(() => {
     fetchVersions(title.id);
@@ -106,6 +125,9 @@ const Title = ({
         bounceToSelect = title.selectedBounce;
       } else {
         bounceToSelect = bounceList.find((b) => b.latest);
+      }
+
+      if (title.selectedBounce?.latest) {
         findLatest(title, bounceToSelect);
       }
 
@@ -113,11 +135,17 @@ const Title = ({
         selectBounce(bounceToSelect, title.id);
         // console.log('select bounce');
       }
-    } else if (song) {
-      setSong(null);
+    } else {
+      setSong((state) => {
+        if (state) {
+          return null;
+        } else {
+          return state;
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bounceList, findLatest, selectBounce, song]);
+  }, [bounceList, findLatest, selectBounce]);
 
   useEffect(() => {
     if (title.selectedBounce && title.selectedVersion) {
@@ -139,6 +167,25 @@ const Title = ({
   const renderPlayContainer = () => {
     if (song) {
       return <PlayContainer song={song} parentType="tier" />;
+    }
+  };
+
+  const renderChordsButton = () => {
+    if (title.chords) {
+      return (
+        <div className="chords-container" ref={chordButtonRef}>
+          <img
+            src="/images/clef.png"
+            alt="song chords"
+            className="chords-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowChords((state) => !state);
+            }}
+          />
+          {showChords && <div className="chords-box">{title.chords}</div>}
+        </div>
+      );
     }
   };
 
@@ -234,9 +281,18 @@ const Title = ({
                 type: 'select',
                 options: tierOptions,
               },
+              {
+                label: 'Chords',
+                name: 'chords',
+                type: 'textarea',
+              },
             ]}
             onSubmit={(formValues) => editTitle(formValues, title.id, tier.id)}
-            initialValues={{ title: title.title, move: null }}
+            initialValues={{
+              title: title.title,
+              move: null,
+              chords: title.chords,
+            }}
             form={`edit-title-${title.id}`}
             enableReinitialize={true}
           />
@@ -277,6 +333,7 @@ const Title = ({
             />
             <h3>{title.title}</h3>
           </div>
+          {renderChordsButton()}
           {/* {renderAudioEditLink()} */}
           {renderPlayContainer()}
           {renderButtons()}

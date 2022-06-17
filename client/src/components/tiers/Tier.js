@@ -36,11 +36,11 @@ const Tier = ({
   useEffect(() => {
     setOrder(tier.id, 'date');
     fetchTitles(tier.id);
-  }, [fetchTitles, setOrder, tier]);
+  }, [fetchTitles, setOrder, tier.id]);
 
   useEffect(() => {
     setTitlesToRender(tier.trackList.map((id) => titles[id]));
-  }, [titles, tier]);
+  }, [titles, tier.trackList]);
 
   // useEffect(() => {
   //   if (expand) {
@@ -62,9 +62,7 @@ const Tier = ({
   // }, [expand]);
 
   const findLatest = (title, bounce) => {
-    if (!orderedTitles.current[title.id]) {
-      orderedTitles.current[title.id] = new Date(bounce.date);
-    }
+    orderedTitles.current[title.id] = new Date(bounce.date);
   };
 
   const renderTitles = () => {

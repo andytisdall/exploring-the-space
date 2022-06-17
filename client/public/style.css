@@ -130,6 +130,10 @@ label {
   justify-content: center;
 }
 
+textarea {
+  height: 100px;
+}
+
 /* LAYOUT ELEMENTS */
 
 .row {
@@ -695,6 +699,29 @@ h3 {
 .edit-link {
   font-size: 0.6rem;
   color: rgb(80, 80, 80);
+}
+
+.chords-container {
+  position: relative;
+}
+
+.chords-button {
+  height: 1.5rem;
+  position: absolute;
+  cursor: pointer;
+  top: -12px;
+}
+
+.chords-box {
+  position: absolute;
+  top: -25px;
+  left: -100px;
+  background-color: white;
+  padding: .5rem;
+  box-sizing: border-box;
+  border: 1px solid black;
+  white-space: pre-wrap;
+  box-shadow: rgba(0, 0, 0, 0.442) .5rem 1rem 2rem;
 }
 
 /* VERSION */

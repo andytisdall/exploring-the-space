@@ -41,7 +41,7 @@ const PlaylistSong = ({
       fetchBounces(id);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchBounces, song, fetchVersions]);
+  }, [fetchBounces, song.title, fetchVersions]);
 
   useEffect(() => {
     if (titles[song.title]) {

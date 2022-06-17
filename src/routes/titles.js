@@ -29,11 +29,12 @@ router.get('/titles/:tierId', async (req, res) => {
 
 router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, move, currentTier } = req.body;
+  const { title, move, currentTier, chords } = req.body;
 
   const thisTitle = await Title.findById(id);
 
   thisTitle.title = title;
+  thisTitle.chords = chords;
 
   if (move) {
     const oldTier = await Tier.findById(currentTier);
