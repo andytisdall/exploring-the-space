@@ -127,7 +127,7 @@ const Title = ({
         bounceToSelect = bounceList.find((b) => b.latest);
       }
 
-      if (title.selectedBounce?.latest) {
+      if (title.selectedVersion?.current && title.selectedBounce?.latest) {
         findLatest(title, bounceToSelect);
       }
 

@@ -34,7 +34,6 @@ const Tier = ({
   const orderedTitles = useRef({});
 
   useEffect(() => {
-    setOrder(tier.id, 'date');
     fetchTitles(tier.id);
   }, [fetchTitles, setOrder, tier.id]);
 

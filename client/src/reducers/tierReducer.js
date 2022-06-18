@@ -17,7 +17,11 @@ const tiersReducer = (state = {}, action) => {
     case CREATE_TIER:
       return { ...state, [action.payload.id]: action.payload };
     case EDIT_TIER:
-      const oldPosition = state[action.payload.id]['position'];
+      const oldTier = state[action.payload.id];
+      if (oldTier.orderBy) {
+        action.payload.orderBy = oldTier.orderBy;
+      }
+      const oldPosition = oldTier['position'];
       const newPosition = action.payload.position;
       let changedPositions = {};
       if (oldPosition > newPosition) {
