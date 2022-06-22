@@ -55,7 +55,7 @@ export const nextSong = () => (dispatch, getState) => {
   if (parent.trackList) {
     let allTitles;
 
-    if (parent.orderBy === 'date') {
+    if (parent.orderBy === 'date' || !parent.orderyBy) {
       allTitles = parent.trackList
         .map((id) => getState().titles[id])
         .sort((a, b) => {
