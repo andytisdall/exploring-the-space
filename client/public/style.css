@@ -889,6 +889,7 @@ h5 {
 
 .drag {
   position: relative;
+  height: 100%;
 }
 
 .bounce-drop-zone {
@@ -899,6 +900,7 @@ h5 {
   top: -10px;
   left: 0;
   pointer-events: none;
+
 }
 
 .dropping {

@@ -12,6 +12,7 @@ const DetailBox = ({
   renderDeleteButton,
   playButton,
   onAddSubmit,
+  authorized,
 }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [droppingFile, setDroppingFile] = useState(false);
@@ -168,38 +169,38 @@ const DetailBox = ({
     }, 0);
   };
 
-  if (itemType === 'Bounce') {
+  const renderContent = () => {
     return (
-      <div className={`detail-box ${itemType === 'Bounce' ? 'bounce' : ''}`}>
-        <div className="drag" onDragOver={onDragOver}>
-          <input
-            type="file"
-            onDrop={onDrop}
-            onMouseOver={onMouseOver}
-            onClick={(e) => e.preventDefault()}
-            className={`bounce-drop-zone ${droppingFile && 'dropping'}`}
-          />
-
-          {renderDetail()}
-          <div className="detail-buttons">
-            {renderAddButton()}
-            {selectedItem && renderEditButton()}
-            {selectedItem && renderDeleteButton()}
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className={`detail-box ${itemType === 'Bounce' ? 'bounce' : ''}`}>
+      <>
         {renderDetail()}
         <div className="detail-buttons">
           {renderAddButton()}
           {selectedItem && renderEditButton()}
           {selectedItem && renderDeleteButton()}
         </div>
+      </>
+    );
+  };
+
+  if (itemType === 'Bounce') {
+    return (
+      <div className="detail-box bounce">
+        <div className="drag" onDragOver={onDragOver}>
+          {authorized && (
+            <input
+              type="file"
+              onDrop={onDrop}
+              onMouseOver={onMouseOver}
+              onClick={(e) => e.preventDefault()}
+              className={`bounce-drop-zone ${droppingFile && 'dropping'}`}
+            />
+          )}
+          {renderContent()}
+        </div>
       </div>
     );
+  } else {
+    return <div className="detail-box">{renderContent()}</div>;
   }
 };
 

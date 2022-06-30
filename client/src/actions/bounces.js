@@ -35,6 +35,7 @@ const processMp3 = (formValues, next, dispatch) => {
         next(formData);
       })
       .catch((err) => {
+        // if testing, file is invalid so just move on
         if (process.env.NODE_ENV === 'test') {
           next(formValues);
         } else {

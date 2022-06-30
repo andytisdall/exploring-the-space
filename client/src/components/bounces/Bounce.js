@@ -200,6 +200,7 @@ const Bounce = ({
             renderDeleteButton={renderDeleteButton}
             playButton={showPlayButton}
             onAddSubmit={onAddSubmit}
+            authorized={authorized}
           />
         </>
       );
