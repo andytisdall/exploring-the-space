@@ -65,7 +65,9 @@ const Bounce = ({
 
   const onEditSubmit = (formValues) => {
     editBounce(formValues, selectedBounce.id, version.id);
-    setUploadActive(true);
+    if (formValues.file) {
+      setUploadActive(true);
+    }
   };
 
   const uploadContent = () => {

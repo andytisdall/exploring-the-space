@@ -6,6 +6,7 @@ import { Readable } from 'stream';
 import { bucket } from './audio.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
+import { rejects } from 'assert';
 
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
@@ -13,7 +14,7 @@ const PlaylistSong = mongoose.model('PlaylistSong');
 
 const router = express.Router();
 
-const saveMp3 = (file, next) => {
+const saveMp3 = (file) => {
   // Create upload stream object
   let stream = bucket.openUploadStream(file.name);
 
@@ -22,12 +23,12 @@ const saveMp3 = (file, next) => {
   readableStream.push(null);
   readableStream.pipe(stream);
 
-  stream.on('error', (err) => {
-    throw new Error('Error uploading mp3!');
+  return new Promise((resolve, reject) => {
+    stream.on('error', (err) => {
+      reject(err);
+    });
+    stream.on('finish', () => resolve(stream.id));
   });
-
-  //
-  stream.on('finish', () => next(stream.id));
 };
 
 router.post('/bounces', currentUser, requireAuth, async (req, res) => {
@@ -58,20 +59,19 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
     latest,
   });
 
-  saveMp3(file, async (streamId) => {
-    // Get id of mp3 from stream object
-    newBounce.mp3 = streamId;
+  const streamId = await saveMp3(file);
+  // Get id of mp3 from stream object
+  newBounce.mp3 = streamId;
 
-    // Add bounce to parent version's bounce list
-    parentVersion.songs.push(newBounce);
+  // Add bounce to parent version's bounce list
+  parentVersion.songs.push(newBounce);
 
-    // Finally save new bounce object
-    await newBounce.save();
-    await parentVersion.save();
-    console.log('Uploaded & created bounce record:', newBounce);
+  // Finally save new bounce object
+  await newBounce.save();
+  await parentVersion.save();
+  console.log('Uploaded & created bounce record:', newBounce);
 
-    return res.status(201).send(newBounce);
-  });
+  return res.status(201).send(newBounce);
 });
 
 router.get('/bounces/:versionId', async (req, res) => {
@@ -88,6 +88,11 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 
   const thisBounce = await Song.findById(id);
 
+  if (!thisBounce) {
+    res.status(404);
+    throw new Error('bounce not found');
+  }
+
   thisBounce.comments = comments;
   thisBounce.date = date;
   thisBounce.latest = latest;
@@ -95,25 +100,24 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
   if (req.files) {
     const file = req.files.file;
 
-    saveMp3(file, async (streamId) => {
-      // delete old mp3
-      const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
-      bucket.delete(mp3Id, async (err) => {
-        if (err) {
-          throw new Error('Error attempting to delete mp3');
-        } else {
-          console.log('mp3 deleted');
+    const streamId = await saveMp3(file);
+    // delete old mp3
+    const mp3Id = new mongodb.ObjectID(thisBounce.mp3);
+    bucket.delete(mp3Id, async (err) => {
+      if (err) {
+        throw new Error('Error attempting to delete mp3');
+      } else {
+        console.log('mp3 deleted');
 
-          // Get id of mp3 from stream object
-          thisBounce.mp3 = streamId;
-          // Edit bounce object form values
-          thisBounce.size = file.size;
-          thisBounce.duration = duration;
-          await thisBounce.save();
+        // Get id of mp3 from stream object
+        thisBounce.mp3 = streamId;
+        // Edit bounce object form values
+        thisBounce.size = file.size;
+        thisBounce.duration = duration;
+        await thisBounce.save();
 
-          res.send(thisBounce);
-        }
-      });
+        res.send(thisBounce);
+      }
     });
   } else {
     await thisBounce.save();
@@ -123,6 +127,7 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 
 router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
   const { bounceId, versionId } = req.body;
+  console.log(req.body);
 
   const thisBounce = await Song.findById(bounceId);
   const mp3Id = new mongodb.ObjectID(thisBounce.mp3);

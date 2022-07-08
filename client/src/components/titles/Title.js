@@ -102,7 +102,6 @@ const Title = ({
     if (title.selectedVersion) {
       if (title.selectedVersion.bounces[0]) {
         setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
-        // console.log('set bounce list');
       } else if (title.selectedBounce !== null) {
         // console.log('set bounce list null');
         setBounceList(null);
@@ -119,30 +118,32 @@ const Title = ({
 
   useEffect(() => {
     if (bounceList && bounceList[0]) {
+      // set the title.selected bounce if there isn't one yet
+      // or if the bounce list has been modified and no longer matches the current title.selected bounce
+
       let bounceToSelect;
 
-      if (title.selectedBounce && bounceList.includes(title.selectedBounce)) {
-        bounceToSelect = title.selectedBounce;
-      } else {
+      if (!title.selectedBounce) {
+        // initialize selected bounce with latest
         bounceToSelect = bounceList.find((b) => b.latest);
+      } else if (!bounceList.includes(title.selectedBounce)) {
+        // if it's been edited it won't be in the list
+        // but the id will be the same
+        // refactor this whole mess please
+        bounceToSelect = bounceList.find(
+          (b) => b.id === title.selectedBounce.id
+        );
       }
 
-      if (title.selectedVersion?.current && title.selectedBounce?.latest) {
-        findLatest(title, bounceToSelect);
-      }
-
-      if (bounceToSelect !== title.selectedBounce) {
+      if (bounceToSelect) {
         selectBounce(bounceToSelect, title.id);
         // console.log('select bounce');
+        if (title.selectedVersion?.current && title.selectedBounce?.latest) {
+          findLatest(title, bounceToSelect);
+        }
       }
     } else {
-      setSong((state) => {
-        if (state) {
-          return null;
-        } else {
-          return state;
-        }
-      });
+      setSong(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bounceList, findLatest, selectBounce]);

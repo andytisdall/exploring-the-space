@@ -12,17 +12,19 @@ import { errorHandler } from './errors';
 import { selectBounce } from './titles';
 import greenhouse from '../apis/greenhouse';
 
-const processMp3 = (formValues, next, dispatch) => {
+const processMp3 = (formValues) => {
   const file = formValues.file[0];
-
   const reader = new FileReader();
 
-  reader.onload = (event) => {
-    const audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
+  return new Promise((resolve, reject) => {
+    if (process.env.NODE_ENV === 'test') {
+      resolve(formValues);
+    }
+    reader.onload = (event) => {
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
 
-    audioContext
-      .decodeAudioData(event.target.result, async (buffer) => {
+      audioContext.decodeAudioData(event.target.result, async (buffer) => {
         // Obtain the duration in seconds of the audio file
         const duration = parseInt(buffer.duration);
         const formObject = { ...formValues, duration, file };
@@ -32,23 +34,16 @@ const processMp3 = (formValues, next, dispatch) => {
           formData.append(key, formObject[key]);
         }
         // continue dispatching the action
-        next(formData);
-      })
-      .catch((err) => {
-        // if testing, file is invalid so just move on
-        if (process.env.NODE_ENV === 'test') {
-          next(formValues);
-        } else {
-          dispatch(errorHandler(err));
-        }
+        resolve(formData);
       });
-  };
-  // In case the file couldn't be read
-  reader.onerror = (event) => {
-    console.log('An error ocurred reading the file: ', event);
-  };
+    };
+    // In case the file couldn't be read
+    reader.onerror = (event) => {
+      reject(event);
+    };
 
-  reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(file);
+  });
 };
 
 export const fetchBounces = (versionId) => async (dispatch) => {
@@ -61,7 +56,7 @@ export const fetchBounces = (versionId) => async (dispatch) => {
 };
 
 export const createBounce =
-  (formValues, versionId, titleId) => (dispatch, getState) => {
+  (formValues, versionId, titleId) => async (dispatch, getState) => {
     dispatch({ type: UPLOAD_STARTED });
     const { currentBand } = getState().bands;
     const parentVersion = getState().versions[versionId];
@@ -72,72 +67,15 @@ export const createBounce =
     formValues.currentBand = currentBand.id;
     formValues.version = versionId;
 
-    processMp3(formValues, dispatchAction, dispatch);
+    try {
+      const formData = await processMp3(formValues);
 
-    // call this to finish dispatching after the mp3 is processed
-    async function dispatchAction(formData) {
-      try {
-        const response = await greenhouse.post('/bounces', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+      const response = await greenhouse.post('/bounces', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-        if (response.data.latest) {
-          if (parentVersion.bounces.length) {
-            const bounceList = parentVersion.bounces.map(
-              (id) => getState().bounces[id]
-            );
-            const oldLatest = bounceList.find((b) => b.latest);
-            oldLatest.latest = false;
-            dispatch(
-              editBounce(
-                _.pick(oldLatest, 'date', 'comments', 'latest'),
-                oldLatest.id,
-                versionId
-              )
-            );
-          }
-        }
-
-        dispatch({
-          type: CREATE_BOUNCE,
-          payload: { bounce: response.data, version: versionId },
-        });
-        dispatch(selectBounce(response.data, titleId));
-      } catch (err) {
-        dispatch({ type: UPLOAD_FAILURE });
-        dispatch(errorHandler(err));
-      }
-    }
-  };
-
-export const editBounce =
-  (formValues, bounceId, versionId) => (dispatch, getState) => {
-    const { currentBand } = getState().bands;
-    const thisBounce = getState().bounces[bounceId];
-
-    if (thisBounce.latest) {
-      formValues.latest = true;
-    }
-    formValues.currentBand = currentBand.id;
-
-    let requestOptions = {};
-    if (formValues.file?.length) {
-      requestOptions.headers = { 'Content-Type': 'multipart/form-data' };
-      processMp3(formValues, dispatchAction);
-    } else {
-      dispatchAction(formValues);
-    }
-
-    async function dispatchAction(formData) {
-      try {
-        const response = await greenhouse.patch(
-          `/bounces/${bounceId}`,
-          formData,
-          requestOptions
-        );
-
-        if (response.data.latest && !thisBounce.latest) {
-          const parentVersion = getState().versions[versionId];
+      if (response.data.latest) {
+        if (parentVersion.bounces.length) {
           const bounceList = parentVersion.bounces.map(
             (id) => getState().bounces[id]
           );
@@ -151,11 +89,63 @@ export const editBounce =
             )
           );
         }
-
-        dispatch({ type: EDIT_BOUNCE, payload: response.data });
-      } catch (err) {
-        dispatch(errorHandler(err));
       }
+
+      dispatch({
+        type: CREATE_BOUNCE,
+        payload: { bounce: response.data, version: versionId },
+      });
+      dispatch(selectBounce(response.data, titleId));
+    } catch (err) {
+      dispatch({ type: UPLOAD_FAILURE });
+      dispatch(errorHandler(err));
+    }
+  };
+
+export const editBounce =
+  (formValues, bounceId, versionId) => async (dispatch, getState) => {
+    const { currentBand } = getState().bands;
+    const thisBounce = getState().bounces[bounceId];
+
+    if (thisBounce.latest) {
+      formValues.latest = true;
+    }
+    formValues.currentBand = currentBand.id;
+
+    let requestOptions = {};
+    let formData = formValues;
+
+    try {
+      if (formValues.file?.length) {
+        requestOptions.headers = { 'Content-Type': 'multipart/form-data' };
+        formData = await processMp3(formValues);
+      }
+
+      const response = await greenhouse.patch(
+        `/bounces/${bounceId}`,
+        formData,
+        requestOptions
+      );
+
+      if (response.data.latest && !thisBounce.latest) {
+        const parentVersion = getState().versions[versionId];
+        const bounceList = parentVersion.bounces.map(
+          (id) => getState().bounces[id]
+        );
+        const oldLatest = bounceList.find((b) => b.latest);
+        oldLatest.latest = false;
+        dispatch(
+          editBounce(
+            _.pick(oldLatest, 'date', 'comments', 'latest'),
+            oldLatest.id,
+            versionId
+          )
+        );
+      }
+
+      dispatch({ type: EDIT_BOUNCE, payload: response.data });
+    } catch (err) {
+      dispatch(errorHandler(err));
     }
   };
 
@@ -178,7 +168,7 @@ export const deleteBounce =
             const newLatest =
               getState().bounces[remainingBounces[remainingBounces.length - 1]];
             newLatest.latest = true;
-            dispatch(selectBounce(newLatest.id, titleId));
+            dispatch(selectBounce(newLatest, titleId));
             dispatch(
               editBounce(
                 _.pick(newLatest, 'date', 'comments', 'latest'),

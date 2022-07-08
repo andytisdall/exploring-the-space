@@ -143,12 +143,13 @@ export const nextSong = () => (dispatch, getState) => {
 };
 
 export const prevSong = () => (dispatch, getState) => {
-  const { parent, currentSong } = getState().audio;
+  const state = getState();
+  const { parent, currentSong } = state.audio;
   if (parent.trackList) {
     let allTitles;
     if (parent.orderBy === 'date') {
       allTitles = parent.trackList
-        .map((id) => getState().titles[id])
+        .map((id) => state.titles[id])
         .sort((a, b) => {
           if (a.selectedBounce && b.selectedBounce) {
             if (
@@ -169,7 +170,7 @@ export const prevSong = () => (dispatch, getState) => {
 
     if (parent.orderBy === 'name') {
       allTitles = parent.trackList
-        .map((id) => getState().titles[id])
+        .map((id) => state.titles[id])
         .sort((a, b) => {
           return a.title < b.title ? -1 : 1;
         });
@@ -178,8 +179,8 @@ export const prevSong = () => (dispatch, getState) => {
     const song = allTitles[allTitles.indexOf(currentSong.title) - 1];
 
     if (song && song.selectedVersion && song.selectedBounce) {
-      const version = getState().versions[song.selectedVersion.id];
-      const bounce = getState().bounces[song.selectedBounce.id];
+      const version = state.versions[song.selectedVersion.id];
+      const bounce = state.bounces[song.selectedBounce.id];
 
       const songObject = {
         title: song,
@@ -195,7 +196,7 @@ export const prevSong = () => (dispatch, getState) => {
 
   if (parent.songs) {
     const allSongs = parent.songs
-      .map((id) => getState().playlistSongs[id])
+      .map((id) => state.playlistSongs[id])
       .sort((a, b) => (a.position < b.position ? -1 : 1));
 
     let song;
@@ -213,9 +214,9 @@ export const prevSong = () => (dispatch, getState) => {
       return dispatch({ type: INITIALIZE_AUDIO });
     }
 
-    const version = getState().versions[song.version];
-    const bounce = getState().bounces[song.bounce];
-    const title = getState().titles[song.title];
+    const version = state.versions[song.version];
+    const bounce = state.bounces[song.bounce];
+    const title = state.titles[song.title];
 
     const songObject = {
       title: title,
