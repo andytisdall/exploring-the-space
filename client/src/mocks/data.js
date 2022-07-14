@@ -36,6 +36,14 @@ export const mockVersion = {
   bounces: ['1'],
 };
 
+export const mockVersion2 = {
+  id: '2',
+  name: 'Wacky Version',
+  current: true,
+  notes: 'These notes of brine',
+  bounces: [],
+};
+
 export const mockTitle = {
   id: '1',
   title: 'Rockin Title',

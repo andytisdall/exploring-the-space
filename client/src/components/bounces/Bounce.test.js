@@ -1,9 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import moment from 'moment';
 
 import Root from '../../root';
 import Bounce from './Bounce';
+
 import {
   mockBand,
   mockBounce,
@@ -82,42 +83,4 @@ test('changes the selected bounce', async () => {
     name: moment.utc(mockBounce.date).format('MM/DD/yy'),
   });
   expect(removedDate).not.toBeInTheDocument();
-});
-
-test('adds a bounce', async () => {
-  render(
-    <Bounce
-      bounces={[mockBounce, mockBounce2]}
-      title={title}
-      version={mockVersion}
-      song={song}
-    />,
-    { wrapper }
-  );
-  const addButton = screen.getByAltText(/add a bounce/i);
-  userEvent.click(addButton);
-
-  const dateInput = await screen.findByLabelText('Date:');
-  const dateValue = '2000-01-01';
-  fireEvent.change(dateInput, { target: { value: dateValue } });
-
-  const fileInput = screen.getByLabelText('File:');
-  const mockFile = new File(['wf48h4wf894j'], 'mock.mp3', {
-    type: 'audio/mpeg',
-  });
-  userEvent.upload(fileInput, mockFile);
-
-  const submitButton = screen.getByRole('button', { name: 'OK' });
-  userEvent.click(submitButton);
-
-  const addBoxTitle = screen.queryByRole('heading', {
-    level: 3,
-    name: /add a bounce/i,
-  });
-  expect(addBoxTitle).not.toBeInTheDocument();
-
-  const newDate = await screen.findByRole('button', {
-    name: moment.utc(dateValue).format('MM/DD/yy'),
-  });
-  expect(newDate).toBeInTheDocument();
 });

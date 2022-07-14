@@ -6,8 +6,13 @@ import '@testing-library/jest-dom';
 
 import { server } from './mocks/server';
 
-// set up server before all tests and then close after
+window.scroll = () => {};
 
+// window.HTMLMediaElement.prototype.load = () => {};
+// window.HTMLMediaElement.prototype.play = () => {};
+// window.HTMLMediaElement.prototype.pause = () => {};
+
+// set up server before all tests and then close after
 beforeAll(() => server.listen());
 
 afterEach(() => server.resetHandlers());

@@ -38,9 +38,12 @@ const Bounce = ({
   }, [selectedBounce, selectBounce]);
 
   useEffect(() => {
-    setSelectedBounce(title.selectedBounce);
-    setUploadActive(false);
-  }, [title.selectedBounce]);
+    if (selectedBounce !== title.selectedBounce) {
+      setSelectedBounce(title.selectedBounce);
+      setUploadActive(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title]);
 
   const displayDate = (date) => {
     return moment.utc(date).format('MM/DD/yy');

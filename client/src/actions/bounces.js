@@ -16,26 +16,33 @@ const processMp3 = (formValues) => {
   const file = formValues.file[0];
   const reader = new FileReader();
 
+  if (process.env.NODE_ENV === 'test') {
+    return Promise.resolve(formValues);
+  }
+
   return new Promise((resolve, reject) => {
-    if (process.env.NODE_ENV === 'test') {
-      resolve(formValues);
-    }
     reader.onload = (event) => {
       const audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
 
-      audioContext.decodeAudioData(event.target.result, async (buffer) => {
-        // Obtain the duration in seconds of the audio file
-        const duration = parseInt(buffer.duration);
-        const formObject = { ...formValues, duration, file };
+      audioContext.decodeAudioData(
+        event.target.result,
+        async (buffer) => {
+          // Obtain the duration in seconds of the audio file
+          const duration = parseInt(buffer.duration);
+          const formObject = { ...formValues, duration, file };
 
-        const formData = new FormData();
-        for (let key in formObject) {
-          formData.append(key, formObject[key]);
+          const formData = new FormData();
+          for (let key in formObject) {
+            formData.append(key, formObject[key]);
+          }
+          // continue dispatching the action
+          resolve(formData);
+        },
+        (err) => {
+          reject(err);
         }
-        // continue dispatching the action
-        resolve(formData);
-      });
+      );
     };
     // In case the file couldn't be read
     reader.onerror = (event) => {
@@ -90,14 +97,17 @@ export const createBounce =
           );
         }
       }
-
       dispatch({
         type: CREATE_BOUNCE,
         payload: { bounce: response.data, version: versionId },
       });
       dispatch(selectBounce(response.data, titleId));
     } catch (err) {
+      // upload state not implemented
       dispatch({ type: UPLOAD_FAILURE });
+      // if upload fails, make redux think it's a new bounce anyway
+      const currentBounce = getState().titles[titleId].selectedBounce;
+      dispatch(selectBounce({ ...currentBounce }, titleId));
       dispatch(errorHandler(err));
     }
   };

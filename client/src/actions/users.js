@@ -7,6 +7,7 @@ export const fetchUser = () => async (dispatch) => {
   try {
     const response = await greenhouse.get('/user');
     if (response.data) {
+      // console.log(response.data);
       dispatch({ type: SIGN_IN, payload: response.data });
     } else {
       dispatch(signOut());

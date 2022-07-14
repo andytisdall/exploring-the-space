@@ -8,6 +8,7 @@ import {
   mockTier,
   mockTitle,
   mockVersion,
+  mockVersion2,
   mockUser,
 } from './data';
 
@@ -41,5 +42,11 @@ export const handlers = [
   }),
   rest.post('http://localhost:3001/api/bounces', (req, res, ctx) => {
     return res(ctx.json(mockBounce3));
+  }),
+  rest.post('http://localhost:3001/api/versions', (req, res, ctx) => {
+    return res(ctx.json(mockVersion2));
+  }),
+  rest.patch('http://localhost:3001/api/versions/:id', (req, res, ctx) => {
+    return res(ctx.json({ ...mockVersion, ...req.body }));
   }),
 ];

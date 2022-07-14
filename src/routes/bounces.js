@@ -6,7 +6,6 @@ import { Readable } from 'stream';
 import { bucket } from './audio.js';
 import { requireAuth } from '../middlewares/require-auth.js';
 import { currentUser } from '../middlewares/current-user.js';
-import { rejects } from 'assert';
 
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
