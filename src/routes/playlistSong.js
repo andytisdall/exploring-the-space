@@ -54,18 +54,22 @@ router.patch(
         greaterPlaylistSongs = otherSongs.filter(
           (pls) => pls.position >= position && pls.position < oldPosition
         );
-        greaterPlaylistSongs.forEach((gps) => {
-          gps.position += 1;
-          gps.save();
-        });
+        await Promise.all(
+          greaterPlaylistSongs.map((gps) => {
+            gps.position += 1;
+            return gps.save();
+          })
+        );
       } else if (oldPosition < position) {
         greaterPlaylistSongs = otherSongs.filter(
           (pls) => pls.position > oldPosition && pls.position <= position
         );
-        greaterPlaylistSongs.forEach((gps) => {
-          gps.position -= 1;
-          gps.save();
-        });
+        await Promise.all(
+          greaterPlaylistSongs.forEach((gps) => {
+            gps.position -= 1;
+            return gps.save();
+          })
+        );
       }
       song.position = position;
     }
@@ -100,10 +104,12 @@ router.post(
       const changePosition = playlist.songs.filter(
         (p) => p.position > song.position
       );
-      changePosition.forEach((pls) => {
-        pls.position = pls.position - 1;
-        pls.save();
-      });
+      Promise.all(
+        changePosition.map((pls) => {
+          pls.position = pls.position - 1;
+          return pls.save();
+        })
+      );
     }
 
     PlaylistSong.deleteOne({ _id: playlistSongId });

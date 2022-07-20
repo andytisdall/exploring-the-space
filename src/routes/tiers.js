@@ -57,18 +57,22 @@ router.patch('/tiers/:id', currentUser, requireAuth, async (req, res) => {
     const changePosition = otherTiers.filter(
       (tier) => tier.position >= position && tier.position < oldPosition
     );
-    changePosition.forEach(async (tier) => {
-      tier.position = tier.position + 1;
-      await tier.save();
-    });
+    await Promise.all(
+      changePosition.map((tier) => {
+        tier.position = tier.position + 1;
+        return tier.save();
+      })
+    );
   } else if (oldPosition < position) {
     const changePosition = otherTiers.filter(
       (tier) => tier.position > oldPosition && tier.position <= position
     );
-    changePosition.forEach(async (tier) => {
-      tier.position = tier.position - 1;
-      await tier.save();
-    });
+    await Promise.all(
+      changePosition.map((tier) => {
+        tier.position = tier.position - 1;
+        return tier.save();
+      })
+    );
   }
   thisTier.position = position;
 
@@ -94,10 +98,12 @@ router.post('/tiers/delete', currentUser, requireAuth, async (req, res) => {
     const changePosition = band.tiers.filter(
       (t) => t.position > thisTier.position
     );
-    changePosition.forEach(async (tier) => {
-      tier.position = tier.position - 1;
-      await tier.save();
-    });
+    await Promise.all(
+      changePosition.map((tier) => {
+        tier.position = tier.position - 1;
+        return tier.save();
+      })
+    );
   }
 
   await Tier.deleteOne({ _id: tierId });

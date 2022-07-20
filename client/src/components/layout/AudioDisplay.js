@@ -188,7 +188,7 @@ class AudioDisplay extends React.Component {
                 className="big-play-btn"
                 src={this.props.play ? '/images/pause.svg' : '/images/play.svg'}
                 onClick={this.onPauseButton}
-                alt="play button"
+                alt="main play button"
               />
               <img
                 src="/images/next.svg"

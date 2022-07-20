@@ -8,9 +8,9 @@ import { server } from './mocks/server';
 
 window.scroll = () => {};
 
-// window.HTMLMediaElement.prototype.load = () => {};
-// window.HTMLMediaElement.prototype.play = () => {};
-// window.HTMLMediaElement.prototype.pause = () => {};
+window.HTMLMediaElement.prototype.load = () => {};
+window.HTMLMediaElement.prototype.play = () => {};
+window.HTMLMediaElement.prototype.pause = () => {};
 
 // set up server before all tests and then close after
 beforeAll(() => server.listen());

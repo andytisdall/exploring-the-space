@@ -114,6 +114,13 @@ test('get audio display up', async () => {
   userEvent.click(firstTier);
   const playButton = await screen.findByAltText('play button');
   userEvent.click(playButton);
+
+  const nextSongButton = await screen.findByAltText('next song');
+  expect(nextSongButton).toBeInTheDocument();
+  userEvent.click(nextSongButton);
+
+  const noBigPlayButton = screen.queryByAltText('main play button');
+  expect(noBigPlayButton).not.toBeInTheDocument();
 });
 
 test('loads both tiers and playlist and all children', async () => {

@@ -136,10 +136,12 @@ router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
   }
   const playlistSongs = await PlaylistSong.find({ bounce: bounceId });
 
-  playlistSongs.forEach(async (pls) => {
-    pls.bounce = null;
-    await pls.save();
-  });
+  await Promise.all(
+    playlistSongs.map((pls) => {
+      pls.bounce = null;
+      return pls.save();
+    })
+  );
 
   bucket.delete(mp3Id, (err) => {
     if (err) {
