@@ -65,7 +65,7 @@ router.patch(
           (pls) => pls.position > oldPosition && pls.position <= position
         );
         await Promise.all(
-          greaterPlaylistSongs.forEach((gps) => {
+          greaterPlaylistSongs.map((gps) => {
             gps.position -= 1;
             return gps.save();
           })

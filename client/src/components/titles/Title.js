@@ -133,6 +133,11 @@ const Title = ({
         bounceToSelect = bounceList.find(
           (b) => b.id === title.selectedBounce.id
         );
+
+        // if not found that means the selected version has changed so just select the latest bounce
+        if (!bounceToSelect) {
+          bounceToSelect = bounceList.find((b) => b.latest);
+        }
       }
 
       if (bounceToSelect) {
