@@ -13,6 +13,7 @@ import {
   editBounce,
   deleteBounce,
   queueSongs,
+  fetchBounces,
 } from '../../actions';
 
 const Bounce = ({
@@ -26,9 +27,15 @@ const Bounce = ({
   deleteBounce,
   song,
   queueSongs,
+  fetchBounces,
 }) => {
   const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
   const [uploadActive, setUploadActive] = useState(false);
+  const [bounceList, setBounceList] = useState(null);
+
+  useEffect(() => {
+    fetchBounces(version.id);
+  }, [version, fetchBounces]);
 
   useEffect(() => {
     if (
@@ -47,6 +54,10 @@ const Bounce = ({
     }
   }, [title, title.selectedBounce]);
 
+  useEffect(() => {
+    setBounceList(version.bounces.map((id) => bounces[id]));
+  }, [bounces, version.bounces]);
+
   const displayDate = (date) => {
     return moment.utc(date).format('MM/DD/yy');
   };
@@ -57,7 +68,7 @@ const Bounce = ({
 
   const itemList = () => {
     if (selectedBounce) {
-      return bounces
+      return bounceList
         .filter((b) => b && b.id !== selectedBounce.id)
         .sort((a, b) => (a.date < b.date ? 1 : -1));
     }
@@ -193,7 +204,7 @@ const Bounce = ({
   if (uploadActive) {
     return <div className="detail-box bounce">{uploadContent()}</div>;
   } else {
-    if (version) {
+    if (bounceList) {
       return (
         <>
           <DetailBox
@@ -217,10 +228,17 @@ const Bounce = ({
   }
 };
 
-export default connect(null, {
+const mapStateToProps = (state) => {
+  return {
+    bounces: state.bounces,
+  };
+};
+
+export default connect(mapStateToProps, {
   selectBounce,
   createBounce,
   editBounce,
   deleteBounce,
   queueSongs,
+  fetchBounces,
 })(requireAuth(Bounce));

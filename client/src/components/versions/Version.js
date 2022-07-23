@@ -31,14 +31,10 @@ const Version = ({
 }) => {
   const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
   const [versionList, setVersionList] = useState([]);
-  const [bounceList, setBounceList] = useState(null);
 
   useEffect(() => {
     fetchVersions(title.id);
-    if (title.selectedVersion) {
-      fetchBounces(title.selectedVersion.id);
-    }
-  }, [fetchBounces, fetchVersions, title.selectedVersion, title.id]);
+  }, [fetchVersions, title.id]);
 
   useEffect(() => {
     setVersionList(title.versions.map((id) => versions[id]));
@@ -48,23 +44,8 @@ const Version = ({
     // console.log(selectedVersion);
     if (selectedVersion && selectedVersion.id !== title.selectedVersion.id) {
       selectVersion(selectedVersion, title.id);
-      setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
-      fetchBounces(selectedVersion.id);
     }
-  }, [
-    selectedVersion,
-    selectVersion,
-    setBounceList,
-    fetchBounces,
-    title,
-    bounces,
-  ]);
-
-  useEffect(() => {
-    if (selectedVersion) {
-      setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
-    }
-  }, [selectedVersion, bounces]);
+  }, [selectedVersion, selectVersion, title]);
 
   useEffect(() => {
     if (versionList[0] && !selectedVersion) {
@@ -85,20 +66,13 @@ const Version = ({
   }, [title.selectedVersion]);
 
   const renderBounces = () => {
-    if (bounceList && selectedVersion) {
-      return (
-        <Bounce
-          bounces={bounceList}
-          title={title}
-          version={selectedVersion}
-          song={song}
-        />
-      );
+    if (selectedVersion) {
+      return <Bounce title={title} version={selectedVersion} song={song} />;
     }
   };
 
   const renderArrow = () => {
-    if (bounceList && selectedVersion) {
+    if (selectedVersion) {
       return <div className="version-arrow">&rarr;</div>;
     }
   };
