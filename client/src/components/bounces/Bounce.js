@@ -31,7 +31,11 @@ const Bounce = ({
   const [uploadActive, setUploadActive] = useState(false);
 
   useEffect(() => {
-    if (selectedBounce && selectedBounce.id !== title.selectedBounce.id) {
+    if (
+      selectedBounce &&
+      title.selectedBounce &&
+      selectedBounce.id !== title.selectedBounce.id
+    ) {
       selectBounce(selectedBounce, title.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +71,7 @@ const Bounce = ({
   };
 
   const onEditSubmit = (formValues) => {
-    editBounce(formValues, selectedBounce.id, version.id);
+    editBounce(formValues, selectedBounce.id, version.id, title.id);
     if (formValues.file) {
       setUploadActive(true);
     }

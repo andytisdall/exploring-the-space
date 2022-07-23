@@ -49,4 +49,14 @@ export const handlers = [
   rest.patch('http://localhost:3001/api/versions/:id', (req, res, ctx) => {
     return res(ctx.json({ ...mockVersion, ...req.body }));
   }),
+  rest.patch('http://localhost:3001/api/bounces/:id', (req, res, ctx) => {
+    return res(ctx.json({ ...mockBounce, ...req.body }));
+  }),
+  rest.patch('http://localhost:3001/api/titles/:id', (req, res, ctx) => {
+    if (req.body.selectedVersion) {
+      return res(ctx.json({ ...mockTitle, selectedVersion: mockVersion2 }));
+    } else if (req.body.selectedBounce) {
+      return res(ctx.json({ ...mockTitle, selectedBounce: mockBounce3 }));
+    }
+  }),
 ];

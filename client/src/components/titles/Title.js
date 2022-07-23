@@ -38,12 +38,51 @@ const Title = ({
   tiers,
 }) => {
   const [expand, setExpand] = useState(false);
-  const [versionList, setVersionList] = useState(null);
+  // const [versionList, setVersionList] = useState(null);
   const [bounceList, setBounceList] = useState(null);
   const [song, setSong] = useState(null);
   const [showChords, setShowChords] = useState(false);
 
   const chordButtonRef = useRef();
+
+  useEffect(() => {
+    if (title.selectedBounce && title.selectedVersion) {
+      setSong({
+        tier,
+        title: titles[title.id],
+        version: title.selectedVersion,
+        bounce: title.selectedBounce,
+      });
+      getTime({ id: title.id, duration: title.selectedBounce.duration });
+    } else if (song && !title.selectedBounce) {
+      setSong(null);
+      getTime({ id: title.id, duration: 0 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getTime, tier, titles, title, versions]);
+
+  // useEffect(() => {
+  //   if (title.selectedVersion?.current) {
+  //     editTitle(
+  //       { title: title.title, selectedVersion: title.selectedVersion.id },
+  //       title.id,
+  //       tier.id
+  //     );
+  //   }
+  // }, [
+  //   title.selectedBounce,
+  //   title.selectedVersion,
+  //   tier.id,
+  //   editTitle,
+  //   title.id,
+  //   title.title,
+  // ]);
+
+  useEffect(() => {
+    if (title.selectedBounce?.latest && title.selectedVersion?.current) {
+      findLatest(title.id, title.selectedBounce);
+    }
+  }, [title.selectedBounce, title.id, findLatest, title.selectedVersion]);
 
   useEffect(() => {
     const bodyClick = (e) => {
@@ -98,77 +137,62 @@ const Title = ({
   //   }
   // }, [title.selectedVersion, fetchBounces]);
 
-  // useEffect(() => {
-  //   if (title.selectedVersion) {
-  //     if (title.selectedVersion.bounces[0]) {
-  //       setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
-  //     } else if (title.selectedBounce !== null) {
-  //       // console.log('set bounce list null');
-  //       setBounceList(null);
-  //       selectBounce(null, title.id);
-  //     }
-  //   }
-  // }, [
-  //   bounces,
-  //   selectBounce,
-  //   title.selectedBounce,
-  //   title.selectedVersion,
-  //   title.id,
-  // ]);
-
-  // useEffect(() => {
-  //   if (bounceList && bounceList[0]) {
-  //     // set the title.selected bounce if there isn't one yet
-  //     // or if the bounce list has been modified and no longer matches the current title.selected bounce
-
-  //     let bounceToSelect;
-
-  //     if (!title.selectedBounce) {
-  //       // initialize selected bounce with latest
-  //       bounceToSelect = bounceList.find((b) => b.latest);
-  //     } else if (!bounceList.includes(title.selectedBounce)) {
-  //       // if it's been edited it won't be in the list
-  //       // but the id will be the same
-  //       // refactor this whole mess please
-  //       bounceToSelect = bounceList.find(
-  //         (b) => b.id === title.selectedBounce.id
-  //       );
-
-  //       // if not found that means the selected version has changed so just select the latest bounce
-  //       if (!bounceToSelect) {
-  //         bounceToSelect = bounceList.find((b) => b.latest);
-  //       }
-  //     }
-
-  //     if (bounceToSelect) {
-  //       selectBounce(bounceToSelect, title.id);
-  //       // console.log('select bounce');
-  //       if (title.selectedVersion?.current && title.selectedBounce?.latest) {
-  //         findLatest(title, bounceToSelect);
-  //       }
-  //     }
-  //   } else {
-  //     setSong(null);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [bounceList, findLatest, selectBounce]);
+  useEffect(() => {
+    if (title.selectedVersion) {
+      if (title.selectedVersion.bounces[0]) {
+        setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
+      } else if (title.selectedBounce !== null) {
+        // console.log('set bounce list null');
+        setBounceList(null);
+        selectBounce(null, title.id);
+      }
+    }
+  }, [
+    bounces,
+    selectBounce,
+    title.selectedBounce,
+    title.selectedVersion,
+    title.id,
+  ]);
 
   useEffect(() => {
-    if (title.selectedBounce && title.selectedVersion) {
-      setSong({
-        tier,
-        title: titles[title.id],
-        version: title.selectedVersion,
-        bounce: title.selectedBounce,
-      });
-      // console.log('song update');
-      getTime({ id: title.id, duration: title.selectedBounce.duration });
-    } else if (song && !title.selectedBounce) {
-      setSong(null);
-      getTime({ id: title.id, duration: 0 });
+    if (bounceList && bounceList[0]) {
+      // set the title.selected bounce if the bounce list has been modified and no longer matches the current title.selected bounce
+
+      let bounceToSelect;
+
+      if (!title.selectedBounce) {
+        // initialize selected bounce with latest
+        bounceToSelect = bounceList.find((b) => b.latest);
+      } else if (
+        !bounceList.map((b) => b.id).includes(title.selectedBounce.id)
+      ) {
+        // console.log(title.selectedBounce);
+        // console.log(bounceList);
+        // if it's been edited it won't be in the list
+        // but the id will be the same
+        // refactor this whole mess please
+        bounceToSelect = bounceList.find(
+          (b) => b && b.id === title.selectedBounce.id
+        );
+
+        // if not found that means the selected version has changed so just select the latest bounce
+        if (!bounceToSelect) {
+          bounceToSelect = bounceList.find((b) => b.latest);
+        }
+      }
+
+      if (bounceToSelect) {
+        selectBounce(bounceToSelect, title.id);
+        // console.log('select bounce');
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, titles, getTime, setSong, tier]);
+  }, [bounceList, findLatest, selectBounce]);
+
+  // useEffect(() => {
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [title, titles, getTime, setSong, tier]);
 
   const renderPlayContainer = () => {
     if (song) {
@@ -217,9 +241,7 @@ const Title = ({
   //   }
   // };
   const renderVersion = () => {
-    return (
-      <Version versions={versionList} title={title} song={song} tier={tier} />
-    );
+    return <Version title={title} song={song} tier={tier} />;
   };
 
   const onAddToPlaylist = (formValues) => {

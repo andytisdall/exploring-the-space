@@ -10,6 +10,7 @@ import { currentUser } from '../middlewares/current-user.js';
 const Song = mongoose.model('Song');
 const Version = mongoose.model('Version');
 const PlaylistSong = mongoose.model('PlaylistSong');
+const Title = mongoose.model('Title');
 
 const router = express.Router();
 
@@ -83,7 +84,7 @@ router.get('/bounces/:versionId', async (req, res) => {
 
 router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { date, comments, duration, latest } = req.body;
+  const { date, comments, duration, latest, titleId } = req.body;
 
   const thisBounce = await Song.findById(id);
 
@@ -94,6 +95,11 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 
   thisBounce.comments = comments;
   thisBounce.date = date;
+  if (latest && !thisBounce.latest) {
+    const title = await Title.findById(titleId);
+    title.selectedBounce = id;
+    await title.save();
+  }
   thisBounce.latest = latest;
 
   if (req.files) {

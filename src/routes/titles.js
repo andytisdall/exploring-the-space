@@ -24,9 +24,7 @@ router.post('/titles', currentUser, requireAuth, async (req, res) => {
 router.get('/titles/:tierId', async (req, res) => {
   const tier = await Tier.findById(req.params.tierId).populate({
     path: 'trackList',
-    populate: {
-      path: ['selectedVersion', 'selectedBounce'],
-    },
+    populate: ['selectedVersion', 'selectedBounce'],
   });
 
   res.status(200).send(tier.trackList);
@@ -34,12 +32,18 @@ router.get('/titles/:tierId', async (req, res) => {
 
 router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, move, currentTier, chords, version, bounce } = req.body;
+  const { title, move, currentTier, chords, selectedVersion, selectedBounce } =
+    req.body;
+  console.log;
 
-  const thisTitle = await Title.findById(id);
+  const thisTitle = await Title.findById(id).populate([
+    'selectedVersion, selectecBounce',
+  ]);
 
   thisTitle.title = title;
-  thisTitle.chords = chords;
+  if (chords) {
+    thisTitle.chords = chords;
+  }
 
   if (move) {
     const oldTier = await Tier.findById(currentTier);
@@ -52,11 +56,11 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
     newTier.save();
   }
 
-  if (version) {
-    thisTitle.version = version;
+  if (selectedVersion) {
+    thisTitle.selectedVersion = selectedVersion;
   }
-  if (bounce) {
-    thisTitle.vounce = bounce;
+  if (selectedBounce) {
+    thisTitle.selectedBounce = selectedBounce;
   }
 
   thisTitle.save();

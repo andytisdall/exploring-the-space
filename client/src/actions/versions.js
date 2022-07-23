@@ -74,6 +74,7 @@ export const editVersion =
       const response = await greenhouse.patch(`/versions/${versionId}`, {
         ...formValues,
         currentBand: currentBand.id,
+        titleId,
       });
       if (response.data.current && !thisVersion.current) {
         const parentTitle = getState().titles[titleId];

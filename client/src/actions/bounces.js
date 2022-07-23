@@ -113,7 +113,7 @@ export const createBounce =
   };
 
 export const editBounce =
-  (formValues, bounceId, versionId) => async (dispatch, getState) => {
+  (formValues, bounceId, versionId, titleId) => async (dispatch, getState) => {
     const { currentBand } = getState().bands;
     const thisBounce = getState().bounces[bounceId];
 
@@ -123,7 +123,7 @@ export const editBounce =
     formValues.currentBand = currentBand.id;
 
     let requestOptions = {};
-    let formData = formValues;
+    let formData = { ...formValues, titleId };
 
     try {
       if (formValues.file?.length) {
@@ -148,7 +148,8 @@ export const editBounce =
           editBounce(
             _.pick(oldLatest, 'date', 'comments', 'latest'),
             oldLatest.id,
-            versionId
+            versionId,
+            titleId
           )
         );
       }

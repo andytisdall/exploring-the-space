@@ -60,8 +60,8 @@ const Tier = ({
   //   }
   // }, [expand]);
 
-  const findLatest = (title, bounce) => {
-    orderedTitles.current[title.id] = new Date(bounce.date);
+  const findLatest = (titleId, bounce) => {
+    orderedTitles.current[titleId] = new Date(bounce.date);
   };
 
   const renderTitles = () => {
@@ -69,17 +69,15 @@ const Tier = ({
 
     if (!tier.orderBy || tier.orderBy === 'date') {
       titleList.sort((a, b) => {
-        if (a.selectedBounce && b.selectedBounce) {
-          if (
-            new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)
-          ) {
+        if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
+          if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
             return -1;
           } else {
             return 1;
           }
-        } else if (a.selectedBounce) {
+        } else if (orderedTitles.current[a.id]) {
           return -1;
-        } else if (b.selectedBounce) {
+        } else if (orderedTitles.current[b.id]) {
           return 1;
         }
         return -1;

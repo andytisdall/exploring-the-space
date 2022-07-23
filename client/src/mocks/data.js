@@ -48,6 +48,8 @@ export const mockTitle = {
   id: '1',
   title: 'Rockin Title',
   versions: ['1'],
+  selectedVersion: mockVersion,
+  selectedBounce: mockBounce,
 };
 
 export const mockTier = {

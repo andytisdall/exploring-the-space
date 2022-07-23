@@ -8,6 +8,7 @@ import {
   createVersion,
   editVersion,
   deleteVersion,
+  fetchVersions,
 } from '../../actions';
 import Bounce from '../bounces/Bounce';
 import AddVersion from './AddVersion';
@@ -26,9 +27,28 @@ const Version = ({
   editVersion,
   deleteVersion,
   song,
+  fetchVersions,
 }) => {
   const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
+  const [versionList, setVersionList] = useState([]);
   const [bounceList, setBounceList] = useState(null);
+
+  useEffect(() => {
+    fetchVersions(title.id);
+    if (title.selectedVersion) {
+      fetchBounces(title.selectedVersion.id);
+    }
+  }, [
+    title.id,
+    fetchVersions,
+    title.selectedVersion,
+    fetchBounces,
+    title.selectedBounce,
+  ]);
+
+  useEffect(() => {
+    setVersionList(title.versions.map((id) => versions[id]));
+  }, [title.versions, versions]);
 
   useEffect(() => {
     // console.log(selectedVersion);
@@ -48,10 +68,15 @@ const Version = ({
 
   useEffect(() => {
     if (selectedVersion) {
-      // console.log(title.selectedVersion)
       setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
     }
   }, [bounces, selectedVersion]);
+
+  useEffect(() => {
+    if (versionList[0] && !selectedVersion) {
+      setSelectedVersion(versionList.find((v) => v.current));
+    }
+  }, [selectedVersion, versionList, bounces]);
 
   useEffect(() => {
     if (selectedVersion !== title.selectedVersion) {
@@ -151,38 +176,43 @@ const Version = ({
   };
 
   const itemList = () => {
-    return versions.filter((v) => v.id !== selectedVersion.id);
+    return versionList.filter((v) => v && v.id !== selectedVersion.id);
   };
 
   const displayVersion = (v) => {
     return `${v.name}`;
   };
 
-  return (
-    <>
-      <DetailBox
-        selectedItem={selectedVersion}
-        itemType="Version"
-        itemList={itemList}
-        displayItem={displayVersion}
-        setSelected={setSelectedVersion}
-        renderAddButton={renderAddButton}
-        renderEditButton={renderEditButton}
-        renderDeleteButton={renderDeleteButton}
-      />
-      <div className="detail-box-between">
-        {/* {renderRecordLink()} */}
-        {renderArrow()}
-      </div>
-      {renderBounces()}
-    </>
-  );
+  if (versionList.length) {
+    return (
+      <>
+        <DetailBox
+          selectedItem={selectedVersion}
+          itemType="Version"
+          itemList={itemList}
+          displayItem={displayVersion}
+          setSelected={setSelectedVersion}
+          renderAddButton={renderAddButton}
+          renderEditButton={renderEditButton}
+          renderDeleteButton={renderDeleteButton}
+        />
+        <div className="detail-box-between">
+          {/* {renderRecordLink()} */}
+          {renderArrow()}
+        </div>
+        {renderBounces()}
+      </>
+    );
+  } else {
+    return <div>!</div>;
+  }
 };
 
 const mapStateToProps = (state) => {
   return {
     bounces: state.bounces,
     band: state.bands.currentBand,
+    versions: state.versions,
   };
 };
 
@@ -192,4 +222,5 @@ export default connect(mapStateToProps, {
   createVersion,
   editVersion,
   deleteVersion,
+  fetchVersions,
 })(requireAuth(Version));
