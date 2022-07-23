@@ -51,6 +51,7 @@ export const createVersion =
             )
           );
         }
+        dispatch(selectVersion(response.data, titleId));
       }
 
       // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
@@ -90,12 +91,13 @@ export const editVersion =
             titleId
           )
         );
+        dispatch(selectVersion(response.data, titleId));
       }
 
       // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
       dispatch({
         type: EDIT_VERSION,
-        payload: { version: response.data, title: titleId },
+        payload: response.data,
       });
     } catch (err) {
       dispatch(errorHandler(err));

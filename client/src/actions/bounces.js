@@ -73,6 +73,7 @@ export const createBounce =
     }
     formValues.currentBand = currentBand.id;
     formValues.version = versionId;
+    formValues.titleId = titleId;
 
     try {
       const formData = await processMp3(formValues);
@@ -137,6 +138,8 @@ export const editBounce =
         requestOptions
       );
 
+      console.log(response.data);
+
       if (response.data.latest && !thisBounce.latest) {
         const parentVersion = getState().versions[versionId];
         const bounceList = parentVersion.bounces.map(
@@ -152,9 +155,13 @@ export const editBounce =
             titleId
           )
         );
+        dispatch(selectBounce(response.data, titleId));
       }
 
-      dispatch({ type: EDIT_BOUNCE, payload: response.data });
+      dispatch({
+        type: EDIT_BOUNCE,
+        payload: { bounce: response.data, title: titleId },
+      });
     } catch (err) {
       dispatch(errorHandler(err));
     }

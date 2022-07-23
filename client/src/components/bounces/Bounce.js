@@ -38,16 +38,14 @@ const Bounce = ({
     ) {
       selectBounce(selectedBounce, title.id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBounce, selectBounce]);
+  }, [selectedBounce, selectBounce, title.id]);
 
   useEffect(() => {
     if (selectedBounce !== title.selectedBounce) {
       setSelectedBounce(title.selectedBounce);
       setUploadActive(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title]);
+  }, [title, title.selectedBounce]);
 
   const displayDate = (date) => {
     return moment.utc(date).format('MM/DD/yy');

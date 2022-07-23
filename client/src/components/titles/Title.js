@@ -161,25 +161,10 @@ const Title = ({
 
       let bounceToSelect;
 
-      if (!title.selectedBounce) {
-        // initialize selected bounce with latest
-        bounceToSelect = bounceList.find((b) => b.latest);
-      } else if (
-        !bounceList.map((b) => b.id).includes(title.selectedBounce.id)
-      ) {
-        // console.log(title.selectedBounce);
-        // console.log(bounceList);
-        // if it's been edited it won't be in the list
-        // but the id will be the same
-        // refactor this whole mess please
-        bounceToSelect = bounceList.find(
-          (b) => b && b.id === title.selectedBounce.id
-        );
-
+      if (!title.selectedBounce || !bounceList.includes(title.selectedBounce)) {
         // if not found that means the selected version has changed so just select the latest bounce
-        if (!bounceToSelect) {
-          bounceToSelect = bounceList.find((b) => b.latest);
-        }
+
+        bounceToSelect = bounceList.find((b) => b.latest);
       }
 
       if (bounceToSelect) {
@@ -187,8 +172,7 @@ const Title = ({
         // console.log('select bounce');
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bounceList, findLatest, selectBounce]);
+  }, [bounceList, findLatest, selectBounce, title.id, title.selectedBounce]);
 
   // useEffect(() => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -38,7 +38,7 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
   // Get parameters from post request and exit if there's an existing bounce with that date.
 
-  const { date, comments, duration, version, latest } = req.body;
+  const { date, comments, duration, version, latest, titleId } = req.body;
   const parentVersion = await Version.findById(version).populate('songs');
   if (parentVersion.songs) {
     let duplicateDate = parentVersion.songs.find((b) => b.date === date);
@@ -65,6 +65,11 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
 
   // Add bounce to parent version's bounce list
   parentVersion.songs.push(newBounce);
+  if (latest) {
+    const title = await Title.findById(titleId);
+    title.selectedBounce = id;
+    await title.save();
+  }
 
   // Finally save new bounce object
   await newBounce.save();

@@ -38,13 +38,7 @@ const Version = ({
     if (title.selectedVersion) {
       fetchBounces(title.selectedVersion.id);
     }
-  }, [
-    title.id,
-    fetchVersions,
-    title.selectedVersion,
-    fetchBounces,
-    title.selectedBounce,
-  ]);
+  }, [fetchBounces, fetchVersions, title.selectedVersion, title.id]);
 
   useEffect(() => {
     setVersionList(title.versions.map((id) => versions[id]));
@@ -52,7 +46,7 @@ const Version = ({
 
   useEffect(() => {
     // console.log(selectedVersion);
-    if (selectedVersion && selectedVersion !== title.selectedVersion) {
+    if (selectedVersion && selectedVersion.id !== title.selectedVersion.id) {
       selectVersion(selectedVersion, title.id);
       setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
       fetchBounces(selectedVersion.id);
@@ -70,19 +64,25 @@ const Version = ({
     if (selectedVersion) {
       setBounceList(selectedVersion.bounces.map((id) => bounces[id]));
     }
-  }, [bounces, selectedVersion]);
+  }, [selectedVersion, bounces]);
 
   useEffect(() => {
     if (versionList[0] && !selectedVersion) {
       setSelectedVersion(versionList.find((v) => v.current));
+    } else if (
+      selectedVersion &&
+      versionList[0] &&
+      !versionList.includes(selectedVersion)
+    ) {
+      setSelectedVersion(versionList.find((v) => v.id === selectedVersion.id));
     }
-  }, [selectedVersion, versionList, bounces]);
+  }, [versionList]);
 
   useEffect(() => {
     if (selectedVersion !== title.selectedVersion) {
       setSelectedVersion(title.selectedVersion);
     }
-  }, [title.selectedVersion, selectedVersion]);
+  }, [title.selectedVersion]);
 
   const renderBounces = () => {
     if (bounceList && selectedVersion) {
