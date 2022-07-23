@@ -69,15 +69,17 @@ const Tier = ({
 
     if (!tier.orderBy || tier.orderBy === 'date') {
       titleList.sort((a, b) => {
-        if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
-          if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
+        if (a.selectedBounce && b.selectedBounce) {
+          if (
+            new Date(a.selectedBounce.date) > new Date(b.selectedBounce.date)
+          ) {
             return -1;
           } else {
             return 1;
           }
-        } else if (orderedTitles.current[a.id]) {
+        } else if (a.selectedBounce) {
           return -1;
-        } else if (orderedTitles.current[b.id]) {
+        } else if (b.selectedBounce) {
           return 1;
         }
         return -1;

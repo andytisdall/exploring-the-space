@@ -44,6 +44,8 @@ const titleSchema = new Schema(
     title: { type: String },
     versions: [{ type: Schema.Types.ObjectId, ref: 'Version' }],
     chords: { type: String },
+    selectedVersion: { type: Schema.Types.ObjectId, ref: 'Version' },
+    selectedBounce: { type: Schema.Types.ObjectId, ref: 'Song' },
   },
   {
     toJSON: {

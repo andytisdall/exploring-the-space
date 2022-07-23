@@ -22,14 +22,19 @@ router.post('/titles', currentUser, requireAuth, async (req, res) => {
 });
 
 router.get('/titles/:tierId', async (req, res) => {
-  const tier = await Tier.findById(req.params.tierId).populate('trackList');
+  const tier = await Tier.findById(req.params.tierId).populate({
+    path: 'trackList',
+    populate: {
+      path: ['selectedVersion', 'selectedBounce'],
+    },
+  });
 
   res.status(200).send(tier.trackList);
 });
 
 router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, move, currentTier, chords } = req.body;
+  const { title, move, currentTier, chords, version, bounce } = req.body;
 
   const thisTitle = await Title.findById(id);
 
@@ -45,6 +50,13 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
     newTier.trackList.push(id);
     oldTier.save();
     newTier.save();
+  }
+
+  if (version) {
+    thisTitle.version = version;
+  }
+  if (bounce) {
+    thisTitle.vounce = bounce;
   }
 
   thisTitle.save();

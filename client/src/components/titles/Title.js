@@ -61,97 +61,97 @@ const Title = ({
     };
   }, [showChords]);
 
-  useEffect(() => {
-    fetchVersions(title.id);
-  }, [fetchVersions, title.id]);
+  // useEffect(() => {
+  //   fetchVersions(title.id);
+  // }, [fetchVersions, title.id]);
 
-  useEffect(() => {
-    setVersionList(title.versions.map((id) => versions[id]));
-    // console.log('set version list');
-  }, [versions, title.versions]);
+  // useEffect(() => {
+  //   setVersionList(title.versions.map((id) => versions[id]));
+  //   // console.log('set version list');
+  // }, [versions, title.versions]);
 
-  useEffect(() => {
-    if (versionList && versionList[0]) {
-      let versionToSelect;
-      const selectedVersion = title.selectedVersion;
-      const versionIds = versionList.map((v) => v.id);
+  // useEffect(() => {
+  //   if (versionList && versionList[0]) {
+  //     let versionToSelect;
+  //     const selectedVersion = title.selectedVersion;
+  //     const versionIds = versionList.map((v) => v.id);
 
-      if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
-        versionToSelect = versionList.find((v) => v.current);
-        selectVersion(versionToSelect, title.id);
-      } else if (selectedVersion) {
-        if (!versions[selectedVersion.id]) {
-          versionToSelect = null;
-        } else {
-          versionToSelect = versions[selectedVersion.id];
-        }
-        selectVersion(versionToSelect, title.id);
-      }
-    }
-  }, [versionList, selectVersion, versions, title.selectedVersion, title.id]);
+  //     if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
+  //       versionToSelect = versionList.find((v) => v.current);
+  //       selectVersion(versionToSelect, title.id);
+  //     } else if (selectedVersion) {
+  //       if (!versions[selectedVersion.id]) {
+  //         versionToSelect = null;
+  //       } else {
+  //         versionToSelect = versions[selectedVersion.id];
+  //       }
+  //       selectVersion(versionToSelect, title.id);
+  //     }
+  //   }
+  // }, [versionList, selectVersion, versions, title.selectedVersion, title.id]);
 
-  useEffect(() => {
-    // console.log(title)
-    if (title.selectedVersion && title.selectedVersion.id) {
-      fetchBounces(title.selectedVersion.id);
-      // console.log('fetch bounces');
-    }
-  }, [title.selectedVersion, fetchBounces]);
+  // useEffect(() => {
+  //   // console.log(title)
+  //   if (title.selectedVersion && title.selectedVersion.id) {
+  //     fetchBounces(title.selectedVersion.id);
+  //     // console.log('fetch bounces');
+  //   }
+  // }, [title.selectedVersion, fetchBounces]);
 
-  useEffect(() => {
-    if (title.selectedVersion) {
-      if (title.selectedVersion.bounces[0]) {
-        setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
-      } else if (title.selectedBounce !== null) {
-        // console.log('set bounce list null');
-        setBounceList(null);
-        selectBounce(null, title.id);
-      }
-    }
-  }, [
-    bounces,
-    selectBounce,
-    title.selectedBounce,
-    title.selectedVersion,
-    title.id,
-  ]);
+  // useEffect(() => {
+  //   if (title.selectedVersion) {
+  //     if (title.selectedVersion.bounces[0]) {
+  //       setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
+  //     } else if (title.selectedBounce !== null) {
+  //       // console.log('set bounce list null');
+  //       setBounceList(null);
+  //       selectBounce(null, title.id);
+  //     }
+  //   }
+  // }, [
+  //   bounces,
+  //   selectBounce,
+  //   title.selectedBounce,
+  //   title.selectedVersion,
+  //   title.id,
+  // ]);
 
-  useEffect(() => {
-    if (bounceList && bounceList[0]) {
-      // set the title.selected bounce if there isn't one yet
-      // or if the bounce list has been modified and no longer matches the current title.selected bounce
+  // useEffect(() => {
+  //   if (bounceList && bounceList[0]) {
+  //     // set the title.selected bounce if there isn't one yet
+  //     // or if the bounce list has been modified and no longer matches the current title.selected bounce
 
-      let bounceToSelect;
+  //     let bounceToSelect;
 
-      if (!title.selectedBounce) {
-        // initialize selected bounce with latest
-        bounceToSelect = bounceList.find((b) => b.latest);
-      } else if (!bounceList.includes(title.selectedBounce)) {
-        // if it's been edited it won't be in the list
-        // but the id will be the same
-        // refactor this whole mess please
-        bounceToSelect = bounceList.find(
-          (b) => b.id === title.selectedBounce.id
-        );
+  //     if (!title.selectedBounce) {
+  //       // initialize selected bounce with latest
+  //       bounceToSelect = bounceList.find((b) => b.latest);
+  //     } else if (!bounceList.includes(title.selectedBounce)) {
+  //       // if it's been edited it won't be in the list
+  //       // but the id will be the same
+  //       // refactor this whole mess please
+  //       bounceToSelect = bounceList.find(
+  //         (b) => b.id === title.selectedBounce.id
+  //       );
 
-        // if not found that means the selected version has changed so just select the latest bounce
-        if (!bounceToSelect) {
-          bounceToSelect = bounceList.find((b) => b.latest);
-        }
-      }
+  //       // if not found that means the selected version has changed so just select the latest bounce
+  //       if (!bounceToSelect) {
+  //         bounceToSelect = bounceList.find((b) => b.latest);
+  //       }
+  //     }
 
-      if (bounceToSelect) {
-        selectBounce(bounceToSelect, title.id);
-        // console.log('select bounce');
-        if (title.selectedVersion?.current && title.selectedBounce?.latest) {
-          findLatest(title, bounceToSelect);
-        }
-      }
-    } else {
-      setSong(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bounceList, findLatest, selectBounce]);
+  //     if (bounceToSelect) {
+  //       selectBounce(bounceToSelect, title.id);
+  //       // console.log('select bounce');
+  //       if (title.selectedVersion?.current && title.selectedBounce?.latest) {
+  //         findLatest(title, bounceToSelect);
+  //       }
+  //     }
+  //   } else {
+  //     setSong(null);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [bounceList, findLatest, selectBounce]);
 
   useEffect(() => {
     if (title.selectedBounce && title.selectedVersion) {
