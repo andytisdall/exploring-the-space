@@ -59,7 +59,7 @@ const Bounce = ({
   }, [bounces, version.bounces]);
 
   useEffect(() => {
-    if (bounceList[0] && !selectedBounce) {
+    if (bounceList && bounceList[0] && !selectedBounce) {
       setSelectedBounce(bounceList.find((b) => b.latest));
     }
   }, [bounceList, selectedBounce]);
