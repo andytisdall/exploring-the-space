@@ -42,7 +42,11 @@ const Version = ({
 
   useEffect(() => {
     // console.log(selectedVersion);
-    if (selectedVersion && selectedVersion.id !== title.selectedVersion.id) {
+    if (
+      selectedVersion &&
+      title.selectedVersion &&
+      selectedVersion.id !== title.selectedVersion.id
+    ) {
       selectVersion(selectedVersion, title.id);
     }
   }, [selectedVersion, selectVersion, title]);
