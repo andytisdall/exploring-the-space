@@ -49,7 +49,7 @@ const Version = ({
     ) {
       selectVersion(selectedVersion, title.id);
     }
-  }, [selectedVersion, selectVersion, title]);
+  }, [selectedVersion, selectVersion]);
 
   useEffect(() => {
     if (versionList[0] && !selectedVersion) {
@@ -61,7 +61,7 @@ const Version = ({
     ) {
       setSelectedVersion(versionList.find((v) => v.id === selectedVersion.id));
     }
-  }, [versionList]);
+  }, [versionList, selectedVersion]);
 
   useEffect(() => {
     if (selectedVersion !== title.selectedVersion) {
