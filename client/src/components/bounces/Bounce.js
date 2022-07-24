@@ -68,11 +68,11 @@ const Bounce = ({
         bounceToSelect = bounceList[0];
       }
       setSelectedBounce(bounceToSelect);
-      editTitle(
-        { ...title, selectedBounce: bounceToSelect.id },
-        title.id,
-        tier.id
-      );
+      // editTitle(
+      //   { ...title, selectedBounce: bounceToSelect.id },
+      //   title.id,
+      //   tier.id
+      // );
     }
   }, [bounceList, selectedBounce]);
 
