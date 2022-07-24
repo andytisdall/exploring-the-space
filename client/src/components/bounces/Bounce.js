@@ -14,6 +14,7 @@ import {
   deleteBounce,
   queueSongs,
   fetchBounces,
+  editTitle,
 } from '../../actions';
 
 const Bounce = ({
@@ -28,6 +29,8 @@ const Bounce = ({
   song,
   queueSongs,
   fetchBounces,
+  editTitle,
+  tier,
 }) => {
   const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
   const [uploadActive, setUploadActive] = useState(false);
@@ -60,7 +63,13 @@ const Bounce = ({
 
   useEffect(() => {
     if (bounceList && bounceList[0] && !selectedBounce) {
-      setSelectedBounce(bounceList.find((b) => b.latest));
+      const bounceToSelect = bounceList.find((b) => b.latest);
+      setSelectedBounce(bounceToSelect);
+      editTitle(
+        { ...title, selectedBounce: bounceToSelect },
+        title.id,
+        tier.id
+      );
     }
   }, [bounceList, selectedBounce]);
 
@@ -247,4 +256,5 @@ export default connect(mapStateToProps, {
   deleteBounce,
   queueSongs,
   fetchBounces,
+  editTitle,
 })(requireAuth(Bounce));

@@ -9,6 +9,7 @@ import {
   editVersion,
   deleteVersion,
   fetchVersions,
+  editTitle,
 } from '../../actions';
 import Bounce from '../bounces/Bounce';
 import AddVersion from './AddVersion';
@@ -28,6 +29,8 @@ const Version = ({
   deleteVersion,
   song,
   fetchVersions,
+  tier,
+  editTitle,
 }) => {
   const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
   const [versionList, setVersionList] = useState([]);
@@ -53,7 +56,13 @@ const Version = ({
 
   useEffect(() => {
     if (versionList[0] && !selectedVersion) {
-      setSelectedVersion(versionList.find((v) => v.current));
+      const versionToSelect = versionList.find((v) => v.current);
+      setSelectedVersion(versionToSelect);
+      editTitle(
+        { ...title, selectedVersion: versionToSelect },
+        title.id,
+        tier.id
+      );
     } else if (
       selectedVersion &&
       versionList[0] &&
@@ -71,7 +80,14 @@ const Version = ({
 
   const renderBounces = () => {
     if (selectedVersion) {
-      return <Bounce title={title} version={selectedVersion} song={song} />;
+      return (
+        <Bounce
+          tier={tier}
+          title={title}
+          version={selectedVersion}
+          song={song}
+        />
+      );
     }
   };
 
@@ -201,4 +217,5 @@ export default connect(mapStateToProps, {
   editVersion,
   deleteVersion,
   fetchVersions,
+  editTitle,
 })(requireAuth(Version));
