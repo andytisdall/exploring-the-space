@@ -58,6 +58,12 @@ const Bounce = ({
     setBounceList(version.bounces.map((id) => bounces[id]));
   }, [bounces, version.bounces]);
 
+  useEffect(() => {
+    if (bounceList[0] && !selectedBounce) {
+      setSelectedBounce(bounceList.find((b) => b.latest));
+    }
+  }, [bounceList, selectedBounce]);
+
   const displayDate = (date) => {
     return moment.utc(date).format('MM/DD/yy');
   };
