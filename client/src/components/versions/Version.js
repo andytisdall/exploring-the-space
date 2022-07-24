@@ -58,11 +58,6 @@ const Version = ({
     if (versionList[0] && !selectedVersion) {
       const versionToSelect = versionList.find((v) => v.current);
       setSelectedVersion(versionToSelect);
-      editTitle(
-        { ...title, selectedVersion: versionToSelect.id },
-        title.id,
-        tier.id
-      );
     } else if (
       selectedVersion &&
       versionList[0] &&
