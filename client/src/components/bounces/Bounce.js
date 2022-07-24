@@ -63,7 +63,10 @@ const Bounce = ({
 
   useEffect(() => {
     if (bounceList && bounceList[0] && !selectedBounce) {
-      const bounceToSelect = bounceList.find((b) => b.latest);
+      let bounceToSelect = bounceList.find((b) => b.latest);
+      if (!bounceToSelect) {
+        bounceToSelect = bounceList[0];
+      }
       setSelectedBounce(bounceToSelect);
       editTitle(
         { ...title, selectedBounce: bounceToSelect.id },
