@@ -66,7 +66,7 @@ const Bounce = ({
       const bounceToSelect = bounceList.find((b) => b.latest);
       setSelectedBounce(bounceToSelect);
       editTitle(
-        { ...title, selectedBounce: bounceToSelect },
+        { ...title, selectedBounce: bounceToSelect.id },
         title.id,
         tier.id
       );

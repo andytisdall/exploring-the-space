@@ -59,7 +59,7 @@ const Version = ({
       const versionToSelect = versionList.find((v) => v.current);
       setSelectedVersion(versionToSelect);
       editTitle(
-        { ...title, selectedVersion: versionToSelect },
+        { ...title, selectedVersion: versionToSelect.id },
         title.id,
         tier.id
       );
