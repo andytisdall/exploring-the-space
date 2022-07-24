@@ -57,15 +57,9 @@ test('shows the date of the selected bounce', async () => {
 });
 
 test('changes the selected bounce', async () => {
-  render(
-    <Bounce
-      bounces={[mockBounce, mockBounce2]}
-      title={title}
-      version={mockVersion}
-      song={song}
-    />,
-    { wrapper }
-  );
+  render(<Bounce title={title} version={mockVersion} song={song} />, {
+    wrapper,
+  });
   const date = await screen.findByRole('button', {
     name: moment.utc(mockBounce.date).format('MM/DD/yy'),
   });

@@ -61,23 +61,6 @@ const Title = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getTime, tier, titles, title, versions]);
 
-  // useEffect(() => {
-  //   if (title.selectedVersion?.current) {
-  //     editTitle(
-  //       { title: title.title, selectedVersion: title.selectedVersion.id },
-  //       title.id,
-  //       tier.id
-  //     );
-  //   }
-  // }, [
-  //   title.selectedBounce,
-  //   title.selectedVersion,
-  //   tier.id,
-  //   editTitle,
-  //   title.id,
-  //   title.title,
-  // ]);
-
   useEffect(() => {
     if (title.selectedBounce?.latest && title.selectedVersion?.current) {
       findLatest(title.id, title.selectedBounce);
@@ -99,43 +82,6 @@ const Title = ({
       document.removeEventListener('mousedown', bodyClick, { capture: true });
     };
   }, [showChords]);
-
-  // useEffect(() => {
-  //   fetchVersions(title.id);
-  // }, [fetchVersions, title.id]);
-
-  // useEffect(() => {
-  //   setVersionList(title.versions.map((id) => versions[id]));
-  //   // console.log('set version list');
-  // }, [versions, title.versions]);
-
-  // useEffect(() => {
-  //   if (versionList && versionList[0]) {
-  //     let versionToSelect;
-  //     const selectedVersion = title.selectedVersion;
-  //     const versionIds = versionList.map((v) => v.id);
-
-  //     if (!selectedVersion || !versionIds.includes(selectedVersion.id)) {
-  //       versionToSelect = versionList.find((v) => v.current);
-  //       selectVersion(versionToSelect, title.id);
-  //     } else if (selectedVersion) {
-  //       if (!versions[selectedVersion.id]) {
-  //         versionToSelect = null;
-  //       } else {
-  //         versionToSelect = versions[selectedVersion.id];
-  //       }
-  //       selectVersion(versionToSelect, title.id);
-  //     }
-  //   }
-  // }, [versionList, selectVersion, versions, title.selectedVersion, title.id]);
-
-  // useEffect(() => {
-  //   // console.log(title)
-  //   if (title.selectedVersion && title.selectedVersion.id) {
-  //     fetchBounces(title.selectedVersion.id);
-  //     // console.log('fetch bounces');
-  //   }
-  // }, [title.selectedVersion, fetchBounces]);
 
   useEffect(() => {
     if (title.selectedVersion) {
@@ -173,10 +119,6 @@ const Title = ({
       }
     }
   }, [bounceList, findLatest, selectBounce, title.id, title.selectedBounce]);
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [title, titles, getTime, setSong, tier]);
 
   const renderPlayContainer = () => {
     if (song) {

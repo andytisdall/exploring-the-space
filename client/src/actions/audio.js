@@ -90,8 +90,8 @@ export const nextSong = () => (dispatch, getState) => {
     const song = allTitles[currentIndex + 1];
 
     if (song && song.selectedVersion && song.selectedBounce) {
-      const version = getState().versions[song.selectedVersion.id];
-      const bounce = getState().bounces[song.selectedBounce.id];
+      const version = song.selectedVersion;
+      const bounce = song.selectedBounce;
 
       const songObject = {
         title: song,
