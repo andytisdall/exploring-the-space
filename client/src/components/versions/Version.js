@@ -75,14 +75,7 @@ const Version = ({
 
   const renderBounces = () => {
     if (selectedVersion) {
-      return (
-        <Bounce
-          tier={tier}
-          title={title}
-          version={selectedVersion}
-          song={song}
-        />
-      );
+      return <Bounce title={title} version={selectedVersion} song={song} />;
     }
   };
 
@@ -172,29 +165,25 @@ const Version = ({
     return `${v.name}`;
   };
 
-  if (versionList.length) {
-    return (
-      <>
-        <DetailBox
-          selectedItem={selectedVersion}
-          itemType="Version"
-          itemList={itemList}
-          displayItem={displayVersion}
-          setSelected={setSelectedVersion}
-          renderAddButton={renderAddButton}
-          renderEditButton={renderEditButton}
-          renderDeleteButton={renderDeleteButton}
-        />
-        <div className="detail-box-between">
-          {/* {renderRecordLink()} */}
-          {renderArrow()}
-        </div>
-        {renderBounces()}
-      </>
-    );
-  } else {
-    return <div>!</div>;
-  }
+  return (
+    <>
+      <DetailBox
+        selectedItem={selectedVersion}
+        itemType="Version"
+        itemList={itemList}
+        displayItem={displayVersion}
+        setSelected={setSelectedVersion}
+        renderAddButton={renderAddButton}
+        renderEditButton={renderEditButton}
+        renderDeleteButton={renderDeleteButton}
+      />
+      <div className="detail-box-between">
+        {/* {renderRecordLink()} */}
+        {renderArrow()}
+      </div>
+      {renderBounces()}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => {

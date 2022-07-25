@@ -147,7 +147,7 @@ export const prevSong = () => (dispatch, getState) => {
   const { parent, currentSong } = state.audio;
   if (parent.trackList) {
     let allTitles;
-    if (parent.orderBy === 'date') {
+    if (parent.orderBy === 'date' || !parent.orderyBy) {
       allTitles = parent.trackList
         .map((id) => state.titles[id])
         .sort((a, b) => {
