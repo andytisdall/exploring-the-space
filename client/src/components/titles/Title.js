@@ -17,13 +17,10 @@ const Title = ({
   tier,
   title,
   titles,
-
   bounces,
-
   authorized,
   band,
   playlists,
-
   selectBounce,
   createPlaylistSong,
   editTitle,
@@ -43,7 +40,6 @@ const Title = ({
   useEffect(() => {
     // console.log('a');
     if (title.selectedBounce && title.selectedVersion) {
-      // console.log(title.selectedBounce);
       setSong({
         parent: tier,
         title: titles[title.id],
@@ -57,7 +53,7 @@ const Title = ({
           findLatest(title, null);
         }
       }
-    } else if (song && (!title.selectedVersion || !title.selectedBounce)) {
+    } else if (song && !title.selectedVersion) {
       setSong(null);
       findLatest(title, null);
     }

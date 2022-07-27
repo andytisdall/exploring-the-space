@@ -67,10 +67,11 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
   parentVersion.songs.push(newBounce);
   if (latest) {
     const title = await Title.findById(titleId);
-    if (title.selectedVersion?.id === parentVersion.id) {
+    if (title.selectedVersion.toString() === parentVersion.id) {
       title.selectedBounce = newBounce.id;
     }
     await title.save();
+    // console.log(title);
   }
 
   // Finally save new bounce object

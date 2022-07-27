@@ -51,7 +51,7 @@ router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
     if (thisVersion.songs.length) {
       const ids = thisVersion.songs.map(mongoose.Types.ObjectId);
       const bounces = await Song.find({ _id: { $in: ids } });
-      title.selectedBounce = bounces.find((b) => b.latest);
+      title.selectedBounce = bounces.find((b) => b.latest).id;
     }
     await title.save();
   }

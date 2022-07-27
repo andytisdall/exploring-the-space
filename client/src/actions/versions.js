@@ -145,6 +145,7 @@ export const deleteVersion =
             );
           } else {
             dispatch(selectVersion(null, titleId));
+            dispatch(selectBounce(null, titleId));
           }
         }
       }
