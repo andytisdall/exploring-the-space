@@ -136,7 +136,7 @@ export const nextSong = () => (dispatch, getState) => {
 
 export const prevSong = () => (dispatch, getState) => {
   const state = getState();
-  const songObject = updateQueue('next', state);
+  const songObject = updateQueue('prev', state);
   if (!songObject) {
     dispatch(initializeAudio());
   }
