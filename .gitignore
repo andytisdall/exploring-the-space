@@ -9,7 +9,7 @@ src/jwt-key.js
 .pnp.js
 .pem
 client/cert
-# client/build
+client/build
 # client/package-lock.json
 
 # user generated audio files

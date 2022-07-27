@@ -47,13 +47,21 @@ const Title = ({
         bounce: title.selectedBounce,
       });
       if (title.selectedVersion.current) {
-        if (title.selectedBounce.latest) {
-          findLatest(title, title.selectedBounce);
+        if (title.selectedBounce) {
+          if (
+            title.selectedVersion.bounces.includes(title.selectedBounce.id) &&
+            title.selectedBounce.latest
+          ) {
+            findLatest(title, title.selectedBounce);
+          }
         } else {
           findLatest(title, null);
         }
       }
-    } else if (song && !title.selectedVersion) {
+    } else if (
+      song &&
+      (!title.selectedVersion || !title.selectedVersion.bounces.length)
+    ) {
       setSong(null);
       findLatest(title, null);
     }
