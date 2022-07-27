@@ -34,7 +34,6 @@ router.patch('/titles/:id', currentUser, requireAuth, async (req, res) => {
   const { id } = req.params;
   const { title, move, currentTier, chords, selectedVersion, selectedBounce } =
     req.body;
-  console.log;
 
   const thisTitle = await Title.findById(id).populate([
     'selectedVersion, selectecBounce',

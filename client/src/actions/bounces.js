@@ -153,8 +153,8 @@ export const editBounce =
             titleId
           )
         );
+        dispatch(selectBounce(response.data, titleId));
       }
-      dispatch(selectBounce(response.data, titleId));
 
       dispatch({
         type: EDIT_BOUNCE,

@@ -28,6 +28,8 @@ test('loads everything', async () => {
 
   userEvent.click(titleName);
 
-  const versionTitle = await screen.findByText(mockVersion.name);
+  const versionTitle = await screen.findByRole('button', {
+    name: mockVersion.name,
+  });
   expect(versionTitle).toBeInTheDocument();
 });

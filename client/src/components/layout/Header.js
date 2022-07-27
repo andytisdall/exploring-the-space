@@ -7,7 +7,6 @@ import Main from './Main';
 import AudioDisplay from '../layout/AudioDisplay';
 import requireAuth from '../reusable/requireAuth';
 import { spinner } from '../reusable/Spinner';
-import Error from './Error';
 
 const Header = ({
   fetchBand,
@@ -127,7 +126,6 @@ const Header = ({
   return (
     <>
       <div className="header">
-        <Error />
         <AudioDisplay />
         {showContent()}
       </div>

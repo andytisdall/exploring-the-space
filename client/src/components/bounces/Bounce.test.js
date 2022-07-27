@@ -56,25 +56,25 @@ test('shows the date of the selected bounce', async () => {
   expect(date).toBeInTheDocument();
 });
 
-test('changes the selected bounce', async () => {
-  render(<Bounce title={title} version={mockVersion} song={song} />, {
-    wrapper,
-  });
-  const date = await screen.findByRole('button', {
-    name: moment.utc(mockBounce.date).format('MM/DD/yy'),
-  });
+// test('changes the selected bounce', async () => {
+//   render(<Bounce title={title} version={mockVersion} song={song} />, {
+//     wrapper,
+//   });
+//   const date = await screen.findByRole('button', {
+//     name: moment.utc(mockBounce.date).format('MM/DD/yy'),
+//   });
 
-  userEvent.click(date);
+//   userEvent.click(date);
 
-  const otherDate = await screen.findByText(
-    moment.utc(mockBounce2.date).format('MM/DD/yy')
-  );
-  expect(otherDate).toBeInTheDocument();
+//   const otherDate = await screen.findByText(
+//     moment.utc(mockBounce2.date).format('MM/DD/yy')
+//   );
+//   expect(otherDate).toBeInTheDocument();
 
-  userEvent.click(otherDate);
+//   userEvent.click(otherDate);
 
-  const removedDate = screen.queryByRole('button', {
-    name: moment.utc(mockBounce.date).format('MM/DD/yy'),
-  });
-  expect(removedDate).not.toBeInTheDocument();
-});
+//   const removedDate = screen.queryByRole('button', {
+//     name: moment.utc(mockBounce.date).format('MM/DD/yy'),
+//   });
+//   expect(removedDate).not.toBeInTheDocument();
+// });

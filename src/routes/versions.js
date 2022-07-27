@@ -7,6 +7,7 @@ import { currentUser } from '../middlewares/current-user.js';
 const Title = mongoose.model('Title');
 const Version = mongoose.model('Version');
 const PlaylistSong = mongoose.model('PlaylistSong');
+const Song = mongoose.model('Song');
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.post('/versions', currentUser, requireAuth, async (req, res) => {
 
   if (current) {
     parentTitle.selectedVersion = newVersion.id;
+    parentTitle.selectedBounce = null;
   }
   await parentTitle.save();
 
@@ -46,6 +48,11 @@ router.patch('/versions/:id', currentUser, requireAuth, async (req, res) => {
   if (!thisVersion.current && current) {
     const title = await Title.findById(titleId);
     title.selectedVersion = id;
+    if (thisVersion.songs.length) {
+      const ids = thisVersion.songs.map(mongoose.Types.ObjectId);
+      const bounces = await Song.find({ _id: { $in: ids } });
+      title.selectedBounce = bounces.find((b) => b.latest);
+    }
     await title.save();
   }
   thisVersion.current = current;

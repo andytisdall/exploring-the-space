@@ -51,6 +51,7 @@ const PlaylistSong = ({
         version: versions[song.version],
         bounce: bounces[song.bounce],
         position: song.position,
+        parent: playlist,
       });
     }
     if (bounces[song.bounce]) {
@@ -221,7 +222,7 @@ const PlaylistSong = ({
 
   const renderPlaylistSong = (drag = null) => {
     const current = audio.currentSong ? audio.currentSong.audio : null;
-    const parent = audio.parent ? audio.parent.id : null;
+    const parent = audio.currentSong ? audio.currentSong.parent.id : null;
 
     let currentClass = '';
 

@@ -21,8 +21,7 @@ const audioReducer = (state = initialState, action) => {
     case PAUSE_AUDIO:
       return { ...state, play: false, pause: true };
     case QUEUE_SONGS:
-      const { song, parent } = action.payload;
-      return { ...state, currentSong: song, play: true, parent };
+      return { ...state, currentSong: action.payload, play: true };
     case NEXT_SONG:
       return { ...state, currentSong: action.payload };
     case DELETE_BOUNCE:

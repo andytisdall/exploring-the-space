@@ -8,7 +8,7 @@ import {
 } from './types';
 import { errorHandler } from './errors';
 import greenhouse from '../apis/greenhouse';
-import { selectVersion } from './titles';
+import { selectVersion, selectBounce } from './titles';
 import { deleteBounce } from '.';
 
 export const fetchVersions = (titleId) => async (dispatch) => {
@@ -52,6 +52,7 @@ export const createVersion =
           );
         }
         dispatch(selectVersion(response.data, titleId));
+        dispatch(selectBounce(null, titleId));
       }
 
       // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });
@@ -92,6 +93,15 @@ export const editVersion =
           )
         );
         dispatch(selectVersion(response.data, titleId));
+        if (response.data.bounces.length) {
+          const bounces = response.data.bounces.map(
+            (id) => getState().bounces[id]
+          );
+          const bounce = bounces.find((b) => b.latest);
+          dispatch(selectBounce(bounce, titleId));
+        } else {
+          dispatch(selectBounce(null, titleId));
+        }
       }
 
       // dispatch({ type: SELECT_VERSION, payload: { titleId, version: response.data } });

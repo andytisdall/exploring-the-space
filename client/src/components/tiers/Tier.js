@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 // import { Sortable } from '@shopify/draggable';
@@ -29,16 +29,25 @@ const Tier = ({
 }) => {
   const [expand, setExpand] = useState(false);
   const [titlesToRender, setTitlesToRender] = useState(null);
-  const [times, setTimes] = useState({});
-
-  const orderedTitles = useRef({});
+  const [orderedTitles, setOrderedTitles] = useState({});
 
   useEffect(() => {
     fetchTitles(tier.id);
   }, [fetchTitles, setOrder, tier.id]);
 
   useEffect(() => {
-    setTitlesToRender(tier.trackList.map((id) => titles[id]));
+    const trackListTitles = tier.trackList
+      .map((id) => titles[id])
+      .filter((title) => title);
+
+    setTitlesToRender(trackListTitles);
+
+    trackListTitles.map((t) => {
+      if (t?.selectedBounce?.latest && t.selectedVersion?.current) {
+        findLatest(t, t.selectedBounce);
+      }
+      return null;
+    });
   }, [titles, tier.trackList]);
 
   // useEffect(() => {
@@ -60,35 +69,60 @@ const Tier = ({
   //   }
   // }, [expand]);
 
-  const findLatest = (titleId, bounce) => {
-    orderedTitles.current[titleId] = new Date(bounce.date);
+  const findLatest = (title, bounce) => {
+    setOrderedTitles((state) => {
+      if (bounce) {
+        return {
+          ...state,
+          [title.id]: new Date(bounce.date),
+        };
+      } else {
+        return {
+          ...state,
+          [title.id]: null,
+        };
+      }
+    });
   };
 
-  const renderTitles = () => {
-    const titleList = [...titlesToRender];
+  const orderTitles = useCallback(
+    (t) => {
+      const titleList = [...t];
 
-    if (!tier.orderBy || tier.orderBy === 'date') {
-      titleList.sort((a, b) => {
-        if (orderedTitles.current[a.id] && orderedTitles.current[b.id]) {
-          if (orderedTitles.current[a.id] > orderedTitles.current[b.id]) {
+      if (!tier.orderBy || tier.orderBy === 'date') {
+        titleList.sort((a, b) => {
+          if (orderedTitles[a.id] && orderedTitles[b.id]) {
+            if (orderedTitles[a.id] > orderedTitles[b.id]) {
+              return -1;
+            } else {
+              return 1;
+            }
+          } else if (orderedTitles[a.id]) {
+            return -1;
+          } else if (orderedTitles[b.id]) {
+            return 1;
+          } else if (a.title < b.title) {
             return -1;
           } else {
             return 1;
           }
-        } else if (orderedTitles.current[a.id]) {
-          return -1;
-        } else if (orderedTitles.current[b.id]) {
-          return 1;
-        }
-        return -1;
-      });
-    }
+        });
+      }
 
-    if (tier.orderBy === 'name') {
-      titleList.sort((a, b) => {
-        return a.title < b.title ? -1 : 1;
-      });
-    }
+      if (tier.orderBy === 'name') {
+        titleList.sort((a, b) => {
+          return a.title < b.title ? -1 : 1;
+        });
+      }
+
+      return titleList;
+    },
+    [orderedTitles, tier.orderBy]
+  );
+
+  const renderTitles = () => {
+    const titleList = orderTitles(titlesToRender);
+    // console.log(titleList.map((t) => t.selectedBounce?.date));
 
     return titleList.map((title) => {
       if (title) {
@@ -97,7 +131,6 @@ const Tier = ({
             title={title}
             tier={tier}
             key={title.id}
-            getTime={getTime}
             findLatest={findLatest}
           />
         );
@@ -168,25 +201,21 @@ const Tier = ({
   };
 
   const renderTotalTime = () => {
-    const total = Object.values(times).reduce((prev, cur) => {
-      return prev + cur;
-    }, 0);
+    if (titlesToRender) {
+      const total = titlesToRender.reduce((prev, cur) => {
+        return prev + cur.selectedBounce?.duration;
+      }, 0);
 
-    if (!total) {
-      return null;
-    }
+      if (!total) {
+        return null;
+      }
 
-    const minutes = Math.floor(total / 60);
-    const seconds =
-      Math.floor(total % 60) < 10
-        ? '0' + Math.floor(total % 60)
-        : Math.floor(total % 60);
-    return <div>{`${minutes}:${seconds}`}</div>;
-  };
-
-  const getTime = (track) => {
-    if (times[track.id] !== track.duration) {
-      setTimes({ ...times, [track.id]: track.duration });
+      const minutes = Math.floor(total / 60);
+      const seconds =
+        Math.floor(total % 60) < 10
+          ? '0' + Math.floor(total % 60)
+          : Math.floor(total % 60);
+      return <div>{`${minutes}:${seconds}`}</div>;
     }
   };
 

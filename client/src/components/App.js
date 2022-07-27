@@ -11,6 +11,7 @@ import Help from './pages/Help';
 // import Recorder from './recording/Recorder';
 // import Editor from './recording/Editor';
 import { fetchUser } from '../actions';
+import Error from './layout/Error';
 
 import history from '../history';
 
@@ -24,6 +25,7 @@ const App = ({ signedIn, fetchUser, error, user }) => {
   return (
     <>
       <div className="container">
+        <Error />
         <Router history={history}>
           <Switch>
             <Route path="/" exact component={Home} />

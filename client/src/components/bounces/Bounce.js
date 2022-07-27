@@ -29,8 +29,6 @@ const Bounce = ({
   song,
   queueSongs,
   fetchBounces,
-  editTitle,
-  tier,
 }) => {
   const [selectedBounce, setSelectedBounce] = useState(title.selectedBounce);
   const [uploadActive, setUploadActive] = useState(false);
@@ -62,7 +60,11 @@ const Bounce = ({
   }, [bounces, version.bounces]);
 
   useEffect(() => {
-    if (bounceList && bounceList[0] && !selectedBounce) {
+    if (
+      bounceList &&
+      bounceList[0] &&
+      (!selectedBounce || !version.bounces.includes(selectedBounce.id))
+    ) {
       let bounceToSelect = bounceList.find((b) => b.latest);
       if (!bounceToSelect) {
         bounceToSelect = bounceList[0];

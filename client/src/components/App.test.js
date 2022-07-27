@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import moment from 'moment';
 
@@ -196,67 +196,66 @@ it('creates a version', async () => {
   const noSubmitButton = screen.queryByRole('button', { name: 'OK' });
   expect(noSubmitButton).not.toBeInTheDocument();
 
-  const newVersionName = await screen.findByRole('button', { name: nameValue });
-  expect(newVersionName).toBeInTheDocument();
+  let newVersionName;
+  await waitFor(() => {
+    newVersionName = screen.getByRole('button', { name: nameValue });
+    expect(newVersionName).toBeInTheDocument();
+  });
   const newVersionNotes = screen.getByText(notesValue);
   expect(newVersionNotes).toBeInTheDocument();
 
   const noBounces = screen.getByText(/no bounces for this version/i);
   expect(noBounces).toBeInTheDocument();
-
-  userEvent.click(newVersionName);
-  const oldVersion = await screen.findByText(mockVersion.name);
-  expect(oldVersion).toBeInTheDocument();
 });
 
-// it('uploads a bounce', async () => {
-//   render(<App />, { wrapper });
+it('uploads a bounce', async () => {
+  render(<App />, { wrapper });
 
-//   // band page
-//   const firstTier = await screen.findByRole('heading', { name: mockTier.name });
-//   expect(firstTier).toBeInTheDocument();
+  // band page
+  const firstTier = await screen.findByRole('heading', { name: mockTier.name });
+  expect(firstTier).toBeInTheDocument();
 
-//   // open title container
-//   userEvent.click(firstTier);
-//   const firstTitle = await screen.findByRole('heading', {
-//     name: mockTitle.title,
-//   });
-//   expect(firstTitle).toBeInTheDocument();
-//   userEvent.click(firstTitle);
+  // open title container
+  userEvent.click(firstTier);
+  const firstTitle = await screen.findByRole('heading', {
+    name: mockTitle.title,
+  });
+  expect(firstTitle).toBeInTheDocument();
+  userEvent.click(firstTitle);
 
-//   const addButton = await screen.findByAltText(/add a bounce/i);
-//   userEvent.click(addButton);
+  const addButton = await screen.findByAltText(/add a bounce/i);
+  userEvent.click(addButton);
 
-//   const dateInput = await screen.findByLabelText('Date:');
-//   const dateValue = '2000-01-01';
-//   fireEvent.change(dateInput, { target: { value: dateValue } });
+  const dateInput = await screen.findByLabelText('Date:');
+  const dateValue = '2000-01-01';
+  fireEvent.change(dateInput, { target: { value: dateValue } });
 
-//   const fileInput = screen.getByLabelText('File:');
-//   const mockFile = new File(['wf48h4wf894j'], 'mock.mp3', {
-//     type: 'audio/mpeg',
-//   });
-//   userEvent.upload(fileInput, mockFile);
+  const fileInput = screen.getByLabelText('File:');
+  const mockFile = new File(['wf48h4wf894j'], 'mock.mp3', {
+    type: 'audio/mpeg',
+  });
+  userEvent.upload(fileInput, mockFile);
 
-//   const submitButton = screen.getByRole('button', { name: 'OK' });
-//   userEvent.click(submitButton);
+  const submitButton = screen.getByRole('button', { name: 'OK' });
+  userEvent.click(submitButton);
 
-//   const addBoxTitle = screen.queryByRole('heading', {
-//     level: 3,
-//     name: /add a bounce/i,
-//   });
-//   expect(addBoxTitle).not.toBeInTheDocument();
+  const addBoxTitle = screen.queryByRole('heading', {
+    level: 3,
+    name: /add a bounce/i,
+  });
+  expect(addBoxTitle).not.toBeInTheDocument();
 
-//   const newDate = await screen.findByRole('button', {
-//     name: moment.utc(dateValue).format('MM/DD/yy'),
-//   });
-//   expect(newDate).toBeInTheDocument();
+  const newDate = await screen.findByRole('button', {
+    name: moment.utc(dateValue).format('MM/DD/yy'),
+  });
+  expect(newDate).toBeInTheDocument();
 
-//   const bounceCount = screen.getByRole('heading', {
-//     level: 5,
-//     name: /bounces/i,
-//   });
-//   expect(bounceCount).toHaveTextContent('2 Bounces');
-// });
+  const bounceCount = screen.getByRole('heading', {
+    level: 5,
+    name: /bounces/i,
+  });
+  expect(bounceCount).toHaveTextContent('2 Bounces');
+});
 
 test('loads everything while not signed in', async () => {
   render(<App />, { wrapper });

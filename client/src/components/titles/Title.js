@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import Version from '../versions/Version';
 import AddButton from '../reusable/AddButton';
 import {
-  fetchVersions,
-  fetchBounces,
   selectBounce,
-  selectVersion,
   createPlaylistSong,
   editTitle,
   deleteTitle,
@@ -20,19 +17,17 @@ const Title = ({
   tier,
   title,
   titles,
-  fetchVersions,
-  versions,
+
   bounces,
-  fetchBounces,
+
   authorized,
   band,
   playlists,
-  selectVersion,
+
   selectBounce,
   createPlaylistSong,
   editTitle,
   deleteTitle,
-  getTime,
   audio,
   findLatest,
   tiers,
@@ -46,26 +41,40 @@ const Title = ({
   const chordButtonRef = useRef();
 
   useEffect(() => {
+    // console.log('a');
     if (title.selectedBounce && title.selectedVersion) {
+      // console.log(title.selectedBounce);
       setSong({
-        tier,
+        parent: tier,
         title: titles[title.id],
         version: title.selectedVersion,
         bounce: title.selectedBounce,
       });
-      getTime({ id: title.id, duration: title.selectedBounce.duration });
-    } else if (song && !title.selectedBounce) {
+      if (title.selectedVersion.current) {
+        if (title.selectedBounce.latest) {
+          findLatest(title, title.selectedBounce);
+        } else {
+          findLatest(title, null);
+        }
+      }
+    } else if (song && (!title.selectedVersion || !title.selectedBounce)) {
       setSong(null);
-      getTime({ id: title.id, duration: 0 });
+      findLatest(title, null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getTime, tier, titles, title, versions]);
+  }, [title.selectedBounce, title.selectedVersion]);
 
   useEffect(() => {
-    if (title.selectedBounce?.latest && title.selectedVersion?.current) {
-      findLatest(title.id, title.selectedBounce);
+    // console.log('c');
+    if (title.selectedVersion) {
+      if (title.selectedVersion.bounces[0]) {
+        setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
+      } else if (title.selectedBounce !== null) {
+        // console.log('set bounce list null');
+        setBounceList(null);
+        selectBounce(null, title.id);
+      }
     }
-  }, [title.selectedBounce, title.id, findLatest, title.selectedVersion]);
+  }, [selectBounce, title.selectedVersion, bounces]);
 
   useEffect(() => {
     const bodyClick = (e) => {
@@ -84,24 +93,8 @@ const Title = ({
   }, [showChords]);
 
   useEffect(() => {
-    if (title.selectedVersion) {
-      if (title.selectedVersion.bounces[0]) {
-        setBounceList(title.selectedVersion.bounces.map((id) => bounces[id]));
-      } else if (title.selectedBounce !== null) {
-        // console.log('set bounce list null');
-        setBounceList(null);
-        selectBounce(null, title.id);
-      }
-    }
-  }, [
-    bounces,
-    selectBounce,
-    title.selectedBounce,
-    title.selectedVersion,
-    title.id,
-  ]);
-
-  useEffect(() => {
+    // console.log('d');
+    // console.log(bounceList);
     if (bounceList && bounceList[0]) {
       // set the title.selected bounce if the bounce list has been modified and no longer matches the current title.selected bounce
 
@@ -109,7 +102,6 @@ const Title = ({
 
       if (!title.selectedBounce || !bounceList.includes(title.selectedBounce)) {
         // if not found that means the selected version has changed so just select the latest bounce
-
         bounceToSelect = bounceList.find((b) => b.latest);
       }
 
@@ -118,7 +110,7 @@ const Title = ({
         // console.log('select bounce');
       }
     }
-  }, [bounceList, findLatest, selectBounce, title.id, title.selectedBounce]);
+  }, [bounceList, selectBounce]);
 
   const renderPlayContainer = () => {
     if (song) {
@@ -262,7 +254,7 @@ const Title = ({
   const arrow = expand ? 'down-arrow' : '';
 
   const current = audio.currentSong ? audio.currentSong.audio : null;
-  const parent = audio.parent ? audio.parent.id : null;
+  const parent = audio.currentSong ? audio.currentSong.parent.id : null;
 
   let currentClass = '';
 
@@ -313,9 +305,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  fetchVersions,
-  fetchBounces,
-  selectVersion,
   selectBounce,
   createPlaylistSong,
   editTitle,

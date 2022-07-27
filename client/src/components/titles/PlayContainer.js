@@ -2,15 +2,10 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { queueSongs, queuePlaylistSongs, playAudio } from '../../actions';
+import { queueSongs, playAudio } from '../../actions';
 import { spinner } from '../reusable/Spinner';
 
-const PlayContainer = ({
-  song,
-  queueSongs,
-  parentType,
-  queuePlaylistSongs,
-}) => {
+const PlayContainer = ({ song, queueSongs, parentType }) => {
   const [loaded, setLoaded] = useState(false);
 
   const displayDate = (date) => {
@@ -28,11 +23,7 @@ const PlayContainer = ({
 
   const onPlay = (e) => {
     e.stopPropagation();
-    if (parentType === 'tier') {
-      queueSongs(song);
-    } else if (parentType === 'playlist') {
-      queuePlaylistSongs(song);
-    }
+    queueSongs(song);
   };
 
   let baseUrl;
@@ -74,6 +65,4 @@ const PlayContainer = ({
   );
 };
 
-export default connect(null, { queueSongs, queuePlaylistSongs, playAudio })(
-  PlayContainer
-);
+export default connect(null, { queueSongs, playAudio })(PlayContainer);

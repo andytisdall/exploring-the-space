@@ -175,7 +175,7 @@ class AudioDisplay extends React.Component {
         <div className="playbar">
           <div className="playbar-header">
             <div className="playbar-title">
-              <p>{this.props.song.title.title}</p>
+              <p>{this.props.song.title}</p>
             </div>
             <div className="big-play-container">
               <img

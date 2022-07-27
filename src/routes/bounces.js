@@ -67,7 +67,9 @@ router.post('/bounces', currentUser, requireAuth, async (req, res) => {
   parentVersion.songs.push(newBounce);
   if (latest) {
     const title = await Title.findById(titleId);
-    title.selectedBounce = newBounce.id;
+    if (title.selectedVersion?.id === parentVersion.id) {
+      title.selectedBounce = newBounce.id;
+    }
     await title.save();
   }
 
@@ -102,7 +104,9 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
   thisBounce.date = date;
   if (latest && !thisBounce.latest) {
     const title = await Title.findById(titleId);
-    title.selectedBounce = id;
+    if (title?.selectedVersion?.songs.includes(id)) {
+      title.selectedBounce = id;
+    }
     await title.save();
   }
   thisBounce.latest = latest;
@@ -137,7 +141,6 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
 
 router.post('/bounces/delete', currentUser, requireAuth, async (req, res) => {
   const { bounceId, versionId } = req.body;
-  console.log(req.body);
 
   const thisBounce = await Song.findById(bounceId);
   const mp3Id = new mongodb.ObjectID(thisBounce.mp3);

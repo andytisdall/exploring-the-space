@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import {
-  fetchBounces,
   selectVersion,
   createVersion,
   editVersion,
   deleteVersion,
   fetchVersions,
-  editTitle,
 } from '../../actions';
 import Bounce from '../bounces/Bounce';
 import AddVersion from './AddVersion';
@@ -20,8 +18,6 @@ import DetailBox from '../reusable/DetailBox';
 
 const Version = ({
   versions,
-  bounces,
-  fetchBounces,
   selectVersion,
   title,
   authorized,
@@ -29,8 +25,6 @@ const Version = ({
   deleteVersion,
   song,
   fetchVersions,
-  tier,
-  editTitle,
 }) => {
   const [selectedVersion, setSelectedVersion] = useState(title.selectedVersion);
   const [versionList, setVersionList] = useState([]);
@@ -55,9 +49,9 @@ const Version = ({
   }, [selectedVersion, selectVersion]);
 
   useEffect(() => {
+    // console.log('b');
     if (versionList[0] && !selectedVersion) {
-      const versionToSelect = versionList.find((v) => v.current);
-      setSelectedVersion(versionToSelect);
+      setSelectedVersion(versionList.find((v) => v.current));
     } else if (
       selectedVersion &&
       versionList[0] &&
@@ -188,18 +182,15 @@ const Version = ({
 
 const mapStateToProps = (state) => {
   return {
-    bounces: state.bounces,
     band: state.bands.currentBand,
     versions: state.versions,
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchBounces,
   selectVersion,
   createVersion,
   editVersion,
   deleteVersion,
   fetchVersions,
-  editTitle,
 })(requireAuth(Version));
