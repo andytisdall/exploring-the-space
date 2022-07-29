@@ -83,7 +83,7 @@ const Bounce = ({
       //   tier.id
       // );
     }
-  }, [bounceList, selectedBounce]);
+  }, [bounceList]);
 
   const displayDate = (date) => {
     return moment.utc(date).format('MM/DD/yy');

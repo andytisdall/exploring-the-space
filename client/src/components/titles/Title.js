@@ -5,6 +5,7 @@ import Version from '../versions/Version';
 import AddButton from '../reusable/AddButton';
 import {
   selectBounce,
+  selectVersion,
   createPlaylistSong,
   editTitle,
   deleteTitle,
@@ -28,6 +29,7 @@ const Title = ({
   audio,
   findLatest,
   tiers,
+  selectVersion,
 }) => {
   const [expand, setExpand] = useState(false);
   // const [versionList, setVersionList] = useState(null);
@@ -63,7 +65,9 @@ const Title = ({
       (!title.selectedVersion || !title.selectedVersion.bounces.length)
     ) {
       setSong(null);
-      findLatest(title, null);
+      if (title.selectedVersion.current) {
+        findLatest(title, null);
+      }
     }
   }, [title.selectedBounce, title.selectedVersion]);
 
@@ -110,7 +114,6 @@ const Title = ({
 
       if (bounceToSelect) {
         selectBounce(bounceToSelect, title.id);
-        // console.log('select bounce');
       }
     }
   }, [bounceList, selectBounce]);
@@ -312,4 +315,5 @@ export default connect(mapStateToProps, {
   createPlaylistSong,
   editTitle,
   deleteTitle,
+  selectVersion,
 })(requireAuth(Title));
