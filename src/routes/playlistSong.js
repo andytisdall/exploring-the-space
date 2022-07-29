@@ -5,21 +5,21 @@ import { Playlist, PlaylistSong } from '../models/models.js';
 
 const router = express.Router();
 
-router.get('/playlistsongs/:playlistId/:option', async (req, res) => {
-  if (req.params.option === 'pop') {
-    const playlist = await Playlist.findById(req.params.playlistId).populate({
-      path: 'songs',
-      populate: ['version', 'bounce'],
-    });
-
-    return res.status(200).send(playlist.songs);
-  }
-
+router.get('/playlistsongs/:playlistId', async (req, res) => {
   const playlist = await Playlist.findById(req.params.playlistId).populate(
     'songs'
   );
 
   res.status(200).send(playlist.songs);
+});
+
+router.get('/playlistsongs/populate/:playlistId', async (req, res) => {
+  const playlist = await Playlist.findById(req.params.playlistId).populate({
+    path: 'songs',
+    populate: ['version', 'bounce'],
+  });
+
+  return res.status(200).send(playlist.songs);
 });
 
 router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
