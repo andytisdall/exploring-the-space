@@ -98,7 +98,6 @@ const Title = ({
 
   useEffect(() => {
     // console.log('d');
-    // console.log(bounceList);
     if (bounceList && bounceList[0]) {
       // set the title.selected bounce if the bounce list has been modified and no longer matches the current title.selected bounce
 

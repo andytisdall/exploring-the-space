@@ -50,25 +50,6 @@ const Tier = ({
     });
   }, [titles, tier.trackList]);
 
-  // useEffect(() => {
-  //   if (expand) {
-  //     const sortable = new Sortable(
-  //       document.querySelectorAll('.title-container'),
-  //       {
-  //         draggable: '.title-margin',
-  //         classes: {
-  //           'draggable:over': ['empty-title'],
-  //           mirror: ['hidden'],
-  //           'source:dragging': ['title-enlarged'],
-  //         },
-  //       }
-  //     );
-  //     sortable.on('drag:over', (e) => {
-  //       console.log(e.over);
-  //     });
-  //   }
-  // }, [expand]);
-
   const findLatest = (title, bounce) => {
     setOrderedTitles((state) => {
       if (bounce) {
