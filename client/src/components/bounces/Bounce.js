@@ -46,6 +46,7 @@ const Bounce = ({
     ) {
       selectBounce(selectedBounce, title.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBounce, selectBounce, title.id]);
 
   useEffect(() => {
@@ -53,6 +54,7 @@ const Bounce = ({
       setSelectedBounce(title.selectedBounce);
       setUploadActive(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, title.selectedBounce]);
 
   useEffect(() => {
@@ -83,6 +85,7 @@ const Bounce = ({
       //   tier.id
       // );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bounceList]);
 
   const displayDate = (date) => {

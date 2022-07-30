@@ -10,7 +10,7 @@ router.get('/playlistsongs/:playlistId', async (req, res) => {
     'songs'
   );
 
-  res.status(200).send(playlist.songs);
+  return res.status(200).send(playlist.songs);
 });
 
 router.get('/playlistsongs/populate/:playlistId', async (req, res) => {

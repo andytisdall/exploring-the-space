@@ -46,6 +46,7 @@ const Version = ({
     ) {
       selectVersion(selectedVersion, title.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVersion, selectVersion]);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const Version = ({
     if (selectedVersion !== title.selectedVersion) {
       setSelectedVersion(title.selectedVersion);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title.selectedVersion]);
 
   const renderBounces = () => {

@@ -69,6 +69,7 @@ const Title = ({
         findLatest(title, null);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title.selectedBounce, title.selectedVersion]);
 
   useEffect(() => {
@@ -82,6 +83,7 @@ const Title = ({
         selectBounce(null, title.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectBounce, title.selectedVersion, bounces]);
 
   useEffect(() => {
@@ -116,6 +118,7 @@ const Title = ({
         selectBounce(bounceToSelect, title.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bounceList, selectBounce]);
 
   const renderPlayContainer = () => {

@@ -8,7 +8,7 @@ import {
 } from '../actions/types';
 import _ from 'lodash';
 
-export default (state = {}, action) => {
+const versionReducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_VERSIONS:
       return { ...state, ..._.mapKeys(action.payload, 'id') };
@@ -32,7 +32,10 @@ export default (state = {}, action) => {
         deleteFromVersion.bounces = newBounceList;
         return { ...state, [deleteFromVersion.id]: deleteFromVersion };
       }
+      return state;
     default:
       return state;
   }
 };
+
+export default versionReducer;

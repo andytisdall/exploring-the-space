@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Draggable } from 'react-beautiful-dnd';
 // import { Sortable } from '@shopify/draggable';
