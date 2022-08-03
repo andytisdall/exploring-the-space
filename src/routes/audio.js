@@ -23,6 +23,23 @@ router.get('/audio/:id', async (req, res) => {
 
   // fix so that safari can request ranges of the file
 
+  if (!req.headers.range) {
+    res.set({
+      'Accept-Ranges': 'bytes',
+      'Content-Length': thisSong.size,
+      'Content-Type': 'audio/mpeg',
+      'Content-Range': 'bytes 0-' + thisSong.size - 1 + '/' + thisSong.size,
+    });
+
+    const stream = bucket.openDownloadStream(mp3Id);
+
+    stream.on('error', (err) => {
+      throw new Error('Could not find mp3');
+    });
+
+    return stream.pipe(res);
+  }
+
   const parts = req.headers.range.replace(/bytes=/, '').split('-');
   const partialstart = parts[0];
   const partialend = parts[1];
