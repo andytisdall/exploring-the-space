@@ -93,7 +93,8 @@ export const createBounce =
             editBounce(
               _.pick(oldLatest, 'date', 'comments', 'latest'),
               oldLatest.id,
-              versionId
+              versionId,
+              titleId
             )
           );
         }
@@ -189,7 +190,8 @@ export const deleteBounce =
               editBounce(
                 _.pick(newLatest, 'date', 'comments', 'latest'),
                 newLatest.id,
-                versionId
+                versionId,
+                titleId
               )
             );
           } else {
