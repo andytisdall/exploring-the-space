@@ -33,7 +33,7 @@ export const mockVersion = {
   name: 'Pervy Version',
   current: true,
   notes: 'These notes of mine',
-  bounces: ['1'],
+  bounces: ['1', '2'],
 };
 
 export const mockVersion2 = {

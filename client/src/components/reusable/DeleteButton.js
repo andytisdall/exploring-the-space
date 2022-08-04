@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 
-const DeleteButton = ({ onSubmit, displayName }) => {
+const DeleteButton = ({ onSubmit, displayName, dataId }) => {
   const [visible, setVisible] = useState(false);
 
   const renderContent = () => {
@@ -45,6 +45,8 @@ const DeleteButton = ({ onSubmit, displayName }) => {
     setVisible(true);
   };
 
+  const testId = dataId ? `delete-${dataId}` : '';
+
   return (
     <div>
       <img
@@ -52,6 +54,7 @@ const DeleteButton = ({ onSubmit, displayName }) => {
         className="delete"
         onClick={onClick}
         alt="delete"
+        data-testid={testId}
       />
       {visible && showModal()}
     </div>

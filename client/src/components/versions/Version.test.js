@@ -1,9 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import moment from 'moment';
 
-import Root from '../root';
-import App from './App';
+import Root from '../../root';
+import App from '../App';
 import {
   mockBand,
   mockTier,
@@ -13,13 +12,14 @@ import {
   mockBounce,
   mockPlaylist,
   mockUser,
-} from '../mocks/data';
+} from '../../mocks/data';
 
 let wrapper = ({ children }) => {
   return <Root initialState={{ auth: { isSignedIn: true } }}>{children}</Root>;
 };
 
 beforeAll(async () => {
+  render(<App />, { wrapper });
   const band = await screen.findByRole('heading', {
     name: mockBand.name,
   });

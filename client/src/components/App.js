@@ -24,6 +24,7 @@ const App = ({ signedIn, fetchUser, error, user }) => {
 
   return (
     <>
+      <div id="modal"></div>
       <div className="container">
         <Error />
         <Router history={history}>

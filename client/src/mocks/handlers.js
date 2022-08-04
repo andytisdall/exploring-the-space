@@ -2,6 +2,7 @@ import { rest } from 'msw';
 import {
   mockBand,
   mockBounce,
+  mockBounce2,
   mockBounce3,
   mockPlaylist,
   mockPlaylistSong,
@@ -20,7 +21,7 @@ export const handlers = [
     return res(ctx.json([mockVersion]));
   }),
   rest.get('http://localhost:3001/api/bounces/:id', (req, res, ctx) => {
-    return res(ctx.json([mockBounce]));
+    return res(ctx.json([mockBounce, mockBounce2]));
   }),
   rest.get('http://localhost:3001/api/playlists/:id', (req, res, ctx) => {
     return res(ctx.json([mockPlaylist]));
@@ -58,5 +59,8 @@ export const handlers = [
     } else if (req.body.selectedBounce) {
       return res(ctx.json({ ...mockTitle, selectedBounce: mockBounce3 }));
     }
+  }),
+  rest.post('http://localhost:3001/api/bounces/delete', (req, res, ctx) => {
+    return res(ctx.json(mockBounce));
   }),
 ];

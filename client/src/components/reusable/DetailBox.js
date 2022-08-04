@@ -184,7 +184,10 @@ const DetailBox = ({
 
   if (itemType === 'Bounce') {
     return (
-      <div className="detail-box bounce">
+      <div
+        className="detail-box bounce"
+        data-testid={selectedItem ? selectedItem.id : ''}
+      >
         <div className="drag" onDragOver={onDragOver}>
           {authorized && (
             <input
