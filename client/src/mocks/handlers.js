@@ -18,7 +18,7 @@ export const handlers = [
     return res(ctx.json([mockTitle]));
   }),
   rest.get('http://localhost:3001/api/versions/:id', (req, res, ctx) => {
-    return res(ctx.json([mockVersion]));
+    return res(ctx.json([mockVersion, mockVersion2]));
   }),
   rest.get('http://localhost:3001/api/bounces/:id', (req, res, ctx) => {
     return res(ctx.json([mockBounce, mockBounce2]));

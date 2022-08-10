@@ -21,6 +21,8 @@ router.get('/audio/:id', async (req, res) => {
   const thisSong = await Song.findById(id);
   let mp3Id = new mongodb.ObjectID(thisSong.mp3);
 
+  // console.log(req.headers);
+
   // fix so that safari can request ranges of the file
 
   if (!req.headers.range) {
@@ -88,7 +90,7 @@ router.get('/audio/:id', async (req, res) => {
   } else {
     // for partial chrome requests and
     // for the initial safari request
-    const stream = bucket.openDownloadStream(mp3Id, { start, end: end - 1 });
+    const stream = bucket.openDownloadStream(mp3Id, { start, end });
     res.status(206);
     stream.pipe(res);
   }

@@ -20,6 +20,7 @@ import {
   mockVersion2,
   mockBounce,
   mockBounce2,
+  mockBounce3,
   mockPlaylist,
   mockUser,
 } from '../../mocks/data';
@@ -80,6 +81,14 @@ test('changes the selected bounce', async () => {
     name: moment.utc(mockBounce.date).format('MM/DD/yy'),
   });
   expect(removedDate).not.toBeInTheDocument();
+  // console.log(prettyDOM(undefined, 10000));
+
+  const playContainerDate = await screen.findByTestId(
+    `play-con-date-${mockTitle.id}`
+  );
+  expect(playContainerDate).toHaveTextContent(
+    moment.utc(mockBounce2.date).format('MM/DD/YY')
+  );
 });
 
 it('uploads a bounce', async () => {
@@ -115,6 +124,12 @@ it('uploads a bounce', async () => {
     name: /bounces/i,
   });
   expect(bounceCount).toHaveTextContent('3 Bounces');
+  const playContainerDate = await screen.findByTestId(
+    `play-con-date-${mockTitle.id}`
+  );
+  expect(playContainerDate).toHaveTextContent(
+    moment.utc(mockBounce3.date).format('MM/DD/YY')
+  );
 });
 
 it('deletes a bounce', async () => {
@@ -142,4 +157,10 @@ it('deletes a bounce', async () => {
     });
     expect(deletedDate).not.toBeInTheDocument();
   });
+  const playContainerDate = await screen.findByTestId(
+    `play-con-date-${mockTitle.id}`
+  );
+  expect(playContainerDate).toHaveTextContent(
+    moment.utc(mockBounce2.date).format('MM/DD/YY')
+  );
 });

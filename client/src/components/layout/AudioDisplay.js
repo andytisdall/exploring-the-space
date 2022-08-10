@@ -145,7 +145,8 @@ class AudioDisplay extends React.Component {
   };
 
   nextSong = () => {
-    this.props.nextSong();
+    const delay = 200;
+    setTimeout(this.props.nextSong, delay);
   };
 
   play = () => {

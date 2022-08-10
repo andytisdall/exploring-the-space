@@ -73,4 +73,30 @@ it('creates a version', async () => {
   expect(noBounces).toBeInTheDocument();
 });
 
-it('changes versions', async () => {});
+it('changes versions', async () => {
+  const versionName = await screen.findByRole('button', {
+    name: mockVersion.name,
+  });
+
+  userEvent.click(versionName);
+
+  // console.log(prettyDOM(screen.getByTestId(mockBounce.id), 10000));
+
+  const otherVersion = await screen.findByText(mockVersion2.name);
+  expect(otherVersion).toBeInTheDocument();
+
+  // userEvent.click(otherDate);
+
+  // const removedDate = screen.queryByRole('button', {
+  //   name: moment.utc(mockBounce.date).format('MM/DD/yy'),
+  // });
+  // expect(removedDate).not.toBeInTheDocument();
+  // // console.log(prettyDOM(undefined, 10000));
+
+  // const playContainerDate = await screen.findByTestId(
+  //   `play-con-date-${mockTitle.id}`
+  // );
+  // expect(playContainerDate).toHaveTextContent(
+  //   moment.utc(mockBounce2.date).format('MM/DD/YY')
+  // );
+});

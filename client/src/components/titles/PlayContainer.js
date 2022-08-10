@@ -49,8 +49,12 @@ const PlayContainer = ({ song, queueSongs, parentType }) => {
         />
       </div>
       <div className="play-container-display">
-        <p>{song.version.name}</p>
-        <p>{displayDate(song.bounce.date)}</p>
+        <p data-testid={`play-con-version-${song.title.id}`}>
+          {song.version.name}
+        </p>
+        <p data-testid={`play-con-date-${song.title.id}`}>
+          {displayDate(song.bounce.date)}
+        </p>
       </div>
       <a
         className="download"
