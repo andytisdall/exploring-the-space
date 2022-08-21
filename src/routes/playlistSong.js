@@ -75,7 +75,7 @@ router.patch(
         );
         await Promise.all(
           greaterPlaylistSongs.map((gps) => {
-            gps.position -= 1;
+            gps.position = gps.position - 1;
             return gps.save();
           })
         );
