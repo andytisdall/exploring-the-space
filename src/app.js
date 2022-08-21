@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
   PORT = '3000';
   STATIC_FILES = 'client/build/';
 } else {
-  PORT = '8000';
+  PORT = '3001';
   STATIC_FILES = 'client/public/';
 }
 
