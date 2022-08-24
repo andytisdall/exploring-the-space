@@ -1,6 +1,6 @@
 @media (max-width: 650px) {
   body {
-    font-size: 0.7rem;
+    font-size: 1rem;
     max-width: 100%;
   }
 
@@ -8,7 +8,7 @@
 
   .add,
   .delete {
-    font-size: 0.65rem;
+    font-size: 1rem;
     padding-left: 0.6rem;
   }
 
@@ -21,12 +21,12 @@
   }
 
   .modal-title {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   .submit-button,
   .modal-button {
-    font-size: 0.8rem;
+    font-size: 1.1rem;
   }
 
   /* LAYOUT */
@@ -48,7 +48,7 @@
   /* ERROR */
 
   .error {
-    font-size: 0.75rem;
+    font-size: 1rem;
     width: 75%;
   }
 
@@ -72,7 +72,7 @@
   }
 
   .playbar-title p {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
 
   .playbar-header {
@@ -99,7 +99,7 @@
   }
 
   .playbar-info-detail p {
-    font-size: 0.65rem;
+    font-size: 0.9rem;
   }
 
   .audio-controls {
@@ -120,7 +120,7 @@
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
   .volume-container {
@@ -130,12 +130,12 @@
   /* MAIN */
 
   .section-title {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   h2 {
     padding-top: 0.5rem;
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   /* TIER */
@@ -154,14 +154,14 @@
   }
 
   .order-by {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
   }
 
   /* TITLE */
 
   h3 {
     padding-left: 5px;
-    font-size: 0.8rem;
+    font-size: 1.1rem;
   }
 
   .title-margin {
@@ -177,7 +177,7 @@
 
   .play-container-time {
     margin-right: 0.8rem;
-    font-size: 0.6rem;
+    font-size: 0.9rem;
   }
 
   .play-icon {
@@ -192,7 +192,7 @@
   }
 
   .play-container-display p {
-    font-size: 0.55rem;
+    font-size: 0.8rem;
     width: 100%;
   }
 
@@ -226,7 +226,7 @@
   }
 
   h5 {
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 
   .detail-buttons {
@@ -234,17 +234,17 @@
   }
 
   .dropbtn {
-    font-size: 0.6rem;
+    font-size: 0.9rem;
     padding: 0.3rem;
   }
 
   .detail-notes {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     margin-top: 0.6rem;
   }
 
   .detail-notes-title {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
   }
 
   .current,
@@ -261,7 +261,7 @@
 
   .playlist-update {
     display: flex;
-    font-size: 0.4rem;
+    font-size: 0.7rem;
     align-items: center;
     justify-content: start;
     width: 25%;
@@ -277,7 +277,7 @@
   /* HOME */
 
   .band-item h2 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
   /*  HELP */
@@ -289,15 +289,15 @@
   }
 
   .help p {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   .help h2 {
-    font-size: 1.4rem;
+    font-size: 1.7rem;
   }
 
   .help h3 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   /*  SPINNER */
