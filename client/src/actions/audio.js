@@ -87,8 +87,6 @@ const updateQueue = (action, state, currentSong = null) => {
       .filter((song) => song.bounce)
       .sort((a, b) => (a.position < b.position ? -1 : 1));
 
-    console.log(currentSong);
-
     const song = allSongs[currentSong.position + (increment - 1)];
     if (!song) {
       return null;
