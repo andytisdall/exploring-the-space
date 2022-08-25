@@ -72,7 +72,7 @@
   }
 
   .playbar-title p {
-    font-size: 1.4rem;
+    font-size: 1.7rem;
   }
 
   .playbar-header {
@@ -149,6 +149,10 @@
     margin-left: 0.3rem;
   }
 
+  .tier-count {
+    width: 45%
+  }
+
   .tier-options {
     margin: 0 2rem;
   }
@@ -199,7 +203,7 @@
   /* VERSION */
 
   .detail-box-between {
-    margin: 0 0.5rem;
+    margin: 0
   }
 
   .record-link {
@@ -209,12 +213,13 @@
   }
 
   .version-arrow {
-    font-size: 2.4rem;
+    font-size: 0rem;
     padding: 3px;
   }
 
   .detail-box {
     padding: 0.5rem;
+    padding-right: 1.5rem;
   }
 
   .detail-content {
