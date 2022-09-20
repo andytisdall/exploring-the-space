@@ -104,8 +104,11 @@ router.patch('/bounces/:id', currentUser, requireAuth, async (req, res) => {
   thisBounce.comments = comments;
   thisBounce.date = date;
   if (latest && !thisBounce.latest) {
-    const title = await Title.findById(titleId);
-    if (title?.selectedVersion?.songs.includes(id)) {
+    const title = await Title.findById(titleId).populate([
+      'selectedVersion',
+      'selectedBounce',
+    ]);
+    if (title?.selectedVersion?.songs?.includes(id)) {
       title.selectedBounce = id;
     }
     await title.save();

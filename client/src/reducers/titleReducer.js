@@ -32,6 +32,7 @@ const titleReducer = (state = {}, action) => {
     case SELECT_BOUNCE:
       const bounceTitle = state[action.payload.titleId];
       bounceTitle.selectedBounce = action.payload.bounce;
+      // console.log(bounceTitle.selectedBounce.date);
       return { ...state, [bounceTitle.id]: { ...bounceTitle } };
     case CREATE_VERSION:
       const addToTitle = state[action.payload.title];

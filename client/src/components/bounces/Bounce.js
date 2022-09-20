@@ -46,6 +46,7 @@ const Bounce = ({
     ) {
       selectBounce(selectedBounce, title.id);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBounce, selectBounce, title.id]);
 

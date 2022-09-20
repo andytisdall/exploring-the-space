@@ -145,15 +145,17 @@ export const editBounce =
           (id) => getState().bounces[id]
         );
         const oldLatest = bounceList.find((b) => b.latest);
-        oldLatest.latest = false;
-        dispatch(
-          editBounce(
-            _.pick(oldLatest, 'date', 'comments', 'latest'),
-            oldLatest.id,
-            versionId,
-            titleId
-          )
-        );
+        if (oldLatest) {
+          oldLatest.latest = false;
+          dispatch(
+            editBounce(
+              _.pick(oldLatest, 'date', 'comments', 'latest'),
+              oldLatest.id,
+              versionId,
+              titleId
+            )
+          );
+        }
         dispatch(selectBounce(response.data, titleId));
       }
 
