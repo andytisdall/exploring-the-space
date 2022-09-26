@@ -100,6 +100,14 @@ const Playlist = ({
 
   useEffect(() => {
     if (doUpdate) {
+      if (songsToRender) {
+        songsToRender.forEach((song, i) => {
+          editPlaylistSong(
+            { playlistId: playlist.id, position: i + 1 },
+            song.id
+          );
+        });
+      }
       setDoUpdate(false);
     }
   }, [doUpdate]);
