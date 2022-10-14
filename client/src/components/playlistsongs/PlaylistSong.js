@@ -224,7 +224,9 @@ const PlaylistSong = ({
 
     if (current && song.bounce) {
       currentClass =
-        parent === playlist.id && current === song.bounce ? 'current-song' : '';
+        parent === playlist.id && current === song.bounce.id
+          ? 'current-song'
+          : '';
     }
     return (
       <div className="title-margin">

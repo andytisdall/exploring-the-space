@@ -38,7 +38,6 @@ export const createPlaylistSong =
 
 export const editPlaylistSong =
   (formValues, playlistSongId) => async (dispatch, getState) => {
-    console.log(formValues);
     try {
       // const playlistsong = getState().playlistSongs[playlistSongId];
       // const optimisticallyEditedPlaylistSong = {
