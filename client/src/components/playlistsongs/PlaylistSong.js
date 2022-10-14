@@ -88,7 +88,7 @@ const PlaylistSong = ({
       return (
         <div className="playlistsong-no-bounce">
           <p>
-            {playSong.version
+            {playSong?.version
               ? `${playSong.version.name}`
               : 'No Version Selected'}
           </p>
