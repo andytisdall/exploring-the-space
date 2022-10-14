@@ -111,7 +111,7 @@ const Title = ({
 
       if (!title.selectedBounce || !bounceList.includes(title.selectedBounce)) {
         // if not found that means the selected version has changed so just select the latest bounce
-        bounceToSelect = bounceList.find((b) => b.latest);
+        bounceToSelect = bounceList.find((b) => b && b.latest);
       }
 
       if (bounceToSelect) {

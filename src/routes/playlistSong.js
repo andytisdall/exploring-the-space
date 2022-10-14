@@ -6,9 +6,10 @@ import { Playlist, PlaylistSong } from '../models/models.js';
 const router = express.Router();
 
 router.get('/playlistsongs/:playlistId', async (req, res) => {
-  const playlist = await Playlist.findById(req.params.playlistId).populate(
-    'songs'
-  );
+  const playlist = await Playlist.findById(req.params.playlistId).populate({
+    path: 'songs',
+    populate: ['version', 'bounce'],
+  });
 
   return res.status(200).send(playlist.songs);
 });
