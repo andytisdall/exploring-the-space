@@ -40,10 +40,7 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
   playlist.save();
   const populatedPlaylistSong = await PlaylistSong.findById(
     newPlaylistSong.id
-  ).populate({
-    path: 'songs',
-    populate: ['version', 'bounce'],
-  });
+  ).populate(['version', 'bounce']);
 
   res.status(201).send(populatedPlaylistSong);
 });
@@ -55,15 +52,15 @@ router.patch(
   async (req, res) => {
     const { id } = req.params;
     const { bounce, position, version, playlistId } = req.body;
-    const song = await PlaylistSong.findById(id);
+    const song = await PlaylistSong.findById(id).populate([
+      'version',
+      'bounce',
+    ]);
     if (!song) {
       throw new Error('Playlist song not found');
     }
 
-    const playlist = await Playlist.findById(playlistId).populate({
-      path: 'songs',
-      populate: ['version', 'bounce'],
-    });
+    const playlist = await Playlist.findById(playlistId).populate('songs');
     const otherSongs = playlist.songs;
 
     if (position !== song.position) {
