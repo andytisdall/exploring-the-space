@@ -154,7 +154,7 @@ const Playlist = ({
   const renderTotalTime = () => {
     if (songsToRender) {
       const total = songsToRender.reduce((prev, cur) => {
-        return prev + cur.bounce?.duration;
+        return prev + cur?.bounce?.duration;
       }, 0);
 
       if (!total) {
