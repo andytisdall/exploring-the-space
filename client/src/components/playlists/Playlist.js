@@ -29,7 +29,7 @@ const Playlist = ({
 }) => {
   const [expand, setExpand] = useState(false);
   const [playlistList, setPlaylistList] = useState([]);
-  const [times, setTimes] = useState({});
+
   const [songsToRender, setSongsToRender] = useState(null);
   const [doUpdate, setDoUpdate] = useState(false);
 
@@ -51,7 +51,6 @@ const Playlist = ({
             song={song}
             playlist={playlist}
             key={song.id}
-            getTime={getTime}
             doUpdate={doUpdate}
           />
         );
@@ -153,25 +152,21 @@ const Playlist = ({
   };
 
   const renderTotalTime = () => {
-    const total = Object.values(times).reduce((prev, cur) => {
-      return prev + cur;
-    }, 0);
+    if (songsToRender) {
+      const total = songsToRender.reduce((prev, cur) => {
+        return prev + cur.bounce?.duration;
+      }, 0);
 
-    if (!total) {
-      return null;
-    }
+      if (!total) {
+        return null;
+      }
 
-    const minutes = Math.floor(total / 60);
-    const seconds =
-      Math.floor(total % 60) < 10
-        ? '0' + Math.floor(total % 60)
-        : Math.floor(total % 60);
-    return <div>{`${minutes}:${seconds}`}</div>;
-  };
-
-  const getTime = (track) => {
-    if (times[track.id] !== track.duration) {
-      setTimes({ ...times, [track.id]: track.duration });
+      const minutes = Math.floor(total / 60);
+      const seconds =
+        Math.floor(total % 60) < 10
+          ? '0' + Math.floor(total % 60)
+          : Math.floor(total % 60);
+      return <div>{`${minutes}:${seconds}`}</div>;
     }
   };
 

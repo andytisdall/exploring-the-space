@@ -29,7 +29,6 @@ const PlaylistSong = ({
   editPlaylistSong,
   deletePlaylistSong,
   audio,
-  getTime,
   band,
   doUpdate,
 }) => {
@@ -54,10 +53,7 @@ const PlaylistSong = ({
         parent: playlist,
       });
     }
-    if (bounces[song.bounce]) {
-      getTime({ id: song.id, duration: bounces[song.bounce].duration });
-    }
-  }, [playlistSongs, bounces, titles, versions, song, getTime, playlist]);
+  }, [playlistSongs, bounces, titles, versions, song, playlist]);
 
   useEffect(() => {
     const updateToCurrent = () => {
@@ -91,11 +87,7 @@ const PlaylistSong = ({
     } else {
       return (
         <div className="playlistsong-no-bounce">
-          <p>
-            {versions[song.version]
-              ? `${versions[song.version].name}`
-              : 'No Version Selected'}
-          </p>
+          <p>{song.version ? `${song.version.name}` : 'No Version Selected'}</p>
           <p>No Bounce Selected</p>
         </div>
       );
