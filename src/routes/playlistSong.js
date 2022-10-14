@@ -37,9 +37,15 @@ router.post('/playlistsongs', currentUser, requireAuth, async (req, res) => {
   await newPlaylistSong.save();
 
   playlist.songs.push(newPlaylistSong);
-  await playlist.save();
+  playlist.save();
+  const populatedPlaylistSong = await PlaylistSong.findById(
+    newPlaylistSong.id
+  ).populate({
+    path: 'songs',
+    populate: ['version', 'bounce'],
+  });
 
-  res.status(201).send(newPlaylistSong);
+  res.status(201).send(populatedPlaylistSong);
 });
 
 router.patch(
@@ -54,7 +60,10 @@ router.patch(
       throw new Error('Playlist song not found');
     }
 
-    const playlist = await Playlist.findById(playlistId).populate('songs');
+    const playlist = await Playlist.findById(playlistId).populate({
+      path: 'songs',
+      populate: ['version', 'bounce'],
+    });
     const otherSongs = playlist.songs;
 
     if (position !== song.position) {
