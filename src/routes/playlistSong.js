@@ -52,10 +52,7 @@ router.patch(
   async (req, res) => {
     const { id } = req.params;
     const { bounce, position, version, playlistId } = req.body;
-    const song = await PlaylistSong.findById(id).populate([
-      'version',
-      'bounce',
-    ]);
+    const song = await PlaylistSong.findById(id);
     if (!song) {
       throw new Error('Playlist song not found');
     }
@@ -97,8 +94,12 @@ router.patch(
       song.bounce = bounce;
     }
 
-    song.save();
-    res.send(song);
+    await song.save();
+    const populatedSong = await PlaylistSong.findById(id).populate([
+      'version',
+      'bounce',
+    ]);
+    res.send(populatedSong);
   }
 );
 
