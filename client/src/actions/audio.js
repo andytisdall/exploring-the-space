@@ -92,8 +92,7 @@ const updateQueue = (action, state, currentSong = null) => {
       return null;
     }
 
-    const version = state.versions[song.version];
-    const bounce = state.bounces[song.bounce];
+    const { version, bounce } = song;
     const title = state.titles[song.title];
 
     return {
