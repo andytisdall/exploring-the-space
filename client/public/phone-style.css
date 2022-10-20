@@ -45,6 +45,10 @@
     width: 15px;
   }
 
+  .mobile {
+    flex-direction: column;
+  }
+
   /* ERROR */
 
   .error {

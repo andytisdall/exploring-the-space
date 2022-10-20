@@ -992,6 +992,22 @@ h5 {
   display: flex;
 }
 
+.mobile {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-btn {
+  color: black;
+  font-size: large;
+  background-color: #65d478;
+  border-radius: 25px;
+  padding: 1rem 2rem;
+  width: fit-content;
+  margin: 20px;
+}
+
 /* AUTH */
 
 .auth {
