@@ -194,7 +194,7 @@ const PlaylistSong = ({
           ]}
           initialValues={
             song.bounce
-              ? { ..._.pick(song, 'position', 'bounce'), move: null }
+              ? { position: song.position, bounce: song.bounce.id, move: null }
               : { position: song.position, move: null }
           }
           form={`edit-playlistsong-${song.id}`}

@@ -13,6 +13,7 @@ import Help from './pages/Help';
 import { fetchUser } from '../actions';
 import Error from './layout/Error';
 import Mobile from './pages/Mobile';
+import Privacy from './pages/Privacy';
 
 import history from '../history';
 
@@ -46,6 +47,7 @@ const App = ({ signedIn, fetchUser, error, user }) => {
             />
             <Route path="/help" exact component={Help} />
             <Route path="/mobile" exact component={Mobile} />
+            <Route path="/privacy" exact component={Privacy} />
             {/* <Route path="/:bandName/record" exact component={Recorder} />
             <Route path="/:bandName/edit" component={Editor} /> */}
             <Route path="/:bandName" component={Header} />
