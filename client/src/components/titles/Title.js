@@ -29,15 +29,14 @@ const Title = ({
   audio,
   findLatest,
   tiers,
-  selectVersion,
 }) => {
   const [expand, setExpand] = useState(false);
   // const [versionList, setVersionList] = useState(null);
   const [bounceList, setBounceList] = useState(null);
   const [song, setSong] = useState(null);
-  const [showChords, setShowChords] = useState(false);
+  // const [showChords, setShowChords] = useState(false);
 
-  const chordButtonRef = useRef();
+  // const chordButtonRef = useRef();
 
   useEffect(() => {
     // console.log('a');
@@ -86,21 +85,21 @@ const Title = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectBounce, title.selectedVersion, bounces]);
 
-  useEffect(() => {
-    const bodyClick = (e) => {
-      if (chordButtonRef.current && chordButtonRef.current.contains(e.target)) {
-        return;
-      }
-      if (showChords) {
-        setShowChords(false);
-      }
-    };
+  // useEffect(() => {
+  //   const bodyClick = (e) => {
+  //     if (chordButtonRef.current && chordButtonRef.current.contains(e.target)) {
+  //       return;
+  //     }
+  //     if (showChords) {
+  //       setShowChords(false);
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', bodyClick, { capture: true });
-    return () => {
-      document.removeEventListener('mousedown', bodyClick, { capture: true });
-    };
-  }, [showChords]);
+  //   document.addEventListener('mousedown', bodyClick, { capture: true });
+  //   return () => {
+  //     document.removeEventListener('mousedown', bodyClick, { capture: true });
+  //   };
+  // }, [showChords]);
 
   useEffect(() => {
     // console.log('d');
@@ -130,7 +129,7 @@ const Title = ({
   const renderChordsButton = () => {
     if (title.chords) {
       return (
-        <div className="chords-container" ref={chordButtonRef}>
+        <a className="chords-container" href={title.chords} target="blank">
           <img
             src="/images/clef.png"
             alt="song chords"
@@ -140,8 +139,8 @@ const Title = ({
               setShowChords((state) => !state);
             }}
           />
-          {showChords && <div className="chords-box">{title.chords}</div>}
-        </div>
+          {/* {showChords && <div className="chords-box">{title.chords}</div>} */}
+        </a>
       );
     }
   };
