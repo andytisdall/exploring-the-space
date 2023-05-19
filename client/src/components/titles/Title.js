@@ -136,7 +136,7 @@ const Title = ({
             className="chords-button"
             onClick={(e) => {
               e.stopPropagation();
-              setShowChords((state) => !state);
+              // setShowChords((state) => !state);
             }}
           />
           {/* {showChords && <div className="chords-box">{title.chords}</div>} */}

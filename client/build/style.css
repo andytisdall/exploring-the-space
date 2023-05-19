@@ -130,6 +130,10 @@ label {
   justify-content: center;
 }
 
+textarea {
+  height: 100px;
+}
+
 /* LAYOUT ELEMENTS */
 
 .row {
@@ -153,7 +157,6 @@ label {
 
 .arrow {
   height: 2.4rem;
-  margin-left: 0.2rem;
   transition: all 0.2s;
   padding-bottom: 0.2rem;
 }
@@ -202,6 +205,11 @@ hr {
   padding: 0 0.5rem;
 }
 
+.drag-handle {
+  width: 1.5rem;
+  height: auto;
+}
+
 /* ERROR */
 
 .error {
@@ -209,12 +217,9 @@ hr {
   background-color: rgb(238, 31, 31);
   padding: 1rem;
   border: 2px solid white;
-  position: fixed;
-  z-index: 30;
-  margin: 1rem 2rem;
+  margin: 0 auto 1rem auto;
   width: 85%;
   height: 2rem;
-  max-width: 55rem;
   text-align: center;
   font-size: 1.3rem;
   display: flex;
@@ -230,11 +235,6 @@ hr {
   border-radius: 50%;
   padding: 0 0.9rem;
 }
-
-.error-margin {
-  padding-top: 5rem;
-}
-
 .no-band {
   width: 80%;
   margin: 1rem auto;
@@ -254,6 +254,12 @@ hr {
   width: 98%;
   padding-top: 1rem;
   box-sizing: border-box;
+}
+
+.loading {
+  position: absolute;
+  top: 10rem;
+  left: 50%;
 }
 
 /* audio display */
@@ -512,7 +518,6 @@ h2 {
 
 .tier {
   padding: 0.3rem 0.5rem 0.1rem 0;
-  margin-left: 2rem;
 }
 
 .tier-name {
@@ -591,6 +596,12 @@ h2 {
   margin-left: 3rem;
   padding-left: 1rem;
 }
+
+.title-enlarged {
+  transform:  scale(1.05);
+  margin: 3px 0;
+}
+
 
 .title {
   border-top: rgb(20, 29, 11) solid 1px;
@@ -690,6 +701,29 @@ h3 {
   color: rgb(80, 80, 80);
 }
 
+.chords-container {
+  position: relative;
+}
+
+.chords-button {
+  height: 1.5rem;
+  position: absolute;
+  cursor: pointer;
+  top: -12px;
+}
+
+.chords-box {
+  position: absolute;
+  top: -25px;
+  left: -100px;
+  background-color: white;
+  padding: .5rem;
+  box-sizing: border-box;
+  border: 1px solid black;
+  white-space: pre-wrap;
+  box-shadow: rgba(0, 0, 0, 0.442) .5rem 1rem 2rem;
+}
+
 /* VERSION */
 
 .version-container {
@@ -697,7 +731,6 @@ h3 {
   justify-content: center;
   color: rgb(248, 147, 240);
   transition: all 0.2s;
-  display: flex;
 }
 
 .detail-box-between {
@@ -767,6 +800,10 @@ h5 {
 
 .dropdown-container {
   display: flex;
+}
+
+.dropdown {
+  margin-right: .5rem;
 }
 
 .dropbtn {
@@ -848,6 +885,26 @@ h5 {
   height: 120px;
   width: 100px;
   margin: auto;
+}
+
+.drag {
+  position: relative;
+  height: 100%;
+}
+
+.bounce-drop-zone {
+  position: absolute;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  top: -10px;
+  left: 0;
+  pointer-events: none;
+
+}
+
+.dropping {
+  pointer-events: all;
 }
 
 /* PLAYLIST */
@@ -933,6 +990,22 @@ h5 {
 
 .band-item {
   display: flex;
+}
+
+.mobile {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-btn {
+  color: black;
+  font-size: large;
+  background-color: #65d478;
+  border-radius: 25px;
+  padding: 1rem 2rem;
+  width: fit-content;
+  margin: 20px;
 }
 
 /* AUTH */
@@ -1096,6 +1169,10 @@ h5 {
   background-color: black;
   border-radius: 100%;
   animation: sk-circle-fade 1.2s infinite ease-in-out both;
+}
+
+.loading .sk-circle-fade-dot:before {
+  background-color: wheat;
 }
 
 .sk-circle-fade-dot:nth-child(1) {
